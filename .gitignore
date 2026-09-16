@@ -1,0 +1,9 @@
+build/
+.cache/
+.state/
+*.log
+*.jsonl
+.env
+config.env
+profiles.local.env
+.DS_Store

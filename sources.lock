@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "tested_on": "2026-09-16",
+  "upstream": {
+    "repository": "https://github.com/ggml-org/llama.cpp.git",
+    "commit": "37b53fd4545847188fdad29e38ba57875efc8228"
+  },
+  "atomic": {
+    "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
+    "commit": "044dff242d78",
+    "release": "b10269-1.6.0"
+  },
+  "patchset": "patches/upstream",
+  "policy": "build both; hardware-gate before promotion"
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=Cloud9 Engine safe source sync and hardware gate
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/cloud9-engine/config.env
+ExecStart=%h/.local/share/cloud9-engine/repo/scripts/production-sync.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ENGINE_HOME=${CLOUD9_ENGINE_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/cloud9-engine}
+for cfg in /etc/cloud9-engine/config.env "$ENGINE_HOME/config.env" "$ENGINE_HOME/profiles.local.env"; do
+  # shellcheck source=/dev/null
+  [[ -r "$cfg" ]] && source "$cfg"
+done
+requested=${CLOUD9_ENGINE_BACKEND:-auto}
+args=" $* "
+if [[ "$requested" == auto ]]; then
+  if [[ "$args" == *" --spec-type draft-mtp "* || "$args" == *" --spec-type nextn "* || "$args" == *" --mtp-head "* ]]; then
+    requested=${CLOUD9_ENGINE_MTP_BACKEND:-atomic}
+  else
+    requested=${CLOUD9_ENGINE_GENERAL_BACKEND:-upstream}
+  fi
+fi
+case "$requested" in atomic|upstream) ;; *) echo "Cloud9 Engine: invalid backend '$requested'" >&2; exit 2;; esac
+bin="$ENGINE_HOME/current/$requested/bin/llama-server"
+other=upstream; [[ "$requested" == upstream ]] && other=atomic
+if [[ ! -x "$bin" && -x "$ENGINE_HOME/current/$other/bin/llama-server" ]]; then
+  echo "Cloud9 Engine: $requested unavailable, falling back to $other" >&2
+  bin="$ENGINE_HOME/current/$other/bin/llama-server"
+fi
+[[ -x "$bin" ]] || { echo "Cloud9 Engine: no promoted llama-server. Run: cloud9-engine build" >&2; exit 127; }
+exec "$bin" "$@"

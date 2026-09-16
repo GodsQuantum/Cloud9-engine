@@ -1,0 +1,26 @@
+From 8802976a157acc25f686c70164b7c77b912fe7a8 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine <cloud9-engine@users.noreply.github.com>
+Date: Wed, 16 Sep 2026 10:00:41 +0200
+Subject: [PATCH 7/7] fix: preserve upstream token history after TurboQuant
+ rebase
+
+---
+ src/llama-kv-cache.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/llama-kv-cache.cpp b/src/llama-kv-cache.cpp
+index b807ce686..6a523e746 100644
+--- a/src/llama-kv-cache.cpp
++++ b/src/llama-kv-cache.cpp
+@@ -2826,6 +2826,8 @@ void llama_kv_cache_context::set_input_v_rot(ggml_tensor * dst) const {
+ 
+ void llama_kv_cache_context::get_prev_tokens(const llama_ubatch & ubatch, uint32_t n, std::vector<llama_token> & res) const {
+     kv->get_prev_tokens(ubatch, n, res);
++}
++
+ void llama_kv_cache_context::set_input_turbo_wht(ggml_tensor * rot, ggml_tensor * signs1, ggml_tensor * signs2) const {
+     kv->set_input_turbo_wht(rot, signs1, signs2);
+ }
+-- 
+2.53.0
+
