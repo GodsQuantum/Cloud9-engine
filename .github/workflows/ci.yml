@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies
+        run: sudo apt-get update && sudo apt-get install -y shellcheck cmake ninja-build ccache libvulkan-dev glslc
+      - name: Static checks
+        run: |
+          python3 -m json.tool sources.lock >/dev/null
+          python3 -m py_compile scripts/*.py
+          shellcheck bin/* scripts/*.sh
+      - name: Apply Cloud9 patchset to locked upstream
+        run: |
+          UP_REPO=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["repository"])')
+          UP_SHA=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["commit"])')
+          git clone --filter=blob:none "$UP_REPO" /tmp/llama-upstream
+          git -C /tmp/llama-upstream checkout "$UP_SHA"
+          git -C /tmp/llama-upstream config user.name 'Cloud9 CI'
+          git -C /tmp/llama-upstream config user.email 'cloud9-ci@users.noreply.github.com'
+          for p in "$GITHUB_WORKSPACE"/patches/upstream/*.patch; do git -C /tmp/llama-upstream am "$p"; done
+          cmake -S /tmp/llama-upstream -B /tmp/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
+          cmake --build /tmp/build --target llama-server llama-bench

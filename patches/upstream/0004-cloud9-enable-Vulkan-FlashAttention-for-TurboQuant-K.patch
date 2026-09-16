@@ -1,0 +1,126 @@
+From 549c8f8b63f9d4808b942575da36c1507eea74e1 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine <cloud9-engine@users.noreply.github.com>
+Date: Sat, 12 Sep 2026 14:20:16 +0200
+Subject: [PATCH 4/7] cloud9: enable Vulkan FlashAttention for TurboQuant KV
+
+---
+ ggml/src/ggml-vulkan/ggml-vulkan.cpp          |  3 ++
+ .../ggml-vulkan/vulkan-shaders/fa_types.glsl  |  3 ++
+ .../vulkan-shaders/flash_attn_dequant.glsl    | 38 +++++++++++++++++++
+ .../vulkan-shaders/ggml_type_ids.glsl         |  3 ++
+ 4 files changed, 47 insertions(+)
+
+diff --git a/ggml/src/ggml-vulkan/ggml-vulkan.cpp b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+index bc96013a3..2933b5e8b 100644
+--- a/ggml/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -19422,6 +19422,9 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
+                     case GGML_TYPE_Q4_1:
+                     case GGML_TYPE_Q4_0:
+                     case GGML_TYPE_IQ4_NL:
++                    case GGML_TYPE_TURBO2_0:
++                    case GGML_TYPE_TURBO3_0:
++                    case GGML_TYPE_TURBO4_0:
+                         return true;
+                     default:
+                         return false;
+diff --git a/ggml/src/ggml-vulkan/vulkan-shaders/fa_types.glsl b/ggml/src/ggml-vulkan/vulkan-shaders/fa_types.glsl
+index 1e732a9a2..fc6381f1e 100644
+--- a/ggml/src/ggml-vulkan/vulkan-shaders/fa_types.glsl
++++ b/ggml/src/ggml-vulkan/vulkan-shaders/fa_types.glsl
+@@ -17,6 +17,9 @@ uint fa_block_elems(uint ty) {
+         case GGML_TYPE_Q8_0: return uint(QUANT_K_Q8_0);
+         case GGML_TYPE_IQ4_NL: return uint(QUANT_K_IQ4_NL);
+         case GGML_TYPE_BF16: return 1u;
++        case GGML_TYPE_TURBO2_0: return uint(QUANT_K_TURBO2_0);
++        case GGML_TYPE_TURBO3_0: return uint(QUANT_K_TURBO3_0);
++        case GGML_TYPE_TURBO4_0: return uint(QUANT_K_TURBO4_0);
+         default:           return 1u;
+     }
+ }
+diff --git a/ggml/src/ggml-vulkan/vulkan-shaders/flash_attn_dequant.glsl b/ggml/src/ggml-vulkan/vulkan-shaders/flash_attn_dequant.glsl
+index 4fcf7c1f4..bdb219b52 100644
+--- a/ggml/src/ggml-vulkan/vulkan-shaders/flash_attn_dequant.glsl
++++ b/ggml/src/ggml-vulkan/vulkan-shaders/flash_attn_dequant.glsl
+@@ -33,6 +33,13 @@ layout (binding = 2) readonly buffer V_PACKED_IQ4_NL { block_iq4_nl_packed16 dat
+ layout (binding = 1) readonly buffer K_PACKED_BF16 { u16vec4 data[]; } k_packed_bf16;
+ layout (binding = 2) readonly buffer V_PACKED_BF16 { u16vec4 data[]; } v_packed_bf16;
+ 
++layout (binding = 1, std430) restrict readonly buffer K_PACKED_TURBO2_0 { block_turbo2_0 data[]; } k_packed_turbo2_0;
++layout (binding = 2, std430) restrict readonly buffer V_PACKED_TURBO2_0 { block_turbo2_0 data[]; } v_packed_turbo2_0;
++layout (binding = 1, std430) restrict readonly buffer K_PACKED_TURBO3_0 { block_turbo3_0 data[]; } k_packed_turbo3_0;
++layout (binding = 2, std430) restrict readonly buffer V_PACKED_TURBO3_0 { block_turbo3_0 data[]; } v_packed_turbo3_0;
++layout (binding = 1, std430) restrict readonly buffer K_PACKED_TURBO4_0 { block_turbo4_0 data[]; } k_packed_turbo4_0;
++layout (binding = 2, std430) restrict readonly buffer V_PACKED_TURBO4_0 { block_turbo4_0 data[]; } v_packed_turbo4_0;
++
+ // Q4_1 and Q5_1 packed32 views: aliased to the same memory as the packed16
+ // views, used by the MMQ K-side hot path for fast 4-uint loads.
+ layout (binding = 1) readonly buffer K_PACKED_Q4_1_P32 { block_q4_1_packed32 data[]; } k_packed_q4_1_p32;
+@@ -118,6 +125,31 @@ layout (binding = 1) readonly buffer K_PACKED_Q5_1_P32 { block_q5_1_packed32 dat
+ #define FA_DEQUANT4_BF16(BUF) \
+     return FLOAT_TYPEV4(bf16_to_fp32(uvec4(BUF.data[(a_offset + ib) / 4])));
+ 
++#define FA_DEQUANT4_TURBO2_0(BUF) { \
++    const float c[4] = float[4](-0.133462, -0.039994, 0.039994, 0.133462); \
++    const float norm = float(BUF.data[a_offset + ib].norm); \
++    const uint q = uint(BUF.data[a_offset + ib].qs[iqs / 4]); \
++    return FLOAT_TYPE(norm) * FLOAT_TYPEV4(c[(q)&3u], c[(q>>2)&3u], c[(q>>4)&3u], c[(q>>6)&3u]); \
++}
++
++#define FA_DEQUANT4_TURBO3_0(BUF) { \
++    const float c[8] = float[8](-0.190685,-0.117832,-0.065717,-0.021460,0.021460,0.065717,0.117832,0.190685); \
++    const float norm = float(BUF.data[a_offset + ib].norm); \
++    const uint q = uint(BUF.data[a_offset + ib].qs[iqs / 4]); \
++    const uint sg = uint(BUF.data[a_offset + ib].signs[iqs / 8]); \
++    const uint b = iqs & 7u; \
++    const uint i0=((q)&3u)|(((sg>>(b  ))&1u)<<2); const uint i1=((q>>2)&3u)|(((sg>>(b+1))&1u)<<2); \
++    const uint i2=((q>>4)&3u)|(((sg>>(b+2))&1u)<<2); const uint i3=((q>>6)&3u)|(((sg>>(b+3))&1u)<<2); \
++    return FLOAT_TYPE(norm) * FLOAT_TYPEV4(c[i0],c[i1],c[i2],c[i3]); \
++}
++
++#define FA_DEQUANT4_TURBO4_0(BUF) { \
++    const float c[16] = float[16](-0.173926,-0.117195,-0.089527,-0.068756,-0.051262,-0.035597,-0.020989,-0.006938,0.006938,0.020989,0.035597,0.051262,0.068756,0.089527,0.117195,0.173926); \
++    const float norm = float(BUF.data[a_offset + ib].norm); \
++    const uint b0=uint(BUF.data[a_offset + ib].qs[iqs/2]); const uint b1=uint(BUF.data[a_offset + ib].qs[iqs/2+1]); \
++    return FLOAT_TYPE(norm) * FLOAT_TYPEV4(c[b0&15u],c[(b0>>4)&15u],c[b1&15u],c[(b1>>4)&15u]); \
++}
++
+ FLOAT_TYPEV4 dequantize4(uint ib, uint iqs, uint a_offset, uint binding_idx) {
+     if (binding_idx == BINDING_IDX_K) {
+         switch (FaTypeK) {
+@@ -129,6 +161,9 @@ FLOAT_TYPEV4 dequantize4(uint ib, uint iqs, uint a_offset, uint binding_idx) {
+             case GGML_TYPE_Q8_0: FA_DEQUANT4_Q8_0(k_packed_q8_0)
+             case GGML_TYPE_IQ4_NL: FA_DEQUANT4_IQ4_NL(k_packed_iq4_nl)
+             case GGML_TYPE_BF16: FA_DEQUANT4_BF16(k_packed_bf16)
++            case GGML_TYPE_TURBO4_0: FA_DEQUANT4_TURBO4_0(k_packed_turbo4_0)
++            case GGML_TYPE_TURBO3_0: FA_DEQUANT4_TURBO3_0(k_packed_turbo3_0)
++            case GGML_TYPE_TURBO2_0: FA_DEQUANT4_TURBO2_0(k_packed_turbo2_0)
+         }
+     } else {
+         switch (FaTypeV) {
+@@ -140,6 +175,9 @@ FLOAT_TYPEV4 dequantize4(uint ib, uint iqs, uint a_offset, uint binding_idx) {
+             case GGML_TYPE_Q8_0: FA_DEQUANT4_Q8_0(v_packed_q8_0)
+             case GGML_TYPE_IQ4_NL: FA_DEQUANT4_IQ4_NL(v_packed_iq4_nl)
+             case GGML_TYPE_BF16: FA_DEQUANT4_BF16(v_packed_bf16)
++            case GGML_TYPE_TURBO4_0: FA_DEQUANT4_TURBO4_0(v_packed_turbo4_0)
++            case GGML_TYPE_TURBO3_0: FA_DEQUANT4_TURBO3_0(v_packed_turbo3_0)
++            case GGML_TYPE_TURBO2_0: FA_DEQUANT4_TURBO2_0(v_packed_turbo2_0)
+         }
+     }
+     return FLOAT_TYPEV4(0);
+diff --git a/ggml/src/ggml-vulkan/vulkan-shaders/ggml_type_ids.glsl b/ggml/src/ggml-vulkan/vulkan-shaders/ggml_type_ids.glsl
+index 0f10c733d..5be62d2db 100644
+--- a/ggml/src/ggml-vulkan/vulkan-shaders/ggml_type_ids.glsl
++++ b/ggml/src/ggml-vulkan/vulkan-shaders/ggml_type_ids.glsl
+@@ -30,5 +30,8 @@
+ #define GGML_TYPE_NVFP4   40u
+ #define GGML_TYPE_Q1_0    41u
+ #define GGML_TYPE_Q2_0    42u
++#define GGML_TYPE_TURBO3_0 43u
++#define GGML_TYPE_TURBO4_0 44u
++#define GGML_TYPE_TURBO2_0 45u
+ 
+ #endif // !defined(GGML_TYPE_IDS_COMP)
+-- 
+2.53.0
+

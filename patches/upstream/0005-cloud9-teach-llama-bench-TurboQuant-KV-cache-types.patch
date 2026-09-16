@@ -1,0 +1,57 @@
+From afcece5f3aedf0a19d339a540626cb82a3a19495 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine <cloud9-engine@users.noreply.github.com>
+Date: Sun, 13 Sep 2026 09:25:28 +0200
+Subject: [PATCH 5/7] cloud9: teach llama-bench TurboQuant KV cache types
+
+---
+ .../test-turboquant-llama-bench-cache-types.py  | 17 +++++++++++++++++
+ tools/llama-bench/llama-bench.cpp               |  9 +++++++++
+ 2 files changed, 26 insertions(+)
+ create mode 100755 cloud9/tests/test-turboquant-llama-bench-cache-types.py
+
+diff --git a/cloud9/tests/test-turboquant-llama-bench-cache-types.py b/cloud9/tests/test-turboquant-llama-bench-cache-types.py
+new file mode 100755
+index 000000000..a559b78c3
+--- /dev/null
++++ b/cloud9/tests/test-turboquant-llama-bench-cache-types.py
+@@ -0,0 +1,17 @@
++#!/usr/bin/env python3
++from pathlib import Path
++p = Path('tools/llama-bench/llama-bench.cpp')
++s = p.read_text()
++want = {
++    'turbo2': 'GGML_TYPE_TURBO2_0',
++    'turbo3': 'GGML_TYPE_TURBO3_0',
++    'turbo4': 'GGML_TYPE_TURBO4_0',
++}
++missing = []
++for name, enum in want.items():
++    if f's == "{name}"' not in s or f'return {enum};' not in s:
++        missing.append(f'{name}->{enum}')
++if missing:
++    print('MISSING=' + ','.join(missing))
++    raise SystemExit(1)
++print('TURBOQUANT_LLAMA_BENCH_CACHE_TYPES=PASS')
+diff --git a/tools/llama-bench/llama-bench.cpp b/tools/llama-bench/llama-bench.cpp
+index 6541bb507..36a2139ad 100644
+--- a/tools/llama-bench/llama-bench.cpp
++++ b/tools/llama-bench/llama-bench.cpp
+@@ -515,6 +515,15 @@ static ggml_type ggml_type_from_name(const std::string & s) {
+     if (s == "iq4_nl") {
+         return GGML_TYPE_IQ4_NL;
+     }
++    if (s == "turbo2") {
++        return GGML_TYPE_TURBO2_0;
++    }
++    if (s == "turbo3") {
++        return GGML_TYPE_TURBO3_0;
++    }
++    if (s == "turbo4") {
++        return GGML_TYPE_TURBO4_0;
++    }
+ 
+     return GGML_TYPE_COUNT;
+ }
+-- 
+2.53.0
+

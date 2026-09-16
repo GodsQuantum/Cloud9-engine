@@ -1,0 +1,631 @@
+From d4d5809d8829d1f0121a1a14e2acbee5e0df4ff7 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine <cloud9-engine@users.noreply.github.com>
+Date: Sat, 12 Sep 2026 13:49:02 +0200
+Subject: [PATCH 3/7] cloud9: add correct Vulkan TurboQuant SET_ROWS
+
+---
+ ggml/src/ggml-turbo-quant.c                   |  16 +-
+ ggml/src/ggml-vulkan/ggml-vulkan.cpp          |  26 +-
+ .../vulkan-shaders/copy_to_quant.comp         | 404 +++++++++++++++++-
+ .../src/ggml-vulkan/vulkan-shaders/types.glsl |  48 +++
+ .../vulkan-shaders/vulkan-shaders-gen.cpp     |   6 +
+ tests/test-backend-ops.cpp                    |   1 +
+ 6 files changed, 491 insertions(+), 10 deletions(-)
+
+diff --git a/ggml/src/ggml-turbo-quant.c b/ggml/src/ggml-turbo-quant.c
+index 139184783..161c67397 100644
+--- a/ggml/src/ggml-turbo-quant.c
++++ b/ggml/src/ggml-turbo-quant.c
+@@ -446,9 +446,10 @@ void quantize_row_turbo4_0_ref(const float * GGML_RESTRICT x, block_turbo4_0 * G
+             memset(normalized, 0, d * sizeof(float));
+         }
+ 
+-        /* Step 2: Rotate */
++        /* Step 2: Forward WHT rotation (matches CUDA set_rows) */
+         float rotated[TURBO_D];
+-        matvec(turbo_rotation, normalized, rotated, d);
++        memcpy(rotated, normalized, d * sizeof(float));
++        turbo_cpu_fwht(rotated, d);
+ 
+ #if TURBO4_USE_4BIT
+         /* Step 3: 4-bit quantization (16 centroids) */
+@@ -549,14 +550,15 @@ void dequantize_row_turbo4_0(const block_turbo4_0 * GGML_RESTRICT x, float * GGM
+     };
+     for (int block = 0; block < nb; block++) {
+         float norm = GGML_FP16_TO_FP32(x[block].norm);
+-        float rotated[QK_TURBO4];
++        float * dst = y + block * d;
+         for (int i = 0; i < d; i++) {
+             uint8_t idx = (x[block].qs[i / 2] >> ((i % 2) * 4)) & 0xF;
+-            rotated[i] = CENTROIDS_4BIT[idx];
++            dst[i] = CENTROIDS_4BIT[idx] * norm;
+         }
+-        float * dst = y + block * d;
+-        matvec(turbo_rotation_t, rotated, dst, d);
+-        for (int i = 0; i < d; i++) dst[i] *= norm;
++        /* No inverse WHT, dequant stays in the rotated domain.
++        * Q is WHT-rotated by the graph, so <Q_rot, K_rot> gives correct attention scores.
++        * The inverse WHT is applied to the attention output by llama_turbo_wht() in the graph.
++        */
+     }
+ #else
+     /* Legacy 3-bit + QJL dequant */
+diff --git a/ggml/src/ggml-vulkan/ggml-vulkan.cpp b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+index baa44ad1f..bc96013a3 100644
+--- a/ggml/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/ggml/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -5902,6 +5902,17 @@ static void ggml_vk_load_shaders(vk_device& device, vk_pipeline requested) {
+     SET_ROWS(1, f16, _i64)
+ #undef SET_ROWS
+ 
++    // fork: TurboQuant set_rows pipelines (f32 source only; shaders are not
++    // generated for the f16 source — supports_op rejects that combination)
++#define SET_ROWS_TURBO(itype) \
++        ggml_vk_create_pipeline(device, device->pipeline_set_rows ## itype [0][GGML_TYPE_TURBO2_0], "set_rows_f32_turbo2_0" #itype, set_rows_f32_turbo2_0 ## itype ## _len, set_rows_f32_turbo2_0 ## itype ## _data, "main", 3, sizeof(vk_op_binary_push_constants), {1, 1, 1}, {1}, 1, true, true, 32u); \
++        ggml_vk_create_pipeline(device, device->pipeline_set_rows ## itype [0][GGML_TYPE_TURBO3_0], "set_rows_f32_turbo3_0" #itype, set_rows_f32_turbo3_0 ## itype ## _len, set_rows_f32_turbo3_0 ## itype ## _data, "main", 3, sizeof(vk_op_binary_push_constants), {1, 1, 1}, {1}, 1, true, true, 32u); \
++        ggml_vk_create_pipeline(device, device->pipeline_set_rows ## itype [0][GGML_TYPE_TURBO4_0], "set_rows_f32_turbo4_0" #itype, set_rows_f32_turbo4_0 ## itype ## _len, set_rows_f32_turbo4_0 ## itype ## _data, "main", 3, sizeof(vk_op_binary_push_constants), {1, 1, 1}, {1}, 1, true, true, 32u);
++
++    SET_ROWS_TURBO(_i32)
++    SET_ROWS_TURBO(_i64)
++#undef SET_ROWS_TURBO
++
+ 
+     ggml_vk_create_pipeline(device, device->pipeline_cpy_quant_f32[GGML_TYPE_Q1_0], "cpy_q1_0_f32", cpy_q1_0_f32_len, cpy_q1_0_f32_data, "main", 2, sizeof(vk_op_unary_push_constants), {(uint32_t)ggml_blck_size(GGML_TYPE_Q1_0), 1, 1}, {}, 1);
+     ggml_vk_create_pipeline(device, device->pipeline_cpy_quant_f32[GGML_TYPE_Q2_0], "cpy_q2_0_f32", cpy_q2_0_f32_len, cpy_q2_0_f32_data, "main", 2, sizeof(vk_op_unary_push_constants), {(uint32_t)ggml_blck_size(GGML_TYPE_Q2_0), 1, 1}, {}, 1);
+@@ -12839,7 +12850,10 @@ static void ggml_vk_op_f32(ggml_backend_vk_context * ctx, vk_context& subctx, co
+     case GGML_OP_SET_ROWS:
+         {
+             uint32_t ne = ggml_nelements(src0);
+-            if (ggml_is_quantized(dst->type)) {
++            if (dst->type == GGML_TYPE_TURBO2_0 || dst->type == GGML_TYPE_TURBO3_0 || dst->type == GGML_TYPE_TURBO4_0) {
++                // turbo set_rows shaders: 128 threads per WG, one full QK=128 block per WG
++                ne = ne / 128;
++            } else if (ggml_is_quantized(dst->type)) {
+                 // quants run 32 threads each doing QUANT_K elements
+                 ne = CEIL_DIV(ne, 32 * ggml_blck_size(dst->type));
+             } else {
+@@ -19470,6 +19484,13 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
+                     (op->src[1]->type != GGML_TYPE_I32 && op->src[1]->type != GGML_TYPE_I64)) {
+                     return false;
+                 }
++                // fork: turbo shaders use a 128-element block (head_dim must be
++                // divisible by 128) and only the f32-source variant is compiled
++                if (op->type == GGML_TYPE_TURBO2_0 || op->type == GGML_TYPE_TURBO3_0 || op->type == GGML_TYPE_TURBO4_0) {
++                    if (op->src[0]->ne[0] % 128 != 0 || op->src[0]->type != GGML_TYPE_F32) {
++                        return false;
++                    }
++                }
+                 switch (op->type) {
+                     case GGML_TYPE_F32:
+                     case GGML_TYPE_F16:
+@@ -19482,6 +19503,9 @@ static bool ggml_backend_vk_device_supports_op(ggml_backend_dev_t dev, const ggm
+                     case GGML_TYPE_Q5_1:
+                     case GGML_TYPE_Q8_0:
+                     case GGML_TYPE_IQ4_NL:
++                    case GGML_TYPE_TURBO2_0:
++                    case GGML_TYPE_TURBO3_0:
++                    case GGML_TYPE_TURBO4_0:
+                         return true;
+                     default:
+                         return false;
+diff --git a/ggml/src/ggml-vulkan/vulkan-shaders/copy_to_quant.comp b/ggml/src/ggml-vulkan/vulkan-shaders/copy_to_quant.comp
+index 776e9b8a5..9ca498e36 100644
+--- a/ggml/src/ggml-vulkan/vulkan-shaders/copy_to_quant.comp
++++ b/ggml/src/ggml-vulkan/vulkan-shaders/copy_to_quant.comp
+@@ -1,8 +1,16 @@
+ #version 450
+ 
++#extension GL_KHR_shader_subgroup_basic : enable
++#extension GL_KHR_shader_subgroup_arithmetic : enable
++#extension GL_KHR_shader_subgroup_ballot : enable
++#extension GL_KHR_shader_subgroup_shuffle : enable
++
+ #include "types.glsl"
+ 
+-#if defined(SET_ROWS) && QUANT_K == 1
++#if defined(SET_ROWS) && (defined(DATA_A_TURBO2_0) || defined(DATA_A_TURBO3_0) || defined(DATA_A_TURBO4_0))
++layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
++const uint BLOCK_SIZE = 128;
++#elif defined(SET_ROWS) && QUANT_K == 1
+ layout(local_size_x = 512, local_size_y = 1, local_size_z = 1) in;
+ const uint BLOCK_SIZE = 512;
+ #else
+@@ -208,6 +216,69 @@ void quantize(uint dst_idx, uint src_idx)
+ }
+ #endif
+ 
++#if defined(DATA_A_TURBO3_0)
++const float TS1[128] = float[128](
++    -1,  1,  1, -1, -1,  1, -1,  1, -1, -1,  1,  1,  1,  1,  1,  1,
++     1, -1,  1, -1,  1, -1, -1,  1,  1,  1, -1,  1,  1, -1, -1, -1,
++    -1,  1,  1, -1,  1,  1, -1,  1, -1,  1,  1, -1, -1,  1, -1,  1,
++     1,  1,  1, -1, -1, -1, -1, -1,  1, -1,  1,  1,  1,  1, -1,  1,
++    -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1,  1,
++     1, -1, -1,  1,  1,  1, -1, -1,  1,  1, -1,  1,  1, -1,  1, -1,
++    -1,  1,  1, -1,  1, -1,  1, -1,  1,  1,  1,  1, -1,  1, -1,  1,
++     1, -1,  1,  1, -1, -1, -1, -1, -1,  1,  1, -1,  1,  1, -1,  1
++);
++
++const float TS2[128] = float[128](
++     1,  1,  1,  1, -1,  1,  1, -1,  1, -1, -1, -1,  1, -1, -1, -1,
++     1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1,  1,  1,
++     1,  1, -1, -1, -1,  1, -1, -1, -1, -1, -1, -1,  1,  1,  1, -1,
++     1, -1,  1,  1,  1, -1, -1,  1, -1, -1, -1, -1, -1, -1,  1,  1,
++     1, -1,  1, -1, -1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1,  1,
++    -1,  1, -1,  1,  1, -1,  1, -1, -1, -1, -1,  1, -1, -1,  1, -1,
++     1, -1,  1,  1,  1, -1, -1,  1, -1,  1, -1,  1,  1, -1, -1,  1,
++    -1,  1, -1,  1,  1, -1,  1, -1,  1, -1, -1, -1, -1, -1,  1, -1
++);
++
++const float TINV = 0.08838834764831845;  // 1 / sqrt(128)
++
++const float TC[8] = float[8](
++    -0.190685, -0.117832, -0.065717, -0.021460,
++     0.021460,  0.065717,  0.117832,  0.190685
++);
++
++const float TM[7] = float[7](
++    -0.154259, -0.091775, -0.043589,
++     0.0,
++     0.043589,  0.091775,  0.154259
++);
++
++#if defined(SET_ROWS)
++
++shared float wht[128];
++shared float sg_acc[16];
++shared float gnrm;
++
++void quantize_block(uint b, uint o) {
++    [[unroll]] for (int j = 0; j < 32; ++j) data_q[b].qs[j]    = uint8_t(0);
++    [[unroll]] for (int j = 0; j < 16; ++j) data_q[b].signs[j] = uint8_t(0);
++    float rs = 0.0;
++    [[unroll]] for (int j = 0; j < 128; ++j) {
++        float v  = wht[o + j];
++        uint  i  = v < TM[0] ? 0 : v < TM[1] ? 1 : v < TM[2] ? 2 : v < TM[3] ? 3 :
++                   v < TM[4] ? 4 : v < TM[5] ? 5 : v < TM[6] ? 6 : 7;
++        rs += TC[i] * TC[i];
++        uint low2 = i & 0x3;
++        uint hi1  = (i >> 2) & 0x1;
++        data_q[b].qs[j / 4]    |= uint8_t(low2 << ((j % 4) * 2));
++        data_q[b].signs[j / 8] |= uint8_t(hi1  << (j % 8));
++    }
++    float rn = sqrt(rs);
++    data_q[b].norm = float16_t((rn > 1e-10) ? (gnrm / rn) : gnrm);
++}
++
++#endif // defined(SET_ROWS)
++#endif // defined(DATA_A_TURBO3_0)
++
+ #if defined(DATA_A_Q2_0)
+ uint quantize_q2_0(float x)
+ {
+@@ -300,7 +371,336 @@ void quantize(uint dst_idx, uint src_idx)
+ }
+ #endif
+ 
+-#if defined(SET_ROWS)
++#if defined(SET_ROWS) && defined(DATA_A_TURBO3_0)
++void main() {
++    const uint t   = gl_LocalInvocationID.x;
++    const uint g   = gl_WorkGroupID.z * 262144 + gl_WorkGroupID.y * 512 + gl_WorkGroupID.x;
++    const uint gpr = p.ne00 / 128;
++
++    if (gpr == 0) return;
++    if (g >= p.ne / 128) return;
++
++    uint tmp = g;
++    const uint ig  = tmp % gpr; tmp /= gpr;
++    const uint i01 = tmp % p.ne01; tmp /= p.ne01;
++    const uint i02 = tmp % p.ne02;
++    const uint i03 = tmp / p.ne02;
++
++    const uint sb  = src0_idx(ig * 128, i01, i02, i03) + get_aoffset();
++    const uint i1  = data_i[src1_idx(i01, fastmod(i02, p.ne11), fastmod(i03, p.ne12), 0) + get_boffset()] DATA_I_SWIZZLE;
++    const uint db  = dst_idx(ig, i1, i02, i03) + get_doffset();
++
++    // Step 1: load into shared memory
++    wht[t] = data_s[sb + t];
++    barrier();
++
++    // Step 2: L2 norm via subgroup reduction
++    float v2 = wht[t] * wht[t];
++    v2 = subgroupAdd(v2);
++    if (gl_SubgroupInvocationID == 0) sg_acc[gl_SubgroupID] = v2;
++    barrier();
++    if (t == 0) {
++        float total = 0.0;
++        for (uint w = 0; w < gl_NumSubgroups; w++) total += sg_acc[w];
++        gnrm = sqrt(total);
++    }
++    barrier();
++
++    // Step 3: normalize, then apply forward WHT: signs1 -> butterfly -> signs2
++    wht[t] *= (gnrm > 1e-10) ? (1.0 / gnrm) : 0.0;
++    barrier();
++
++    wht[t] *= TS1[t];
++    barrier();
++
++    [[unroll]] for (uint h = 1; h < 128; h *= 2) {
++        if ((t % (2 * h)) < h) {
++            float a    = wht[t];
++            float b    = wht[t + h];
++            wht[t]     = a + b;
++            wht[t + h] = a - b;
++        }
++        barrier();
++    }
++
++    // Step 5: apply signs2 + scaling
++    float rv = wht[t] * TINV * TS2[t];
++
++    // Step 6: quantize -- all 128 threads participate
++    uint idx = rv < TM[0] ? 0u : rv < TM[1] ? 1u : rv < TM[2] ? 2u : rv < TM[3] ? 3u :
++              rv < TM[4] ? 4u : rv < TM[5] ? 5u : rv < TM[6] ? 6u : 7u;
++
++    // Pack qs: 4 elements per byte via subgroup shuffle
++    uint sg_lane = gl_SubgroupInvocationID;
++    uint my_low2 = idx & 0x3u;
++    uint qs_byte = 0u;
++    [[unroll]] for (uint k = 0; k < 4; k++) {
++        uint contrib = subgroupShuffle(my_low2, (sg_lane & ~3u) + k);
++        qs_byte |= contrib << (k * 2u);
++    }
++    if (sg_lane % 4u == 0u) {
++        data_q[db].qs[t / 4u] = uint8_t(qs_byte);
++    }
++
++    // Pack signs: 8 elements per byte via subgroup ballot
++    uvec4 ballot = subgroupBallot(((idx >> 2u) & 1u) != 0u);
++    if (sg_lane % 8u == 0u) {
++        uint local_byte = sg_lane / 8u;
++        data_q[db].signs[t / 8u] = uint8_t((ballot.x >> (local_byte * 8u)) & 0xFFu);
++    }
++
++    // Step 7: reconstruction norm via subgroup reduction
++    float rc = TC[idx] * TC[idx];
++    rc = subgroupAdd(rc);
++    if (sg_lane == 0u) sg_acc[gl_SubgroupID] = rc;
++    barrier();
++    if (t == 0u) {
++        float total = 0.0;
++        for (uint w = 0; w < gl_NumSubgroups; w++) total += sg_acc[w];
++        float rn = sqrt(total);
++        data_q[db].norm = float16_t((rn > 1e-10) ? (gnrm / rn) : gnrm);
++    }
++}
++#elif defined(SET_ROWS) && defined(DATA_A_TURBO2_0)
++// Mirror of the TURBO3_0 block above, adapted for turbo2 (4 centroids,
++// 2-bit pack, no signs byte). WHT tables and reduction structure are
++// identical (QK = 128 for both).
++const float TS1_T2[128] = float[128](
++    -1,  1,  1, -1, -1,  1, -1,  1, -1, -1,  1,  1,  1,  1,  1,  1,
++     1, -1,  1, -1,  1, -1, -1,  1,  1,  1, -1,  1,  1, -1, -1, -1,
++    -1,  1,  1, -1,  1,  1, -1,  1, -1,  1,  1, -1, -1,  1, -1,  1,
++     1,  1,  1, -1, -1, -1, -1, -1,  1, -1,  1,  1,  1,  1, -1,  1,
++    -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1,  1,
++     1, -1, -1,  1,  1,  1, -1, -1,  1,  1, -1,  1,  1, -1,  1, -1,
++    -1,  1,  1, -1,  1, -1,  1, -1,  1,  1,  1,  1, -1,  1, -1,  1,
++     1, -1,  1,  1, -1, -1, -1, -1, -1,  1,  1, -1,  1,  1, -1,  1
++);
++const float TS2_T2[128] = float[128](
++     1,  1,  1,  1, -1,  1,  1, -1,  1, -1, -1, -1,  1, -1, -1, -1,
++     1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1,  1,  1,
++     1,  1, -1, -1, -1,  1, -1, -1, -1, -1, -1, -1,  1,  1,  1, -1,
++     1, -1,  1,  1,  1, -1, -1,  1, -1, -1, -1, -1, -1, -1,  1,  1,
++     1, -1,  1, -1, -1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1,  1,
++    -1,  1, -1,  1,  1, -1,  1, -1, -1, -1, -1,  1, -1, -1,  1, -1,
++     1, -1,  1,  1,  1, -1, -1,  1, -1,  1, -1,  1,  1, -1, -1,  1,
++    -1,  1, -1,  1,  1, -1,  1, -1,  1, -1, -1, -1, -1, -1,  1, -1
++);
++const float TINV_T2 = 0.08838834764831845;  // 1 / sqrt(128)
++// Lloyd-Max centroids for N(0, 1/128), 4 levels (matches CENTROIDS_2BIT in C ref)
++const float TC2[4] = float[4](-0.133462, -0.039994, 0.039994, 0.133462);
++// Midpoints between adjacent centroids
++const float TM2[3] = float[3](-0.086728, 0.0, 0.086728);
++
++shared float wht_t2[128];
++shared float sg_acc_t2[16];
++shared float gnrm_t2;
++
++void main() {
++    const uint t   = gl_LocalInvocationID.x;
++    const uint g   = gl_WorkGroupID.z * 262144 + gl_WorkGroupID.y * 512 + gl_WorkGroupID.x;
++    const uint gpr = p.ne00 / 128;
++
++    if (gpr == 0) return;
++    if (g >= p.ne / 128) return;
++
++    uint tmp = g;
++    const uint ig  = tmp % gpr; tmp /= gpr;
++    const uint i01 = tmp % p.ne01; tmp /= p.ne01;
++    const uint i02 = tmp % p.ne02;
++    const uint i03 = tmp / p.ne02;
++
++    const uint sb  = src0_idx(ig * 128, i01, i02, i03) + get_aoffset();
++    const uint i1  = data_i[src1_idx(i01, fastmod(i02, p.ne11), fastmod(i03, p.ne12), 0) + get_boffset()] DATA_I_SWIZZLE;
++    const uint db  = dst_idx(ig, i1, i02, i03) + get_doffset();
++
++    wht_t2[t] = data_s[sb + t];
++    barrier();
++
++    float v2 = wht_t2[t] * wht_t2[t];
++    v2 = subgroupAdd(v2);
++    if (gl_SubgroupInvocationID == 0) sg_acc_t2[gl_SubgroupID] = v2;
++    barrier();
++    if (t == 0) {
++        float total = 0.0;
++        for (uint w = 0; w < gl_NumSubgroups; w++) total += sg_acc_t2[w];
++        gnrm_t2 = sqrt(total);
++    }
++    barrier();
++
++    wht_t2[t] *= (gnrm_t2 > 1e-10) ? (1.0 / gnrm_t2) : 0.0;
++    barrier();
++
++    wht_t2[t] *= TS1_T2[t];
++    barrier();
++
++    [[unroll]] for (uint h = 1; h < 128; h *= 2) {
++        if ((t % (2 * h)) < h) {
++            float a    = wht_t2[t];
++            float b    = wht_t2[t + h];
++            wht_t2[t]     = a + b;
++            wht_t2[t + h] = a - b;
++        }
++        barrier();
++    }
++
++    float rv = wht_t2[t] * TINV_T2 * TS2_T2[t];
++
++    // Quantize to nearest of 4 centroids (2-bit index, no signs byte)
++    uint idx = rv < TM2[0] ? 0u : rv < TM2[1] ? 1u : rv < TM2[2] ? 2u : 3u;
++
++    // Pack qs: 4 elements per byte (full 2-bit each, no high bit)
++    uint sg_lane = gl_SubgroupInvocationID;
++    uint qs_byte = 0u;
++    [[unroll]] for (uint k = 0; k < 4; k++) {
++        uint contrib = subgroupShuffle(idx & 0x3u, (sg_lane & ~3u) + k);
++        qs_byte |= contrib << (k * 2u);
++    }
++    if (sg_lane % 4u == 0u) {
++        data_q[db].qs[t / 4u] = uint8_t(qs_byte);
++    }
++
++    // Reconstruction norm via subgroup reduction
++    float rc = TC2[idx] * TC2[idx];
++    rc = subgroupAdd(rc);
++    if (sg_lane == 0u) sg_acc_t2[gl_SubgroupID] = rc;
++    barrier();
++    if (t == 0u) {
++        float total = 0.0;
++        for (uint w = 0; w < gl_NumSubgroups; w++) total += sg_acc_t2[w];
++        float rn = sqrt(total);
++        data_q[db].norm = float16_t((rn > 1e-10) ? (gnrm_t2 / rn) : gnrm_t2);
++    }
++}
++
++#elif defined(SET_ROWS) && defined(DATA_A_TURBO4_0)
++// Mirror of the TURBO3_0 block above, adapted for turbo4 (16 centroids,
++// 4-bit nibble pack, no signs byte). WHT tables and reduction structure
++// are identical (QK = 128 for both). The block struct keeps a reserved
++// rnorm field for ABI parity with the legacy 3-bit + QJL layout.
++const float TS1_T4[128] = float[128](
++    -1,  1,  1, -1, -1,  1, -1,  1, -1, -1,  1,  1,  1,  1,  1,  1,
++     1, -1,  1, -1,  1, -1, -1,  1,  1,  1, -1,  1,  1, -1, -1, -1,
++    -1,  1,  1, -1,  1,  1, -1,  1, -1,  1,  1, -1, -1,  1, -1,  1,
++     1,  1,  1, -1, -1, -1, -1, -1,  1, -1,  1,  1,  1,  1, -1,  1,
++    -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1, -1, -1, -1,  1,  1,
++     1, -1, -1,  1,  1,  1, -1, -1,  1,  1, -1,  1,  1, -1,  1, -1,
++    -1,  1,  1, -1,  1, -1,  1, -1,  1,  1,  1,  1, -1,  1, -1,  1,
++     1, -1,  1,  1, -1, -1, -1, -1, -1,  1,  1, -1,  1,  1, -1,  1
++);
++const float TS2_T4[128] = float[128](
++     1,  1,  1,  1, -1,  1,  1, -1,  1, -1, -1, -1,  1, -1, -1, -1,
++     1,  1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1, -1,  1,  1,  1,
++     1,  1, -1, -1, -1,  1, -1, -1, -1, -1, -1, -1,  1,  1,  1, -1,
++     1, -1,  1,  1,  1, -1, -1,  1, -1, -1, -1, -1, -1, -1,  1,  1,
++     1, -1,  1, -1, -1, -1, -1,  1, -1,  1, -1,  1, -1, -1,  1,  1,
++    -1,  1, -1,  1,  1, -1,  1, -1, -1, -1, -1,  1, -1, -1,  1, -1,
++     1, -1,  1,  1,  1, -1, -1,  1, -1,  1, -1,  1,  1, -1, -1,  1,
++    -1,  1, -1,  1,  1, -1,  1, -1,  1, -1, -1, -1, -1, -1,  1, -1
++);
++const float TINV_T4 = 0.08838834764831845;  // 1 / sqrt(128)
++// Lloyd-Max centroids for N(0, 1/128), 16 levels (matches CENTROIDS_4BIT in C ref)
++const float TC4[16] = float[16](
++    -0.173926, -0.117195, -0.089527, -0.068756,
++    -0.051262, -0.035597, -0.020989, -0.006938,
++     0.006938,  0.020989,  0.035597,  0.051262,
++     0.068756,  0.089527,  0.117195,  0.173926
++);
++// 15 midpoints between adjacent centroids
++const float TM4[15] = float[15](
++    -0.145561, -0.103361, -0.079142, -0.060009,
++    -0.043430, -0.028293, -0.013964,  0.0,
++     0.013964,  0.028293,  0.043430,  0.060009,
++     0.079142,  0.103361,  0.145561
++);
++
++shared float wht_t4[128];
++shared float sg_acc_t4[16];
++shared float gnrm_t4;
++
++void main() {
++    const uint t   = gl_LocalInvocationID.x;
++    const uint g   = gl_WorkGroupID.z * 262144 + gl_WorkGroupID.y * 512 + gl_WorkGroupID.x;
++    const uint gpr = p.ne00 / 128;
++
++    if (gpr == 0) return;
++    if (g >= p.ne / 128) return;
++
++    uint tmp = g;
++    const uint ig  = tmp % gpr; tmp /= gpr;
++    const uint i01 = tmp % p.ne01; tmp /= p.ne01;
++    const uint i02 = tmp % p.ne02;
++    const uint i03 = tmp / p.ne02;
++
++    const uint sb  = src0_idx(ig * 128, i01, i02, i03) + get_aoffset();
++    const uint i1  = data_i[src1_idx(i01, fastmod(i02, p.ne11), fastmod(i03, p.ne12), 0) + get_boffset()] DATA_I_SWIZZLE;
++    const uint db  = dst_idx(ig, i1, i02, i03) + get_doffset();
++
++    wht_t4[t] = data_s[sb + t];
++    barrier();
++
++    float v2 = wht_t4[t] * wht_t4[t];
++    v2 = subgroupAdd(v2);
++    if (gl_SubgroupInvocationID == 0) sg_acc_t4[gl_SubgroupID] = v2;
++    barrier();
++    if (t == 0) {
++        float total = 0.0;
++        for (uint w = 0; w < gl_NumSubgroups; w++) total += sg_acc_t4[w];
++        gnrm_t4 = sqrt(total);
++    }
++    barrier();
++
++    wht_t4[t] *= (gnrm_t4 > 1e-10) ? (1.0 / gnrm_t4) : 0.0;
++    barrier();
++
++    wht_t4[t] *= TS1_T4[t];
++    barrier();
++
++    [[unroll]] for (uint h = 1; h < 128; h *= 2) {
++        if ((t % (2 * h)) < h) {
++            float a    = wht_t4[t];
++            float b    = wht_t4[t + h];
++            wht_t4[t]     = a + b;
++            wht_t4[t + h] = a - b;
++        }
++        barrier();
++    }
++
++    float rv = wht_t4[t] * TINV_T4 * TS2_T4[t];
++
++    // Quantize to nearest of 16 centroids (4-bit index, no signs byte)
++    uint idx = 0u;
++    [[unroll]] for (uint i = 0; i < 15; i++) {
++        if (rv >= TM4[i]) idx = i + 1u;
++    }
++
++    // Pack qs: 2 elements per byte (4-bit nibble each)
++    uint sg_lane = gl_SubgroupInvocationID;
++    uint pair_low  = subgroupShuffle(idx & 0xFu, sg_lane & ~1u);
++    uint pair_high = subgroupShuffle(idx & 0xFu, (sg_lane & ~1u) + 1u);
++    uint qs_byte = pair_low | (pair_high << 4u);
++    if (sg_lane % 2u == 0u) {
++        data_q[db].qs[t / 2u] = uint8_t(qs_byte);
++    }
++
++    // Reset rnorm field (reserved in 4-bit mode)
++    if (t == 0u) {
++        data_q[db].rnorm = float16_t(0.0);
++    }
++
++    // Reconstruction norm via subgroup reduction
++    float rc = TC4[idx] * TC4[idx];
++    rc = subgroupAdd(rc);
++    if (sg_lane == 0u) sg_acc_t4[gl_SubgroupID] = rc;
++    barrier();
++    if (t == 0u) {
++        float total = 0.0;
++        for (uint w = 0; w < gl_NumSubgroups; w++) total += sg_acc_t4[w];
++        float rn = sqrt(total);
++        data_q[db].norm = float16_t((rn > 1e-10) ? (gnrm_t4 / rn) : gnrm_t4);
++    }
++}
++
++#elif defined(SET_ROWS)
+ 
+ void main() {
+ #ifdef NEEDS_INIT_IQ_SHMEM
+diff --git a/ggml/src/ggml-vulkan/vulkan-shaders/types.glsl b/ggml/src/ggml-vulkan/vulkan-shaders/types.glsl
+index 21d601d0e..f88f32817 100644
+--- a/ggml/src/ggml-vulkan/vulkan-shaders/types.glsl
++++ b/ggml/src/ggml-vulkan/vulkan-shaders/types.glsl
+@@ -1869,6 +1869,54 @@ struct block_nvfp4_packed32
+ #define A_TYPE_PACKED32 block_nvfp4_packed32
+ #endif
+ 
++#define QUANT_K_TURBO3_0 128
++#define QUANT_R_TURBO3_0 1
++
++struct block_turbo3_0
++{
++    float16_t norm;
++    uint8_t qs[32];     // 2-bit centroid indices (4 per byte), 128/4 = 32 bytes
++    uint8_t signs[16]; // 1-bit high bit of 3-bit index (8 per byte), 128/8 = 16 bytes
++};
++
++#if defined(DATA_A_TURBO3_0)
++#define QUANT_K QUANT_K_TURBO3_0
++#define QUANT_R QUANT_R_TURBO3_0
++#define QUANT_AUXF 1
++#define A_TYPE block_turbo3_0
++#endif
++
++#define QUANT_K_TURBO2_0 128
++#define QUANT_R_TURBO2_0 1
++struct block_turbo2_0
++{
++    float16_t norm;
++    uint8_t qs[32];     // 2-bit centroid indices (4 per byte), 128/4 = 32 bytes
++};
++#if defined(DATA_A_TURBO2_0)
++#define QUANT_K QUANT_K_TURBO2_0
++#define QUANT_R QUANT_R_TURBO2_0
++#define QUANT_AUXF 1
++#define A_TYPE block_turbo2_0
++#endif
++
++#define QUANT_K_TURBO4_0 128
++#define QUANT_R_TURBO4_0 1
++struct block_turbo4_0
++{
++    float16_t norm;
++    float16_t rnorm;    // reserved in 4-bit mode (kept for ABI parity with legacy)
++    uint8_t qs[64];     // 4-bit centroid indices, nibble-packed (2 per byte), 128/2 = 64 bytes
++};
++#if defined(DATA_A_TURBO4_0)
++#define QUANT_K QUANT_K_TURBO4_0
++#define QUANT_R QUANT_R_TURBO4_0
++#define QUANT_AUXF 1
++#define A_TYPE block_turbo4_0
++#endif
++
++
++
+ #if defined(DATA_A_IQ4_NL) || defined(DATA_A_IQ4_XS)
+ const int8_t kvalues_iq4nl_const[16] = {
+     int8_t(-127), int8_t(-104), int8_t(-83), int8_t(-65), int8_t(-49), int8_t(-35), int8_t(-22), int8_t(-10),
+diff --git a/ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp b/ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp
+index d3f425968..14c032e01 100644
+--- a/ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp
++++ b/ggml/src/ggml-vulkan/vulkan-shaders/vulkan-shaders-gen.cpp
+@@ -891,6 +891,12 @@ void process_shaders() {
+         }
+     }
+ 
++    // Cloud9: TurboQuant set_rows shaders (F32 source; production KV path).
++    for (std::string dst : {"turbo2_0", "turbo3_0", "turbo4_0"}) {
++        string_to_spv("set_rows_f32_" + dst + "_i32", "copy_to_quant.comp", {{"SET_ROWS", "1"}, {"DATA_A_" + to_uppercase(dst), "1"}, {"B_TYPE", "uint"}, {"B_SIZE", "32"}, {"S_TYPE", "float"}, {"D_TYPE", "float"}, {"FLOAT_TYPE", "float"}});
++        string_to_spv("set_rows_f32_" + dst + "_i64", "copy_to_quant.comp", {{"SET_ROWS", "1"}, {"DATA_A_" + to_uppercase(dst), "1"}, {"B_TYPE", "uvec2"}, {"B_SIZE", "64"}, {"S_TYPE", "float"}, {"D_TYPE", "float"}, {"FLOAT_TYPE", "float"}});
++    }
++
+     auto get_type_str = [](bool f16) {
+         return f16 ? "float16_t" : "float";
+     };
+diff --git a/tests/test-backend-ops.cpp b/tests/test-backend-ops.cpp
+index f41e188e6..4d5da743a 100644
+--- a/tests/test-backend-ops.cpp
++++ b/tests/test-backend-ops.cpp
+@@ -9114,6 +9114,7 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
+     test_cases.emplace_back(new test_set_rows(GGML_TYPE_F32, GGML_TYPE_F32, GGML_TYPE_I32, { 1, 8, 1, 3 }, { 1, 1 }, 2, false));
+     test_cases.emplace_back(new test_set_rows(GGML_TYPE_F32, GGML_TYPE_Q8_0, GGML_TYPE_I32, { 256, 5, 1, 3 }, { 1, 1, }, 1, false));
+     for (ggml_type type : { GGML_TYPE_TURBO2_0, GGML_TYPE_TURBO3_0, GGML_TYPE_TURBO4_0 }) {
++        test_cases.emplace_back(new test_set_rows(GGML_TYPE_F32, type, GGML_TYPE_I64, { 128, 5, 1, 3 }, { 1, 1 }, 1, false));
+         test_cases.emplace_back(new test_set_rows(GGML_TYPE_F32, type, GGML_TYPE_I64,
+                     { 256, 5, 1, 3 }, { 1, 1 }, 1, false));
+         test_cases.emplace_back(new test_set_rows(GGML_TYPE_F16, type, GGML_TYPE_I64,
+-- 
+2.53.0
+

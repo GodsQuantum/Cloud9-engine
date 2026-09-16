@@ -1,0 +1,34 @@
+name: Source watch
+
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update source locks
+        run: python3 scripts/update-lock.py
+      - name: Open or refresh source-sync PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git diff --quiet sources.lock && exit 0
+          branch=bot/source-sync
+          git config user.name 'cloud9-engine-bot'
+          git config user.email 'cloud9-engine-bot@users.noreply.github.com'
+          git checkout -B "$branch"
+          git add sources.lock
+          git commit -m 'chore: sync upstream engine sources'
+          git push --force-with-lease origin "$branch"
+          gh pr view "$branch" >/dev/null 2>&1 || gh pr create --base main --head "$branch" --title 'chore: sync engine sources' --body 'Automated source-lock refresh. CI must prove the Cloud9 patchset still applies and compiles before this can land.'
+          gh pr merge "$branch" --auto --squash || true

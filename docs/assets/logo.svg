@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud9 Engine</title><desc id="desc">A luminous number nine inside an orbital cloud mark.</desc>
+  <defs>
+    <radialGradient id="core" cx="45%" cy="38%"><stop offset="0" stop-color="#ffffff"/><stop offset=".32" stop-color="#8be9ff"/><stop offset=".72" stop-color="#6b7cff"/><stop offset="1" stop-color="#151936"/></radialGradient>
+    <linearGradient id="orbit" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7df9ff"/><stop offset=".5" stop-color="#8f7cff"/><stop offset="1" stop-color="#ff7ad9"/></linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="128" cy="128" r="91" fill="#0b1020"/>
+  <ellipse cx="128" cy="128" rx="111" ry="61" fill="none" stroke="url(#orbit)" stroke-width="5" transform="rotate(-24 128 128)" filter="url(#glow)"/>
+  <circle cx="42" cy="170" r="7" fill="#7df9ff" filter="url(#glow)"/>
+  <path d="M83 143c-19 0-34-13-34-30 0-16 13-29 30-30 8-23 30-39 57-39 30 0 55 20 60 47 16 3 28 16 28 31 0 18-16 32-36 32H83z" fill="url(#core)" opacity=".92"/>
+  <path d="M152 85c24 0 40 17 40 40 0 29-20 53-54 74l-12-17c19-11 31-22 38-34-6 4-13 6-21 6-23 0-39-14-39-34 0-21 18-35 48-35zm0 20c-14 0-22 6-22 16 0 9 8 15 20 15 10 0 18-4 24-11-1-12-9-20-22-20z" fill="#0b1020"/>
+</svg>

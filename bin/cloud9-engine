@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+SELF=$(readlink -f "${BASH_SOURCE[0]}")
+REPO=$(cd "$(dirname "$SELF")/.." && pwd)
+ENGINE_HOME=${CLOUD9_ENGINE_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/cloud9-engine}
+cmd=${1:-status}; shift || true
+case "$cmd" in
+  build) exec "$REPO/scripts/build-backends.sh" "$@" ;;
+  gate) exec "$REPO/scripts/hardware-gate.sh" "$@" ;;
+  server) exec "$REPO/bin/cloud9-llama-server" "$@" ;;
+  status)
+    echo "Cloud9 Engine"
+    echo "  repo: $REPO"
+    echo "  state: $ENGINE_HOME"
+    for b in atomic upstream; do
+      p="$ENGINE_HOME/current/$b/bin/llama-server"
+      printf '  %-8s ' "$b"
+      if [[ -x "$p" ]]; then "$p" --version 2>&1 | head -1; else echo 'not promoted'; fi
+    done
+    [[ -r "$ENGINE_HOME/profiles.local.env" ]] && { echo '  profiles:'; sed 's/^/    /' "$ENGINE_HOME/profiles.local.env"; }
+    ;;
+  doctor)
+    fail=0
+    command -v git >/dev/null || { echo '✗ git'; fail=1; }
+    command -v cmake >/dev/null || { echo '✗ cmake'; fail=1; }
+    command -v glslc >/dev/null || { echo '✗ glslc (Vulkan shader compiler)'; fail=1; }
+    if command -v vulkaninfo >/dev/null; then vulkaninfo --summary 2>/dev/null | sed -n '1,28p'; else echo '⚠ vulkaninfo not installed'; fi
+    for b in atomic upstream; do [[ -x "$ENGINE_HOME/current/$b/bin/llama-server" ]] && echo "✓ $b" || echo "○ $b not promoted"; done
+    exit "$fail"
+    ;;
+  help|-h|--help) echo 'Usage: cloud9-engine {status|doctor|build|gate|server}' ;;
+  *) echo "Unknown command: $cmd" >&2; exit 2 ;;
+esac

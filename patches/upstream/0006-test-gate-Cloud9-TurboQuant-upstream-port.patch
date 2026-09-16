@@ -1,0 +1,38 @@
+From ad77e6d216a1be1d48b3706a9dbb8d5d47d089c1 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine <cloud9-engine@users.noreply.github.com>
+Date: Wed, 16 Sep 2026 09:57:23 +0200
+Subject: [PATCH 6/7] test: gate Cloud9 TurboQuant upstream port
+
+---
+ cloud9/tests/test-cloud9-turboquant-port.py | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 cloud9/tests/test-cloud9-turboquant-port.py
+
+diff --git a/cloud9/tests/test-cloud9-turboquant-port.py b/cloud9/tests/test-cloud9-turboquant-port.py
+new file mode 100644
+index 000000000..6b83c4cc7
+--- /dev/null
++++ b/cloud9/tests/test-cloud9-turboquant-port.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++from pathlib import Path
++
++root = Path(__file__).resolve().parents[2]
++checks = {
++    "ggml/include/ggml.h": ["GGML_TYPE_TURBO3_0", "GGML_TYPE_TURBO4_0", "GGML_TYPE_TURBO2_0"],
++    "ggml/src/ggml-vulkan/vulkan-shaders/types.glsl": ["block_turbo3_0", "block_turbo4_0"],
++    "ggml/src/ggml-vulkan/vulkan-shaders/flash_attn_dequant.glsl": ["GGML_TYPE_TURBO3_0", "GGML_TYPE_TURBO4_0"],
++    "tools/llama-bench/llama-bench.cpp": ["turbo3", "turbo4"],
++}
++missing = []
++for rel, needles in checks.items():
++    text = (root / rel).read_text(errors="replace")
++    for needle in needles:
++        if needle not in text:
++            missing.append(f"{rel}: {needle}")
++if missing:
++    raise SystemExit("Missing Cloud9 TurboQuant port:\n" + "\n".join(missing))
++print("Cloud9 TurboQuant port markers present")
+-- 
+2.53.0
+
