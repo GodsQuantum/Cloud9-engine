@@ -3,11 +3,13 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
-mkdir -p "$T/home/state" "$T/upstream/bin" "$T/fakebin"
+mkdir -p "$T/home/state" "$T/home/current" "$T/upstream/bin" "$T/fakebin" "$T/stale"
 : > "$T/model.gguf"
 cat > "$T/home/candidates.env" <<EOC
 UPSTREAM=$T/upstream
 EOC
+echo '{"median_decode_tps":99.0}' > "$T/home/state/atomic-mtp.json"
+ln -s "$T/stale" "$T/home/current/atomic"
 cat > "$T/upstream/bin/llama-server" <<'EOC'
 #!/usr/bin/env bash
 sleep 30
@@ -35,4 +37,6 @@ grep -qx 'CLOUD9_ENGINE_GENERAL_BACKEND=upstream' "$T/home/profiles.local.env"
 grep -qx 'CLOUD9_ENGINE_MTP_BACKEND=upstream' "$T/home/profiles.local.env"
 [[ "$(readlink "$T/home/current/upstream")" == "$T/upstream" ]]
 [[ ! -e "$T/home/current/atomic" ]]
+[[ ! -e "$T/home/state/atomic-mtp.json" ]]
+! grep -q '^atomic:' "$T/out"
 echo 'hardware-gate single-backend test: PASS'
