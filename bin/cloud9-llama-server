@@ -6,10 +6,11 @@ for cfg in /etc/cloud9-engine/config.env "$ENGINE_HOME/config.env" "$ENGINE_HOME
   [[ -r "$cfg" ]] && source "$cfg"
 done
 requested=${CLOUD9_ENGINE_BACKEND:-auto}
+original_args=("$@")
 args=" $* "
 if [[ "$requested" == auto ]]; then
   if [[ "$args" == *" --spec-type draft-mtp "* || "$args" == *" --spec-type nextn "* || "$args" == *" --mtp-head "* ]]; then
-    requested=${CLOUD9_ENGINE_MTP_BACKEND:-atomic}
+    requested=${CLOUD9_ENGINE_MTP_BACKEND:-upstream}
   else
     requested=${CLOUD9_ENGINE_GENERAL_BACKEND:-upstream}
   fi
@@ -19,7 +20,53 @@ bin="$ENGINE_HOME/current/$requested/bin/llama-server"
 other=upstream; [[ "$requested" == upstream ]] && other=atomic
 if [[ ! -x "$bin" && -x "$ENGINE_HOME/current/$other/bin/llama-server" ]]; then
   echo "Cloud9 Engine: $requested unavailable, falling back to $other" >&2
+  requested=$other
   bin="$ENGINE_HOME/current/$other/bin/llama-server"
 fi
 [[ -x "$bin" ]] || { echo "Cloud9 Engine: no promoted llama-server. Run: cloud9-engine build" >&2; exit 127; }
-exec "$bin" "$@"
+
+has_opt() {
+  local needle arg
+  for needle in "$@"; do
+    for arg in "${original_args[@]}"; do
+      [[ "$arg" == "$needle" || "$arg" == "$needle="* ]] && return 0
+    done
+  done
+  return 1
+}
+
+extra=()
+profile=${CLOUD9_ENGINE_RDNA_PROFILE:-balanced}
+tune=${CLOUD9_ENGINE_RDNA_TUNING:-auto}
+is_radv=0
+if [[ "$requested" == upstream && "$tune" != 0 && "$tune" != off ]]; then
+  if [[ "$tune" == force ]]; then
+    is_radv=1
+  elif command -v vulkaninfo >/dev/null 2>&1 && vulkaninfo --summary 2>/dev/null | grep -Eqi 'RADV|AMD Radeon'; then
+    is_radv=1
+  fi
+fi
+if (( is_radv )); then
+  case ",${RADV_PERFTEST:-}," in *,nogttspill,*) ;; *) export RADV_PERFTEST="${RADV_PERFTEST:+$RADV_PERFTEST,}nogttspill" ;; esac
+  has_opt -t --threads || extra+=( -t 8 )
+  has_opt --poll || extra+=( --poll 100 )
+  has_opt --poll-batch || extra+=( --poll-batch 0 )
+  has_opt -lzm --lazy-mode || extra+=( -lzm off )
+  case "$profile" in
+    balanced|decode)
+      has_opt -b --batch-size || extra+=( -b 1024 )
+      has_opt -ub --ubatch-size || extra+=( -ub 1024 )
+      has_opt -fa --flash-attn || extra+=( -fa on )
+      ;;
+    prefill)
+      has_opt -b --batch-size || extra+=( -b 2048 )
+      has_opt -ub --ubatch-size || extra+=( -ub 1024 )
+      has_opt -fa --flash-attn || extra+=( -fa off )
+      has_opt --no-host || extra+=( --no-host 1 )
+      ;;
+    off) ;;
+    *) echo "Cloud9 Engine: invalid RDNA profile '$profile'" >&2; exit 2 ;;
+  esac
+fi
+[[ ${CLOUD9_ENGINE_VERBOSE:-0} == 1 ]] && echo "Cloud9 Engine: backend=$requested profile=$profile extra=${extra[*]:-none}" >&2
+exec "$bin" "${extra[@]}" "$@"
