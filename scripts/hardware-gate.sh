@@ -23,6 +23,9 @@ done
 (( ! WANT_ATOMIC )) || [[ -n "${ATOMIC:-}" ]] || { echo "Atomic selected but ATOMIC candidate is missing." >&2; exit 2; }
 (( ! WANT_UPSTREAM )) || [[ -n "${UPSTREAM:-}" ]] || { echo "Upstream selected but UPSTREAM candidate is missing." >&2; exit 2; }
 
+(( WANT_ATOMIC )) || rm -f "$ENGINE_HOME/current/atomic" "$ENGINE_HOME/state/atomic-mtp.json" "$ENGINE_HOME/state/atomic-mtp.json.tmp"
+(( WANT_UPSTREAM )) || rm -f "$ENGINE_HOME/current/upstream" "$ENGINE_HOME/state/upstream-mtp.json" "$ENGINE_HOME/state/upstream-mtp.json.tmp"
+
 exec 9>"$ENGINE_HOME/state/hardware-gate.lock"
 flock -n 9 || { echo 'Hardware gate already running; refusing concurrent benchmark.' >&2; exit 4; }
 
@@ -110,5 +113,6 @@ CLOUD9_ENGINE_GENERAL_BACKEND=$general
 CLOUD9_ENGINE_MTP_BACKEND=$mtp
 EOF2
 echo "Promoted. General=$general, MTP=$mtp"
-for b in atomic upstream; do [[ -f "$ENGINE_HOME/state/$b-mtp.json" ]] && echo "$b: $(cat "$ENGINE_HOME/state/$b-mtp.json")"; done
+(( AT_OK )) && echo "atomic: $(cat "$ENGINE_HOME/state/atomic-mtp.json")"
+(( UP_OK )) && echo "upstream: $(cat "$ENGINE_HOME/state/upstream-mtp.json")"
 exit 0
