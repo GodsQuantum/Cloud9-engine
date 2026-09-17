@@ -26,8 +26,12 @@ run_mtp(){
   kill "$pid" 2>/dev/null || true; wait "$pid" 2>/dev/null || true; trap - RETURN
 }
 AT_OK=0; UP_OK=0
-run_mtp atomic "$ATOMIC" 19881 atomic && AT_OK=1 || true
-run_mtp upstream "$UPSTREAM" 19882 upstream && UP_OK=1 || true
+if run_mtp atomic "$ATOMIC" 19881 atomic; then
+    AT_OK=1
+fi
+if run_mtp upstream "$UPSTREAM" 19882 upstream; then
+    UP_OK=1
+fi
 (( AT_OK || UP_OK )) || { echo 'Hardware gate failed for both candidates.' >&2; exit 3; }
 ln -sfn "$ATOMIC" "$ENGINE_HOME/current/atomic"
 ln -sfn "$UPSTREAM" "$ENGINE_HOME/current/upstream"
