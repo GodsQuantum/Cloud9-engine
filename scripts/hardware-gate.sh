@@ -12,13 +12,17 @@ PROMPT=${CLOUD9_ENGINE_GATE_PROMPT:-$ROOT/bench/prompt.txt}
 run_mtp(){
   local name=$1 dir=$2 port=$3 mode=${4:-}
   local log="$ENGINE_HOME/state/${name}-gate.log" out="$ENGINE_HOME/state/${name}-mtp.json"
-  local -a extra_args=()
-  [[ "$mode" == upstream ]] && extra_args+=(--lazy-mode off)
-  "$dir/bin/llama-server" -m "$MODEL" -ngl 99 -c 8192 -np 1 -b 2048 -ub 512 -t "${CLOUD9_ENGINE_THREADS:-8}" -tb "${CLOUD9_ENGINE_THREADS:-8}" -fa on -ctk f16 -ctv f16 --fit off --jinja --reasoning off --reasoning-budget 0 --spec-type draft-mtp --spec-draft-n-max 2 --spec-draft-p-min 0 --no-spec-draft-backend-sampling --no-host -lm mmap "${extra_args[@]}" --host 127.0.0.1 --port "$port" --no-warmup >"$log" 2>&1 &
+  local -a extra_args=(--poll 100 --poll-batch 0)
+  local -a env_args=()
+  if [[ "$mode" == upstream ]]; then
+    extra_args+=(--lazy-mode off)
+    env_args+=(env RADV_PERFTEST="${RADV_PERFTEST:+$RADV_PERFTEST,}nogttspill")
+  fi
+  "${env_args[@]}" "$dir/bin/llama-server" -m "$MODEL" -ngl 99 -c 8192 -np 1 -b 1024 -ub 1024 -t "${CLOUD9_ENGINE_THREADS:-8}" -tb "${CLOUD9_ENGINE_THREADS:-8}" -fa on -ctk f16 -ctv f16 --fit off --jinja --reasoning off --reasoning-budget 0 --spec-type draft-mtp --spec-draft-n-max 2 --spec-draft-p-min 0 --no-spec-draft-backend-sampling -lm mmap "${extra_args[@]}" --host 127.0.0.1 --port "$port" --no-warmup >"$log" 2>&1 &
   local pid=$!; trap 'kill $pid 2>/dev/null || true' RETURN
   for _ in $(seq 1 120); do curl -sf "http://127.0.0.1:$port/health" | grep -q '"status":"ok"' && break; kill -0 "$pid" 2>/dev/null || return 1; sleep 1; done
   curl -sf "http://127.0.0.1:$port/health" | grep -q '"status":"ok"' || return 1
-  python3 "$ROOT/scripts/bench_client.py" --port "$port" --prompt "$PROMPT" --runs "${CLOUD9_ENGINE_GATE_RUNS:-3}" --tokens "${CLOUD9_ENGINE_GATE_TOKENS:-128}" > "$out"
+  python3 "$ROOT/scripts/bench_client.py" --port "$port" --prompt "$PROMPT" --runs "${CLOUD9_ENGINE_GATE_RUNS:-3}" --tokens "${CLOUD9_ENGINE_GATE_TOKENS:-256}" > "$out"
   kill "$pid" 2>/dev/null || true; wait "$pid" 2>/dev/null || true; trap - RETURN
 }
 AT_OK=0; UP_OK=0

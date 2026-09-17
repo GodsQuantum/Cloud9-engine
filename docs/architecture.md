@@ -17,11 +17,11 @@ Atomic TurboQuant ───── build candidate ── hardware gate ── cu
 
 ## Upstream + Cloud9 profile
 
-The upstream profile starts from the exact commit recorded in `sources.lock` and applies the mail patches in `patches/upstream/`. The current patchset carries the TurboQuant KV types and the Vulkan plumbing still missing from the tested upstream revision: CPU/WHT contract, Vulkan `SET_ROWS`, FlashAttention decode, and llama-bench cache-type support.
+The upstream profile starts from the exact commit recorded in `sources.lock` and applies the mail patches in `patches/upstream/`. The current patchset carries TurboQuant KV support plus RDNA-specific Vulkan work still missing from the tested upstream revision: CPU/WHT contract, Vulkan `SET_ROWS`, FlashAttention decode, llama-bench cache-type support, and a Phoenix/Hawk Point RDNA3 UMA high-aspect `MUL_MAT_ID` tile for sparse MoE prompt processing.
 
 ## Atomic profile
 
-Atomic is built from its locked source without pretending those features are Cloud9 inventions. It currently provides mature TurboQuant/speculative paths that can outperform the newer upstream path on some longer MTP workloads.
+Atomic is built from its locked source without pretending those features are Cloud9 inventions. It remains a donor/fallback and is benchmarked at every hardware gate; the current reference 780M profile selects upstream+Cloud9 after tuning, but another GPU or future revision may select Atomic.
 
 ## Routing
 

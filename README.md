@@ -14,9 +14,11 @@ Cloud9 Engine is a small control layer for people running local LLMs on AMD RDNA
 
 ## ☁️ Why Cloud9 Engine?
 
-- **Two good engines, one stable entry point** — current upstream for fresh model/Vulkan support, Atomic for mature TurboQuant and speculative paths.
+- **RDNA-tuned Vulkan, not just another wrapper** — a Phoenix/Hawk Point high-aspect `MUL_MAT_ID` kernel accelerates sparse MoE prompt processing on validated RDNA3 UMA hardware.
+- **Hardware autotuning** — Cloud9 selects measured RADV batch/ubatch, polling, FlashAttention and memory-placement defaults while preserving any flags you explicitly pass.
+- **TurboQuant on current upstream** — TQ2/TQ3/TQ4 KV support, Vulkan `SET_ROWS`, FlashAttention decode and benchmark plumbing stay available on a much newer llama.cpp Vulkan tree.
+- **Two engines, one stable entry point** — current upstream+Cloud9 is the default; Atomic remains a tracked fallback/donor and can still win on different hardware or future revisions.
 - **RDNA-first validation** — the reference machine is Radeon 780M / RADV (`gfx1103` class hardware), not CUDA.
-- **TurboQuant on current upstream** — Cloud9 patches add TQ2/TQ3/TQ4 KV support, Vulkan `SET_ROWS`, FlashAttention decode and benchmark plumbing where upstream still lacks it.
 - **Hardware-gated promotion** — updates are candidates until they load a real model and survive an on-device benchmark.
 - **Safe automatic tracking** — GitHub watches both source trees; a source update becomes a PR, not an invisible production `git pull`.
 - **Drop-in server command** — `cloud9-llama-server` routes to the promoted backend and still accepts normal llama-server arguments.
@@ -39,26 +41,29 @@ You need a C/C++ toolchain, CMake, Git, Vulkan development files, `glslc`, and p
 
 ## 🧠 How routing works
 
-`CLOUD9_ENGINE_BACKEND=auto` is the default. The promoted **upstream+Cloud9** build handles normal requests so you get current llama.cpp model and Vulkan support. MTP/NextN-style speculative requests prefer the promoted **Atomic** build when the local hardware gate says it is faster. Either path can be forced explicitly.
+`CLOUD9_ENGINE_BACKEND=auto` is the default. A local hardware gate benchmarks both candidates with a production-like MTP workload and writes the measured winner into a local profile. On the reference Radeon 780M, the current **upstream + Cloud9** backend wins both general and MTP routing after RDNA tuning. Atomic remains available as an explicit fallback.
 
 ```bash
 CLOUD9_ENGINE_BACKEND=upstream cloud9-llama-server ...
 CLOUD9_ENGINE_BACKEND=atomic   cloud9-llama-server ...
+CLOUD9_ENGINE_RDNA_PROFILE=prefill cloud9-llama-server ...
 ```
 
-The wrapper never downloads a model and never uploads prompts or model data.
+The default `balanced` RDNA profile is only injected on AMD/RADV and only for options you did not already specify. Set `CLOUD9_ENGINE_RDNA_TUNING=off` to pass through untouched llama-server defaults. The wrapper never downloads a model and never uploads prompts or model data.
 
-## 📊 Why not just use one fork?
+## 📊 Measured RDNA performance
 
-On the reference Radeon 780M, there was no honest universal winner on 16 Sep 2026:
+Reference platform: Ryzen 7 8845HS / Radeon 780M (RADV), Qwen3.6-35B-A3B Pym Q2 + MTP2, September 16 2026. These are **hardware-specific measurements, not universal claims**.
 
-| Same host / same model | Atomic 1.6.0 | older Cloud9 champion | current upstream + Cloud9 |
-|---|---:|---:|---:|
-| Raw prefill, 512-token bench | ~301 t/s | **~342 t/s** | ~335 t/s |
-| Raw generation | ~21.67 t/s | **~21.91 t/s** | ~21.56 t/s |
-| MTP, 3×256 median decode | **~33.26 t/s** | ~31.29 t/s | ~31.90 t/s |
+| Test | Comparison | Result |
+|---|---|---:|
+| MTP 3×256 median decode | Atomic 1.6.0 tuned → Cloud9 tuned | **32.99 → 34.40 t/s (+4.3%)** |
+| MoE pp512, reverse-order 5-run A/B | same upstream build, kernel off → on | **342.4 → 362.5 t/s (+5.9%)** |
+| MoE pp2048, reverse-order 5-run A/B | same upstream build, kernel off → on | **378.8 → 391.6 t/s (+3.4%)** |
+| MoE pp512, production chat profile | same upstream build, kernel off → on | **337.1 → 397.5 t/s (+17.9%)** |
+| Decode-only 7-run reverse A/B | kernel off → on | **22.50 → 22.63 t/s (no regression)** |
 
-Atomic remained better for this longer MTP workload, while newer upstream code delivered substantially stronger Vulkan prefill. Cloud9 Engine therefore keeps **both advantages** instead of hiding that trade-off. Full protocol and limitations: [Benchmarks](docs/benchmarks.md).
+The Vulkan `MUL_MAT_ID` gate also passes **921/921** backend correctness cases on the reference 780M. See [Benchmarks](docs/benchmarks.md) for protocol, variance and limitations.
 
 ## 🔄 Updates without roulette
 
