@@ -9,6 +9,19 @@ MODEL=${1:-${CLOUD9_ENGINE_GATE_MODEL:-}}
 source "$ENGINE_HOME/candidates.env"
 mkdir -p "$ENGINE_HOME/state" "$ENGINE_HOME/current"
 PROMPT=${CLOUD9_ENGINE_GATE_PROMPT:-$ROOT/bench/prompt.txt}
+GATE_BACKENDS=${CLOUD9_ENGINE_GATE_BACKENDS:-"atomic upstream"}
+WANT_ATOMIC=0
+WANT_UPSTREAM=0
+for backend in $GATE_BACKENDS; do
+  case "$backend" in
+    atomic) WANT_ATOMIC=1 ;;
+    upstream) WANT_UPSTREAM=1 ;;
+    *) echo "Unknown hardware-gate backend: $backend" >&2; exit 2 ;;
+  esac
+done
+(( WANT_ATOMIC || WANT_UPSTREAM )) || { echo "No hardware-gate backend selected." >&2; exit 2; }
+(( ! WANT_ATOMIC )) || [[ -n "${ATOMIC:-}" ]] || { echo "Atomic selected but ATOMIC candidate is missing." >&2; exit 2; }
+(( ! WANT_UPSTREAM )) || [[ -n "${UPSTREAM:-}" ]] || { echo "Upstream selected but UPSTREAM candidate is missing." >&2; exit 2; }
 
 exec 9>"$ENGINE_HOME/state/hardware-gate.lock"
 flock -n 9 || { echo 'Hardware gate already running; refusing concurrent benchmark.' >&2; exit 4; }
@@ -73,9 +86,13 @@ run_mtp(){
 }
 
 AT_OK=0; UP_OK=0
-if run_mtp atomic "$ATOMIC" 19881 atomic; then AT_OK=1; else rc=$?; (( rc == 125 )) && exit 125; fi
-if run_mtp upstream "$UPSTREAM" 19882 upstream; then UP_OK=1; else rc=$?; (( rc == 125 )) && exit 125; fi
-(( AT_OK || UP_OK )) || { echo 'Hardware gate failed for both candidates.' >&2; exit 3; }
+if (( WANT_ATOMIC )); then
+  if run_mtp atomic "$ATOMIC" 19881 atomic; then AT_OK=1; else rc=$?; (( rc == 125 )) && exit 125; fi
+fi
+if (( WANT_UPSTREAM )); then
+  if run_mtp upstream "$UPSTREAM" 19882 upstream; then UP_OK=1; else rc=$?; (( rc == 125 )) && exit 125; fi
+fi
+(( AT_OK || UP_OK )) || { echo 'Hardware gate failed for all selected candidates.' >&2; exit 3; }
 (( AT_OK )) && ln -sfn "$ATOMIC" "$ENGINE_HOME/current/atomic"
 (( UP_OK )) && ln -sfn "$UPSTREAM" "$ENGINE_HOME/current/upstream"
 general=atomic
