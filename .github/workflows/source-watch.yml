@@ -7,28 +7,61 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
+  actions: write
 
 jobs:
   sync:
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Update source locks
         run: python3 scripts/update-lock.py
-      - name: Open or refresh source-sync PR
+      - name: Validate and promote source locks
         env:
           GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
+          set -euo pipefail
           git diff --quiet sources.lock && exit 0
+
           branch=bot/source-sync
           git config user.name 'cloud9-engine-bot'
           git config user.email 'cloud9-engine-bot@users.noreply.github.com'
-          git checkout -B "$branch"
+          git switch -C "$branch"
           git add sources.lock
           git commit -m 'chore: sync upstream engine sources'
           git push --force-with-lease origin "$branch"
-          gh pr view "$branch" >/dev/null 2>&1 || gh pr create --base main --head "$branch" --title 'chore: sync engine sources' --body 'Automated source-lock refresh. CI must prove the Cloud9 patchset still applies and compiles before this can land.'
-          gh pr merge "$branch" --auto --squash || true
+          candidate_sha="$(git rev-parse HEAD)"
+
+          # GITHUB_TOKEN-created PRs require manual CI approval in current GitHub.
+          # workflow_dispatch is explicitly allowed to start a child validation run.
+          gh workflow run ci.yml --ref "$branch"
+
+          run_id=""
+          for _ in $(seq 1 30); do
+            run_id="$(gh run list --workflow ci.yml --branch "$branch" --event workflow_dispatch --limit 20 --json databaseId,headSha --jq ".[] | select(.headSha == \"$candidate_sha\") | .databaseId" | head -n1)"
+            [ -n "$run_id" ] && break
+            sleep 2
+          done
+          if [ -z "$run_id" ]; then
+            echo "::error::CI dispatch was not registered for $candidate_sha"
+            exit 1
+          fi
+
+          gh run watch "$run_id" --exit-status
+
+          # Publish only the exact commit that CI validated, and never overwrite
+          # unrelated main changes that may have landed while validation ran.
+          git fetch origin main
+          main_sha="$(git rev-parse origin/main)"
+          base_sha="$(git merge-base "$candidate_sha" "$main_sha")"
+          if [ "$base_sha" != "$main_sha" ]; then
+            echo "::error::main changed while candidate CI was running; refusing stale promotion"
+            exit 1
+          fi
+
+          git push origin "$candidate_sha:refs/heads/main"
+          git push origin --delete "$branch" || true
