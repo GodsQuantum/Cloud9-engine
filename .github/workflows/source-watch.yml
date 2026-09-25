@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   actions: write
+  issues: write
 
 jobs:
   sync:
@@ -27,6 +28,17 @@ jobs:
           set -euo pipefail
           git diff --quiet sources.lock && exit 0
 
+          upstream_sha="$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["commit"])')"
+          patch_tree="$(git rev-parse HEAD:patches/upstream)"
+          marker="<!-- source-watch-block:${upstream_sha}:${patch_tree} -->"
+
+          blocked_issue="$(gh issue list --state open --limit 100 --json number,body --jq ".[] | select((.body // \"\") | contains(\"$marker\")) | .number" | head -n1)"
+          if [ -n "$blocked_issue" ]; then
+            echo "Upstream $upstream_sha is already tracked as incompatible in issue #$blocked_issue."
+            echo "The same upstream + patchset combination will not be re-tested until either changes."
+            exit 0
+          fi
+
           branch=bot/source-sync
           git config user.name 'cloud9-engine-bot'
           git config user.email 'cloud9-engine-bot@users.noreply.github.com'
@@ -36,10 +48,7 @@ jobs:
           git push --force-with-lease origin "$branch"
           candidate_sha="$(git rev-parse HEAD)"
 
-          # GITHUB_TOKEN-created PRs require manual CI approval in current GitHub.
-          # workflow_dispatch is explicitly allowed to start a child validation run.
           gh workflow run ci.yml --ref "$branch"
-
           run_id=""
           for _ in $(seq 1 30); do
             run_id="$(gh run list --workflow ci.yml --branch "$branch" --event workflow_dispatch --limit 20 --json databaseId,headSha --jq ".[] | select(.headSha == \"$candidate_sha\") | .databaseId" | head -n1)"
@@ -51,10 +60,30 @@ jobs:
             exit 1
           fi
 
-          gh run watch "$run_id" --exit-status
+          if ! gh run watch "$run_id" --exit-status; then
+            run_url="https://github.com/$GITHUB_REPOSITORY/actions/runs/$run_id"
+            short_upstream="${upstream_sha:0:12}"
+            title="Source watch blocked: upstream $short_upstream"
+            body="$(printf '%s\n' \
+              'Automated source refresh was rejected because the Cloud9 patchset no longer validates on this upstream.' \
+              '' \
+              "Upstream commit: $upstream_sha" \
+              "Patch tree: $patch_tree" \
+              "Failed CI: $run_url" \
+              'Current main sources.lock was intentionally left unchanged.' \
+              '' \
+              "$marker")"
 
-          # Publish only the exact commit that CI validated, and never overwrite
-          # unrelated main changes that may have landed while validation ran.
+            issue_number="$(gh issue list --state open --limit 100 --json number,title --jq ".[] | select(.title == \"$title\") | .number" | head -n1)"
+            if [ -n "$issue_number" ]; then
+              gh issue edit "$issue_number" --body "$body"
+            else
+              gh issue create --title "$title" --body "$body"
+            fi
+            git push origin --delete "$branch" || true
+            exit 0
+          fi
+
           git fetch origin main
           main_sha="$(git rev-parse origin/main)"
           base_sha="$(git merge-base "$candidate_sha" "$main_sha")"
@@ -65,3 +94,8 @@ jobs:
 
           git push origin "$candidate_sha:refs/heads/main"
           git push origin --delete "$branch" || true
+
+          while IFS= read -r issue_number; do
+            [ -n "$issue_number" ] || continue
+            gh issue close "$issue_number" --comment "Resolved by validated source refresh $candidate_sha."
+          done < <(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title | startswith("Source watch blocked: upstream ")) | .number')
