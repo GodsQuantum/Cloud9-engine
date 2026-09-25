@@ -22,7 +22,7 @@ AT_SHORT=${AT_SHA:0:12}; AT_OUT="$RELEASES/atomic-$AT_SHORT"
 clone_or_fetch "$UP_REPO" "$SRC/upstream"
 git -C "$SRC/upstream" am --abort >/dev/null 2>&1 || true
 git -C "$SRC/upstream" reset --hard "$UP_SHA"; git -C "$SRC/upstream" clean -fdx
-for patch in "$ROOT"/patches/upstream/*.patch; do git -C "$SRC/upstream" am "$patch"; done
+"$ROOT/scripts/apply-upstream-patches.sh" "$SRC/upstream" "$ROOT/patches/upstream"
 UP_SHORT=${UP_SHA:0:12}; UP_OUT="$RELEASES/upstream-$UP_SHORT-cloud9"
 [[ -x "$UP_OUT/bin/llama-server" ]] || build_one "$SRC/upstream" "$UP_OUT"
 ln -sfn "$AT_OUT" "$CAND/atomic"; ln -sfn "$UP_OUT" "$CAND/upstream"

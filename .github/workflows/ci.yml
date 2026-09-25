@@ -26,6 +26,6 @@ jobs:
           git -C /tmp/llama-upstream checkout "$UP_SHA"
           git -C /tmp/llama-upstream config user.name 'Cloud9 CI'
           git -C /tmp/llama-upstream config user.email 'cloud9-ci@users.noreply.github.com'
-          for p in "$GITHUB_WORKSPACE"/patches/upstream/*.patch; do git -C /tmp/llama-upstream am "$p"; done
+          "$GITHUB_WORKSPACE/scripts/apply-upstream-patches.sh" /tmp/llama-upstream "$GITHUB_WORKSPACE/patches/upstream"
           cmake -S /tmp/llama-upstream -B /tmp/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
           cmake --build /tmp/build --target llama-server llama-bench
