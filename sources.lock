@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "tested_on": "2026-09-25",
+  "tested_on": "2026-09-26",
   "upstream": {
     "repository": "https://github.com/ggml-org/llama.cpp.git",
-    "commit": "fcc891545b0f06de346d8f67d1e6c61f9bf0e777"
+    "commit": "81bc6b83f827df746eb129235488d325c49cae52"
   },
   "atomic": {
     "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
