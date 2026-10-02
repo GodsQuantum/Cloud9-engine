@@ -26,6 +26,21 @@ jobs:
           git -C /tmp/llama-upstream checkout "$UP_SHA"
           git -C /tmp/llama-upstream config user.name 'Cloud9 CI'
           git -C /tmp/llama-upstream config user.email 'cloud9-ci@users.noreply.github.com'
-          "$GITHUB_WORKSPACE/scripts/apply-upstream-patches.sh" /tmp/llama-upstream "$GITHUB_WORKSPACE/patches/upstream"
+          PATCHSET=$(python3 -c 'import json; print(json.load(open("sources.lock"))["patchset"])')
+          "$GITHUB_WORKSPACE/scripts/apply-upstream-patches.sh" /tmp/llama-upstream "$GITHUB_WORKSPACE/$PATCHSET"
           cmake -S /tmp/llama-upstream -B /tmp/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
           cmake --build /tmp/build --target llama-server llama-bench
+      - name: Build locked Atomic and Prism lab backends
+        run: |
+          set -euo pipefail
+          for key in atomic prism; do
+            repo="$(python3 -c "import json; print(json.load(open('sources.lock'))['$key']['repository'])")"
+            sha="$(python3 -c "import json; print(json.load(open('sources.lock'))['$key']['commit'])")"
+            src="/tmp/llama-$key"
+            build="/tmp/build-$key"
+            git clone --filter=blob:none "$repo" "$src"
+            git -C "$src" checkout "$sha"
+            cmake -S "$src" -B "$build" -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
+            cmake --build "$build" --target llama-server
+          done

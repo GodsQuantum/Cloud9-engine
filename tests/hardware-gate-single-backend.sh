@@ -26,6 +26,11 @@ if [[ "${1:-}" == *bench_client.py ]]; then
 fi
 exec /usr/bin/python3 "$@"
 EOC
+cat > "$T/fakebin/pgrep" <<'EOC'
+#!/usr/bin/env bash
+if [[ "$*" == *"llama-server"* ]]; then exit 1; fi
+exec /usr/bin/pgrep "$@"
+EOC
 chmod +x "$T/upstream/bin/llama-server" "$T/fakebin/"*
 if ! PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" CLOUD9_ENGINE_RENDER_DEVICE=/nonexistent \
   CLOUD9_ENGINE_GATE_BACKENDS=upstream timeout 8 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >"$T/out" 2>"$T/err"; then
@@ -36,7 +41,8 @@ fi
 grep -qx 'CLOUD9_ENGINE_GENERAL_BACKEND=upstream' "$T/home/profiles.local.env"
 grep -qx 'CLOUD9_ENGINE_MTP_BACKEND=upstream' "$T/home/profiles.local.env"
 [[ "$(readlink "$T/home/current/upstream")" == "$T/upstream" ]]
-[[ ! -e "$T/home/current/atomic" ]]
-[[ ! -e "$T/home/state/atomic-mtp.json" ]]
+# An upstream-only gate must not mutate an unrelated promoted/lab Atomic backend or its prior state.
+[[ "$(readlink "$T/home/current/atomic")" == "$T/stale" ]]
+[[ -e "$T/home/state/atomic-mtp.json" ]]
 ! grep -q '^atomic:' "$T/out"
 echo 'hardware-gate single-backend test: PASS'

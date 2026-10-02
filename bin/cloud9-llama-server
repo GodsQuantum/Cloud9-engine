@@ -8,22 +8,88 @@ done
 requested=${CLOUD9_ENGINE_BACKEND:-auto}
 original_args=("$@")
 args=" $* "
-if [[ "$requested" == auto ]]; then
-  if [[ "$args" == *" --spec-type draft-mtp "* || "$args" == *" --spec-type nextn "* || "$args" == *" --mtp-head "* ]]; then
-    requested=${CLOUD9_ENGINE_MTP_BACKEND:-upstream}
-  else
-    requested=${CLOUD9_ENGINE_GENERAL_BACKEND:-upstream}
+model_path=""
+for ((i=0; i<${#original_args[@]}; i++)); do
+  case "${original_args[$i]}" in
+    -m|--model) (( i + 1 < ${#original_args[@]} )) && model_path=${original_args[$((i+1))]} ;;
+    --model=*) model_path=${original_args[$i]#--model=} ;;
+  esac
+done
+model_lc=${model_path,,}
+if [[ -n "$model_path" && -f "$model_path" ]]; then
+  max_model_bytes=${CLOUD9_ENGINE_MAX_MODEL_BYTES:-42949672960}
+  model_bytes=$(stat -c %s -- "$model_path")
+  case ${CLOUD9_ENGINE_ALLOW_OVERSIZE:-0} in 1|true|TRUE|yes|YES) allow_oversize=1 ;; *) allow_oversize=0 ;; esac
+  if (( model_bytes > max_model_bytes && ! allow_oversize )); then
+    echo "Cloud9 Engine: refusing oversized model '$model_path' ($model_bytes bytes > $max_model_bytes safety limit). Set CLOUD9_ENGINE_ALLOW_OVERSIZE=1 only for an explicit lab run." >&2
+    exit 4
   fi
 fi
-case "$requested" in atomic|upstream) ;; *) echo "Cloud9 Engine: invalid backend '$requested'" >&2; exit 2;; esac
-bin="$ENGINE_HOME/current/$requested/bin/llama-server"
-other=upstream; [[ "$requested" == upstream ]] && other=atomic
-if [[ ! -x "$bin" && -x "$ENGINE_HOME/current/$other/bin/llama-server" ]]; then
-  echo "Cloud9 Engine: $requested unavailable, falling back to $other" >&2
-  requested=$other
-  bin="$ENGINE_HOME/current/$other/bin/llama-server"
+needs_prism=0
+route_latest=0
+route_next=0
+route_pym=0
+route_fast=0
+if [[ "$model_lc" == *bonsai* || "$model_lc" == *ternary* || "$model_lc" == *ptq1_0* || "$model_lc" == *pq2_0* ]]; then
+  needs_prism=1
+elif [[ "$model_lc" == *qwen3.8* || "$model_lc" == *qwen38* || "$model_lc" == *cloud9-qwen38* || "$model_lc" == *spark-x2.5* || "$model_lc" == *spark_x2.5* || "$model_lc" == *sparkx2.5* || "$model_lc" == *cloud9-spark* || "$model_lc" == *lfm2.5-2.6* || "$model_lc" == *lfm25-26* || "$model_lc" == *flash-next* || "$model_lc" == *flash_next* || "$model_lc" == *flashnext* || "$model_lc" == *cloud9-flash* || "$model_lc" == *qwen4* ]]; then
+  route_latest=1
+elif [[ "$model_lc" == *minicpm5* || "$model_lc" == *cloud9-minicpm* || "$model_lc" == *ling-3* || "$model_lc" == *ling3* || "$model_lc" == *cloud9-ling* || "$model_lc" == *lfm2.5-8b* || "$model_lc" == *lfm25-8b* || "$model_lc" == *qwen3.5* || "$model_lc" == *qwen35* ]]; then
+  route_next=1
+elif [[ "$model_lc" == *pym* || "$model_lc" == *cloud9-pym* ]]; then
+  route_pym=1
+elif [[ "$model_lc" == *qwen3.6* || "$model_lc" == *qwen36* || "$model_lc" == *cloud9-heretic* || "$model_lc" == *gemma-4* || "$model_lc" == *gemma4* || "$model_lc" == *cloud9-gemma* ]]; then
+  route_fast=1
+elif [[ -n "$model_path" ]]; then
+  route_latest=1
 fi
-[[ -x "$bin" ]] || { echo "Cloud9 Engine: no promoted llama-server. Run: cloud9-engine build" >&2; exit 127; }
+if [[ "$requested" == auto ]]; then
+  if (( needs_prism )); then
+    requested=prism
+  elif (( route_latest )); then
+    requested=upstream-latest
+  elif (( route_next )); then
+    requested=upstream-next
+  elif (( route_pym )); then
+    requested=upstream-pym
+  elif (( route_fast )); then
+    requested=upstream-fast
+  elif [[ "$args" == *" --spec-type draft-mtp "* || "$args" == *" --spec-type nextn "* || "$args" == *" --mtp-head "* ]]; then
+    requested=${CLOUD9_ENGINE_MTP_BACKEND:-upstream-fast}
+  else
+    requested=${CLOUD9_ENGINE_GENERAL_BACKEND:-upstream-fast}
+  fi
+fi
+case "$requested" in atomic|upstream|upstream-fast|upstream-next|upstream-latest|upstream-pym|prism) ;; *) echo "Cloud9 Engine: invalid backend '$requested'" >&2; exit 2;; esac
+bin="$ENGINE_HOME/current/$requested/bin/llama-server"
+if [[ ! -x "$bin" ]]; then
+  if (( needs_prism )); then
+    echo "Cloud9 Engine: Prism backend is required for ternary/Bonsai model '$model_path' but is not promoted." >&2
+    exit 127
+  fi
+  if (( route_latest )); then
+    echo "Cloud9 Engine: upstream-latest is required for recent model '$model_path' but is not available." >&2
+    exit 127
+  fi
+  if (( route_next )); then
+    echo "Cloud9 Engine: upstream-next is required for the benchmark-selected model family '$model_path' but is not available." >&2
+    exit 127
+  fi
+  if (( route_pym )); then
+    echo "Cloud9 Engine: upstream-pym is required for Pym '$model_path' but is not available." >&2
+    exit 127
+  fi
+  for other in upstream-fast upstream-next upstream-latest upstream prism; do
+    [[ "$other" == "$requested" ]] && continue
+    if [[ -x "$ENGINE_HOME/current/$other/bin/llama-server" ]]; then
+      echo "Cloud9 Engine: $requested unavailable, falling back to $other" >&2
+      requested=$other
+      bin="$ENGINE_HOME/current/$other/bin/llama-server"
+      break
+    fi
+  done
+fi
+[[ -x "$bin" ]] || { echo "Cloud9 Engine: no compatible promoted llama-server. Run: cloud9-engine build/gate" >&2; exit 127; }
 
 has_opt() {
   local needle arg
@@ -39,7 +105,7 @@ extra=()
 profile=${CLOUD9_ENGINE_RDNA_PROFILE:-balanced}
 tune=${CLOUD9_ENGINE_RDNA_TUNING:-auto}
 is_radv=0
-if [[ "$requested" == upstream && "$tune" != 0 && "$tune" != off ]]; then
+if [[ "$requested" =~ ^(upstream|upstream-fast|upstream-next|upstream-latest|upstream-pym|prism)$ && "$tune" != 0 && "$tune" != off ]]; then
   if [[ "$tune" == force ]]; then
     is_radv=1
   elif command -v vulkaninfo >/dev/null 2>&1 && vulkaninfo --summary 2>/dev/null | grep -Eqi 'RADV|AMD Radeon'; then
@@ -51,6 +117,8 @@ if (( is_radv )); then
   has_opt -t --threads || extra+=( -t 8 )
   has_opt --poll || extra+=( --poll 100 )
   has_opt --poll-batch || extra+=( --poll-batch 0 )
+  # On RADV/Vulkan, lazy-mode auto currently regresses Qwen4Exp/Flash-Next prefill heavily.
+  # Keep it off for all validated Cloud9 Radeon paths; revisit when upstream fixes the regression.
   has_opt -lzm --lazy-mode || extra+=( -lzm off )
   case "$profile" in
     balanced|decode)
@@ -62,7 +130,7 @@ if (( is_radv )); then
       has_opt -b --batch-size || extra+=( -b 2048 )
       has_opt -ub --ubatch-size || extra+=( -ub 1024 )
       has_opt -fa --flash-attn || extra+=( -fa off )
-      has_opt --no-host || extra+=( --no-host 1 )
+      has_opt --no-host || extra+=( --no-host )
       ;;
     off) ;;
     *) echo "Cloud9 Engine: invalid RDNA profile '$profile'" >&2; exit 2 ;;

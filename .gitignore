@@ -10,3 +10,5 @@ profiles.local.env
 
 __pycache__/
 *.py[cod]
+bench/results/
+bench/fixtures/
