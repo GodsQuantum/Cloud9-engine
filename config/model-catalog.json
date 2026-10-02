@@ -1,0 +1,176 @@
+{
+  "schema": 1,
+  "updated_at": "2026-10-02",
+  "defaults": {
+    "worker_idle_seconds": 30,
+    "gpu_lock_timeout_seconds": 120,
+    "max_model_bytes": 42949672960
+  },
+  "models": [
+    {
+      "id": "Cloud9-MiniCPM5-2B-DSpark",
+      "group": "small",
+      "uncensored": true,
+      "backend": "upstream-next",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2B-heretic-Q6_K.gguf",
+      "extra_args": [
+        "--model-draft",
+        "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2.6B-DSpark.gguf",
+        "--spec-type",
+        "draft-dspark",
+        "--spec-draft-n-max",
+        "7",
+        "--spec-draft-p-min",
+        "0.6",
+        "--spec-draft-ngl",
+        "99"
+      ],
+      "benchmark": {
+        "decode_tps": 47.73,
+        "autopublisher": 75,
+        "agentic": 100
+      }
+    },
+    {
+      "id": "Cloud9-Ling3-Tiny-Uncensored",
+      "group": "small",
+      "uncensored": true,
+      "backend": "upstream-next",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/ling3-tiny-uncensored/Ling-3.0-tiny-abliterated-APEX-I-Balanced.gguf",
+      "extra_args": [],
+      "benchmark": {
+        "decode_tps": 44.41,
+        "autopublisher": 85,
+        "agentic": 100
+      }
+    },
+    {
+      "id": "Cloud9-LFM2.5-2.6B-Uncensored",
+      "group": "small",
+      "uncensored": true,
+      "backend": "upstream-latest",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/lfm25-26b-uncensored/LFM2.5-2.6B-Uncensored-Q4_K_M.gguf",
+      "extra_args": [],
+      "benchmark": {
+        "decode_tps": 34.98,
+        "autopublisher": 75,
+        "agentic": 100
+      }
+    },
+    {
+      "id": "Cloud9-Qwen3.8-4B-Heretic",
+      "aliases": [
+        "Cloud9-Qwen3.8-4B-MTP",
+        "Cloud9-Qwen38-4B-Heretic"
+      ],
+      "group": "small",
+      "uncensored": true,
+      "backend": "upstream-latest",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38distill-qwen35-4b-mtp/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "extra_args": [
+        "--spec-type",
+        "draft-mtp",
+        "--spec-draft-n-max",
+        "2",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling"
+      ],
+      "benchmark": {
+        "decode_tps": 25.81,
+        "best_short_decode_tps": 28.35,
+        "long_prompt_prefill_tps": 398.89,
+        "long_prompt_decode_tps": 22.86,
+        "autopublisher": 95,
+        "agentic": 100
+      },
+      "notes": "Qwen3.5-4B target distilled from Qwen3.8, Heretic/uncensored, inline MTP preserved. Selected after bounded JSON AutoPublisher gate on 2026-10-02."
+    },
+    {
+      "id": "Cloud9-Pym-35B-A3B-MTP",
+      "group": "large",
+      "uncensored": false,
+      "backend": "upstream-pym",
+      "context": 8192,
+      "model": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "extra_args": [
+        "--spec-type",
+        "draft-mtp",
+        "--spec-draft-n-max",
+        "2",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling"
+      ],
+      "benchmark": {
+        "decode_tps": 30.87,
+        "historical_best_decode_tps": 34.4
+      }
+    },
+    {
+      "id": "Cloud9-Qwen3.6-35B-A3B-Heretic",
+      "group": "large",
+      "uncensored": true,
+      "backend": "upstream-fast",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf",
+      "extra_args": [
+        "--spec-type",
+        "draft-mtp",
+        "--spec-draft-n-max",
+        "2",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling"
+      ],
+      "benchmark": {
+        "long_prompt_decode_tps": 10.29,
+        "long_prompt_prefill_tps": 228.41,
+        "autopublisher": 95,
+        "agentic": 100
+      }
+    },
+    {
+      "id": "Cloud9-Gemma4-26B-A4B-MTP",
+      "group": "large",
+      "uncensored": false,
+      "backend": "upstream-fast",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "extra_args": [
+        "--model-draft",
+        "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/MTP/mtp-gemma-4-26B-A4B-it-Q8_0.gguf",
+        "--spec-type",
+        "draft-mtp",
+        "--spec-draft-n-max",
+        "2",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling"
+      ],
+      "benchmark": {
+        "decode_tps": 25.79,
+        "autopublisher": 90,
+        "agentic": 100
+      }
+    },
+    {
+      "id": "Cloud9-Bonsai2-27B-Ternary-Abliterated",
+      "group": "large",
+      "uncensored": true,
+      "backend": "prism",
+      "context": 16384,
+      "model": "/srv/lxc/ia-compute/data/models/bonsai2/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0.gguf",
+      "extra_args": [],
+      "benchmark": {
+        "decode_tps": 8.59,
+        "autopublisher": 90,
+        "agentic": 100
+      }
+    }
+  ]
+}

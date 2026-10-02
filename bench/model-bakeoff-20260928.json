@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "date": "2026-09-28",
+  "models": [
+    {
+      "id": "qwen35-4b-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen35-4b-heretic/Qwen3.5-4B-heretic-Q4_K_M-imatrix.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen35-4b-heretic/mtp-Qwen3.5-4B-heretic-Q8_0.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "spec_note": "External MTP GGUF rejected by llama.cpp build11232 (blk.32.attn_norm.weight missing); benchmark base model first.",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "gemma4-e4b-heretic-qat-q4",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/gemma4-e4b-heretic-qat/gemma-4-E4B-it-heretic-QAT-UD-Q4_K_XL.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen35-9b-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen35-9b-heretic/Qwen3.5-9B-heretic-Q4_K_M-imatrix.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen35-9b-heretic/mtp-Qwen3.5-9B-heretic-Q8_0.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "spec_note": "External MTP GGUF rejected by llama.cpp build11232 (blk.32.attn_norm.weight missing); benchmark base model first.",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "lfm2.5-8b-a1b-uncensored-q6k",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/lfm2.5-8b-a1b-uncensored/LFM2.5-8B-A1B-Uncensored-Gaston-Q6_K.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "gaston-parravicini/LFM2.5-8B-A1B-Uncensored-Gaston-GGUF",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "spark-x2.5-4b-uncensored-q6k",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/spark-x2.5-4b-uncensored/Spark-X2.5-4B-uncensored-Q6_K.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "InfinimindCreations/Spark-X2.5-4B-uncensored-GGUF",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "minicpm5-2b-heretic-q6k-dspark",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2B-heretic-Q6_K.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2.6B-DSpark.gguf",
+      "spec": "dspark",
+      "uncensored": true,
+      "source": "saidutta69/MiniCPM5-2B-heretic + openbmb/MiniCPM5-2B-DSpark-GGUF",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "ling3-tiny-uncensored-apex-balanced",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/ling3-tiny-uncensored/Ling-3.0-tiny-abliterated-APEX-I-Balanced.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "SC117/Ling-3.0-tiny-abliterated-APEX-GGUF",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen38-4b-distill-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38-4b-heretic/Qwen3.8-4B-Distill-Heretic-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "yachen4ever/Qwen3.8-4B-Distill-Heretic-Abliterated-GGUF",
+      "runtime_role": "upstream-latest"
+    },
+    {
+      "id": "qwen38-9b-distill-heretic-mtp-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38-9b-heretic-mtp/Qwen3.8-9B-Distill-Heretic-Uncensored-MTP-Q4_K_M.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "source": "ge525/Qwen3.8-9B-Distill-uncensored-heretic-Q4_K_M-GGUF",
+      "runtime_role": "upstream-latest"
+    },
+    {
+      "id": "qwen38-9b-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38-9b-heretic/Qwen3.8-9B-heretic-uncensored-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "optionalAI/Qwen3.8-9B-heretic-uncensored-Q4_K_M-GGUF",
+      "runtime_role": "upstream-latest",
+      "status": "rejected-broken-gguf",
+      "reason": "Missing blk.32.attn_norm.weight; source quant dropped the MTP/33rd block."
+    },
+    {
+      "id": "qwen36-pym-35b-a3b-q2-mtp",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "spec": "inline",
+      "uncensored": false,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen36-apex-iquality-35b-a3b",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/variants-20260914/qwen36-apex-iquality/Qwen3.6-35B-A3B-APEX-MTP-I-Quality.gguf",
+      "spec": "inline",
+      "uncensored": false,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen36-heretic-35b-a3b",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "gemma4-26b-a4b-q4km",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/MTP/mtp-gemma-4-26B-A4B-it-Q8_0.gguf",
+      "spec": "draft",
+      "uncensored": false,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen38-27b-uncensored-iq4xs",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen38-27b-uncensored/Qwen3.8-27B-Uncensored-IQ4_XS.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "runtime_role": "upstream-latest"
+    },
+    {
+      "id": "bonsai2-27b-abliterated-v2-pq2-mtp",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/prism-79971a480be6/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/bonsai2-27b-abliterated-v2/Ternary-Bonsai-2-27B-Abliterated-v2-PQ2_0-MTP.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "runtime_role": "prism-ternary",
+      "status": "unsupported-vulkan",
+      "reason": "PQ2_0 has no native Vulkan kernel in Prism v7; retained as historical result only."
+    },
+    {
+      "id": "bonsai2-27b-abliterated-ptq1",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/prism-88c4bc60b9c9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bonsai2/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "BoldingBuilds/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0-GGUF",
+      "runtime_role": "prism-ternary"
+    },
+    {
+      "id": "ornith1.5-35b-a3b-uncensored-q4km",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/ornith1.5-35b-a3b-uncensored/Ornith-1.5-35B-A3B-Uncensored-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "vonvonhero/Ornith-1.5-35B-A3B-Uncensored-GGUF",
+      "runtime_role": "upstream-next"
+    },
+    {
+      "id": "qwen38-flash-next",
+      "group": "large",
+      "status": "blocked-memory",
+      "reason": "Smallest mainstream GGUF is ~66-70 GiB while CT410 is capped at 52 GiB; ds4 Q2 streams n-grams but its optimized graph is Metal/CUDA, not Radeon 780M Vulkan."
+    }
+  ]
+}
