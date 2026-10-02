@@ -23,8 +23,17 @@ done
 (( ! WANT_ATOMIC )) || [[ -n "${ATOMIC:-}" ]] || { echo "Atomic selected but ATOMIC candidate is missing." >&2; exit 2; }
 (( ! WANT_UPSTREAM )) || [[ -n "${UPSTREAM:-}" ]] || { echo "Upstream selected but UPSTREAM candidate is missing." >&2; exit 2; }
 
-(( WANT_ATOMIC )) || rm -f "$ENGINE_HOME/current/atomic" "$ENGINE_HOME/state/atomic-mtp.json" "$ENGINE_HOME/state/atomic-mtp.json.tmp"
-(( WANT_UPSTREAM )) || rm -f "$ENGINE_HOME/current/upstream" "$ENGINE_HOME/state/upstream-mtp.json" "$ENGINE_HOME/state/upstream-mtp.json.tmp"
+CURRENT_ATOMIC=$(readlink -f "$ENGINE_HOME/current/atomic" 2>/dev/null || true)
+CURRENT_UPSTREAM=$(readlink -f "$ENGINE_HOME/current/upstream" 2>/dev/null || true)
+REFERENCE_ATOMIC=${CLOUD9_ENGINE_REFERENCE_ATOMIC:-$CURRENT_ATOMIC}
+REFERENCE_UPSTREAM=${CLOUD9_ENGINE_REFERENCE_UPSTREAM:-$CURRENT_UPSTREAM}
+rm -f \
+  "$ENGINE_HOME/state/atomic-mtp.json.tmp" \
+  "$ENGINE_HOME/state/upstream-mtp.json.tmp" \
+  "$ENGINE_HOME/state/atomic-reference-mtp.json" \
+  "$ENGINE_HOME/state/atomic-reference-mtp.json.tmp" \
+  "$ENGINE_HOME/state/upstream-reference-mtp.json" \
+  "$ENGINE_HOME/state/upstream-reference-mtp.json.tmp"
 
 exec 9>"$ENGINE_HOME/state/hardware-gate.lock"
 flock -n 9 || { echo 'Hardware gate already running; refusing concurrent benchmark.' >&2; exit 4; }
@@ -32,20 +41,59 @@ flock -n 9 || { echo 'Hardware gate already running; refusing concurrent benchma
 port_in_use() {
   ss -H -ltn "sport = :$1" 2>/dev/null | grep -q .
 }
-for port in 19881 19882; do
+for port in 19880 19881 19882; do
   port_in_use "$port" && { echo "Hardware gate port $port is already in use; refusing dirty benchmark." >&2; exit 4; }
 done
+render_dev=${CLOUD9_ENGINE_RENDER_DEVICE:-/dev/dri/renderD128}
+gpu_users() {
+  [[ -e "$render_dev" ]] || return 0
+  python3 - "$render_dev" <<'PYGPU'
+import glob,os,sys
+target=os.path.realpath(sys.argv[1])
+seen=set()
+for proc in glob.glob('/proc/[0-9]*'):
+    pid=proc.rsplit('/',1)[-1]
+    for fd in glob.glob(proc+'/fd/*'):
+        try:
+            if os.path.realpath(fd) != target:
+                continue
+        except OSError:
+            continue
+        if pid in seen:
+            break
+        seen.add(pid)
+        try:
+            comm=open(proc+'/comm').read().strip()
+        except Exception:
+            comm='?'
+        try:
+            cmd=open(proc+'/cmdline','rb').read().replace(b'\x00',b' ').decode(errors='replace').strip()
+        except Exception:
+            cmd=''
+        print(f"{pid}\t{comm}\t{cmd}")
+        break
+PYGPU
+}
+assert_gpu_idle() {
+  local users
+  users=$(gpu_users || true)
+  if [[ -n "$users" ]]; then
+    echo "GPU render device $render_dev is already held by another process; refusing mixed-workload gate:" >&2
+    printf '%s\n' "$users" >&2
+    return 1
+  fi
+}
 if pgrep -x llama-server >/dev/null 2>&1; then
   echo 'A llama-server process is already running; unload it before the hardware gate.' >&2
   exit 4
 fi
-render_dev=${CLOUD9_ENGINE_RENDER_DEVICE:-/dev/dri/renderD128}
+assert_gpu_idle || exit 4
 if [[ -e "$render_dev" ]]; then
-  python3 - "$render_dev" <<'PY' || { echo "GPU render device $render_dev cannot be opened; refusing hardware gate." >&2; exit 5; }
+  python3 - "$render_dev" <<'PYOPEN' || { echo "GPU render device $render_dev cannot be opened; refusing hardware gate." >&2; exit 5; }
 import os,sys
 fd=os.open(sys.argv[1], os.O_RDWR)
 os.close(fd)
-PY
+PYOPEN
 fi
 
 cleanup_server() {
@@ -64,6 +112,7 @@ run_mtp(){
   local log="$ENGINE_HOME/state/${name}-gate.log" out="$ENGINE_HOME/state/${name}-mtp.json" tmp="$ENGINE_HOME/state/${name}-mtp.json.tmp"
   local pid rc=0 healthy=0
   rm -f "$log" "$out" "$tmp"
+  assert_gpu_idle || return 4
   local -a extra_args=(--poll 100 --poll-batch 0)
   local -a env_args=()
   if [[ "$mode" == upstream ]]; then
@@ -88,14 +137,55 @@ run_mtp(){
   mv "$tmp" "$out"
 }
 
-AT_OK=0; UP_OK=0
+passes_regression_gate() {
+  local candidate_json=$1 reference_json=$2 backend=$3
+  local min_ratio=${CLOUD9_ENGINE_PROMOTION_MIN_RATIO:-0.98}
+  python3 - "$candidate_json" "$reference_json" "$min_ratio" "$backend" <<'PYREG'
+import json,sys
+cand=json.load(open(sys.argv[1]))['median_decode_tps']
+ref=json.load(open(sys.argv[2]))['median_decode_tps']
+ratio=cand/ref if ref else 0.0
+minimum=float(sys.argv[3])
+backend=sys.argv[4]
+print(f"{backend}: candidate={cand:.3f} t/s reference={ref:.3f} t/s ratio={ratio:.4f} minimum={minimum:.4f}")
+raise SystemExit(0 if ratio >= minimum else 1)
+PYREG
+}
+
+AT_OK=0; UP_OK=0; AT_REF_OK=0; UP_REF_OK=0
+if (( WANT_ATOMIC )) && [[ -n "$REFERENCE_ATOMIC" && "$REFERENCE_ATOMIC" != "${ATOMIC:-}" && -x "$REFERENCE_ATOMIC/bin/llama-server" ]]; then
+  if run_mtp atomic-reference "$REFERENCE_ATOMIC" 19880 atomic; then
+    AT_REF_OK=1
+  else
+    rc=$?
+    (( rc == 125 )) && exit 125
+    echo 'Atomic reference gate failed; refusing candidate promotion without a valid reference.' >&2
+    exit 3
+  fi
+fi
+if (( WANT_UPSTREAM )) && [[ -n "$REFERENCE_UPSTREAM" && "$REFERENCE_UPSTREAM" != "${UPSTREAM:-}" && -x "$REFERENCE_UPSTREAM/bin/llama-server" ]]; then
+  if run_mtp upstream-reference "$REFERENCE_UPSTREAM" 19880 upstream; then
+    UP_REF_OK=1
+  else
+    rc=$?
+    (( rc == 125 )) && exit 125
+    echo 'Upstream reference gate failed; refusing candidate promotion without a valid reference.' >&2
+    exit 3
+  fi
+fi
 if (( WANT_ATOMIC )); then
   if run_mtp atomic "$ATOMIC" 19881 atomic; then AT_OK=1; else rc=$?; (( rc == 125 )) && exit 125; fi
 fi
 if (( WANT_UPSTREAM )); then
   if run_mtp upstream "$UPSTREAM" 19882 upstream; then UP_OK=1; else rc=$?; (( rc == 125 )) && exit 125; fi
 fi
-(( AT_OK || UP_OK )) || { echo 'Hardware gate failed for all selected candidates.' >&2; exit 3; }
+if (( AT_OK && AT_REF_OK )); then
+  passes_regression_gate "$ENGINE_HOME/state/atomic-mtp.json" "$ENGINE_HOME/state/atomic-reference-mtp.json" atomic || AT_OK=0
+fi
+if (( UP_OK && UP_REF_OK )); then
+  passes_regression_gate "$ENGINE_HOME/state/upstream-mtp.json" "$ENGINE_HOME/state/upstream-reference-mtp.json" upstream || UP_OK=0
+fi
+(( AT_OK || UP_OK )) || { echo 'Hardware/performance gate rejected all selected candidates.' >&2; exit 3; }
 (( AT_OK )) && ln -sfn "$ATOMIC" "$ENGINE_HOME/current/atomic"
 (( UP_OK )) && ln -sfn "$UPSTREAM" "$ENGINE_HOME/current/upstream"
 general=atomic

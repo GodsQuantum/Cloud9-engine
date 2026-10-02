@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "date": "2026-10-02",
+  "models": [
+    {
+      "id": "qwen35-4b-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen35-4b-heretic/Qwen3.5-4B-heretic-Q4_K_M-imatrix.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/qwen35-4b-heretic/mtp-Qwen3.5-4B-heretic-Q8_0.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "spec_note": "External MTP GGUF rejected by llama.cpp build11232 (blk.32.attn_norm.weight missing); benchmark base model first.",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "gemma4-e4b-heretic-qat-q4",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/gemma4-e4b-heretic-qat/gemma-4-E4B-it-heretic-QAT-UD-Q4_K_XL.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "spark-x2.5-4b-uncensored-q6k",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/spark-x2.5-4b-uncensored/Spark-X2.5-4B-uncensored-Q6_K.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "InfinimindCreations/Spark-X2.5-4B-uncensored-GGUF",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "minicpm5-2b-heretic-q6k-dspark",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2B-heretic-Q6_K.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2.6B-DSpark.gguf",
+      "spec": "dspark",
+      "uncensored": true,
+      "source": "saidutta69/MiniCPM5-2B-heretic + openbmb/MiniCPM5-2B-DSpark-GGUF",
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen38-4b-distill-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38-4b-heretic/Qwen3.8-4B-Distill-Heretic-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "yachen4ever/Qwen3.8-4B-Distill-Heretic-Abliterated-GGUF",
+      "runtime_role": "upstream-latest"
+    },
+    {
+      "id": "qwen38-9b-heretic-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38-9b-heretic/Qwen3.8-9B-heretic-uncensored-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "optionalAI/Qwen3.8-9B-heretic-uncensored-Q4_K_M-GGUF",
+      "runtime_role": "upstream-latest",
+      "status": "rejected-broken-gguf",
+      "reason": "Missing blk.32.attn_norm.weight; source quant dropped the MTP/33rd block."
+    },
+    {
+      "id": "qwen36-pym-35b-a3b-q2-mtp",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "spec": "inline",
+      "uncensored": false,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "qwen36-heretic-35b-a3b",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "gemma4-26b-a4b-q4km",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-19e28a277021-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/MTP/mtp-gemma-4-26B-A4B-it-Q8_0.gguf",
+      "spec": "draft",
+      "uncensored": false,
+      "runtime_role": "upstream-fast"
+    },
+    {
+      "id": "bonsai2-27b-abliterated-ptq1",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/prism-79971a480be6/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bonsai2/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "BoldingBuilds/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0-GGUF",
+      "runtime_role": "prism-ternary"
+    }
+  ]
+}

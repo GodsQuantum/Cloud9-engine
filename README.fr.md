@@ -3,14 +3,15 @@
 <p align="center"><strong>Un runtime llama.cpp adaptatif et optimisé pour AMD RDNA. On mesure d'abord, on promeut ensuite.</strong></p>
 <p align="center"><a href="README.md">English</a> · <a href="README.fr.md">Français</a> · <a href="README.zh-CN.md">简体中文</a></p>
 
-Cloud9 Engine est un runtime local pour AMD RDNA + Vulkan. Il suit **llama.cpp upstream** et **Atomic TurboQuant**, ajoute les optimisations Cloud9 encore absentes de l'upstream, autotune les paramètres RADV sur la machine réelle, puis ne promeut qu'un build qui passe les gates de correction et de performance.
+Cloud9 Engine est un runtime local pour AMD RDNA + Vulkan. La production repose sur **llama.cpp upstream + les optimisations Cloud9**, avec plusieurs révisions upstream validées conservées lorsque des familles de modèles différentes gagnent sur des commits différents. **Prism** sert uniquement aux modèles ternaires/PTQ. **Atomic TurboQuant** reste suivi en laboratoire/donor, mais n'est jamais sélectionné automatiquement sur la Radeon 780M de référence après les erreurs Vulkan reproduites avec Atomic 1.7.
 
 ## ☁️ Pourquoi Cloud9 Engine ?
 - **Kernel Vulkan RDNA réellement optimisé** : une tuile `MUL_MAT_ID` 128×32 accélère le prefill des modèles MoE sur Phoenix/Hawk Point RDNA3 UMA.
 - **Autotuning hardware** : batch/ubatch, polling, FlashAttention et placement mémoire sont choisis à partir de mesures RDNA, sans écraser tes flags explicites.
-- **TurboQuant sur un llama.cpp récent** : TQ2/TQ3/TQ4 KV, `SET_ROWS` Vulkan, FlashAttention et benchmark plumbing restent disponibles sur l'upstream actuel.
-- **Deux backends, une seule commande** : upstream+Cloud9 est le choix actuel ; Atomic reste suivi comme fallback et donor de features.
+- **Union des features sans verrouillage sur un fork** : le runtime récent conserve les nouveautés llama.cpp tandis que des révisions upstream plus rapides peuvent rester sélectionnées pour certaines familles.
+- **Une seule API, plusieurs runtimes internes** : le routeur choisit `upstream-pym`, `upstream-fast`, `upstream-next`, `upstream-latest` ou Prism selon le modèle. Atomic reste laboratoire uniquement sur la 780M.
 - **Mises à jour sans roulette russe** : chaque update devient candidate et doit repasser le gate hardware avant production.
+- **Fusible modèles géants** : les fichiers modèle >40 Gio sont refusés par défaut sur la 780M de référence après qu'un smoke Flash-Next a saturé le GTT ; un override explicite de laboratoire est requis.
 
 ## ⚡ Installation rapide
 ```bash
@@ -24,7 +25,7 @@ cloud9-llama-server -m /chemin/vers/modele.gguf -ngl 99 -c 32768
 ```
 
 ## 🧠 Routage et profils
-Le mode `auto` utilise le backend élu par le gate local. Sur la Radeon 780M de référence, **upstream + Cloud9** gagne actuellement en général et en MTP. Atomic peut toujours être forcé avec `CLOUD9_ENGINE_BACKEND=atomic`.
+Le trafic de production passe par `cloud9-model-router`, qui choisit pour chaque modèle le runtime, le contexte et le profil MTP/DSpark validés. Le wrapper direct garde un mode `auto` dont le fallback générique est `upstream-fast`. Atomic ne peut être utilisé que par override explicite de laboratoire (`CLOUD9_ENGINE_BACKEND=atomic`).
 
 Le profil RDNA `balanced` est injecté uniquement sur AMD/RADV et uniquement pour les options non précisées par l'utilisateur. Pour un workload d'ingestion massif : `CLOUD9_ENGINE_RDNA_PROFILE=prefill`. Pour désactiver tout tuning : `CLOUD9_ENGINE_RDNA_TUNING=off`.
 
@@ -41,7 +42,7 @@ Plateforme de référence : Ryzen 7 8845HS / Radeon 780M RADV, Qwen3.6-35B-A3B P
 Le kernel passe **921/921 tests `MUL_MAT_ID` Vulkan** et le decode seul reste neutre (22,50 → 22,63 t/s). Détails : [benchmarks](docs/benchmarks.md).
 
 ## 🔄 Politique d'update
-GitHub surveille llama.cpp et Atomic, ouvre une mise à jour de `sources.lock`, CI vérifie que les patchs s'appliquent et compilent, puis le serveur reconstruit des candidats. **La production n'est promue qu'après le gate hardware.**
+GitHub surveille llama.cpp, Atomic et Prism. Une nouvelle révision reste candidate tant que le patchset déclaré, la compilation Vulkan et les gates matériels/modèles n'ont pas passé. **Aucun refresh de source ne remplace directement un runtime connu comme bon.**
 
 Voir aussi : [architecture](docs/architecture.md), [benchmarks](docs/benchmarks.md), [installation](docs/installation.md) et [procédure d'update](docs/updates.md).
 
