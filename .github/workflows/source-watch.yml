@@ -29,13 +29,16 @@ jobs:
           git diff --quiet sources.lock && exit 0
 
           upstream_sha="$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["commit"])')"
-          patch_tree="$(git rev-parse HEAD:patches/upstream)"
-          marker="<!-- source-watch-block:${upstream_sha}:${patch_tree} -->"
+          atomic_sha="$(python3 -c 'import json; print(json.load(open("sources.lock"))["atomic"]["commit"])')"
+          prism_sha="$(python3 -c 'import json; print(json.load(open("sources.lock"))["prism"]["commit"])')"
+          patchset="$(python3 -c 'import json; print(json.load(open("sources.lock"))["patchset"])')"
+          patch_tree="$(git rev-parse "HEAD:$patchset")"
+          marker="<!-- source-watch-block:${upstream_sha}:${atomic_sha}:${prism_sha}:${patch_tree} -->"
 
           blocked_issue="$(gh issue list --state open --limit 100 --json number,body --jq ".[] | select((.body // \"\") | contains(\"$marker\")) | .number" | head -n1)"
           if [ -n "$blocked_issue" ]; then
-            echo "Upstream $upstream_sha is already tracked as incompatible in issue #$blocked_issue."
-            echo "The same upstream + patchset combination will not be re-tested until either changes."
+            echo "This exact upstream/Atomic/Prism + patchset tuple is already tracked as incompatible in issue #$blocked_issue."
+            echo "It will not be re-tested until at least one source or the Cloud9 patchset changes."
             exit 0
           fi
 
@@ -62,12 +65,16 @@ jobs:
 
           if ! gh run watch "$run_id" --exit-status; then
             run_url="https://github.com/$GITHUB_REPOSITORY/actions/runs/$run_id"
-            short_upstream="${upstream_sha:0:12}"
-            title="Source watch blocked: upstream $short_upstream"
+            short_upstream="${upstream_sha:0:8}"
+            short_atomic="${atomic_sha:0:8}"
+            short_prism="${prism_sha:0:8}"
+            title="Source watch blocked: U-$short_upstream A-$short_atomic P-$short_prism"
             body="$(printf '%s\n' \
-              'Automated source refresh was rejected because the Cloud9 patchset no longer validates on this upstream.' \
+              'Automated source refresh was rejected because at least one locked engine no longer passes Cloud9 CI.' \
               '' \
               "Upstream commit: $upstream_sha" \
+              "Atomic commit: $atomic_sha" \
+              "Prism commit: $prism_sha" \
               "Patch tree: $patch_tree" \
               "Failed CI: $run_url" \
               'Current main sources.lock was intentionally left unchanged.' \
@@ -98,4 +105,4 @@ jobs:
           while IFS= read -r issue_number; do
             [ -n "$issue_number" ] || continue
             gh issue close "$issue_number" --comment "Resolved by validated source refresh $candidate_sha."
-          done < <(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title | startswith("Source watch blocked: upstream ")) | .number')
+          done < <(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title | startswith("Source watch blocked: ")) | .number')

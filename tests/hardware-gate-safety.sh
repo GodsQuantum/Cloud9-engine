@@ -18,6 +18,11 @@ EOC
 if [[ "${1:-}" == *bench_client.py ]]; then echo '{"median_decode_tps":10.0}'; exit 0; fi
 exec /usr/bin/python3 "$@"
 EOC
+cat > "$T/fakebin/pgrep" <<'EOC'
+#!/usr/bin/env bash
+if [[ "$*" == *"llama-server"* ]]; then exit 1; fi
+exec /usr/bin/pgrep "$@"
+EOC
   chmod +x "$T/fakebin/"*
 }
 cleanup(){ [[ -n "${T:-}" ]] && rm -rf "$T"; }
@@ -32,7 +37,7 @@ EOC
 cp "$T/atomic/bin/llama-server" "$T/upstream/bin/llama-server"; chmod +x "$T/atomic/bin/llama-server" "$T/upstream/bin/llama-server"
 exec 9>"$T/home/state/hardware-gate.lock"; flock -n 9
 set +e
-PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" timeout 5 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >/dev/null 2>&1
+PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" CLOUD9_ENGINE_RENDER_DEVICE=/nonexistent timeout 5 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >/dev/null 2>&1
 rc=$?
 set -e
 [[ $rc -ne 0 ]] || { echo "lock test: gate unexpectedly succeeded" >&2; exit 1; }
@@ -51,7 +56,7 @@ cp "$T/atomic/bin/llama-server" "$T/upstream/bin/llama-server"; chmod +x "$T/ato
 trap 'kill ${hp:-0} 2>/dev/null || true; cleanup' EXIT
 sleep 0.3
 set +e
-PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" timeout 5 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >/dev/null 2>&1
+PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" CLOUD9_ENGINE_RENDER_DEVICE=/nonexistent timeout 5 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >/dev/null 2>&1
 rc=$?
 set -e
 kill "$hp" 2>/dev/null || true; wait "$hp" 2>/dev/null || true; hp=
@@ -73,7 +78,7 @@ exit 1
 EOC
 chmod +x "$T/atomic/bin/llama-server" "$T/upstream/bin/llama-server"
 set +e
-PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" timeout 8 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >/dev/null 2>&1
+PATH="$T/fakebin:$PATH" CLOUD9_ENGINE_HOME="$T/home" CLOUD9_ENGINE_RENDER_DEVICE=/nonexistent timeout 8 bash "$ROOT/scripts/hardware-gate.sh" "$T/model.gguf" >/dev/null 2>&1
 rc=$?
 set -e
 [[ $rc -eq 0 ]] || { echo "cleanup test: gate did not complete cleanly (rc=$rc)" >&2; exit 1; }

@@ -33,8 +33,13 @@ if [[ "${1:-}" == *bench_client.py ]]; then
 fi
 exec /usr/bin/python3 "$@"
 EOF
-chmod +x "$tmp/fakebin/python3"
-if ! PATH="$tmp/fakebin:$PATH" CLOUD9_ENGINE_HOME="$tmp/home" \
+cat > "$tmp/fakebin/pgrep" <<'EOC'
+#!/usr/bin/env bash
+if [[ "$*" == *"llama-server"* ]]; then exit 1; fi
+exec /usr/bin/pgrep "$@"
+EOC
+chmod +x "$tmp/fakebin/python3" "$tmp/fakebin/pgrep"
+if ! PATH="$tmp/fakebin:$PATH" CLOUD9_ENGINE_HOME="$tmp/home" CLOUD9_ENGINE_RENDER_DEVICE=/nonexistent \
   bash "$ROOT/scripts/hardware-gate.sh" "$tmp/model.gguf" >"$tmp/gate.out" 2>"$tmp/gate.err"; then
   cat "$tmp/gate.out" "$tmp/gate.err" >&2
   exit 98
