@@ -12,6 +12,7 @@ ROUTER=cloud9-engine-router.service
 EMBED=cloud9-embedding.service
 LEMOND=lemond.service
 SPEACHES=speaches
+VOICESTUDIO=voicestudio
 FRONT_SOCKETS=(comfyui-proxy.socket autopublisher-image-proxy.socket)
 FRONT_PROXIES=(comfyui-proxy.service autopublisher-image-proxy.service)
 USER_GPU_SERVICES=(comfyui.service autopublisher-image.service)
@@ -23,9 +24,11 @@ declare -a RESTORE_SOCKETS=()
 declare -a RESTORE_SERVICES=()
 was_router_socket=0
 was_speaches=0
+was_voicestudio=0
 
 systemctl is-active --quiet "$ROUTER_SOCKET" && was_router_socket=1 || true
 docker inspect -f '{{.State.Running}}' "$SPEACHES" 2>/dev/null | grep -qx true && was_speaches=1 || true
+docker inspect -f '{{.State.Running}}' "$VOICESTUDIO" 2>/dev/null | grep -qx true && was_voicestudio=1 || true
 for u in "$EMBED" "$LEMOND"; do
   systemctl is-active --quiet "$u" && RESTORE_SERVICES+=("$u")
 done
@@ -37,6 +40,7 @@ restore_units() {
   local rc=$?
   trap - EXIT INT TERM
   if (( was_speaches )); then docker start "$SPEACHES" >/dev/null 2>&1 || true; fi
+  if (( was_voicestudio )); then docker start "$VOICESTUDIO" >/dev/null 2>&1 || true; fi
   for u in "${RESTORE_SERVICES[@]}"; do
     systemctl thaw "$u" >/dev/null 2>&1 || true
     systemctl start "$u" >/dev/null 2>&1 || true
@@ -53,10 +57,27 @@ slot_busy() {
   slots=$(curl -fsS --max-time 1 "$url" 2>/dev/null || true)
   [[ -n "$slots" ]] && grep -Eq '"is_processing"[[:space:]]*:[[:space:]]*true|"state"[[:space:]]*:[[:space:]]*"processing"' <<<"$slots"
 }
+router_has_established_clients() {
+  ss -Htn state established 2>/dev/null | awk '
+    $4 ~ /:(8090|18090|18091)$/ || $5 ~ /:(8090|18090|18091)$/ { found=1 }
+    END { exit !found }'
+}
+speaches_has_established_clients() {
+  ss -Htn state established 2>/dev/null | awk '
+    $4 ~ /:8005$/ || $5 ~ /:8005$/ { found=1 }
+    END { exit !found }'
+}
+voicestudio_has_established_clients() {
+  ss -Htn state established 2>/dev/null | awk '
+    $4 ~ /:(3900|7443)$/ || $5 ~ /:(3900|7443)$/ { found=1 }
+    END { exit !found }'
+}
 
 # Never interrupt a user-visible GPU workload.
 for u in "${USER_GPU_SERVICES[@]}"; do
   if systemctl is-active --quiet "$u"; then
+    unit_pid=$(systemctl show -p MainPID --value "$u" 2>/dev/null || echo 0)
+    [ "$unit_pid" = "$$" ] && continue
     echo "$u is active; refusing to interrupt an image job." >&2
     exit 4
   fi
@@ -65,13 +86,17 @@ if systemctl is-active --quiet "$EMBED" && slot_busy http://127.0.0.1:8091/slots
   echo "Embedding Engine is processing a request; refusing GPU preemption." >&2
   exit 4
 fi
-if systemctl is-active --quiet "$ROUTER" && slot_busy http://127.0.0.1:18091/slots; then
-  echo "Cloud9 LLM router worker is processing a request; refusing GPU preemption." >&2
+if (( was_speaches )) && speaches_has_established_clients; then
+  echo "Speaches has an established transcription client; refusing GPU preemption." >&2
   exit 4
 fi
-if (( was_speaches )) && ss -Htn state established sport = :8005 2>/dev/null | grep -q .; then
-  echo "Speaches is serving an active HTTP connection; refusing GPU preemption." >&2
+if (( was_voicestudio )) && voicestudio_has_established_clients; then
+  echo "VoiceStudio has an established client; refusing GPU preemption." >&2
   exit 4
+fi
+if systemctl is-active --quiet "$ROUTER"; then
+  router_has_established_clients && { echo "Cloud9 LLM router has an established client/proxy connection; refusing GPU preemption." >&2; exit 4; }
+  slot_busy http://127.0.0.1:18091/slots && { echo "Cloud9 LLM router worker is processing a request; refusing GPU preemption." >&2; exit 4; }
 fi
 
 # Close all socket-activation front doors first.
@@ -89,10 +114,13 @@ done
 
 systemctl stop "$EMBED" "$LEMOND" >/dev/null 2>&1 || true
 if (( was_speaches )); then docker stop --time 20 "$SPEACHES" >/dev/null 2>&1 || true; fi
+if (( was_voicestudio )); then docker stop --time 20 "$VOICESTUDIO" >/dev/null 2>&1 || true; fi
 
 # Re-check user services after closing the front doors.
 for u in "${USER_GPU_SERVICES[@]}"; do
   if systemctl is-active --quiet "$u"; then
+    unit_pid=$(systemctl show -p MainPID --value "$u" 2>/dev/null || echo 0)
+    [ "$unit_pid" = "$$" ] && continue
     echo "$u became active while acquiring exclusivity; refusing benchmark." >&2
     exit 4
   fi
