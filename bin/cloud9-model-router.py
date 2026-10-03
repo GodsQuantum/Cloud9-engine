@@ -27,6 +27,7 @@ ENGINE=Path(a.engine_home)
 CATALOG_PATH=Path(a.catalog)
 GPU_LOCK=Path("/run/cloud9-gpu.lock")
 EMBED_SERVICE="cloud9-embedding.service"
+SPEACHES_CONTAINER="speaches"
 STATE_DIR=ENGINE/"state"
 STATE_DIR.mkdir(parents=True,exist_ok=True)
 WORKER_LOG=STATE_DIR/"model-router-worker.log"
@@ -54,6 +55,26 @@ def run_systemctl(*args,check=False,timeout=45):
 
 def service_active(name):
     return run_systemctl("is-active","--quiet",name).returncode==0
+
+def run_docker(*args,check=False,timeout=45):
+    p=subprocess.run(["docker",*args],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,timeout=timeout)
+    if check and p.returncode:
+        raise RuntimeError(f"docker {' '.join(args)} failed: {p.stderr.strip()}")
+    return p
+
+def container_running(name):
+    p=run_docker("inspect","-f","{{.State.Running}}",name,timeout=10)
+    return p.returncode==0 and p.stdout.strip().lower()=="true"
+
+def tcp_port_busy(port):
+    try:
+        p=subprocess.run(
+            ["ss","-Htn","state","established","sport","=",f":{port}"],
+            stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,timeout=2,
+        )
+        return p.returncode==0 and bool(p.stdout.strip())
+    except Exception:
+        return False
 
 def embedding_busy():
     try:
@@ -115,6 +136,7 @@ class RouterState:
         self.active=0
         self.gpu_fd=None
         self.embed_was_active=False
+        self.speaches_was_running=False
         self.worker_log_handle=None
         self.stopping=False
 
@@ -132,6 +154,7 @@ class RouterState:
                     raise RuntimeError("GPU busy: timed out waiting for Cloud9 GPU lock")
                 time.sleep(.25)
         was=service_active(EMBED_SERVICE)
+        speaches_was=container_running(SPEACHES_CONTAINER)
         try:
             if was and embedding_busy():
                 raise RuntimeError("Embedding Engine is processing a request; refusing GPU preemption")
@@ -140,35 +163,55 @@ class RouterState:
                 for _ in range(40):
                     if not service_active(EMBED_SERVICE): break
                     time.sleep(.25)
+            if speaches_was:
+                if tcp_port_busy(8005):
+                    raise RuntimeError("Speaches is serving an active HTTP connection; refusing GPU preemption")
+                run_docker("stop","--time","20",SPEACHES_CONTAINER,check=True,timeout=30)
+                for _ in range(80):
+                    if not container_running(SPEACHES_CONTAINER): break
+                    time.sleep(.25)
             users=gpu_users()
             if users:
-                for _ in range(20):
+                for _ in range(80):
                     time.sleep(.25)
                     users=gpu_users()
                     if not users: break
             if users:
-                raise RuntimeError("GPU render device is still in use: "+repr(users))
+                raise RuntimeError("GPU render device is still in use after managed handoff: "+repr(users))
         except Exception:
+            if speaches_was:
+                run_docker("start",SPEACHES_CONTAINER,timeout=30)
             if was:
+                run_systemctl("thaw",EMBED_SERVICE)
                 run_systemctl("reset-failed",EMBED_SERVICE)
                 run_systemctl("start",EMBED_SERVICE)
+                run_systemctl("thaw",EMBED_SERVICE)
             fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
             fd.close()
             raise
         self.embed_was_active=was
+        self.speaches_was_running=speaches_was
         self.gpu_fd=fd
 
     def release_gpu(self):
         fd=self.gpu_fd
         was=self.embed_was_active
+        speaches_was=self.speaches_was_running
         self.gpu_fd=None
         self.embed_was_active=False
+        self.speaches_was_running=False
+        if fd:
+            try:
+                fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
+            finally:
+                fd.close()
         if was:
+            run_systemctl("thaw",EMBED_SERVICE)
             run_systemctl("reset-failed",EMBED_SERVICE)
             run_systemctl("start",EMBED_SERVICE)
-        if fd:
-            try: fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
-            finally: fd.close()
+            run_systemctl("thaw",EMBED_SERVICE)
+        if speaches_was:
+            run_docker("start",SPEACHES_CONTAINER,timeout=30)
 
     def runtime(self,m):
         p=ENGINE/"current"/m["backend"]/"bin"/"llama-server"
@@ -334,6 +377,16 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         n=int(self.headers.get("Content-Length","0") or "0")
         raw=self.rfile.read(n) if n else b""
+        if self.path.rstrip("/")=="/internal/unload":
+            with state.switch_lock:
+                with state.cv:
+                    if state.active>0:
+                        self.send_json(409,{"error":{"message":"worker has active requests","type":"conflict"}})
+                        return
+                previous=state.worker_model
+                state.stop_worker_locked()
+            self.send_json(200,{"status":"ok","unloaded":previous,"worker_model":state.worker_model})
+            return
         try: body=json.loads(raw or b"{}")
         except Exception:
             self.send_json(400,{"error":{"message":"invalid JSON request","type":"invalid_request_error"}});return
