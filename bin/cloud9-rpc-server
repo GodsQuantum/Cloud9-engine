@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ENGINE_HOME=${CLOUD9_ENGINE_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/cloud9-engine}
+for cfg in /etc/cloud9-engine/config.env "$ENGINE_HOME/config.env" "$ENGINE_HOME/profiles.local.env"; do
+  # shellcheck source=/dev/null
+  [[ -r "$cfg" ]] && source "$cfg"
+done
+
+requested=${CLOUD9_ENGINE_RPC_BACKEND:-upstream}
+case "$requested" in
+  upstream|upstream-fast|upstream-next|upstream-latest|upstream-pym) ;;
+  *) echo "Cloud9 Engine RPC: invalid backend '$requested' (RPC workers use upstream-derived runtimes)." >&2; exit 2 ;;
+esac
+
+pick_rpc_bin() {
+  local b
+  for b in "$requested" upstream-latest upstream-fast upstream-next upstream-pym upstream; do
+    [[ -x "$ENGINE_HOME/current/$b/bin/ggml-rpc-server" ]] && {
+      printf '%s\n' "$ENGINE_HOME/current/$b/bin/ggml-rpc-server"
+      return 0
+    }
+  done
+  return 1
+}
+bin=$(pick_rpc_bin || true)
+[[ -n "$bin" ]] || {
+  echo "Cloud9 Engine RPC: no promoted RPC-capable runtime. Rebuild Cloud9 Engine with GGML_RPC=ON." >&2
+  exit 127
+}
+
+original_args=("$@")
+has_opt() {
+  local needle arg
+  for needle in "$@"; do
+    for arg in "${original_args[@]}"; do
+      [[ "$arg" == "$needle" || "$arg" == "$needle="* ]] && return 0
+    done
+  done
+  return 1
+}
+
+host=${CLOUD9_RPC_HOST:-127.0.0.1}
+port=${CLOUD9_RPC_PORT:-50052}
+device=${CLOUD9_RPC_DEVICE:-}
+cache=${CLOUD9_RPC_CACHE:-1}
+
+# Resolve the effective bind host including explicit CLI overrides before
+# applying the security guard.
+bind_host=$host
+for ((i=0; i<${#original_args[@]}; i++)); do
+  case "${original_args[$i]}" in
+    -H|--host) (( i + 1 < ${#original_args[@]} )) && bind_host=${original_args[$((i+1))]} ;;
+    --host=*) bind_host=${original_args[$i]#--host=} ;;
+  esac
+done
+
+# ggml RPC is unauthenticated. Remote binding must be an explicit choice and
+# should only target a private point-to-point/VPN link.
+if [[ "$bind_host" != 127.0.0.1 && "$bind_host" != ::1 && "$bind_host" != localhost ]]; then
+  case ${CLOUD9_RPC_ALLOW_REMOTE:-0} in
+    1|true|TRUE|yes|YES) ;;
+    *)
+      echo "Cloud9 Engine RPC: refusing non-loopback bind '$bind_host' without CLOUD9_RPC_ALLOW_REMOTE=1." >&2
+      exit 4
+      ;;
+  esac
+fi
+
+extra=()
+has_opt -H --host || extra+=( -H "$host" )
+has_opt -p --port || extra+=( -p "$port" )
+if [[ -n "$device" ]] && ! has_opt -d --device; then extra+=( -d "$device" ); fi
+if [[ "$cache" != 0 && "$cache" != off && "$cache" != false ]] && ! has_opt -c --cache; then extra+=( -c ); fi
+
+[[ ${CLOUD9_ENGINE_VERBOSE:-0} == 1 ]] && {
+  echo "Cloud9 Engine RPC worker: bin=$bin host=$host port=$port cache=$cache device=${device:-auto}" >&2
+}
+exec "$bin" "${extra[@]}" "$@"

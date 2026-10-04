@@ -102,6 +102,21 @@ has_opt() {
 }
 
 extra=()
+
+# Optional multi-host ggml RPC. Nothing is enabled unless peers are configured.
+# Layer split is the conservative default over USB4/Ethernet; tensor split is
+# opt-in because its cross-device reductions are much more interconnect-sensitive.
+rpc_peers=${CLOUD9_ENGINE_RPC_PEERS:-}
+if [[ -n "$rpc_peers" ]] && ! has_opt --rpc; then
+  extra+=( --rpc "$rpc_peers" )
+  if ! has_opt -sm --split-mode; then
+    extra+=( --split-mode "${CLOUD9_ENGINE_RPC_SPLIT_MODE:-layer}" )
+  fi
+  if [[ -n "${CLOUD9_ENGINE_TENSOR_SPLIT:-}" ]] && ! has_opt -ts --tensor-split; then
+    extra+=( --tensor-split "$CLOUD9_ENGINE_TENSOR_SPLIT" )
+  fi
+fi
+
 profile=${CLOUD9_ENGINE_RDNA_PROFILE:-balanced}
 tune=${CLOUD9_ENGINE_RDNA_TUNING:-auto}
 is_radv=0
