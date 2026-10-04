@@ -1,10 +1,13 @@
 {
   "schema": 1,
-  "updated_at": "2026-10-02",
+  "updated_at": "2026-10-05",
   "defaults": {
     "worker_idle_seconds": 30,
     "gpu_lock_timeout_seconds": 120,
-    "max_model_bytes": 42949672960
+    "max_model_bytes": 42949672960,
+    "gpu_mode": "exclusive",
+    "coexist_min_available_mib": 12288,
+    "coexist_max_gtt_mib": 8192
   },
   "models": [
     {
@@ -30,7 +33,8 @@
         "decode_tps": 47.73,
         "autopublisher": 75,
         "agentic": 100
-      }
+      },
+      "gpu_mode": "coexist-light"
     },
     {
       "id": "Cloud9-Ling3-Tiny-Uncensored",
@@ -44,7 +48,8 @@
         "decode_tps": 44.41,
         "autopublisher": 85,
         "agentic": 100
-      }
+      },
+      "gpu_mode": "coexist-light"
     },
     {
       "id": "Cloud9-LFM2.5-2.6B-Uncensored",
@@ -58,7 +63,8 @@
         "decode_tps": 34.98,
         "autopublisher": 75,
         "agentic": 100
-      }
+      },
+      "gpu_mode": "coexist-light"
     },
     {
       "id": "Cloud9-Qwen3.8-4B-Heretic",
@@ -88,7 +94,8 @@
         "autopublisher": 95,
         "agentic": 100
       },
-      "notes": "Qwen3.5-4B target distilled from Qwen3.8, Heretic/uncensored, inline MTP preserved. Selected after bounded JSON AutoPublisher gate on 2026-10-02."
+      "notes": "Qwen3.5-4B target distilled from Qwen3.8, Heretic/uncensored, inline MTP preserved. Selected after bounded JSON AutoPublisher gate on 2026-10-02.",
+      "gpu_mode": "coexist-light"
     },
     {
       "id": "Cloud9-Pym-35B-A3B-MTP",
@@ -109,7 +116,8 @@
       "benchmark": {
         "decode_tps": 30.87,
         "historical_best_decode_tps": 34.4
-      }
+      },
+      "gpu_mode": "exclusive"
     },
     {
       "id": "Cloud9-Qwen3.6-35B-A3B-Heretic",
@@ -132,7 +140,8 @@
         "long_prompt_prefill_tps": 228.41,
         "autopublisher": 95,
         "agentic": 100
-      }
+      },
+      "gpu_mode": "exclusive"
     },
     {
       "id": "Cloud9-Gemma4-26B-A4B-MTP",
@@ -156,7 +165,8 @@
         "decode_tps": 25.79,
         "autopublisher": 90,
         "agentic": 100
-      }
+      },
+      "gpu_mode": "exclusive"
     },
     {
       "id": "Cloud9-Bonsai2-27B-Ternary-Abliterated",
@@ -170,7 +180,8 @@
         "decode_tps": 8.59,
         "autopublisher": 90,
         "agentic": 100
-      }
+      },
+      "gpu_mode": "exclusive"
     }
   ]
 }
