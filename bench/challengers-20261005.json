@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date": "2026-10-05",
+  "purpose": "October 5 controlled challenger bakeoff. Same candidate llama.cpp runtime for model-to-model pass; retained winners must later beat their production runtime/model head-to-head. Full AutoPublisher + agentic gates, not speed-only.",
+  "models": [
+    {
+      "id": "control-minicpm5-2b-heretic-q6k-dspark",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2B-heretic-Q6_K.gguf",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2.6B-DSpark.gguf",
+      "spec": "dspark",
+      "uncensored": true,
+      "source": "retained production control"
+    },
+    {
+      "id": "control-qwen38-4b-heretic-mtp",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38distill-qwen35-4b-mtp/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "source": "retained production control"
+    },
+    {
+      "id": "sharp-spark-x25-4b-q6kxl",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/sharp-spark-x25-q6/Sharp-Spark-X2.5-4B-Q6_K_XL.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "peculiar-ragdoll/Sharp-Spark-X2.5-4B-GGUF",
+      "note": "Author-recommended Q6_K_XL; corrected Sharp tool template; no MTP."
+    },
+    {
+      "id": "nanbeige42-3b-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261004/nanbeige42-3b/Nanbeige4.2-3B-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "iamimmanuelraj/Nanbeige4.2-3B-GGUF"
+    },
+    {
+      "id": "neohorse1-4b-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261004/neohorse1-4b/NeoHorse-1-4B-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "TokenRhythm/NeoHorse-1-4B-GGUF"
+    },
+    {
+      "id": "agents-a1-4b-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261004/agents-a1-4b/Agents-A1-4B-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "InternScience/Agents-A1-4B-Q4_K_M-GGUF"
+    },
+    {
+      "id": "control-pym-qwen36-35b-a3b-q2-mtp",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "spec": "inline",
+      "uncensored": false,
+      "source": "retained Pym production model; same-runtime control"
+    },
+    {
+      "id": "qwen38-distill-35b-a3b-q2k",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/qwen38-35b-a3b-distill-q2k/Qwen3.8-35B-A3B-Q2_K.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "empero-ai/Qwen3.8-35B-A3B-Distill-GGUF",
+      "note": "Community Qwen3.8 distillation into Qwen3.6 35B-A3B sparse architecture; not official Qwen3.8 MoE."
+    },
+    {
+      "id": "tiel-coder-35b-a3b-mtp-q2kxl",
+      "group": "large",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/tiel-coder-35b-a3b-mtp-q2/Tiel-Coder-35B-A3B-MTP-UD-Q2_K_XL.gguf",
+      "spec": "inline",
+      "uncensored": false,
+      "source": "peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP",
+      "note": "Integrated pinned MTP head; agentic coding candidate at Pym-like footprint."
+    }
+  ]
+}

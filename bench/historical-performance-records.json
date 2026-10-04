@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "updated_at": "2026-10-05T00:15:00+02:00",
+  "policy": "Never overwrite a historical winner or rejected correctness result. New runs append to BENCHMARK_LEDGER.jsonl; this file summarizes records by distinct engine/model/protocol.",
+  "recovered_sources": {
+    "old_workspace": "/srv/lxc/ia-compute/data/cloud9-rdna-vulkan-lab/ (no longer present on disk)",
+    "old_expected_records": [
+      "records/PERFORMANCE_RECORDS.json",
+      "records/BENCHMARK_LEDGER.jsonl"
+    ],
+    "recovery": "prior-session checkpoint history + surviving Cloud9 Engine git documentation"
+  },
+  "records": [
+    {
+      "id": "flashnext-ad427-raw",
+      "date": "2026-09-14",
+      "engine": "llama.cpp/Atomic-era Vulkan",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next",
+      "quant": "Atomic Dynamic AD-4.27bpw-Q4_K_M-M64",
+      "spec": "none/raw baseline",
+      "decode_tps": 8.29,
+      "status": "historical baseline"
+    },
+    {
+      "id": "flashnext-iq1s-baseline",
+      "date": "2026-09-14",
+      "engine": "Vulkan/RADV",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next",
+      "quant": "IQ1_S",
+      "spec": "historical baseline",
+      "decode_tps": 10.31,
+      "status": "historical baseline"
+    },
+    {
+      "id": "flashnext-rocmfpx-mtp3",
+      "date": "2026-09-13",
+      "engine": "ROCmFPX-Vulkan",
+      "runtime_commit": "aed0d5fd9",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next AD-4.27",
+      "draft": "Agention Q8",
+      "spec": "strict-Qwen MTP3",
+      "coding_decode_tps": 14.54,
+      "prose_decode_tps": 13.20,
+      "status": "validated historical"
+    },
+    {
+      "id": "flashnext-rocmfpx-mtp2",
+      "date": "2026-09-13",
+      "engine": "ROCmFPX-Vulkan",
+      "runtime_commit": "aed0d5fd9",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next AD-4.27",
+      "draft": "Agention Q8",
+      "spec": "strict-Qwen MTP2",
+      "coding_decode_tps": 13.58,
+      "prose_decode_tps": 13.48,
+      "status": "validated historical"
+    },
+    {
+      "id": "flashnext-frspec-record",
+      "date": "2026-09-13",
+      "engine": "Cloud9 RDNA Vulkan composite",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next",
+      "quant": "AD-4.27bpw-Q4_K_M-M64",
+      "draft": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+      "spec": "Strix NextN / FR-Spec / MTP3",
+      "fix_commit": "b1ea2c634",
+      "protocol": "~132 prompt tokens; smoke64; 3x256; cache_prompt=false",
+      "coding_runs_tps": [
+        16.79,
+        17.7884059,
+        17.843
+      ],
+      "coding_median_tps": 17.7884059,
+      "prose_median_tps": 11.63,
+      "prefill_tps_range": [
+        58,
+        60
+      ],
+      "drafts_accepted": 184,
+      "drafts_proposed": 213,
+      "status": "historical record"
+    },
+    {
+      "id": "flashnext-frspec-safe-nogdn",
+      "date": "2026-09-15",
+      "engine": "Cloud9 RDNA Vulkan",
+      "runtime_commit": "53f34cfaa",
+      "build": "b10738",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next AD-4.27 + FR-Spec",
+      "spec": "MTP3; GDN fusion OFF; TurboQuant + Vulkan SET_ROWS + FlashAttention + CPU-WHT",
+      "decode_tps": 17.878,
+      "status": "promoted historical safe"
+    },
+    {
+      "id": "flashnext-frspec-gdn-optin",
+      "date": "2026-09-15",
+      "engine": "Cloud9 RDNA Vulkan",
+      "runtime_commit": "53f34cfaa",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.8-Flash-Next AD-4.27 + FR-Spec",
+      "spec": "MTP3; GGML_VK_ENABLE_GDN_CACHE_FUSION=1",
+      "decode_tps": 18.009,
+      "status": "opt-in only",
+      "reason_not_default": "separate Pym series exposed GDN cache-fusion correctness/corruption risk on RADV"
+    },
+    {
+      "id": "pym-mtp-sweep",
+      "date": "2026-09-14",
+      "engine": "Cloud9 Vulkan",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.6-35B-A3B Pym Q2-MTP",
+      "results_tps": {
+        "no_mtp": 24.11,
+        "mtp1": 31.58,
+        "mtp2_median": 34.56,
+        "mtp2_code": 35.61,
+        "mtp2_math": 37.2,
+        "mtp2_prose": 33.18,
+        "mtp2_reasoning": 33.52,
+        "mtp3": 33.52,
+        "mtp4": 31.41
+      },
+      "winner": "MTP2",
+      "status": "validated historical"
+    },
+    {
+      "id": "pym-atomic16-kv",
+      "date": "2026-09-11",
+      "engine": "Atomic 1.6",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.6-35B-A3B Pym Q2-MTP",
+      "spec": "MTP2",
+      "results_tps": {
+        "f16": 36.28,
+        "q8": 35.07,
+        "turbo4": 35.2,
+        "turbo3": 34.4
+      },
+      "status": "validated historical"
+    },
+    {
+      "id": "pym-long-context",
+      "date": "2026-09-11",
+      "engine": "Cloud9/Atomic-era Vulkan",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.6-35B-A3B Pym Q2-MTP",
+      "results_tps": {
+        "32k_f16": 20.26,
+        "32k_turbo3": 19.89,
+        "64k_f16": 16.81,
+        "64k_turbo3": 16.73
+      },
+      "status": "validated historical"
+    },
+    {
+      "id": "pym-turboquant-corrupt",
+      "date": "2026-09-14",
+      "engine": "TurboQuant experimental",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.6-35B-A3B Pym Q2-MTP",
+      "runtime_commits": [
+        "f2b1c3cdd",
+        "07f502168",
+        "50eee0bac",
+        "8009e7bb2",
+        "98135fe95"
+      ],
+      "decode_median_tps": 38.2486,
+      "vulkan_tests": "5806/5806 PASS",
+      "correctness": "FAIL / corrupt output",
+      "status": "REJECTED"
+    },
+    {
+      "id": "pym-gdn-corrected",
+      "date": "2026-09-15",
+      "engine": "Cloud9 RDNA Vulkan",
+      "runtime_commit": "53f34cfaa",
+      "backend": "Vulkan/RADV",
+      "model": "Qwen3.6-35B-A3B Pym Q2-MTP",
+      "spec": "MTP2; GDN cache fusion OFF",
+      "runs_tps": [
+        33.46,
+        33.21,
+        33.72
+      ],
+      "median_tps": 33.46,
+      "drafts_accepted": 161,
+      "drafts_proposed": 187,
+      "correctness": "deterministic",
+      "status": "validated safe"
+    },
+    {
+      "id": "strata-coder-iq1m",
+      "date": "2026-10-03",
+      "engine": "Strata v0.1.38 Cloud9 gfx1103",
+      "backend": "ROCm/HIP gfx1103",
+      "model": "Qwen3.8-Flash-Next Coder",
+      "quant": "GSQ-RCO IQ1_M",
+      "spec": "MTP multidomain expert profile/cache1024",
+      "best_safe_decode_tps": 5.96,
+      "contemporary_range_tps": [
+        3.9,
+        4.5
+      ],
+      "status": "specialized research; NOT comparable to historical AD-4.27 Vulkan"
+    }
+  ]
+}
