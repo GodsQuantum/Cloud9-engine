@@ -100,20 +100,34 @@
         "-ot",
         "per_layer_token_embd=CPU"
       ],
-      "note": "Qwen3.8-Flash-Next qwen4_exp architecture reduced to 35.1B/~3B-active; 10B n-gram memory is load-bearing and must remain whole in CPU/RAM. Stock llama.cpp."
+      "note": "Qwen3.8-Flash-Next qwen4_exp architecture reduced to 35.1B/~3B-active; 10B n-gram memory is load-bearing and must remain whole in CPU/RAM. Stock llama.cpp.",
+      "download": {
+        "repo": "logic65/Whittle-Qwen-3.8-35B-A3B-GGUF",
+        "file": "Whittle-Qwen-3.8-35B-A3B-Q4_K_M.gguf",
+        "size": 21281827744,
+        "sha256": "a9c3669333d54de6932f1c793d5d163bbb138c216228322af0b9a2dccc39c42e"
+      }
     },
     {
       "id": "qwen38-flash-next-gyro",
       "group": "flash-special",
       "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/agention-main-03eb382-vulkan/bin/llama-server",
-      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/flashnext-gyro/Qwen3.8-Flash-Next-Gyro.gguf",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/flashnext-gyro/Qwen3.8-Flash-Next-Gyro-S-TQ1_0.gguf",
       "spec": "none",
       "uncensored": false,
       "source": "agentionai/Qwen3.8-Flash-Next-Gyro-GGUF",
       "extra_args": [
         "--ngram-on-disk"
       ],
-      "note": "Full Qwen3.8-Flash-Next architecture with APR/Gyro routed-expert quant. 58.5 GB file but ~28.8 GiB GPU at 64K because the 51.2B n-gram table stays on disk. Specialized agentionai/llama.cpp Vulkan runtime required."
+      "note": "Gyro-S TQ1_0 full Qwen3.8-Flash-Next architecture; 58.5 GB on disk but published 28.8 GiB GPU at 64K because 51.2B n-gram table stays on disk. Specialized agentionai/llama.cpp Vulkan runtime required; first Cloud9 gate without MTP.",
+      "download": {
+        "repo": "agentionai/Qwen3.8-Flash-Next-Gyro-GGUF",
+        "file": "Qwen3.8-Flash-Next-Gyro-S-TQ1_0.gguf",
+        "size": 58487015808,
+        "sha256": "250a778eaa818b85a8165d0f35fe3360608456e952cb574b0cd0a15b5efee098"
+      },
+      "estimated_resident_bytes": 30923764531,
+      "oversize_policy": "ngram-on-disk"
     }
   ]
 }
