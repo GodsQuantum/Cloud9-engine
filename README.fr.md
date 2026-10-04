@@ -12,6 +12,7 @@ Cloud9 Engine est un runtime local pour AMD RDNA + Vulkan. La production repose 
 - **Une seule API, plusieurs runtimes internes** : le routeur choisit `upstream-pym`, `upstream-fast`, `upstream-next`, `upstream-latest` ou Prism selon le modèle. Atomic reste laboratoire uniquement sur la 780M.
 - **Mises à jour sans roulette russe** : chaque update devient candidate et doit repasser le gate hardware avant production.
 - **Fusible modèles géants** : les fichiers modèle >40 Gio sont refusés par défaut sur la 780M de référence après qu'un smoke Flash-Next a saturé le GTT ; un override explicite de laboratoire est requis.
+- **Multi-machine prêt pour USB4/LAN** : les builds upstream Cloud9 incluent le backend RPC de llama.cpp. Un second nœud peut lancer `cloud9-engine rpc-worker`; le coordinateur utilise `layer` par défaut et n'active `tensor` qu'explicitement après benchmark. Le worker reste bindé sur loopback tant qu'un accès privé distant n'est pas explicitement autorisé.
 
 ## ⚡ Installation rapide
 ```bash
@@ -44,7 +45,7 @@ Le kernel passe **921/921 tests `MUL_MAT_ID` Vulkan** et le decode seul reste ne
 ## 🔄 Politique d'update
 GitHub surveille llama.cpp, Atomic et Prism. Une nouvelle révision reste candidate tant que le patchset déclaré, la compilation Vulkan et les gates matériels/modèles n'ont pas passé. **Aucun refresh de source ne remplace directement un runtime connu comme bon.**
 
-Voir aussi : [architecture](docs/architecture.md), [benchmarks](docs/benchmarks.md), [installation](docs/installation.md) et [procédure d'update](docs/updates.md).
+Voir aussi : [architecture](docs/architecture.md), [benchmarks](docs/benchmarks.md), [installation](docs/installation.md), [multi-machine](docs/distributed.md) et [procédure d'update](docs/updates.md).
 
 ## 📄 Licence
 Les scripts et docs originaux Cloud9 Engine sont sous licence MIT. Les moteurs upstream conservent leurs licences respectives.

@@ -8,6 +8,8 @@ case "$cmd" in
   build) exec "$REPO/scripts/build-backends.sh" "$@" ;;
   gate) exec "$REPO/scripts/hardware-gate.sh" "$@" ;;
   server) exec "$REPO/bin/cloud9-llama-server" "$@" ;;
+  rpc-worker) exec "$REPO/bin/cloud9-rpc-server" "$@" ;;
+  distributed-doctor) exec "$REPO/scripts/distributed-doctor.sh" "$@" ;;
   status)
     echo "Cloud9 Engine"
     echo "  repo: $REPO"
@@ -28,6 +30,6 @@ case "$cmd" in
     for b in atomic upstream; do [[ -x "$ENGINE_HOME/current/$b/bin/llama-server" ]] && echo "✓ $b" || echo "○ $b not promoted"; done
     exit "$fail"
     ;;
-  help|-h|--help) echo 'Usage: cloud9-engine {status|doctor|build|gate|server}' ;;
+  help|-h|--help) echo 'Usage: cloud9-engine {status|doctor|build|gate|server|rpc-worker|distributed-doctor}' ;;
   *) echo "Unknown command: $cmd" >&2; exit 2 ;;
 esac

@@ -23,6 +23,7 @@ Cloud9 Engine is a small control layer for local LLMs on AMD RDNA GPUs. Producti
 - **Oversize-model fuse** — model files above 40 GiB are refused by default on the reference 780M after a Flash-Next lab load exhausted GTT; bypass requires an explicit laboratory override.
 - **Safe automatic tracking** — GitHub watches llama.cpp, Atomic and Prism; source changes become reviewable candidates, never invisible production `git pull`s.
 - **Drop-in server command** — `cloud9-llama-server` routes to the promoted backend and still accepts normal llama-server arguments.
+- **Multi-machine ready** — upstream-derived builds include llama.cpp RPC. A second Cloud9 node can expose its accelerator with `cloud9-engine rpc-worker`; the coordinator defaults to conservative layer split and can opt into tensor split only after hardware A/B. RPC stays loopback-only until explicitly enabled.
 
 ## ⚡ Quick start
 
@@ -102,6 +103,7 @@ cloud9-engine server ...      run through the adaptive server wrapper
 - [Architecture](docs/architecture.md)
 - [Benchmarks](docs/benchmarks.md)
 - [Updating safely](docs/updates.md)
+- [Distributed / multi-machine](docs/distributed.md)
 - [Français](README.fr.md)
 - [简体中文](README.zh-CN.md)
 

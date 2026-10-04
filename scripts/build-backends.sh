@@ -32,9 +32,22 @@ clone_or_fetch(){
   fi
 }
 build_one(){
-  local src=$1 out=$2
-  cmake -S "$src" -B "$out" -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DGGML_NATIVE=ON -DGGML_CCACHE=ON -DBUILD_SHARED_LIBS=ON -DLLAMA_CURL=OFF -DLLAMA_BUILD_UI=OFF -DLLAMA_USE_PREBUILT_UI=OFF
-  cmake --build "$out" -j "${CLOUD9_ENGINE_JOBS:-$(nproc)}" --target llama-server llama-cli llama-bench
+  local src=$1 out=$2 rpc=${3:-OFF}
+  local -a cmake_args=(
+    -DCMAKE_BUILD_TYPE=Release
+    -DGGML_VULKAN=ON
+    -DGGML_NATIVE=ON
+    -DGGML_CCACHE=ON
+    -DBUILD_SHARED_LIBS=ON
+    -DLLAMA_CURL=OFF
+    -DLLAMA_BUILD_UI=OFF
+    -DLLAMA_USE_PREBUILT_UI=OFF
+    -DGGML_RPC="$rpc"
+  )
+  cmake -S "$src" -B "$out" "${cmake_args[@]}"
+  local -a targets=(llama-server llama-cli llama-bench)
+  [[ "$rpc" == ON ]] && targets+=(ggml-rpc-server)
+  cmake --build "$out" -j "${CLOUD9_ENGINE_JOBS:-$(nproc)}" --target "${targets[@]}"
 }
 
 AT_SHORT=${AT_SHA:0:12}; AT_OUT="$RELEASES/atomic-$AT_SHORT"
@@ -44,7 +57,7 @@ PR_SHORT=${PR_SHA:0:12}; PR_OUT="$RELEASES/prism-$PR_SHORT"
 if want_backend atomic; then
   clone_or_fetch "$AT_REPO" "$SRC/atomic"
   git -C "$SRC/atomic" reset --hard "$AT_SHA"; git -C "$SRC/atomic" clean -fdx
-  [[ -x "$AT_OUT/bin/llama-server" ]] || build_one "$SRC/atomic" "$AT_OUT"
+  [[ -x "$AT_OUT/bin/llama-server" ]] || build_one "$SRC/atomic" "$AT_OUT" OFF
   ln -sfn "$AT_OUT" "$CAND/atomic"
 fi
 
@@ -53,14 +66,16 @@ if want_backend upstream; then
   git -C "$SRC/upstream" am --abort >/dev/null 2>&1 || true
   git -C "$SRC/upstream" reset --hard "$UP_SHA"; git -C "$SRC/upstream" clean -fdx
   "$ROOT/scripts/apply-upstream-patches.sh" "$SRC/upstream" "$ROOT/$UP_PATCHSET"
-  [[ -x "$UP_OUT/bin/llama-server" ]] || build_one "$SRC/upstream" "$UP_OUT"
+  if [[ ! -x "$UP_OUT/bin/llama-server" || ! -x "$UP_OUT/bin/ggml-rpc-server" ]]; then
+    build_one "$SRC/upstream" "$UP_OUT" ON
+  fi
   ln -sfn "$UP_OUT" "$CAND/upstream"
 fi
 
 if want_backend prism; then
   clone_or_fetch "$PR_REPO" "$SRC/prism"
   git -C "$SRC/prism" reset --hard "$PR_SHA"; git -C "$SRC/prism" clean -fdx
-  [[ -x "$PR_OUT/bin/llama-server" ]] || build_one "$SRC/prism" "$PR_OUT"
+  [[ -x "$PR_OUT/bin/llama-server" ]] || build_one "$SRC/prism" "$PR_OUT" OFF
   ln -sfn "$PR_OUT" "$CAND/prism"
 fi
 
