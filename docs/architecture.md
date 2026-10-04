@@ -40,7 +40,16 @@ Production traffic goes through `cloud9-model-router` and `config/model-catalog.
 - MTP/DSpark draft configuration;
 - benchmark metadata.
 
-The router exposes one OpenAI-compatible API, keeps at most one LLM worker resident, acquires the shared GPU lock, refuses to preempt a busy embedding request, unloads idle LLMs, and restores the embedding service after the worker exits. It also rejects model files larger than 40 GiB by default; an explicit `CLOUD9_ENGINE_ALLOW_OVERSIZE=1` laboratory override is required to bypass that guard.
+The router exposes one OpenAI-compatible API, keeps at most one LLM worker resident, acquires the shared heavy-workload GPU lock, unloads idle LLMs, and restores managed services after the worker exits. It also rejects model files larger than 40 GiB by default; an explicit `CLOUD9_ENGINE_ALLOW_OVERSIZE=1` laboratory override is required to bypass that guard.
+
+## GPU arbitration profiles
+
+The physical Radeon 780M is shared even if workloads live in different containers, so LXC separation is **not** a substitute for GPU scheduling. Cloud9 uses two arbitration profiles:
+
+- `exclusive` — strict benchmark / Strata / unsafe-load mode. All managed GPU services are quiesced and the runner requires zero remaining `renderD128` users before starting.
+- `coexist-light` — production image mode. Heavy LLM/image/ROCm services remain mutually exclusive, but **Cloud9 Embedding Engine and Cloud9-Speaches remain online**. The runner accepts only those classified light GPU users and falls back to `exclusive` when memory/GTT headroom is below the configured safety thresholds.
+
+ComfyUI and AutoPublisher image services use `coexist-light`; reproducible benchmarks keep the default `exclusive` mode. A live 2026-10-05 validation kept both `:8091` and `:8005` healthy for 8/8 probes during a coexist-light window.
 
 ## Atomic policy
 
