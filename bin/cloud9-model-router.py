@@ -127,6 +127,30 @@ def gtt_used_mib():
     except Exception:
         return 0
 
+def model_oversize_decision(m,model_bytes,max_bytes,max_special_resident_bytes,env_allow=False):
+    """Return (allowed, reason) for a model that may exceed the generic file-size fuse."""
+    if model_bytes <= max_bytes:
+        return True,"within-generic-limit"
+    if env_allow:
+        return True,"explicit-lab-override"
+
+    policy=m.get("oversize_policy")
+    if not policy:
+        return False,"generic-oversize-refusal"
+    if policy!="ngram-on-disk":
+        raise RuntimeError(f"unknown oversize_policy for {m.get('id','?')}: {policy}")
+
+    extra=list(m.get("extra_args",[]))
+    estimate=int(m.get("estimated_resident_bytes",0) or 0)
+    if "--ngram-on-disk" not in extra:
+        raise RuntimeError(f"invalid ngram-on-disk safety declaration for {m.get('id','?')}: --ngram-on-disk required")
+    if estimate <= 0 or estimate > max_special_resident_bytes:
+        raise RuntimeError(
+            f"invalid ngram-on-disk safety declaration for {m.get('id','?')}: "
+            f"estimated_resident_bytes={estimate}, ceiling={max_special_resident_bytes}"
+        )
+    return True,"typed-ngram-on-disk"
+
 def container_id(name):
     p=run_docker("inspect","-f","{{.Id}}",name,timeout=10)
     return p.stdout.strip() if p.returncode==0 else ""
@@ -316,16 +340,32 @@ class RouterState:
         if self.worker is not None and self.worker.poll() is None and self.worker_model==m["id"]:
             return
         model_path=Path(m["model"])
-        max_bytes=int(os.environ.get("CLOUD9_ENGINE_MAX_MODEL_BYTES",catalog.get("defaults",{}).get("max_model_bytes",42949672960)))
-        allow_oversize=os.environ.get("CLOUD9_ENGINE_ALLOW_OVERSIZE","0").lower() in ("1","true","yes") or bool(m.get("allow_oversize"))
+        defaults=catalog.get("defaults",{})
+        max_bytes=int(os.environ.get("CLOUD9_ENGINE_MAX_MODEL_BYTES",defaults.get("max_model_bytes",42949672960)))
+        env_allow=os.environ.get("CLOUD9_ENGINE_ALLOW_OVERSIZE","0").lower() in ("1","true","yes")
         try:
             model_bytes=model_path.stat().st_size
         except FileNotFoundError:
             raise RuntimeError(f"model file is missing: {model_path}")
-        if model_bytes > max_bytes and not allow_oversize:
+
+        # Some Flash-Next formats are large on disk because a lookup table stays
+        # on disk rather than resident in GTT/UMA. The typed policy keeps the
+        # generic >40 GiB fuse intact while allowing only a bounded on-disk
+        # n-gram format with the required runtime flag.
+        max_special=int(defaults.get("max_special_resident_bytes",32212254720))
+        allowed,oversize_reason=model_oversize_decision(
+            m,model_bytes,max_bytes,max_special,env_allow=env_allow,
+        )
+        if not allowed:
             raise RuntimeError(
                 f"refusing oversized model {m['id']}: {model_bytes} bytes > safety limit {max_bytes}; "
-                "use CLOUD9_ENGINE_ALLOW_OVERSIZE=1 only for an explicit lab run"
+                "use a validated typed oversize policy or CLOUD9_ENGINE_ALLOW_OVERSIZE=1 for an explicit lab run"
+            )
+        if model_bytes > max_bytes:
+            print(
+                f"Cloud9 router: oversize accepted for {m['id']} reason={oversize_reason} "
+                f"(file={model_bytes} resident_estimate={m.get('estimated_resident_bytes')})",
+                flush=True,
             )
         end=time.monotonic()+600
         with self.cv:
