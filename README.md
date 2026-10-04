@@ -20,7 +20,7 @@ Cloud9 Engine is a small control layer for local LLMs on AMD RDNA GPUs. Producti
 - **One stable API, model-specific runtimes** — the model router can select `upstream-pym`, `upstream-fast`, `upstream-next`, `upstream-latest` or Prism per model while exposing one OpenAI-compatible endpoint. Atomic is lab-only on the reference 780M.
 - **RDNA-first validation** — the reference machine is Radeon 780M / RADV (`gfx1103` class hardware), not CUDA.
 - **Hardware-gated promotion** — updates are candidates until they load a real model and survive an on-device benchmark.
-- **Oversize-model fuse** — model files above 40 GiB are refused by default on the reference 780M after a Flash-Next lab load exhausted GTT; bypass requires an explicit laboratory override.
+- **Oversize-model fuse** — ordinary model files above 40 GiB are refused by default on the reference 780M after a Flash-Next lab load exhausted GTT. A separate typed `ngram-on-disk` policy may be used only for validated formats whose resident estimate is <=30 GiB and whose runtime explicitly receives `--ngram-on-disk`; the generic laboratory override remains explicit.
 - **Safe automatic tracking** — GitHub watches llama.cpp, Atomic and Prism; source changes become reviewable candidates, never invisible production `git pull`s.
 - **Drop-in server command** — `cloud9-llama-server` routes to the promoted backend and still accepts normal llama-server arguments.
 - **Multi-machine ready** — upstream-derived builds include llama.cpp RPC. A second Cloud9 node can expose its accelerator with `cloud9-engine rpc-worker`; the coordinator defaults to conservative layer split and can opt into tensor split only after hardware A/B. RPC stays loopback-only until explicitly enabled.

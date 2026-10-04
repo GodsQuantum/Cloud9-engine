@@ -40,7 +40,7 @@ Production traffic goes through `cloud9-model-router` and `config/model-catalog.
 - MTP/DSpark draft configuration;
 - benchmark metadata.
 
-The router exposes one OpenAI-compatible API, keeps at most one LLM worker resident, acquires the shared heavy-workload GPU lock, unloads idle LLMs, and restores managed services after the worker exits. It also rejects model files larger than 40 GiB by default; an explicit `CLOUD9_ENGINE_ALLOW_OVERSIZE=1` laboratory override is required to bypass that guard.
+The router exposes one OpenAI-compatible API, keeps at most one LLM worker resident, acquires the shared GPU arbiter, unloads idle LLMs, and restores managed services after the worker exits. Ordinary model files larger than 40 GiB are rejected by default. Specialized formats that are large on disk only because an n-gram lookup remains on disk may use the typed `ngram-on-disk` policy, but only with `--ngram-on-disk` present and an estimated resident footprint <=30 GiB. `CLOUD9_ENGINE_ALLOW_OVERSIZE=1` remains a lab-only override, never a production default.
 
 ## GPU arbitration profiles
 

@@ -5,6 +5,7 @@
     "worker_idle_seconds": 30,
     "gpu_lock_timeout_seconds": 120,
     "max_model_bytes": 42949672960,
+    "max_special_resident_bytes": 32212254720,
     "gpu_mode": "exclusive",
     "coexist_min_available_mib": 12288,
     "coexist_max_gtt_mib": 8192
