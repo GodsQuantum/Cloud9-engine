@@ -99,3 +99,11 @@ call `search_transcript(DPAFM48)` and then `create_social_draft(..., platform=In
 
 Raw per-run JSON and server logs are retained under `bench/results/2026-10-02/`; the production-facing summary
 is the model catalog in `config/model-catalog.json`.
+
+## Recovered historical Flash-Next Vulkan record
+
+Do not confuse the current Strata Coder IQ1_M result with the older Cloud9 composite Flash-Next stack. The recovered historical record on the same Radeon 780M used Qwen3.8-Flash-Next Atomic Dynamic **AD-4.27bpw-Q4_K_M-M64** with Vulkan/RADV, NextN/MTP3 and the **FR-Spec 65K** Q8 sidecar. Under the locked ~132-token prompt + smoke64 + 3x256 protocol it reached **17.7884 tok/s median coding**, later **17.878 tok/s safe** and **18.009 tok/s with GDN opt-in**. The GDN path was not retained blindly because a separate sparse-MoE series exposed RADV correctness problems.
+
+The present Strata Coder IQ1_M **5.96 tok/s best-safe** result is a different engine, quant, expert-streaming strategy and benchmark family. Both numbers are valid; they are not directly comparable.
+
+Canonical recovery note: `../Sources/Worklogs/2026-10-04_RECOVERED_HISTORICAL_BENCHMARKS.md` in the Moteurs IA workspace.
