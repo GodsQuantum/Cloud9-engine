@@ -83,12 +83,20 @@ host actually exposes a supported verbs/RDMA device.
 Recommended first-pass policy:
 
 1. private point-to-point addressing;
-2. `cloud9-engine distributed-doctor WORKER_IP:50052`;
-3. worker tensor cache enabled;
-4. `layer` split first;
-5. benchmark explicit placement ratios;
-6. test `tensor` only after a layer baseline and reject it if TTFT, decode,
-   memory/GTT, thermals or correctness regress.
+2. measure the actual USB4 path with `ping` and `iperf3` before inference;
+3. `cloud9-engine distributed-doctor WORKER_IP:50052`; the doctor validates
+   TCP reachability and the ggml RPC/device handshake, not just an open port;
+4. worker tensor cache enabled, then compare cold and warm model-load time;
+5. `layer` split first;
+6. benchmark explicit placement ratios;
+7. test `row` and then experimental `tensor` only after a layer baseline;
+8. reject any distributed profile if TTFT, prefill, effective decode,
+   memory/GTT, thermals, output correctness, or worker-loss recovery regress.
+
+For production measurements keep the exact model, context, speculative profile
+and prompt corpus identical between single-host and distributed arms. Small
+models should normally remain single-host; the interconnect is most likely to
+pay for large MoE models, long-context work and concurrent requests.
 
 ## Workload policy
 

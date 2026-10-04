@@ -46,6 +46,16 @@ except Exception as e:
     print(f"  peer {host}:{port}: UNREACHABLE ({e})")
     raise SystemExit(4)
 PY
+  if [[ -n "$server" ]]; then
+    echo "  RPC protocol/device probe:"
+    if rpc_devices=$("$server" --rpc "$peer" --list-devices 2>&1); then
+      sed 's/^/    /' <<<"$rpc_devices"
+    else
+      sed 's/^/    /' <<<"$rpc_devices" >&2
+      echo "  RPC protocol/device probe: FAILED" >&2
+      exit 5
+    fi
+  fi
 fi
 
 if command -v ip >/dev/null; then
