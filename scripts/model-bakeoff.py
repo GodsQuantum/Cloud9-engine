@@ -209,6 +209,7 @@ def server_args(m,port):
     elif m.get("spec")=="dspark":
         x += ["--model-draft",m["draft"],"--spec-type","draft-dspark","--spec-draft-n-max","7",
               "--spec-draft-p-min","0.6","--spec-draft-ngl","99"]
+    x += list(m.get("extra_args",[]))
     return x
 rows=[]
 speed_prompt=(ROOT/"bench/prompt.txt").read_text()
