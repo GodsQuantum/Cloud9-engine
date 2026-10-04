@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "date": "2026-10-04",
+  "purpose": "Bounded text-first challenger gate. Same llama.cpp candidate runtime for every arm; no speculative decoding in pass 1. Promote nothing until a challenger clears local AutoPublisher + agentic gates and then wins a direct head-to-head against a retained production model.",
+  "models": [
+    {
+      "id": "spark-x2.5-4b-uncensored-q4km-candidate",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/spark-x25-4b-q4/Spark-X2.5-4B-uncensored-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": true,
+      "source": "existing Cloud9 lab baseline",
+      "runtime_role": "upstream-candidate"
+    },
+    {
+      "id": "nanbeige42-3b-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261004/nanbeige42-3b/Nanbeige4.2-3B-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "iamimmanuelraj/Nanbeige4.2-3B-GGUF",
+      "runtime_role": "upstream-candidate",
+      "note": "Native nanbeige architecture is present in this llama.cpp candidate. Text-first gate; no fork-specific runtime."
+    },
+    {
+      "id": "neohorse1-4b-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261004/neohorse1-4b/NeoHorse-1-4B-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "TokenRhythm/NeoHorse-1-4B-GGUF",
+      "runtime_role": "upstream-candidate",
+      "note": "Qwen3.5-derived agent/tool/coding challenger. Pass 1 intentionally disables speculative decoding; inspect MTP/abliterated variants only if base wins."
+    },
+    {
+      "id": "agents-a1-4b-q4km",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261004/agents-a1-4b/Agents-A1-4B-Q4_K_M.gguf",
+      "spec": "none",
+      "uncensored": false,
+      "source": "InternScience/Agents-A1-4B-Q4_K_M-GGUF",
+      "runtime_role": "upstream-candidate",
+      "note": "Qwen3.5-derived agentic/multimodal model. Text-only first gate; no mmproj downloaded."
+    }
+  ]
+}

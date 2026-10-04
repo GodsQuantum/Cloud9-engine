@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "date": "2026-10-04",
+  "purpose": "Same-model current-vs-candidate llama.cpp runtime gate: speed + strict JSON schema + 2-step tool calling on the retained production Qwen3.8-derived 4B MTP model.",
+  "models": [
+    {
+      "id": "qwen38-prod-runtime-a868c3",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-a868c3e3c566-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38distill-qwen35-4b-mtp/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "source": "production control",
+      "runtime_role": "upstream-latest-current"
+    },
+    {
+      "id": "qwen38-candidate-runtime-050439614",
+      "group": "small",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/upstream-050439614-cloud9/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38distill-qwen35-4b-mtp/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "spec": "inline",
+      "uncensored": true,
+      "source": "llama.cpp 050439614 + Cloud9 RDNA3 UMA patch",
+      "runtime_role": "upstream-latest-candidate"
+    }
+  ]
+}
