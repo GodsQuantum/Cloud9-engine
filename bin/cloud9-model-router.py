@@ -100,13 +100,40 @@ def gpu_users():
                 try:
                     if os.path.realpath(p+"/fd/"+fd)!=target: continue
                     cmd=Path(p+"/cmdline").read_bytes().replace(b"\0",b" ").decode(errors="replace").strip()
-                    seen.append((int(name),cmd))
+                    try:
+                        cgroup=Path(p+"/cgroup").read_text(errors="replace").strip()
+                    except (FileNotFoundError,PermissionError,OSError):
+                        cgroup=""
+                    seen.append((int(name),cmd,cgroup))
                     break
                 except (FileNotFoundError,PermissionError,OSError):
                     pass
         except (FileNotFoundError,PermissionError,OSError):
             pass
     return seen
+
+def mem_available_mib():
+    try:
+        for line in Path("/proc/meminfo").read_text().splitlines():
+            if line.startswith("MemAvailable:"):
+                return int(line.split()[1])//1024
+    except Exception:
+        pass
+    return 0
+
+def gtt_used_mib():
+    try:
+        return int(Path("/sys/class/drm/card0/device/mem_info_gtt_used").read_text().strip())//1024//1024
+    except Exception:
+        return 0
+
+def container_id(name):
+    p=run_docker("inspect","-f","{{.Id}}",name,timeout=10)
+    return p.stdout.strip() if p.returncode==0 else ""
+
+def light_gpu_user(user,speaches_id):
+    _pid,_cmd,cgroup=user
+    return "cloud9-embedding.service" in cgroup or bool(speaches_id and speaches_id in cgroup)
 
 def wait_health(proc,timeout=180):
     end=time.monotonic()+timeout
@@ -135,12 +162,13 @@ class RouterState:
         self.last_used=time.monotonic()
         self.active=0
         self.gpu_fd=None
+        self.gpu_mode=None
         self.embed_was_active=False
         self.speaches_was_running=False
         self.worker_log_handle=None
         self.stopping=False
 
-    def acquire_gpu(self,timeout=120):
+    def acquire_gpu(self,m,timeout=120):
         if self.gpu_fd is not None: return
         fd=open(GPU_LOCK,"a+")
         end=time.monotonic()+timeout
@@ -153,35 +181,59 @@ class RouterState:
                     fd.close()
                     raise RuntimeError("GPU busy: timed out waiting for Cloud9 GPU lock")
                 time.sleep(.25)
+
+        requested=m.get("gpu_mode",catalog.get("defaults",{}).get("gpu_mode","exclusive"))
+        if requested not in ("exclusive","coexist-light"):
+            fcntl.flock(fd.fileno(),fcntl.LOCK_UN); fd.close()
+            raise RuntimeError(f"unknown gpu_mode for {m['id']}: {requested}")
+        mode=requested
+        if mode=="coexist-light":
+            min_avail=int(catalog.get("defaults",{}).get("coexist_min_available_mib",12288))
+            max_gtt=int(catalog.get("defaults",{}).get("coexist_max_gtt_mib",8192))
+            avail=mem_available_mib(); gtt=gtt_used_mib()
+            if avail < min_avail or gtt > max_gtt:
+                print(f"Cloud9 router: coexist-light unsafe for {m['id']} "
+                      f"(MemAvailable={avail}MiB GTT={gtt}MiB); falling back to exclusive",flush=True)
+                mode="exclusive"
+
         was=service_active(EMBED_SERVICE)
         speaches_was=container_running(SPEACHES_CONTAINER)
+        stopped_embed=False
+        stopped_speaches=False
         try:
-            if was and embedding_busy():
-                raise RuntimeError("Embedding Engine is processing a request; refusing GPU preemption")
-            if was:
-                run_systemctl("stop",EMBED_SERVICE,check=True,timeout=45)
-                for _ in range(40):
-                    if not service_active(EMBED_SERVICE): break
-                    time.sleep(.25)
-            if speaches_was:
-                if tcp_port_busy(8005):
-                    raise RuntimeError("Speaches is serving an active HTTP connection; refusing GPU preemption")
-                run_docker("stop","--time","20",SPEACHES_CONTAINER,check=True,timeout=30)
-                for _ in range(80):
-                    if not container_running(SPEACHES_CONTAINER): break
-                    time.sleep(.25)
+            if mode=="exclusive":
+                if was and embedding_busy():
+                    raise RuntimeError("Embedding Engine is processing a request; refusing GPU preemption")
+                if was:
+                    run_systemctl("stop",EMBED_SERVICE,check=True,timeout=45)
+                    stopped_embed=True
+                    for _ in range(40):
+                        if not service_active(EMBED_SERVICE): break
+                        time.sleep(.25)
+                if speaches_was:
+                    if tcp_port_busy(8005):
+                        raise RuntimeError("Speaches is serving an active HTTP connection; refusing GPU preemption")
+                    run_docker("stop","--time","20",SPEACHES_CONTAINER,check=True,timeout=30)
+                    stopped_speaches=True
+                    for _ in range(80):
+                        if not container_running(SPEACHES_CONTAINER): break
+                        time.sleep(.25)
+
+            sid=container_id(SPEACHES_CONTAINER) if mode=="coexist-light" else ""
             users=gpu_users()
-            if users:
+            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+            if blocked:
                 for _ in range(80):
                     time.sleep(.25)
                     users=gpu_users()
-                    if not users: break
-            if users:
-                raise RuntimeError("GPU render device is still in use after managed handoff: "+repr(users))
+                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+                    if not blocked: break
+            if blocked:
+                raise RuntimeError(f"GPU render device has incompatible users for {mode}: {blocked!r}")
         except Exception:
-            if speaches_was:
+            if stopped_speaches:
                 run_docker("start",SPEACHES_CONTAINER,timeout=30)
-            if was:
+            if stopped_embed:
                 run_systemctl("thaw",EMBED_SERVICE)
                 run_systemctl("reset-failed",EMBED_SERVICE)
                 run_systemctl("start",EMBED_SERVICE)
@@ -189,15 +241,19 @@ class RouterState:
             fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
             fd.close()
             raise
-        self.embed_was_active=was
-        self.speaches_was_running=speaches_was
+
+        self.gpu_mode=mode
+        self.embed_was_active=stopped_embed
+        self.speaches_was_running=stopped_speaches
         self.gpu_fd=fd
+        print(f"Cloud9 router: GPU mode {mode} for {m['id']}",flush=True)
 
     def release_gpu(self):
         fd=self.gpu_fd
         was=self.embed_was_active
         speaches_was=self.speaches_was_running
         self.gpu_fd=None
+        self.gpu_mode=None
         self.embed_was_active=False
         self.speaches_was_running=False
         if fd:
@@ -278,7 +334,7 @@ class RouterState:
                 if left<=0: raise RuntimeError("timed out waiting for active requests before model switch")
                 self.cv.wait(min(left,1))
         self.stop_worker_locked()
-        self.acquire_gpu(timeout=int(catalog.get("defaults",{}).get("gpu_lock_timeout_seconds",120)))
+        self.acquire_gpu(m,timeout=int(catalog.get("defaults",{}).get("gpu_lock_timeout_seconds",120)))
         args=self.worker_args(m)
         env=os.environ.copy()
         perf=[x for x in env.get("RADV_PERFTEST","").split(",") if x]
