@@ -128,6 +128,89 @@
       },
       "estimated_resident_bytes": 30923764531,
       "oversize_policy": "ngram-on-disk"
+    },
+    {
+      "group": "large-dense",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/agention-main-03eb382-vulkan/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/qwen38-27b-rocmfp4/Qwen3.8-27B-ROCmFP4-FAST.gguf",
+      "uncensored": false,
+      "source": "julianmb/Qwen-3.8-27B-ROCmFP4-FAST-GGUF + agentionai/llama.cpp",
+      "extra_args": [
+        "-b",
+        "2048",
+        "-ub",
+        "512"
+      ],
+      "download": {
+        "target_repo": "julianmb/Qwen-3.8-27B-ROCmFP4-FAST-GGUF",
+        "target_file": "Qwen3.8-27B-ROCmFP4-FAST.gguf",
+        "target_size": 14562236384,
+        "target_sha256": "9ae01038e6d243a5dd37d672aa3b31ad80f3706f3e7b26986352493feee865d5",
+        "draft_repo": "agentionai/Qwen3.8-27B-DFlash2-ROCmFP4-FAST-GGUF",
+        "draft_file": "Qwen3.8-27B-DFlash2-Q4_0_ROCMFP4_FAST.gguf",
+        "draft_size": 1034216992,
+        "draft_sha256": "b4b744f03c456c4716236be76d7110c4c7e5e332e314acbccc9639e6fa2c50da"
+      },
+      "id": "qwen38-27b-rocmfp4-bare",
+      "spec": "none",
+      "note": "Agention Vulkan ROCmFP4 target control; isolates quant/runtime before speculation."
+    },
+    {
+      "group": "large-dense",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/agention-main-03eb382-vulkan/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/qwen38-27b-rocmfp4/Qwen3.8-27B-ROCmFP4-FAST.gguf",
+      "uncensored": false,
+      "source": "julianmb/Qwen-3.8-27B-ROCmFP4-FAST-GGUF + agentionai/llama.cpp",
+      "extra_args": [
+        "-b",
+        "2048",
+        "-ub",
+        "512"
+      ],
+      "download": {
+        "target_repo": "julianmb/Qwen-3.8-27B-ROCmFP4-FAST-GGUF",
+        "target_file": "Qwen3.8-27B-ROCmFP4-FAST.gguf",
+        "target_size": 14562236384,
+        "target_sha256": "9ae01038e6d243a5dd37d672aa3b31ad80f3706f3e7b26986352493feee865d5",
+        "draft_repo": "agentionai/Qwen3.8-27B-DFlash2-ROCmFP4-FAST-GGUF",
+        "draft_file": "Qwen3.8-27B-DFlash2-Q4_0_ROCMFP4_FAST.gguf",
+        "draft_size": 1034216992,
+        "draft_sha256": "b4b744f03c456c4716236be76d7110c4c7e5e332e314acbccc9639e6fa2c50da"
+      },
+      "id": "qwen38-27b-rocmfp4-mtp-adaptive",
+      "spec": "mtp-adaptive",
+      "spec_n_min": 3,
+      "spec_n_max": 4,
+      "note": "Integrated Qwen3.8 NextN/MTP with adaptive draft sizing; compare short and long context separately."
+    },
+    {
+      "group": "large-dense",
+      "runtime": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/agention-main-03eb382-vulkan/bin/llama-server",
+      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/qwen38-27b-rocmfp4/Qwen3.8-27B-ROCmFP4-FAST.gguf",
+      "uncensored": false,
+      "source": "julianmb/Qwen-3.8-27B-ROCmFP4-FAST-GGUF + agentionai/llama.cpp",
+      "extra_args": [
+        "-b",
+        "2048",
+        "-ub",
+        "512"
+      ],
+      "download": {
+        "target_repo": "julianmb/Qwen-3.8-27B-ROCmFP4-FAST-GGUF",
+        "target_file": "Qwen3.8-27B-ROCmFP4-FAST.gguf",
+        "target_size": 14562236384,
+        "target_sha256": "9ae01038e6d243a5dd37d672aa3b31ad80f3706f3e7b26986352493feee865d5",
+        "draft_repo": "agentionai/Qwen3.8-27B-DFlash2-ROCmFP4-FAST-GGUF",
+        "draft_file": "Qwen3.8-27B-DFlash2-Q4_0_ROCMFP4_FAST.gguf",
+        "draft_size": 1034216992,
+        "draft_sha256": "b4b744f03c456c4716236be76d7110c4c7e5e332e314acbccc9639e6fa2c50da"
+      },
+      "id": "qwen38-27b-rocmfp4-dflash2-adaptive",
+      "spec": "dflash-adaptive",
+      "draft": "/srv/lxc/ia-compute/data/models/bakeoff-20261005/qwen38-27b-rocmfp4/Qwen3.8-27B-DFlash2-Q4_0_ROCMFP4_FAST.gguf",
+      "spec_n_min": 3,
+      "spec_n_max": 7,
+      "note": "DFlash2 adaptive sidecar; expected strongest on short structured/code outputs, but must be gated locally on 780M."
     }
   ]
 }
