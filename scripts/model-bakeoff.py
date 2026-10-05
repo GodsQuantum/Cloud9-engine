@@ -203,9 +203,18 @@ def server_args(m,port):
     if m.get("spec")=="inline":
         x += ["--spec-type","draft-mtp","--spec-draft-n-max","2","--spec-draft-p-min","0",
               "--no-spec-draft-backend-sampling"]
+    elif m.get("spec")=="mtp-adaptive":
+        x += ["--spec-type","draft-mtp","--spec-draft-adaptive",
+              "--spec-draft-n-min",str(m.get("spec_n_min",3)),
+              "--spec-draft-n-max",str(m.get("spec_n_max",4))]
     elif m.get("spec")=="draft":
         x += ["--model-draft",m["draft"],"--spec-type","draft-mtp","--spec-draft-n-max","2",
               "--spec-draft-p-min","0","--no-spec-draft-backend-sampling"]
+    elif m.get("spec")=="dflash-adaptive":
+        x += ["--model-draft",m["draft"],"--spec-type","draft-dflash","--spec-draft-adaptive",
+              "--spec-draft-n-min",str(m.get("spec_n_min",3)),
+              "--spec-draft-n-max",str(m.get("spec_n_max",7)),
+              "--spec-draft-ngl","99"]
     elif m.get("spec")=="dspark":
         x += ["--model-draft",m["draft"],"--spec-type","draft-dspark","--spec-draft-n-max","7",
               "--spec-draft-p-min","0.6","--spec-draft-ngl","99"]
