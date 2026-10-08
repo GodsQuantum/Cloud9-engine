@@ -64,8 +64,15 @@ for u in "$LEMOND"; do
   systemctl is-active --quiet "$u" && RESTORE_SERVICES+=("$u")
 done
 if (( STOP_LIGHT )); then
+  # Restore Embedding before Router: Router may rely on the embedding backend
+  # and shutdown ordering intentionally stops Router first.
   systemctl is-active --quiet "$EMBED" && RESTORE_SERVICES+=("$EMBED")
 fi
+# Router is stopped for every exclusive/coexist window, so preserve its
+# pre-window state explicitly. Older versions only tracked the legacy proxy
+# socket and could leave :8090 down after a benchmark or an early command
+# failure once that socket unit no longer existed.
+systemctl is-active --quiet "$ROUTER" && RESTORE_SERVICES+=("$ROUTER")
 for u in "${FRONT_SOCKETS[@]}"; do
   systemctl is-active --quiet "$u" && RESTORE_SOCKETS+=("$u")
 done
