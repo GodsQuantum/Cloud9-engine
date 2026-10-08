@@ -6,8 +6,6 @@ set -Eeuo pipefail
 # This MUST be the same lock used by cloud9-model-router.
 LOCK_FILE=${CLOUD9_GPU_LOCK:-/run/cloud9-gpu.lock}
 RENDER_DEV=${CLOUD9_ENGINE_RENDER_DEVICE:-/dev/dri/renderD128}
-ROUTER_SOCKET=cloud9-engine-router-proxy.socket
-ROUTER_PROXY=cloud9-engine-router-proxy.service
 ROUTER=cloud9-engine-router.service
 EMBED=cloud9-embedding.service
 LEMOND=lemond.service
@@ -48,13 +46,11 @@ flock -n 9 || { echo "Cloud9 GPU is already reserved by another engine/request (
 
 declare -a RESTORE_SOCKETS=()
 declare -a RESTORE_SERVICES=()
-was_router_socket=0
 was_speaches=0
 was_voicestudio=0
 was_chatterbox=0
 was_docling=0
 
-systemctl is-active --quiet "$ROUTER_SOCKET" && was_router_socket=1 || true
 docker inspect -f '{{.State.Running}}' "$SPEACHES" 2>/dev/null | grep -qx true && was_speaches=1 || true
 docker inspect -f '{{.State.Running}}' "$VOICESTUDIO" 2>/dev/null | grep -qx true && was_voicestudio=1 || true
 docker inspect -f '{{.State.Running}}' "$CHATTERBOX" 2>/dev/null | grep -qx true && was_chatterbox=1 || true
@@ -89,7 +85,6 @@ restore_units() {
     systemctl start "$u" >/dev/null 2>&1 || true
     systemctl thaw "$u" >/dev/null 2>&1 || true
   done
-  if (( was_router_socket )); then systemctl start "$ROUTER_SOCKET" >/dev/null 2>&1 || true; fi
   for u in "${RESTORE_SOCKETS[@]}"; do systemctl start "$u" >/dev/null 2>&1 || true; done
 
   # Delayed restore outside this systemd cgroup avoids teardown races.
@@ -98,7 +93,6 @@ restore_units() {
   (( was_voicestudio )) && restore_items+=("docker:$VOICESTUDIO")
   (( was_chatterbox )) && restore_items+=("docker:$CHATTERBOX")
   (( was_docling )) && restore_items+=("docker:$DOCLING")
-  (( was_router_socket )) && restore_items+=("systemd:$ROUTER_SOCKET")
   for u in "${RESTORE_SERVICES[@]}"; do restore_items+=("systemd:$u"); done
   for u in "${RESTORE_SOCKETS[@]}"; do restore_items+=("systemd:$u"); done
   if (("${#restore_items[@]}")); then
@@ -182,7 +176,6 @@ systemctl stop "${FRONT_PROXIES[@]}" >/dev/null 2>&1 || true
 
 # Router shutdown may restore embedding. Stop it FIRST and wait for it to be gone,
 # then stop embedding. This ordering removes the old shutdown race.
-systemctl stop "$ROUTER_SOCKET" "$ROUTER_PROXY" >/dev/null 2>&1 || true
 systemctl stop "$ROUTER" >/dev/null 2>&1 || true
 for _ in $(seq 1 80); do
   systemctl is-active --quiet "$ROUTER" || break
