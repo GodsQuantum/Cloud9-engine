@@ -18,11 +18,13 @@ pct push "$CTID" "$ROOT/bin/cloud9-model-router.py" /usr/local/bin/cloud9-model-
 pct push "$CTID" "$ROOT/bin/cloud9-llama-server" /usr/local/bin/cloud9-llama-server --perms 0755 --user root --group root
 pct push "$CTID" "$ROOT/scripts/exclusive-gpu-run.sh" /usr/local/sbin/cloud9-exclusive-gpu-run --perms 0755 --user root --group root
 pct push "$CTID" "$ROOT/scripts/gpu-second-chance-restore.sh" /usr/local/sbin/cloud9-gpu-second-chance-restore --perms 0755 --user root --group root
+pct push "$CTID" "$ROOT/systemd/cloud9-engine-router.service" /etc/systemd/system/cloud9-engine-router.service --perms 0644 --user root --group root
 
 pct exec "$CTID" -- mkdir -p /etc/systemd/system/autopublisher-image.service.d /etc/systemd/system/comfyui.service.d
 pct push "$CTID" "$ROOT/systemd/autopublisher-image.service.d/20-gpu-arbiter.conf" /etc/systemd/system/autopublisher-image.service.d/20-gpu-arbiter.conf --perms 0644 --user root --group root
 pct push "$CTID" "$ROOT/systemd/comfyui.service.d/40-memory-safety.conf" /etc/systemd/system/comfyui.service.d/40-memory-safety.conf --perms 0644 --user root --group root
 pct exec "$CTID" -- systemctl daemon-reload
+pct exec "$CTID" -- systemctl enable --now cloud9-engine-router.service
 
 echo "Cloud9 router/GPU arbitration deployment complete:"
 echo "  CT:       $CTID"
