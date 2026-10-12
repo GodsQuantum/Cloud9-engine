@@ -1,0 +1,17 @@
+[Unit]
+Description=Cloud9 Engine model router
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/cloud9-model-router --host 192.168.1.219 --port 8090 --worker-host 127.0.0.1 --worker-port 18091 --catalog /srv/lxc/ia-compute/data/cloud9-engine-runtime/model-catalog.json --engine-home /srv/lxc/ia-compute/data/cloud9-engine-runtime --idle-seconds 30
+Restart=on-failure
+RestartSec=2s
+TimeoutStopSec=60s
+KillMode=mixed
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
