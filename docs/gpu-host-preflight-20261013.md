@@ -48,3 +48,19 @@ Do not accept a latest llama.cpp runtime for Pym solely from a first warm decode
 - llama.cpp Vulkan device loss / mmap workaround after #26081: https://github.com/ggml-org/llama.cpp/issues/29455
 - Radeon 780M Vulkan startup hangs on several models: https://github.com/ggml-org/llama.cpp/issues/24664
 - Official AMDGPU debugfs: https://docs.kernel.org/next/gpu/amdgpu/debugfs.html
+
+
+## Follow-up: no hidden RADV flags in secondary benchmark scripts
+
+A later source audit revealed **two additional implicit `RADV_PERFTEST=nogttspill` activations** which were not covered by the original `model-bakeoff.py` fix:
+
+- `scripts/hardware-gate.sh` forced the flag only for the upstream/MTP candidate.
+- `scripts/fresh-run-bench.py` unconditionally appended the flag to the environment for every subprocess.
+
+Both have been removed **on this DEV branch**, with explicit inherited `RADV_PERFTEST` settings preserved. The `fresh-run-bench.py` result JSON now records the effective inherited RADV value for scientific reproducibility. A new `tests/radv-no-implicit-test.py` proves all three entrypoints default to no forced `nogttspill`. This prevents an undocumented setting from confounding Cloud9's upstream/fork comparison.
+
+Static/CPU tests at 2026-10-13 ~11:55 CEST: 7 GPU preflight tests + 5 manifest env tests + 3 new RADV tests passed; shell hardware-gate safety, fallback, and oversize policy passed. AST, bash syntax, git diff check passed. Actual host read-only preflight **REFUSE/4** because two cross-CT AMDGPU tasks still remain in uninterruptible kernel state and GTT exceeds idle 8GiB. **No GPU benchmark nor build has been run by these edits.**
+
+Additional upstream context: ggml-org/llama.cpp issue #27998 (https://github.com/ggml-org/llama.cpp/issues/27998) traced another Radeon 780M/TTM stall to `ttm.pages_limit`, but Cloud9 currently has 18,874,368 kernel TTM pages × 4,096 bytes ≈ 72GiB and idle GTT ~10.64GiB. This *does not prove* the same cause on Cloud9. Do not change the kernel TTM parameter or mounts based on a different machine's success.
+
+**Next release gate**: read host and production health; do not merge/activate a new GPU runtime until both D-state processes are gone, host preflight PASS, CT700 attach and toolchain are healthy, all original hardware correctness/performance fixtures succeed, and measured improvement beats the stable multi-runtime baseline.
