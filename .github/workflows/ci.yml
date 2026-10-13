@@ -26,6 +26,7 @@ jobs:
           python3 -B tests/bench-env-test.py
           python3 -B tests/radv-no-implicit-test.py
           python3 -B tests/source-watch-safety-test.py
+          python3 -B tests/autopublisher-llm-contract-test.py
           bash tests/hardware-gate-safety.sh
           bash tests/hardware-gate-fallback.sh
           bash tests/typed-oversize-policy.sh
