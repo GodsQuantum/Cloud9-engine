@@ -32,6 +32,19 @@ STATE_DIR=ENGINE/"state"
 STATE_DIR.mkdir(parents=True,exist_ok=True)
 WORKER_LOG=STATE_DIR/"model-router-worker.log"
 
+def model_env(source_env, model):
+    """Respect inherited or explicit per-model RADV settings; no hidden tuning."""
+    env=dict(source_env)
+    if "radv_perftest" in model:
+        opt=model["radv_perftest"]
+        if not isinstance(opt,str):
+            raise TypeError("radv_perftest must be a string")
+        if opt:
+            env["RADV_PERFTEST"]=opt
+        else:
+            env.pop("RADV_PERFTEST",None)
+    return env
+
 def load_catalog():
     data=json.loads(CATALOG_PATH.read_text())
     models=data.get("models",[])
@@ -377,11 +390,12 @@ class RouterState:
         self.acquire_gpu(m,timeout=int(catalog.get("defaults",{}).get("gpu_lock_timeout_seconds",120)))
         args=self.worker_args(m)
         env=os.environ.copy()
-        perf=[x for x in env.get("RADV_PERFTEST","").split(",") if x]
-        if "nogttspill" not in perf:perf.append("nogttspill")
-        env["RADV_PERFTEST"]=",".join(perf)
+        # Never silently force nogttspill on the production Radeon 780M.
+        # Preserve the inherited RADV profile, unless this particular model
+        # explicitly selects or clears a profile; record it for reproducibility.
+        env=model_env(env,m)
         self.worker_log_handle=open(WORKER_LOG,"a",buffering=1)
-        self.worker_log_handle.write(f"\n=== {time.strftime('%Y-%m-%dT%H:%M:%S%z')} {m['id']} backend={m['backend']} ===\n")
+        self.worker_log_handle.write(f"\n=== {time.strftime('%Y-%m-%dT%H:%M:%S%z')} {m['id']} backend={m['backend']} radv={env.get('RADV_PERFTEST','<unset>')} ===\n")
         try:
             self.worker=subprocess.Popen(args,stdout=self.worker_log_handle,stderr=subprocess.STDOUT,env=env)
             self.worker_model=m["id"]
