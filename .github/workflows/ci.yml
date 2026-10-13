@@ -27,6 +27,7 @@ jobs:
           python3 -B tests/router-radv-contract-test.py
           python3 -B tests/source-watch-safety-test.py
           python3 -B tests/autopublisher-llm-contract-test.py
+          python3 -B tests/hall-performance-gate-test.py
           bash tests/hardware-gate-safety.sh
           bash tests/hardware-gate-fallback.sh
           bash tests/typed-oversize-policy.sh
