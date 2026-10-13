@@ -168,9 +168,35 @@ def container_id(name):
     p=run_docker("inspect","-f","{{.Id}}",name,timeout=10)
     return p.stdout.strip() if p.returncode==0 else ""
 
-def light_gpu_user(user,speaches_id):
+def idle_voicestudio_gpu_id():
+    """Allow ONLY healthy and idle VoiceStudio with tiny GPU usage to coexist.
+
+    ROCm keeps the render-device fd open after its model idle-unload. Merely
+    finding an open fd does not imply an active GPU job. Refuse if VoiceStudio
+    has an active HTTP connection, is not healthy, or GTT is >=512 MiB.
+    Any failure of the inspect/ss checks means NOT whitelisted.
+    """
+    if gtt_used_mib() >= 512:
+        return ""
+    healthy=run_docker("inspect","-f","{{.State.Health.Status}}","voicestudio",timeout=10)
+    if healthy.returncode!=0 or healthy.stdout.strip()!="healthy":
+        return ""
+    try:
+        port=subprocess.run(["ss","-Htn","state","established","sport","=",":3900"],
+                            stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,
+                            text=True,timeout=2)
+    except Exception:
+        return ""
+    if port.returncode!=0 or port.stdout.strip():
+        return ""
+    return container_id("voicestudio")
+
+
+def light_gpu_user(user,speaches_id,voicestudio_id=""):
     _pid,_cmd,cgroup=user
-    return "cloud9-embedding.service" in cgroup or bool(speaches_id and speaches_id in cgroup)
+    return ("cloud9-embedding.service" in cgroup
+            or bool(speaches_id and speaches_id in cgroup)
+            or bool(voicestudio_id and voicestudio_id in cgroup))
 
 def wait_health(proc,timeout=180):
     end=time.monotonic()+timeout
@@ -257,13 +283,15 @@ class RouterState:
                         time.sleep(.25)
 
             sid=container_id(SPEACHES_CONTAINER) if mode=="coexist-light" else ""
+            vid=idle_voicestudio_gpu_id() if mode=="coexist-light" else ""
             users=gpu_users()
-            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid,vid)]
             if blocked:
                 for _ in range(80):
                     time.sleep(.25)
                     users=gpu_users()
-                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+                    vid=idle_voicestudio_gpu_id() if mode=="coexist-light" else ""
+                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid,vid)]
                     if not blocked: break
             if blocked:
                 raise RuntimeError(f"GPU render device has incompatible users for {mode}: {blocked!r}")
