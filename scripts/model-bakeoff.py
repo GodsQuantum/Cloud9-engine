@@ -3,6 +3,19 @@ import argparse,json,os,re,statistics,subprocess,time,urllib.request
 from datetime import datetime,timezone
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+
+def model_env(source_env, model):
+    # Self-contained: this benchmark script is sometimes deployed standalone.
+    env = dict(source_env)
+    if "radv_perftest" in model:
+        opt = model["radv_perftest"]
+        if not isinstance(opt, str):
+            raise TypeError("radv_perftest must be a string")
+        if opt:
+            env["RADV_PERFTEST"] = opt
+        else:
+            env.pop("RADV_PERFTEST", None)
+    return env
 ap=argparse.ArgumentParser()
 ap.add_argument("--manifest",default=str(ROOT/"bench/model-bakeoff-20260928.json"))
 ap.add_argument("--fixture",default=str(ROOT/"bench/fixtures/dpafm48.json"))
@@ -241,8 +254,9 @@ for m in manifest["models"]:
                                                           stderr=subprocess.STDOUT,timeout=10).splitlines()[:3]
     except Exception as e: result["runtime_version_error"]=repr(e)
     log=open(outdir/f"{mid}.server.log","w")
-    env=os.environ.copy()
-    env["RADV_PERFTEST"]=",".join(x for x in [env.get("RADV_PERFTEST",""),"nogttspill"] if x).strip(",")
+    # Manifest opt-in only. Never automatically enable nogttspill.
+    env=model_env(os.environ, m)
+    result["radv_perftest_effective"] = env.get("RADV_PERFTEST", "")
     args=server_args(m,a.port); result["server_args"]=args[1:]
     t0=time.monotonic(); p=subprocess.Popen(args,stdout=log,stderr=subprocess.STDOUT,env=env)
     try:
