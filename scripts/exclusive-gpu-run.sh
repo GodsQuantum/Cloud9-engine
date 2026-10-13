@@ -56,9 +56,9 @@ docker inspect -f '{{.State.Running}}' "$VOICESTUDIO" 2>/dev/null | grep -qx tru
 docker inspect -f '{{.State.Running}}' "$CHATTERBOX" 2>/dev/null | grep -qx true && was_chatterbox=1 || true
 docker inspect -f '{{.State.Running}}' "$DOCLING" 2>/dev/null | grep -qx true && was_docling=1 || true
 # Lemonade remains in the heavy/legacy class. Embedding stays live in coexist-light.
-for u in "$LEMOND"; do
-  systemctl is-active --quiet "$u" && RESTORE_SERVICES+=("$u")
-done
+if systemctl is-active --quiet "$LEMOND"; then
+  RESTORE_SERVICES+=("$LEMOND")
+fi
 if (( STOP_LIGHT )); then
   # Restore Embedding before Router: Router may rely on the embedding backend
   # and shutdown ordering intentionally stops Router first.
