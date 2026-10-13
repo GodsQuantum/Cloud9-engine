@@ -17,8 +17,7 @@ jobs:
         run: |
           python3 -m json.tool sources.lock >/dev/null
           python3 -m py_compile scripts/*.py
-          # Only actual shell programs: bin/cloud9-model-router.py is Python.
-          # Existing advisory style notes are independent of functional correctness.
+          # Only actual shell scripts: bin/cloud9-model-router.py is Python.
           shellcheck --severity=warning bin/cloud9-engine bin/cloud9-llama-server bin/cloud9-rpc-server scripts/*.sh
       - name: Offline GPU safety and RADV regression tests
         run: |
