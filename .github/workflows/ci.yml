@@ -17,7 +17,9 @@ jobs:
         run: |
           python3 -m json.tool sources.lock >/dev/null
           python3 -m py_compile scripts/*.py
-          shellcheck bin/* scripts/*.sh
+          # bin/cloud9-model-router.py is Python, not shell.
+          shellcheck --severity=warning bin/cloud9-engine bin/cloud9-llama-server bin/cloud9-rpc-server scripts/*.sh
+          python3 -B tests/source-watch-safety-test.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
           UP_REPO=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["repository"])')

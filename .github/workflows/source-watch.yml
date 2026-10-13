@@ -9,6 +9,7 @@ permissions:
   contents: write
   actions: write
   issues: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -42,13 +43,19 @@ jobs:
             exit 0
           fi
 
-          branch=bot/source-sync
+          # Immutable candidate branch per tuple; never rewrite an older candidate
+          # or replace an already reviewed source-watch PR.
+          branch="bot/source-sync-u${upstream_sha:0:12}-a${atomic_sha:0:8}-p${prism_sha:0:8}"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            echo "Candidate branch $branch already exists; preserving original CI and PR."
+            exit 0
+          fi
           git config user.name 'cloud9-engine-bot'
           git config user.email 'cloud9-engine-bot@users.noreply.github.com'
           git switch -C "$branch"
           git add sources.lock
           git commit -m 'chore: sync upstream engine sources'
-          git push --force-with-lease origin "$branch"
+          git push origin "$branch"
           candidate_sha="$(git rev-parse HEAD)"
 
           gh workflow run ci.yml --ref "$branch"
@@ -95,14 +102,36 @@ jobs:
           main_sha="$(git rev-parse origin/main)"
           base_sha="$(git merge-base "$candidate_sha" "$main_sha")"
           if [ "$base_sha" != "$main_sha" ]; then
-            echo "::error::main changed while candidate CI was running; refusing stale promotion"
+            echo "::error::main changed while candidate CI was running; refusing stale source candidate PR"
             exit 1
           fi
 
-          git push origin "$candidate_sha:refs/heads/main"
-          git push origin --delete "$branch" || true
-
-          while IFS= read -r issue_number; do
-            [ -n "$issue_number" ] || continue
-            gh issue close "$issue_number" --comment "Resolved by validated source refresh $candidate_sha."
-          done < <(gh issue list --state open --limit 100 --json number,title --jq '.[] | select(.title | startswith("Source watch blocked: ")) | .number')
+          # A green build proves source compatibility, NOT stable GPU inference,
+          # model quality, latency, or safe startup on the Radeon 780M.
+          # Preserve validated sources.lock on main; require human review of
+          # each candidate before merging, and independent hardware promotion.
+          comparison_url="https://github.com/$GITHUB_REPOSITORY/compare/main...$branch"
+          title="Source candidate: U-${upstream_sha:0:8} A-${atomic_sha:0:8} P-${prism_sha:0:8}"
+          body="$(printf '%s\n' \
+            'CI compiler/patch compatibility succeeded. This is NOT a hardware certification or a production promotion.' \
+            '' \
+            "Upstream: $upstream_sha" \
+            "Atomic: $atomic_sha" \
+            "Prism: $prism_sha" \
+            "Patch tree: $patch_tree" \
+            "CI run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$run_id" \
+            "Compare: $comparison_url" \
+            '' \
+            'STOP GATE: compare historical Hall of Fame, run Cloud9 Radeon 780M correctness/stability + matched model/AutoPublisher A/B, and only then manually review this PR.' \
+            'Merging source pins does not deploy runtime links; production promotion remains separate.')"
+          existing="$(gh pr list --state open --head "$branch" --base main --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$title" --body "$body"
+            echo "Updated source candidate PR #$existing. main is unchanged."
+          else
+            gh pr create --base main --head "$branch" --draft --title "$title" --body "$body" || {
+              echo "::warning::Could not create PR (repository Actions permissions?). Candidate remains at $comparison_url, main untouched."
+              exit 0
+            }
+            echo "Created DRAFT source candidate PR; main and production remain untouched."
+          fi
