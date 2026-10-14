@@ -21,6 +21,8 @@ jobs:
           shellcheck --severity=warning bin/cloud9-engine bin/cloud9-llama-server bin/cloud9-rpc-server scripts/*.sh
           python3 -B tests/source-watch-safety-test.py
           python3 -B tests/top5-role-contract-test.py
+          python3 scripts/model-specialty-catalog.py --check
+          python3 -B tests/model-specialty-contract-test.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
           UP_REPO=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["repository"])')
