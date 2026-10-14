@@ -35,7 +35,10 @@
         "autopublisher": 75,
         "agentic": 100
       },
-      "gpu_mode": "coexist-light"
+      "gpu_mode": "coexist-light",
+      "aliases": [
+        "Cloud9-Fast"
+      ]
     },
     {
       "id": "Cloud9-Ling3-Tiny-Uncensored",
@@ -50,7 +53,10 @@
         "autopublisher": 85,
         "agentic": 100
       },
-      "gpu_mode": "coexist-light"
+      "gpu_mode": "coexist-light",
+      "aliases": [
+        "Cloud9-Quick"
+      ]
     },
     {
       "id": "Cloud9-LFM2.5-2.6B-Uncensored",
@@ -71,7 +77,8 @@
       "id": "Cloud9-Qwen3.8-4B-Heretic",
       "aliases": [
         "Cloud9-Qwen3.8-4B-MTP",
-        "Cloud9-Qwen38-4B-Heretic"
+        "Cloud9-Qwen38-4B-Heretic",
+        "Cloud9-Structured"
       ],
       "group": "small",
       "uncensored": true,
@@ -118,7 +125,10 @@
         "decode_tps": 30.87,
         "historical_best_decode_tps": 34.4
       },
-      "gpu_mode": "exclusive"
+      "gpu_mode": "exclusive",
+      "aliases": [
+        "Cloud9-Deep"
+      ]
     },
     {
       "id": "Cloud9-Qwen3.6-35B-A3B-Heretic",
@@ -167,7 +177,10 @@
         "autopublisher": 90,
         "agentic": 100
       },
-      "gpu_mode": "exclusive"
+      "gpu_mode": "exclusive",
+      "aliases": [
+        "Cloud9-Creative"
+      ]
     },
     {
       "id": "Cloud9-Bonsai2-27B-Ternary-Abliterated",
