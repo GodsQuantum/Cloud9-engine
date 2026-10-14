@@ -518,8 +518,10 @@ class Handler(BaseHTTPRequestHandler):
             data=[]
             for m in models:
                 data.append({"id":m["id"],"object":"model","created":0,"owned_by":"cloud9-engine",
+                             "name":m.get("display_name",m["id"]),
                              "cloud9":{"group":m.get("group"),"uncensored":m.get("uncensored"),
                                        "backend":m.get("backend"),"context":m.get("context"),
+                                       "specialty":m.get("specialty"),"aliases":m.get("aliases",[]),
                                        "benchmark":m.get("benchmark",{})}})
             self.send_json(200,{"object":"list","data":data})
             return
@@ -527,7 +529,8 @@ class Handler(BaseHTTPRequestHandler):
             mid=self.path.split("/",3)[-1]
             m=resolve_model(mid)
             if not m:self.send_json(404,{"error":{"message":"unknown model","type":"invalid_request_error"}});return
-            self.send_json(200,{"id":m["id"],"object":"model","owned_by":"cloud9-engine","cloud9":m})
+            self.send_json(200,{"id":m["id"],"object":"model","owned_by":"cloud9-engine",
+                                "name":m.get("display_name",m["id"]),"cloud9":m})
             return
         self.proxy_existing(None)
 
