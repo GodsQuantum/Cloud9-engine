@@ -17,10 +17,25 @@ jobs:
         run: |
           python3 -m json.tool sources.lock >/dev/null
           python3 -m py_compile scripts/*.py
-          # bin/cloud9-model-router.py is Python, not shell.
+          # Only actual shell scripts: bin/cloud9-model-router.py is Python.
           shellcheck --severity=warning bin/cloud9-engine bin/cloud9-llama-server bin/cloud9-rpc-server scripts/*.sh
+      - name: Offline GPU safety and RADV regression tests
+        run: |
+          python3 -B tests/host-gpu-preflight-test.py
+          python3 -B tests/bench-env-test.py
+          python3 -B tests/radv-no-implicit-test.py
+          python3 -B tests/router-radv-contract-test.py
+          python3 -B tests/router-voicestudio-idle-coexist-test.py
+          python3 -B tests/router-exclusive-voicestudio-test.py
           python3 -B tests/source-watch-safety-test.py
           python3 -B tests/top5-role-contract-test.py
+          python3 scripts/model-specialty-catalog.py --check
+          python3 -B tests/model-specialty-contract-test.py
+          python3 -B tests/autopublisher-llm-contract-test.py
+          python3 -B tests/hall-performance-gate-test.py
+          bash tests/hardware-gate-safety.sh
+          bash tests/hardware-gate-fallback.sh
+          bash tests/typed-oversize-policy.sh
       - name: Apply Cloud9 patchset to locked upstream
         run: |
           UP_REPO=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["repository"])')

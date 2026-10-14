@@ -117,7 +117,8 @@ run_mtp(){
   local -a env_args=()
   if [[ "$mode" == upstream ]]; then
     extra_args+=(--lazy-mode off)
-    env_args+=(env RADV_PERFTEST="${RADV_PERFTEST:+$RADV_PERFTEST,}nogttspill")
+    # Preserve an explicitly inherited RADV_PERFTEST; no hidden nogttspill.
+    # Benchmarks on Cloud9 Pym/780M found nogttspill regressive.
   fi
   "${env_args[@]}" "$dir/bin/llama-server" -m "$MODEL" -ngl 99 -c 8192 -np 1 -b 1024 -ub 1024 -t "${CLOUD9_ENGINE_THREADS:-8}" -tb "${CLOUD9_ENGINE_THREADS:-8}" -fa on -ctk f16 -ctv f16 --fit off --jinja --reasoning off --reasoning-budget 0 --spec-type draft-mtp --spec-draft-n-max 2 --spec-draft-p-min 0 --no-spec-draft-backend-sampling -lm mmap "${extra_args[@]}" --host 127.0.0.1 --port "$port" --no-warmup >"$log" 2>&1 &
   pid=$!

@@ -28,9 +28,23 @@ CATALOG_PATH=Path(a.catalog)
 GPU_LOCK=Path("/run/cloud9-gpu.lock")
 EMBED_SERVICE="cloud9-embedding.service"
 SPEACHES_CONTAINER="speaches"
+VOICE_CONTAINER="voicestudio"
 STATE_DIR=ENGINE/"state"
 STATE_DIR.mkdir(parents=True,exist_ok=True)
 WORKER_LOG=STATE_DIR/"model-router-worker.log"
+
+def model_env(source_env, model):
+    """Respect inherited or explicit per-model RADV settings; no hidden tuning."""
+    env=dict(source_env)
+    if "radv_perftest" in model:
+        opt=model["radv_perftest"]
+        if not isinstance(opt,str):
+            raise TypeError("radv_perftest must be a string")
+        if opt:
+            env["RADV_PERFTEST"]=opt
+        else:
+            env.pop("RADV_PERFTEST",None)
+    return env
 
 def load_catalog():
     data=json.loads(CATALOG_PATH.read_text())
@@ -155,9 +169,35 @@ def container_id(name):
     p=run_docker("inspect","-f","{{.Id}}",name,timeout=10)
     return p.stdout.strip() if p.returncode==0 else ""
 
-def light_gpu_user(user,speaches_id):
+def idle_voicestudio_gpu_id():
+    """Allow ONLY healthy and idle VoiceStudio with tiny GPU usage to coexist.
+
+    ROCm keeps the render-device fd open after its model idle-unload. Merely
+    finding an open fd does not imply an active GPU job. Refuse if VoiceStudio
+    has an active HTTP connection, is not healthy, or GTT is >=512 MiB.
+    Any failure of the inspect/ss checks means NOT whitelisted.
+    """
+    if gtt_used_mib() >= 512:
+        return ""
+    healthy=run_docker("inspect","-f","{{.State.Health.Status}}","voicestudio",timeout=10)
+    if healthy.returncode!=0 or healthy.stdout.strip()!="healthy":
+        return ""
+    try:
+        port=subprocess.run(["ss","-Htn","state","established","sport","=",":3900"],
+                            stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,
+                            text=True,timeout=2)
+    except Exception:
+        return ""
+    if port.returncode!=0 or port.stdout.strip():
+        return ""
+    return container_id("voicestudio")
+
+
+def light_gpu_user(user,speaches_id,voicestudio_id=""):
     _pid,_cmd,cgroup=user
-    return "cloud9-embedding.service" in cgroup or bool(speaches_id and speaches_id in cgroup)
+    return ("cloud9-embedding.service" in cgroup
+            or bool(speaches_id and speaches_id in cgroup)
+            or bool(voicestudio_id and voicestudio_id in cgroup))
 
 def wait_health(proc,timeout=180):
     end=time.monotonic()+timeout
@@ -189,6 +229,7 @@ class RouterState:
         self.gpu_mode=None
         self.embed_was_active=False
         self.speaches_was_running=False
+        self.voice_was_running=False
         self.worker_log_handle=None
         self.stopping=False
 
@@ -222,10 +263,14 @@ class RouterState:
 
         was=service_active(EMBED_SERVICE)
         speaches_was=container_running(SPEACHES_CONTAINER)
+        voice_was=container_running(VOICE_CONTAINER)
         stopped_embed=False
         stopped_speaches=False
+        stopped_voice=False
         try:
             if mode=="exclusive":
+                if voice_was and not idle_voicestudio_gpu_id():
+                    raise RuntimeError("VoiceStudio is busy or unsafe for exclusive GPU preemption")
                 if was and embedding_busy():
                     raise RuntimeError("Embedding Engine is processing a request; refusing GPU preemption")
                 if was:
@@ -242,19 +287,29 @@ class RouterState:
                     for _ in range(80):
                         if not container_running(SPEACHES_CONTAINER): break
                         time.sleep(.25)
+                if voice_was:
+                    run_docker("stop","--time","20",VOICE_CONTAINER,check=True,timeout=30)
+                    stopped_voice=True
+                    for _ in range(80):
+                        if not container_running(VOICE_CONTAINER): break
+                        time.sleep(.25)
 
             sid=container_id(SPEACHES_CONTAINER) if mode=="coexist-light" else ""
+            vid=idle_voicestudio_gpu_id() if mode=="coexist-light" else ""
             users=gpu_users()
-            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid,vid)]
             if blocked:
                 for _ in range(80):
                     time.sleep(.25)
                     users=gpu_users()
-                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+                    vid=idle_voicestudio_gpu_id() if mode=="coexist-light" else ""
+                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid,vid)]
                     if not blocked: break
             if blocked:
                 raise RuntimeError(f"GPU render device has incompatible users for {mode}: {blocked!r}")
         except Exception:
+            if stopped_voice:
+                run_docker("start",VOICE_CONTAINER,timeout=30)
             if stopped_speaches:
                 run_docker("start",SPEACHES_CONTAINER,timeout=30)
             if stopped_embed:
@@ -269,6 +324,7 @@ class RouterState:
         self.gpu_mode=mode
         self.embed_was_active=stopped_embed
         self.speaches_was_running=stopped_speaches
+        self.voice_was_running=stopped_voice
         self.gpu_fd=fd
         print(f"Cloud9 router: GPU mode {mode} for {m['id']}",flush=True)
 
@@ -276,10 +332,12 @@ class RouterState:
         fd=self.gpu_fd
         was=self.embed_was_active
         speaches_was=self.speaches_was_running
+        voice_was=self.voice_was_running
         self.gpu_fd=None
         self.gpu_mode=None
         self.embed_was_active=False
         self.speaches_was_running=False
+        self.voice_was_running=False
         if fd:
             try:
                 fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
@@ -292,6 +350,8 @@ class RouterState:
             run_systemctl("thaw",EMBED_SERVICE)
         if speaches_was:
             run_docker("start",SPEACHES_CONTAINER,timeout=30)
+        if voice_was:
+            run_docker("start",VOICE_CONTAINER,timeout=30)
 
     def runtime(self,m):
         p=ENGINE/"current"/m["backend"]/"bin"/"llama-server"
@@ -377,11 +437,12 @@ class RouterState:
         self.acquire_gpu(m,timeout=int(catalog.get("defaults",{}).get("gpu_lock_timeout_seconds",120)))
         args=self.worker_args(m)
         env=os.environ.copy()
-        perf=[x for x in env.get("RADV_PERFTEST","").split(",") if x]
-        if "nogttspill" not in perf:perf.append("nogttspill")
-        env["RADV_PERFTEST"]=",".join(perf)
+        # Never silently force nogttspill on the production Radeon 780M.
+        # Preserve the inherited RADV profile, unless this particular model
+        # explicitly selects or clears a profile; record it for reproducibility.
+        env=model_env(env,m)
         self.worker_log_handle=open(WORKER_LOG,"a",buffering=1)
-        self.worker_log_handle.write(f"\n=== {time.strftime('%Y-%m-%dT%H:%M:%S%z')} {m['id']} backend={m['backend']} ===\n")
+        self.worker_log_handle.write(f"\n=== {time.strftime('%Y-%m-%dT%H:%M:%S%z')} {m['id']} backend={m['backend']} radv={env.get('RADV_PERFTEST','<unset>')} ===\n")
         try:
             self.worker=subprocess.Popen(args,stdout=self.worker_log_handle,stderr=subprocess.STDOUT,env=env)
             self.worker_model=m["id"]
@@ -457,8 +518,10 @@ class Handler(BaseHTTPRequestHandler):
             data=[]
             for m in models:
                 data.append({"id":m["id"],"object":"model","created":0,"owned_by":"cloud9-engine",
+                             "name":m.get("display_name",m["id"]),
                              "cloud9":{"group":m.get("group"),"uncensored":m.get("uncensored"),
                                        "backend":m.get("backend"),"context":m.get("context"),
+                                       "specialty":m.get("specialty"),"aliases":m.get("aliases",[]),
                                        "benchmark":m.get("benchmark",{})}})
             self.send_json(200,{"object":"list","data":data})
             return
@@ -466,7 +529,8 @@ class Handler(BaseHTTPRequestHandler):
             mid=self.path.split("/",3)[-1]
             m=resolve_model(mid)
             if not m:self.send_json(404,{"error":{"message":"unknown model","type":"invalid_request_error"}});return
-            self.send_json(200,{"id":m["id"],"object":"model","owned_by":"cloud9-engine","cloud9":m})
+            self.send_json(200,{"id":m["id"],"object":"model","owned_by":"cloud9-engine",
+                                "name":m.get("display_name",m["id"]),"cloud9":m})
             return
         self.proxy_existing(None)
 

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-14",
   "defaults": {
     "worker_idle_seconds": 30,
     "gpu_lock_timeout_seconds": 120,
@@ -35,7 +35,12 @@
         "autopublisher": 75,
         "agentic": 100
       },
-      "gpu_mode": "coexist-light"
+      "gpu_mode": "coexist-light",
+      "specialty": "Titres et extraction rapide",
+      "display_name": "Cloud9-MiniCPM5-2B-DSpark — Titres et extraction rapide",
+      "aliases": [
+        "Cloud9-MiniCPM5-2B-DSpark--Titres-Extraction"
+      ]
     },
     {
       "id": "Cloud9-Ling3-Tiny-Uncensored",
@@ -50,7 +55,12 @@
         "autopublisher": 85,
         "agentic": 100
       },
-      "gpu_mode": "coexist-light"
+      "gpu_mode": "coexist-light",
+      "specialty": "Rédaction courte",
+      "display_name": "Cloud9-Ling3-Tiny-Uncensored — Rédaction courte",
+      "aliases": [
+        "Cloud9-Ling3-Tiny-Uncensored--Redaction-Courte"
+      ]
     },
     {
       "id": "Cloud9-LFM2.5-2.6B-Uncensored",
@@ -65,13 +75,19 @@
         "autopublisher": 75,
         "agentic": 100
       },
-      "gpu_mode": "coexist-light"
+      "gpu_mode": "coexist-light",
+      "specialty": "Conversation légère",
+      "display_name": "Cloud9-LFM2.5-2.6B-Uncensored — Conversation légère",
+      "aliases": [
+        "Cloud9-LFM2.5-2.6B-Uncensored--Conversation-Legere"
+      ]
     },
     {
       "id": "Cloud9-Qwen3.8-4B-Heretic",
       "aliases": [
         "Cloud9-Qwen3.8-4B-MTP",
-        "Cloud9-Qwen38-4B-Heretic"
+        "Cloud9-Qwen38-4B-Heretic",
+        "Cloud9-Qwen3.8-4B-Heretic--JSON-Outils"
       ],
       "group": "small",
       "uncensored": true,
@@ -96,7 +112,9 @@
         "agentic": 100
       },
       "notes": "Qwen3.5-4B target distilled from Qwen3.8, Heretic/uncensored, inline MTP preserved. Selected after bounded JSON AutoPublisher gate on 2026-10-02.",
-      "gpu_mode": "coexist-light"
+      "gpu_mode": "coexist-light",
+      "specialty": "JSON structuré et outils",
+      "display_name": "Cloud9-Qwen3.8-4B-Heretic — JSON structuré et outils"
     },
     {
       "id": "Cloud9-Pym-35B-A3B-MTP",
@@ -118,7 +136,12 @@
         "decode_tps": 30.87,
         "historical_best_decode_tps": 34.4
       },
-      "gpu_mode": "exclusive"
+      "gpu_mode": "exclusive",
+      "specialty": "Raisonnement complexe",
+      "display_name": "Cloud9-Pym-35B-A3B-MTP — Raisonnement complexe",
+      "aliases": [
+        "Cloud9-Pym-35B-A3B-MTP--Raisonnement-Complexe"
+      ]
     },
     {
       "id": "Cloud9-Qwen3.6-35B-A3B-Heretic",
@@ -142,7 +165,12 @@
         "autopublisher": 95,
         "agentic": 100
       },
-      "gpu_mode": "exclusive"
+      "gpu_mode": "exclusive",
+      "specialty": "Agents et consignes longues",
+      "display_name": "Cloud9-Qwen3.6-35B-A3B-Heretic — Agents et consignes longues",
+      "aliases": [
+        "Cloud9-Qwen3.6-35B-A3B-Heretic--Agents-Consignes"
+      ]
     },
     {
       "id": "Cloud9-Gemma4-26B-A4B-MTP",
@@ -167,7 +195,12 @@
         "autopublisher": 90,
         "agentic": 100
       },
-      "gpu_mode": "exclusive"
+      "gpu_mode": "exclusive",
+      "specialty": "Écriture créative",
+      "display_name": "Cloud9-Gemma4-26B-A4B-MTP — Écriture créative",
+      "aliases": [
+        "Cloud9-Gemma4-26B-A4B-MTP--Ecriture-Creative"
+      ]
     },
     {
       "id": "Cloud9-Bonsai2-27B-Ternary-Abliterated",
@@ -182,7 +215,12 @@
         "autopublisher": 90,
         "agentic": 100
       },
-      "gpu_mode": "exclusive"
+      "gpu_mode": "exclusive",
+      "specialty": "Rédaction libre",
+      "display_name": "Cloud9-Bonsai2-27B-Ternary-Abliterated — Rédaction libre",
+      "aliases": [
+        "Cloud9-Bonsai2-27B-Ternary-Abliterated--Redaction-Libre"
+      ]
     }
   ]
 }

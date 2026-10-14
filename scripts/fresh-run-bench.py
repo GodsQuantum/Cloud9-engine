@@ -41,7 +41,7 @@ for n in range(a.runs):
         args += ["--spec-type","draft-mtp","--spec-draft-n-max","2","--spec-draft-p-min","0",
                  "--no-spec-draft-backend-sampling"]
     env=os.environ.copy()
-    env["RADV_PERFTEST"]=",".join(x for x in [env.get("RADV_PERFTEST",""),"nogttspill"] if x).strip(",")
+    # No implicit RADV nogttspill. Inherited profile is explicit and measurable.
     t0=time.monotonic()
     p=subprocess.Popen(args,stdout=log,stderr=subprocess.STDOUT,env=env)
     try:
@@ -68,7 +68,8 @@ for n in range(a.runs):
         log.close()
         time.sleep(2)
 ok=[x for x in rows if x.get("status")=="ok"]
-res={"runtime":a.runtime,"model":a.model,"spec":a.spec,"runs":rows}
+res={"runtime":a.runtime,"model":a.model,"spec":a.spec,"runs":rows,
+     "radv_perftest_effective":os.environ.get("RADV_PERFTEST","")}
 if ok:
     res["median_decode_tps"]=statistics.median(x["decode_tps"] for x in ok)
     res["median_prefill_tps"]=statistics.median(x["prefill_tps"] for x in ok)

@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Read-only Proxmox host GPU safety gate before touching CT410 services.
+# CT410 /proc cannot detect a stuck llama-server in CT700.
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
+python3 "$SCRIPT_DIR/host-gpu-preflight.py" || {
+  echo "REFUSE: Cloud9 GPU host preflight failed; no LXC was preempted" >&2
+  exit 4
+}
 CTID=${CLOUD9_ENGINE_CTID:-410}
 WORKTREE=${CLOUD9_ENGINE_RUNTIME_WORKTREE:-/srv/lxc/ia-compute/data/worktrees/cloud9-engine-lab}
 MAX_START_TCTL=${CLOUD9_BENCH_START_MAX_TCTL:-72}
