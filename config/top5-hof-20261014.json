@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "date": "2026-10-14",
+  "name": "Cloud9 five-role Hall of Fame shortlist",
+  "state": "validated_for_catalog_routing_not_new_gpu_benchmark",
+  "source_hall": "../../HALL_OF_FAME.json",
+  "catalog": "model-catalog.json",
+  "winner_count": 5,
+  "selection": [
+    {
+      "role_alias": "Cloud9-Fast",
+      "model_id": "Cloud9-MiniCPM5-2B-DSpark",
+      "hall_evidence_id": "oct02:minicpm5-2b-heretic-q6k-dspark",
+      "engine_runtime": "upstream-next",
+      "purpose": "Microtasks/captions ultra rapides",
+      "historical_decode_tps": 47.73,
+      "performance_claim": "historical only; benchmark protocols differ",
+      "gpu_mode": "coexist-light",
+      "context": 16384
+    },
+    {
+      "role_alias": "Cloud9-Quick",
+      "model_id": "Cloud9-Ling3-Tiny-Uncensored",
+      "hall_evidence_id": "oct02:strict-ling3-tiny-uncensored-apex-balanced",
+      "engine_runtime": "upstream-next",
+      "purpose": "Brouillons brefs, vitesse et style",
+      "historical_decode_tps": 44.41,
+      "performance_claim": "historical only; benchmark protocols differ",
+      "gpu_mode": "coexist-light",
+      "context": 16384
+    },
+    {
+      "role_alias": "Cloud9-Structured",
+      "model_id": "Cloud9-Qwen3.8-4B-Heretic",
+      "hall_evidence_id": "oct02:qwen38distill-qwen35-4b-mtp-q4km",
+      "engine_runtime": "upstream-latest",
+      "purpose": "JSON editorial, extraction et tool-use",
+      "historical_decode_tps": 25.81,
+      "performance_claim": "historical only; benchmark protocols differ",
+      "gpu_mode": "coexist-light",
+      "context": 16384
+    },
+    {
+      "role_alias": "Cloud9-Deep",
+      "model_id": "Cloud9-Pym-35B-A3B-MTP",
+      "hall_evidence_id": "historical:pym-mtp-sweep:mtp2_math",
+      "engine_runtime": "upstream-pym",
+      "purpose": "Raisonnement/recherche complexe, seulement mode GPU exclusif",
+      "historical_decode_tps": 30.87,
+      "performance_claim": "historical only; benchmark protocols differ",
+      "gpu_mode": "exclusive",
+      "context": 8192
+    },
+    {
+      "role_alias": "Cloud9-Creative",
+      "model_id": "Cloud9-Gemma4-26B-A4B-MTP",
+      "hall_evidence_id": "oct02:gemma4-26b-a4b-q4km",
+      "engine_runtime": "upstream-fast",
+      "purpose": "Rédaction podcast et style créatif contrôlé",
+      "historical_decode_tps": 25.79,
+      "performance_claim": "historical only; benchmark protocols differ",
+      "gpu_mode": "exclusive",
+      "context": 16384
+    }
+  ],
+  "other_compatible_models_retained": [
+    "Cloud9-Bonsai2-27B-Ternary-Abliterated",
+    "Cloud9-LFM2.5-2.6B-Uncensored",
+    "Cloud9-Qwen3.6-35B-A3B-Heretic"
+  ],
+  "specialized_backends": {
+    "prism": {
+      "model_id": "Cloud9-Bonsai2-27B-Ternary-Abliterated",
+      "historical_decode_tps": 8.59,
+      "state": "retained optional not top5, not comparable protocol"
+    },
+    "strata": {
+      "runtime": "independent HIP gfx1103 fork v0.1.44.1 LAB PR2",
+      "historical_decode_tps": 5.96,
+      "state": "candidate only; no equivalent full-model 0.1.44.1 GPU benchmark; do not auto-promote"
+    },
+    "embedding": {
+      "endpoint": "8091",
+      "state": "separate specialized embedding engine"
+    },
+    "asr": {
+      "endpoint": "8005",
+      "state": "separate specialized Speaches engine"
+    }
+  },
+  "constraints": {
+    "no_auto_model_deletions": true,
+    "no_auto_driver_or_mount_changes": true,
+    "all_existing_eight_ids_still_route": true,
+    "gpu_limit": "honor preflight, exclusivity and current thermals",
+    "benchmarks": "require 3 repeats, same hardware + model, no invented tps",
+    "autopublisher": "only LLM-only dry-run before live publication"
+  }
+}

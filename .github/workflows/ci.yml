@@ -28,6 +28,7 @@ jobs:
           python3 -B tests/router-voicestudio-idle-coexist-test.py
           python3 -B tests/router-exclusive-voicestudio-test.py
           python3 -B tests/source-watch-safety-test.py
+          python3 -B tests/top5-role-contract-test.py
           python3 -B tests/autopublisher-llm-contract-test.py
           python3 -B tests/hall-performance-gate-test.py
           bash tests/hardware-gate-safety.sh
