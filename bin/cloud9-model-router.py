@@ -28,6 +28,7 @@ CATALOG_PATH=Path(a.catalog)
 GPU_LOCK=Path("/run/cloud9-gpu.lock")
 EMBED_SERVICE="cloud9-embedding.service"
 SPEACHES_CONTAINER="speaches"
+VOICE_CONTAINER="voicestudio"
 STATE_DIR=ENGINE/"state"
 STATE_DIR.mkdir(parents=True,exist_ok=True)
 WORKER_LOG=STATE_DIR/"model-router-worker.log"
@@ -228,6 +229,7 @@ class RouterState:
         self.gpu_mode=None
         self.embed_was_active=False
         self.speaches_was_running=False
+        self.voice_was_running=False
         self.worker_log_handle=None
         self.stopping=False
 
@@ -261,10 +263,14 @@ class RouterState:
 
         was=service_active(EMBED_SERVICE)
         speaches_was=container_running(SPEACHES_CONTAINER)
+        voice_was=container_running(VOICE_CONTAINER)
         stopped_embed=False
         stopped_speaches=False
+        stopped_voice=False
         try:
             if mode=="exclusive":
+                if voice_was and not idle_voicestudio_gpu_id():
+                    raise RuntimeError("VoiceStudio is busy or unsafe for exclusive GPU preemption")
                 if was and embedding_busy():
                     raise RuntimeError("Embedding Engine is processing a request; refusing GPU preemption")
                 if was:
@@ -281,6 +287,12 @@ class RouterState:
                     for _ in range(80):
                         if not container_running(SPEACHES_CONTAINER): break
                         time.sleep(.25)
+                if voice_was:
+                    run_docker("stop","--time","20",VOICE_CONTAINER,check=True,timeout=30)
+                    stopped_voice=True
+                    for _ in range(80):
+                        if not container_running(VOICE_CONTAINER): break
+                        time.sleep(.25)
 
             sid=container_id(SPEACHES_CONTAINER) if mode=="coexist-light" else ""
             vid=idle_voicestudio_gpu_id() if mode=="coexist-light" else ""
@@ -296,6 +308,8 @@ class RouterState:
             if blocked:
                 raise RuntimeError(f"GPU render device has incompatible users for {mode}: {blocked!r}")
         except Exception:
+            if stopped_voice:
+                run_docker("start",VOICE_CONTAINER,timeout=30)
             if stopped_speaches:
                 run_docker("start",SPEACHES_CONTAINER,timeout=30)
             if stopped_embed:
@@ -310,6 +324,7 @@ class RouterState:
         self.gpu_mode=mode
         self.embed_was_active=stopped_embed
         self.speaches_was_running=stopped_speaches
+        self.voice_was_running=stopped_voice
         self.gpu_fd=fd
         print(f"Cloud9 router: GPU mode {mode} for {m['id']}",flush=True)
 
@@ -317,10 +332,12 @@ class RouterState:
         fd=self.gpu_fd
         was=self.embed_was_active
         speaches_was=self.speaches_was_running
+        voice_was=self.voice_was_running
         self.gpu_fd=None
         self.gpu_mode=None
         self.embed_was_active=False
         self.speaches_was_running=False
+        self.voice_was_running=False
         if fd:
             try:
                 fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
@@ -333,6 +350,8 @@ class RouterState:
             run_systemctl("thaw",EMBED_SERVICE)
         if speaches_was:
             run_docker("start",SPEACHES_CONTAINER,timeout=30)
+        if voice_was:
+            run_docker("start",VOICE_CONTAINER,timeout=30)
 
     def runtime(self,m):
         p=ENGINE/"current"/m["backend"]/"bin"/"llama-server"
