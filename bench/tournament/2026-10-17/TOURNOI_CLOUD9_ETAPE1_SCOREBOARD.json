@@ -1,0 +1,299 @@
+{
+  "date": "2026-10-17T21:41:21.879810+02:00",
+  "candidate_production_ready": false,
+  "ctx_max_tested_this_run": false,
+  "model_results": [
+    {
+      "artifact": "atomic-2.0-Qwen3.5-4B-Qwen3.8-Disti-agentic-cool69.json",
+      "engine": "atomic-2.0",
+      "model": "Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "status": "complete",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.159,
+          "median_decode_tps": 24.53,
+          "median_prefill_tps": 124.7
+        },
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.403,
+          "median_decode_tps": 22.53,
+          "median_prefill_tps": 127.17
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 3.303,
+          "median_decode_tps": 22.29,
+          "median_prefill_tps": 210.66
+        }
+      },
+      "total_passed": 6,
+      "attempted": 9,
+      "error": null,
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Agents-A1-4B-Q4_K_M-agentic-cool69.json",
+      "engine": "llama-oct17",
+      "model": "Agents-A1-4B-Q4_K_M.gguf",
+      "status": "complete",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.829,
+          "median_decode_tps": 22.33,
+          "median_prefill_tps": 411.25
+        },
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.483,
+          "median_decode_tps": 21.61,
+          "median_prefill_tps": 405.21
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.926,
+          "median_decode_tps": 22.34,
+          "median_prefill_tps": 427.17
+        }
+      },
+      "total_passed": 6,
+      "attempted": 9,
+      "error": null,
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Qwen3.5-4B-Qwen3.8-Disti-agentic-cool69.json",
+      "engine": "llama-oct17",
+      "model": "Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "status": "complete",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 0.872,
+          "median_decode_tps": 22.55,
+          "median_prefill_tps": 207.31
+        },
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.109,
+          "median_decode_tps": 21.64,
+          "median_prefill_tps": 210.4
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.403,
+          "median_decode_tps": 22.13,
+          "median_prefill_tps": 387.82
+        }
+      },
+      "total_passed": 6,
+      "attempted": 9,
+      "error": null,
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Qwen3.5-4B-Qwen3.8-Disti-all.json",
+      "engine": "llama-oct17",
+      "model": "Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "status": "interrupted_by_host_thermal_watchdog",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 0.909,
+          "median_decode_tps": 22.22,
+          "median_prefill_tps": 204.36
+        },
+        "creative": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 3.563,
+          "median_decode_tps": 21.95,
+          "median_prefill_tps": 205.36
+        },
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.205,
+          "median_decode_tps": 21.91,
+          "median_prefill_tps": 191.09
+        },
+        "prefill": {
+          "passed": 2,
+          "attempted": 2,
+          "median_wall_s": 4.87,
+          "median_decode_tps": 21.66,
+          "median_prefill_tps": 523.75
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.43,
+          "median_decode_tps": 22.07,
+          "median_prefill_tps": 389.56
+        }
+      },
+      "total_passed": 11,
+      "attempted": 14,
+      "error": "Host external GPU arbiter stopped at Tctl 80.4 C before 15th call. Own test server stopped, CT410 lock released.",
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Qwen3.5-4B-Qwen3.8-Disti-code_schema-cool69-schema.json",
+      "engine": "llama-oct17",
+      "model": "Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "status": "complete",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "code_schema": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.549,
+          "median_decode_tps": 20.34,
+          "median_prefill_tps": 209.11
+        }
+      },
+      "total_passed": 0,
+      "attempted": 3,
+      "error": null,
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Qwen3.8-9B-Distill-Heret-agentic-cool69.json",
+      "engine": "llama-oct17",
+      "model": "Qwen3.8-9B-Distill-Heretic-Uncensored-MTP-Q4_K_M.gguf",
+      "status": "error",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "json": {
+          "passed": 1,
+          "attempted": 1,
+          "median_wall_s": 2.589,
+          "median_decode_tps": 13.16,
+          "median_prefill_tps": 151.49
+        },
+        "tool": {
+          "passed": 1,
+          "attempted": 1,
+          "median_wall_s": 3.92,
+          "median_decode_tps": 13.35,
+          "median_prefill_tps": 240.07
+        }
+      },
+      "total_passed": 2,
+      "attempted": 2,
+      "error": "RuntimeError('Tctl cooling failure: 71.125C')",
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Sharp-Spark-X2.5-4B-Q6_K-agentic-cool69.json",
+      "engine": "llama-oct17",
+      "model": "Sharp-Spark-X2.5-4B-Q6_K_XL.gguf",
+      "status": "complete",
+      "native_template": true,
+      "official_template_sha256": null,
+      "cases": {
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.147,
+          "median_decode_tps": 19.26,
+          "median_prefill_tps": 389.86
+        },
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.617,
+          "median_decode_tps": 19.07,
+          "median_prefill_tps": 391.28
+        },
+        "tool": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 0.858,
+          "median_decode_tps": 19.28,
+          "median_prefill_tps": 447.39
+        }
+      },
+      "total_passed": 3,
+      "attempted": 9,
+      "error": null,
+      "ctx_capacity": 8192
+    },
+    {
+      "artifact": "llama-oct17-Sharp-Spark-X2.5-4B-Q6_K-agentic-sharp-template.json",
+      "engine": "llama-oct17",
+      "model": "Sharp-Spark-X2.5-4B-Q6_K_XL.gguf",
+      "status": "complete",
+      "native_template": false,
+      "official_template_sha256": "4b17e14468e458809f5b24dfbfb5e84d26249d115b1a70c68d547e44108f0dd8",
+      "cases": {
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.121,
+          "median_decode_tps": 19.46,
+          "median_prefill_tps": 403.05
+        },
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.598,
+          "median_decode_tps": 19.2,
+          "median_prefill_tps": 391.87
+        },
+        "tool": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 0.859,
+          "median_decode_tps": 19.15,
+          "median_prefill_tps": 444.69
+        }
+      },
+      "total_passed": 3,
+      "attempted": 9,
+      "error": null,
+      "ctx_capacity": 8192
+    },
+    {
+      "engine": "atomic-dev",
+      "model": "Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "status": "complete",
+      "artifact": "atomic-dev-Qwen3.5-4B-Qwen3.8-Disti-agentic-cool69.json",
+      "attempted": 9,
+      "passed": 6,
+      "quality_cases": {
+        "json": "3/3",
+        "tool": "3/3",
+        "code": "0/3"
+      },
+      "median_tool_latency_s": 3.302,
+      "median_tool_prefill_tps": 207.6,
+      "median_tool_decode_tps": 22.43,
+      "production_eligible": false,
+      "engine_sha256": "66e4682f46e3faf5e1449a56e3826b948b09e2a66606d60ff489ab8c93c12df8",
+      "ctx_capacity": 8192
+    }
+  ]
+}
