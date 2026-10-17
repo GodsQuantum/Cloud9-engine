@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-18T01:17:47.423369+02:00",
+  "reason": "Prior scorer removed markdown triple fences even though user explicitly requested raw strict JSON; report corrected protocol and semantic axes separately, no GPU retest required.",
+  "affected_records": [
+    "bench:20261018:s1-vs-upstream-pym35b-q2:8k:llama-s1",
+    "bench:20261018:s1-vs-upstream-pym35b-q2:8k:llama-oct17"
+  ],
+  "corrected_code_scores": {
+    "llama-s1": {
+      "strict_exact_success": 0,
+      "semantic_code_correct": 3,
+      "rows": [
+        {
+          "rep": 1,
+          "original_scorer_permissive_pass": false,
+          "strict_json_brut_exact": false,
+          "math_code_correct": true,
+          "output_preview": "def add(a,b): return a+b"
+        },
+        {
+          "rep": 2,
+          "original_scorer_permissive_pass": false,
+          "strict_json_brut_exact": false,
+          "math_code_correct": true,
+          "output_preview": "def add(a,b): return a+b"
+        },
+        {
+          "rep": 3,
+          "original_scorer_permissive_pass": false,
+          "strict_json_brut_exact": false,
+          "math_code_correct": true,
+          "output_preview": "def add(a,b): return a+b"
+        }
+      ],
+      "source": "llama-s1-Qwen3.6-35B-A3B-Pym-Q2-M-agentic-pym-q2-guarded.json"
+    },
+    "llama-oct17": {
+      "strict_exact_success": 0,
+      "semantic_code_correct": 3,
+      "rows": [
+        {
+          "rep": 1,
+          "original_scorer_permissive_pass": true,
+          "strict_json_brut_exact": false,
+          "math_code_correct": true,
+          "output_preview": "```json\n{\n    \"corrected_line\": \"    return a + b\"\n}\n```"
+        },
+        {
+          "rep": 2,
+          "original_scorer_permissive_pass": true,
+          "strict_json_brut_exact": false,
+          "math_code_correct": true,
+          "output_preview": "```json\n{\n    \"corrected_line\": \"    return a + b\"\n}\n```"
+        },
+        {
+          "rep": 3,
+          "original_scorer_permissive_pass": false,
+          "strict_json_brut_exact": false,
+          "math_code_correct": true,
+          "output_preview": "def add(a,b): return a+b"
+        }
+      ],
+      "source": "llama-oct17-Qwen3.6-35B-A3B-Pym-Q2-M-agentic-pym-q2-guarded.json"
+    }
+  },
+  "operator": "Do not conflate math correct code with strict API JSON output; previous upstream score 2/3 was permissive, true strict 0/3 both."
+}
