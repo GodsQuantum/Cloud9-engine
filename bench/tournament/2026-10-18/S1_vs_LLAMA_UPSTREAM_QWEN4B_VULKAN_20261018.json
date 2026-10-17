@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-18T01:11:51.286540+02:00",
+  "model_sha256": "0424152306572c2ea48972135a2aecd306ab5854610b68e11c2d086a3c810fe9",
+  "scope": "4B short agentic prefilter only, not whole engine verdict; thermal pacing 74C same both",
+  "sources": {
+    "llama-s1": {
+      "source": "llama-s1-Qwen3.8-4B-Heretic.i1-IQ-agentic-cool74.json",
+      "source_commit": "20abe83b232cea5b705356be859be81d86cb92b2",
+      "engine_sha256": "9b86781cfcc989a493b6196e7f593551968ba7bc5a7b21ebfdd767a334daf934",
+      "cases": {
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.262,
+          "median_prefill_tps": 113.371,
+          "median_decode_tps": 26.349
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 3.029,
+          "median_prefill_tps": 211.552,
+          "median_decode_tps": 27.188
+        },
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.705,
+          "median_prefill_tps": 118.926,
+          "median_decode_tps": 26.011
+        }
+      },
+      "load_seconds": 2.423,
+      "tctl_max_c": 75.125,
+      "passed": 6,
+      "attempted": 9
+    },
+    "llama-oct17": {
+      "source": "llama-oct17-Qwen3.8-4B-Heretic.i1-IQ-agentic-cool74.json",
+      "source_commit": "9d1878a4354e743529fbe09e7350a957f5e39e9a",
+      "engine_sha256": "97d2a1e41ca5485218ddbc8b2808f02b2ee35fd2b2692ed32e4d33f22e0498f1",
+      "cases": {
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 1.767,
+          "median_prefill_tps": 206.456,
+          "median_decode_tps": 27.324
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.325,
+          "median_prefill_tps": 318.005,
+          "median_decode_tps": 27.191
+        },
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.28,
+          "median_prefill_tps": 204.341,
+          "median_decode_tps": 26.457
+        }
+      },
+      "load_seconds": 2.422,
+      "tctl_max_c": 75.25,
+      "passed": 6,
+      "attempted": 9
+    }
+  },
+  "winner_for_short_tools": "llama-oct17",
+  "reason": "median tool latency 2.325s vs 3.029s, prefill 318.01 vs 211.55 tok/s; decode equal; both 6/9 quality",
+  "long_context_or_moe_winner": "undetermined",
+  "need_chimera": false,
+  "production_ready": false
+}

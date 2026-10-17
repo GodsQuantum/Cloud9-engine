@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-18T01:16:17.968384+02:00",
+  "model_sha256": "cac59f495abd12710d723b6957a52e78b4f3ef382c808327ead27cc685c03788",
+  "protocol": "Cloud9 780M Vulkan, full ngl99, same 35B SHA, KV F16/F16, no speculation, 8K capacity, 3 repeats, JSON/tool/code, host safe GTT <14.3GiB, mem available >20GiB, Tctl<80",
+  "results": {
+    "llama-s1": {
+      "status": "complete",
+      "engine_sha256": "9b86781cfcc989a493b6196e7f593551968ba7bc5a7b21ebfdd767a334daf934",
+      "GGUF": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "load_s": 9.944,
+      "evidence": "llama-s1-Qwen3.6-35B-A3B-Pym-Q2-M-agentic-pym-q2-guarded.json",
+      "cases": {
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 2.558,
+          "median_prefill_tps": 66.637,
+          "median_decode_tps": 21.285
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 4.277,
+          "median_prefill_tps": 136.282,
+          "median_decode_tps": 20.694
+        },
+        "code": {
+          "passed": 0,
+          "attempted": 3,
+          "median_wall_s": 1.773,
+          "median_prefill_tps": 66.038,
+          "median_decode_tps": 20.263
+        }
+      },
+      "max_tctl_c": 76.625
+    },
+    "llama-oct17": {
+      "status": "complete",
+      "engine_sha256": "97d2a1e41ca5485218ddbc8b2808f02b2ee35fd2b2692ed32e4d33f22e0498f1",
+      "GGUF": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "load_s": 9.348,
+      "evidence": "llama-oct17-Qwen3.6-35B-A3B-Pym-Q2-M-agentic-pym-q2-guarded.json",
+      "cases": {
+        "json": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 1.965,
+          "median_prefill_tps": 113.281,
+          "median_decode_tps": 21.195
+        },
+        "tool": {
+          "passed": 3,
+          "attempted": 3,
+          "median_wall_s": 3.092,
+          "median_prefill_tps": 221.799,
+          "median_decode_tps": 21.506
+        },
+        "code": {
+          "passed": 2,
+          "attempted": 3,
+          "median_wall_s": 1.674,
+          "median_prefill_tps": 112.748,
+          "median_decode_tps": 21.472
+        }
+      },
+      "max_tctl_c": 76.625
+    }
+  },
+  "leader_short_agentic": "llama-oct17",
+  "reasons": [
+    "upstream tool median 3.092s vs S1 4.277s",
+    "upstream tool prefill 221.799 vs S1 136.282",
+    "upstream strict code 2/3 vs S1 0/3",
+    "decode tool 21.506 vs20.694 tok/s"
+  ],
+  "pending": [
+    "S1 long-context 32K/72K",
+    "Strata HIP same model and source",
+    "Flas-Next memory admission",
+    "more forks and wider cognitive tasks"
+  ],
+  "is_production_qualification": false
+}
