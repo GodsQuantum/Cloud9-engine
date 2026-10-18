@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-18T02:10:41.817816+02:00",
+  "same_engine": true,
+  "same_tasks": true,
+  "same_weights": false,
+  "quant": "IQ4_XS",
+  "backend": "Radeon780M Vulkan",
+  "note": "COMPARE MODELS, not engines. Both models different weights, same agentic benchmark. Strict JSON never strip role/think or markdown.",
+  "results": {
+    "heretic_i1_iq4": {
+      "gguf": "Qwen3.8-9B-Distill-uncen-heretic.i1-IQ4_XS.gguf",
+      "engine": "llama.cpp upstream 9d1878a",
+      "engine_sha256": "97d2a1e41ca5485218ddbc8b2808f02b2ee35fd2b2692ed32e4d33f22e0498f1",
+      "metrics": {
+        "json": {
+          "exact": 3,
+          "repeats": 3,
+          "median_wall_s": 2.539,
+          "median_decode_tps": 13.737,
+          "median_prefill_tps": 159.201
+        },
+        "tool": {
+          "exact": 3,
+          "repeats": 3,
+          "median_wall_s": 3.645,
+          "median_decode_tps": 14.036,
+          "median_prefill_tps": 280.337
+        },
+        "code": {
+          "exact": 0,
+          "repeats": 3,
+          "median_wall_s": 2.037,
+          "median_decode_tps": 13.698,
+          "median_prefill_tps": 157.183,
+          "semantic_addition": 3
+        }
+      },
+      "source": "llama-oct17-Qwen3.8-9B-Distill-uncen-agentic-protocol-strict-v2.json"
+    },
+    "hermes_fc_iq4": {
+      "gguf": "qwen3.8-9b-hermes-fc-tooluse.IQ4_XS.gguf",
+      "engine": "llama.cpp upstream 9d1878a",
+      "engine_sha256": "97d2a1e41ca5485218ddbc8b2808f02b2ee35fd2b2692ed32e4d33f22e0498f1",
+      "metrics": {
+        "json": {
+          "exact": 1,
+          "repeats": 3,
+          "median_wall_s": 8.402,
+          "median_decode_tps": 12.111,
+          "median_prefill_tps": 143.116
+        },
+        "tool": {
+          "exact": 3,
+          "repeats": 3,
+          "median_wall_s": 3.967,
+          "median_decode_tps": 12.766,
+          "median_prefill_tps": 262.394
+        },
+        "code": {
+          "exact": 0,
+          "repeats": 3,
+          "median_wall_s": 4.414,
+          "median_decode_tps": 12.696,
+          "median_prefill_tps": 148.526,
+          "semantic_addition": 3
+        }
+      },
+      "source": "llama-oct17-qwen3.8-9b-hermes-fc-too-agentic-protocol-strict-v2.json"
+    }
+  },
+  "temporary_preference": "i1 Heretic Oct16 better 3/3 JSON vs Hermes1/3, faster tool and decoder; neither passes exact corrected_line code, semantic addition3/3 both",
+  "not_production_final": true
+}

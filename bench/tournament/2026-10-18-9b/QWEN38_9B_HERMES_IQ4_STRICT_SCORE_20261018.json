@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-18",
+  "gguf": "qwen3.8-9b-hermes-fc-tooluse.IQ4_XS.gguf",
+  "model_sha256": "ff4251e45511afc93f6d04201541ab0f740969a912a930aad94b35957c6a8957",
+  "engine": "llama.cpp upstream 9d1878a Vulkan gfx1103",
+  "protocol": "3 repeats, real OpenAI tools, strict literal JSON and exact single corrected_line, semantic coding separate",
+  "metrics": {
+    "json": {
+      "passed": 1,
+      "attempted": 3,
+      "median_wall_s": 8.402,
+      "median_prefill_tps": 143.116,
+      "median_decode_tps": 12.111
+    },
+    "tool": {
+      "passed": 3,
+      "attempted": 3,
+      "median_wall_s": 3.967,
+      "median_prefill_tps": 262.394,
+      "median_decode_tps": 12.766
+    },
+    "code": {
+      "passed": 0,
+      "attempted": 3,
+      "median_wall_s": 4.414,
+      "median_prefill_tps": 148.526,
+      "median_decode_tps": 12.696,
+      "semantic_python_addition": 3
+    }
+  },
+  "conclusion": "tools 3/3 but JSON strict1/3 and code strict0/3, semantic addition3/3, latency~3.967s and tool decode~12.766t/s; not promotable",
+  "format_diagnostic": {
+    "eos_token_id": 248046,
+    "eos_token": "<|im_end|>",
+    "last_added_tool_tokens": [
+      248077,
+      248078
+    ],
+    "json_failures": "model content repeated assistant and <think> suffix after correct JSON; not proven runtime root cause",
+    "code_failures": "correctly repairs arithmetic, but outputs whole function in corrected_line rather than expected single line"
+  },
+  "recommendation": "evaluate template/stop sequence options and compare same runtime with other 9B before choosing any final four."
+}

@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-18T02:20:28.449997+02:00",
+  "backend": "Cloud9 Vulkan gfx1103",
+  "is_complete_model_ranking": false,
+  "results": {
+    "Qwen3.8 4B Heretic i1 IQ3_XXS": {
+      "model": "Qwen3.8 4B Heretic i1 IQ3_XXS",
+      "model_sha256": "0424152306572c2ea48972135a2aecd306ab5854610b68e11c2d086a3c810fe9",
+      "status": "complete",
+      "attempts_completed": 3,
+      "planned": 3,
+      "format_prompt_success": 0,
+      "median_wall_s": 1.752,
+      "median_decode_tps": 25.363,
+      "source_file": "llama-oct17-Qwen3.8-4B-He-B-Heretic.i1-IQ3_XXS-creative-protocol-strict-v3.json",
+      "quality_notes": "Quantitative constraints only, not human joke quality; manually inspect raw outputs"
+    },
+    "Qwen3.8 9B Distill Heretic i1 IQ4_XS": {
+      "model": "Qwen3.8 9B Distill Heretic i1 IQ4_XS",
+      "model_sha256": "e00deea4ecde346153ea6a687fa19c0a7caeb98af84f92db074de0d73beeabe6",
+      "status": "error",
+      "attempts_completed": 2,
+      "planned": 3,
+      "format_prompt_success": 1,
+      "median_wall_s": 8.035,
+      "median_decode_tps": 12.154,
+      "source_file": "llama-oct17-Qwen3.8-9B-Di-en-heretic.i1-IQ4_XS-creative-protocol-strict-v3.json",
+      "quality_notes": "Quantitative constraints only, not human joke quality; manually inspect raw outputs"
+    }
+  },
+  "takeaway": "4B fails simplistic creative constraints in 3/3 repeated outputs; 9B passes 1/2 observed, stopped near thermal 79.0C before third run; no reliable creative champion."
+}
