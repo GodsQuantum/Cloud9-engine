@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-18",
+  "model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "hardware": "Ryzen8845HS / Radeon780M Vulkan",
+  "status": "INCOMPLETE thermal watch fail-closed",
+  "upstream_completed": [
+    6099,
+    7373
+  ],
+  "cache_n_second_stage": 5587,
+  "raw_json_exact": [
+    false,
+    false
+  ],
+  "first_marker_semantic": [
+    true,
+    true
+  ],
+  "upstream_tctl_after_c": [
+    78.0,
+    79.375
+  ],
+  "s1_retrieval_completion": "none",
+  "s1_host_watchdog_stop_tctl_c": 80.4,
+  "s1_laboratory_process": "terminated and GPU lease released",
+  "long_depth_32k_72k_128k_certified": false,
+  "interpretation": "Thermal limit under current conditions, not demonstrated native context capacity or S1 vs llama long-depth winner. Production settings unchanged."
+}

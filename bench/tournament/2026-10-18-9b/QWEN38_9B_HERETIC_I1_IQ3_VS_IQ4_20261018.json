@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-18T02:15:50.589436+02:00",
+  "model_source": "mradermacher/Qwen3.8-9B-Distill-uncen-heretic-i1-GGUF",
+  "source_sha": "11b3ea70886db383c420dd8b6f2aff80b73d073b",
+  "same_model_variant": true,
+  "different_quant": true,
+  "same_runtime": "llama.cpp upstream 9d1878a Vulkan AMD780M ctx8192 KV f16/f16",
+  "same_tasks_and_sampling": true,
+  "quants": {
+    "IQ3_M": {
+      "filename": "Qwen3.8-9B-Distill-uncen-heretic.i1-IQ3_M.gguf",
+      "engine_sha256": "97d2a1e41ca5485218ddbc8b2808f02b2ee35fd2b2692ed32e4d33f22e0498f1",
+      "metrics": {
+        "json": {
+          "exact": 3,
+          "attempts": 3,
+          "median_wall_s": 3.211,
+          "median_prefill_tps": 126.633,
+          "median_decode_tps": 14.333
+        },
+        "tool": {
+          "exact": 3,
+          "attempts": 3,
+          "median_wall_s": 4.236,
+          "median_prefill_tps": 175.461,
+          "median_decode_tps": 14.538
+        },
+        "code": {
+          "exact": 0,
+          "attempts": 3,
+          "median_wall_s": 2.069,
+          "median_prefill_tps": 131.845,
+          "median_decode_tps": 14.442,
+          "semantic_addition": 3
+        }
+      },
+      "source": "llama-oct17-Qwen3.8-9B-Di-cen-heretic.i1-IQ3_M-agentic-protocol-strict-v3.json"
+    },
+    "IQ4_XS": {
+      "filename": "Qwen3.8-9B-Distill-uncen-heretic.i1-IQ4_XS.gguf",
+      "engine_sha256": "97d2a1e41ca5485218ddbc8b2808f02b2ee35fd2b2692ed32e4d33f22e0498f1",
+      "metrics": {
+        "json": {
+          "exact": 3,
+          "attempts": 3,
+          "median_wall_s": 2.539,
+          "median_prefill_tps": 159.201,
+          "median_decode_tps": 13.737
+        },
+        "tool": {
+          "exact": 3,
+          "attempts": 3,
+          "median_wall_s": 3.645,
+          "median_prefill_tps": 280.337,
+          "median_decode_tps": 14.036
+        },
+        "code": {
+          "exact": 0,
+          "attempts": 3,
+          "median_wall_s": 2.037,
+          "median_prefill_tps": 157.183,
+          "median_decode_tps": 13.698,
+          "semantic_addition": 3
+        }
+      },
+      "source": "llama-oct17-Qwen3.8-9B-Distill-uncen-agentic-protocol-strict-v2.json"
+    }
+  },
+  "conclusion": "IQ3_M 4.523GB vs IQ4_XS 5.326GB reduces weights15.1% and decode small +0.5tok/s, but tool latency degrades 3.645s ->4.236s, tool prefill falls 280->175tok/s; quality exact identical JSON3/3 tool3/3 code0/3 semantic math3/3; prefer IQ4_XS for latency pending long context/concurrency."
+}
