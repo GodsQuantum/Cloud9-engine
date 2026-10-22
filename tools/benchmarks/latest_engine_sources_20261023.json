@@ -5,11 +5,11 @@
   "github_repositories": {
     "rdna": {
       "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
-      "release_tag": "v14-097cf33d9-r112",
-      "release_commit": "5e9bfc92f11fff6a2a2c08c5e7e43ac3b0e1b786",
+      "release_tag": "v14-097cf33d9-r113",
+      "release_commit": "d5679a568db310de4af0f09b4cd1e4878836e315",
       "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
       "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
-      "expected_tree": "9a49150e4c32e662d22ba0553777497c2e75434b",
+      "expected_tree": "186cf70192d894b02103c38e8bf1ffbf2b4292c1",
       "patch_sha256": {
         "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "e4259056cb4a139b2f4d513575fad6991b893689d6dca1dfe9f3088a0a029672",
         "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "ffd926059d5bac86a100b2f80403ac3cfce82633def39606707ca3295c2fa8dd",
@@ -23,8 +23,8 @@
         "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "1fd9dce459585958f6a0e3960901c3ee47033f82fd79e730a5f450af08833ab3",
         "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "012374ccdd2fd5733a5f58e15fea75b5ab978784053dd58e982be4417f3e8edb",
         "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "fdf22bc9ad483c4681ec103ee8293731d533555c542ec1d9e7ab4620f3495854",
-        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "f546e78febfd3146c353f71227fc171aefe6ecc9f30f65dbfc067f4398a2895d",
-        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "62fd2a1a1bac83f3dcd64639370143bd2361ae68f60996a67112d42f331fcc3d"
+        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "73c9c4e32adbc5a8258d797b1bb57c1e7274467fd473e9a6bb2458c3d959d672",
+        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "8a558086f5b4ecf496a7abc6c4407c2ed3b240d1af11e93d56dbaffb3d0bb94e"
       },
       "patch_count": 14,
       "gpu_target": "gfx1103",
@@ -58,5 +58,6 @@
   "source_date": "2026-10-23",
   "flashnext_gt20_tps_certified": false,
   "production_approved": false,
-  "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate."
+  "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate.",
+  "notes_revision": "r113 supersedes r112; prefill-aware host expert pool layout, released 2026-10-22T23:05:09Z; pre-existing upstream/Prism artifacts unaffected"
 }

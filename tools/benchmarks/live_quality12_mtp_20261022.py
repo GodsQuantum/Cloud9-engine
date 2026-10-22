@@ -58,8 +58,8 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
- "rdna-r112-hip-4b":{
-  "bin":PARENT/"llama-rdna-r112-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+ "rdna-r113-hip-4b":{
+  "bin":PARENT/"llama-rdna-r113-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
@@ -105,7 +105,7 @@ CANDIDATES={
 # Never allow a new live GPU run against retired b11798 or r111.
 LATEST_ONLY_CANDIDATES=frozenset({
     "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
-    "rdna-r112-hip-4b", "upstream-master-4b", "prism-head-4b",
+    "rdna-r113-hip-4b", "upstream-master-4b", "prism-head-4b",
 })
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
 LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")
@@ -115,7 +115,7 @@ def validate_latest_only(candidate):
     assert candidate in LATEST_ONLY_CANDIDATES, f"RETIRED_ENGINE_GPU_TEST_DENIED: {candidate}"
     lock=json.loads(LATEST_SOURCE_MANIFEST.read_text())
     r=lock["github_repositories"]
-    assert r["rdna"]["release_tag"]=="v14-097cf33d9-r112"
+    assert r["rdna"]["release_tag"]=="v14-097cf33d9-r113"
     assert r["atomic"]["release_tag"]=="b10298-2.0.0"
     assert r["upstream"]["commit"]=="184f6536024668e8908ab8c86033d56708e62b40"
     assert r["prism"]["commit"]=="73bfe6cc485554822f80c473a3c0c4f25e80f41b"
