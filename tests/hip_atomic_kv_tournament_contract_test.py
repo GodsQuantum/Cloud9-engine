@@ -23,7 +23,7 @@ class HybridCandidateSafety(unittest.TestCase):
         cls.module = load()
 
     def test_same_weights_between_all_four_engines(self):
-        names = ("atomic4b", "atomic4b-q8v", "b11798-4b", "rdna-r111-vulkan-4b", "rdna-r111-hip-4b")
+        names = ("atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v", "b11798-4b", "rdna-r111-vulkan-4b", "rdna-r111-hip-4b")
         specs = [self.module.CANDIDATES[name] for name in names]
         self.assertEqual(len({str(s["model"]) for s in specs}), 1)
         self.assertEqual({s["expected_bytes"] for s in specs}, {2790000800})
@@ -44,6 +44,15 @@ class HybridCandidateSafety(unittest.TestCase):
         self.assertEqual(a["flags"], b["flags"])
         self.assertIn("actions-20261023", str(b["bin"]))
         self.assertNotIn("current/", str(b["bin"]))
+
+    def test_atomic_hip_has_identical_backend_flags_and_lab_paths(self):
+        c = self.module.CANDIDATES
+        self.assertEqual(c["atomic4b-hip-turbo3"]["flags"], c["atomic4b"]["flags"])
+        self.assertEqual(c["atomic4b-hip-q8v"]["flags"], c["atomic4b-q8v"]["flags"])
+        self.assertEqual(c["atomic4b-hip-turbo3"]["bin"], c["atomic4b-hip-q8v"]["bin"])
+        self.assertNotEqual(c["atomic4b-hip-turbo3"]["bin"], c["atomic4b"]["bin"])
+        self.assertIn("rocm-20261023", str(c["atomic4b-hip-turbo3"]["bin"]))
+        self.assertNotIn("/current/", str(c["atomic4b-hip-turbo3"]["bin"]))
 
     def test_guard_remains_fail_closed(self):
         code = BENCH.read_text()
