@@ -1,0 +1,116 @@
+name: LAB RDNA r111 HIP gfx1103
+
+on:
+  push:
+    branches:
+      - lab/20261022-one-engine-qualification
+    paths:
+      - .github/workflows/hip-r111-gfx1103-lab.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hip-gfx1103:
+    name: Compile pinned r111 HIP gfx1103 (CPU-hosted; NO GPU test)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Host preflight and compiler dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /; free -h; nproc
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake ninja-build ccache patchelf libnuma-dev jq
+          python3 --version
+      - name: Verify pinned r111 source and patch tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool tools/benchmarks/rdna_r111_source_lock_20261022.json >/dev/null
+          git clone --filter=blob:none https://github.com/stew675/llama-cpp-rdna-boosts.git "$RUNNER_TEMP/rdna-r111-patches"
+          git -C "$RUNNER_TEMP/rdna-r111-patches" checkout 2a16c4b1f7592106d5652f56cc9e3c7adf95e395
+          git clone --filter=blob:none https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/llama-r111"
+          git -C "$RUNNER_TEMP/llama-r111" checkout 097cf33d9499b1eade67d51e16d7c75427e7b267
+          git -C "$RUNNER_TEMP/llama-r111" config user.name 'Cloud9 LAB CI'
+          git -C "$RUNNER_TEMP/llama-r111" config user.email 'cloud9-lab-ci@users.noreply.github.com'
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          lock=json.load(open('tools/benchmarks/rdna_r111_source_lock_20261022.json'))
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          patches=root/'rdna-r111-patches'/'patches'
+          for name,expected in lock['patch_sha256'].items():
+              actual=hashlib.sha256((patches/name).read_bytes()).hexdigest()
+              if actual!=expected: raise SystemExit(f'PATCH_SHA_MISMATCH {name}')
+          tip=subprocess.check_output(['git','-C',str(root/'rdna-r111-patches'),'rev-parse','HEAD'],text=True).strip()
+          assert tip==lock['release_git_commit'],tip
+          assert len(lock['patch_sha256'])==14
+          print('R111_SHA14_PASS',tip)
+          PY
+          bash "$RUNNER_TEMP/rdna-r111-patches/scripts/apply-all.sh" "$RUNNER_TEMP/llama-r111"
+          expected=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/rdna_r111_source_lock_20261022.json"))["expected_patched_tree"])')
+          actual=$(git -C "$RUNNER_TEMP/llama-r111" rev-parse HEAD^{tree})
+          test "$actual" = "$expected" || { echo "PATCH_TREE_MISMATCH $actual != $expected"; exit 17; }
+          echo "R111_PATCH_TREE_PASS $actual"
+      - name: Install official AMD ROCm SDK 10.1 in isolated venv
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/rocm-venv"
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://stable.repo.amd.com/rocm/whl-next/ \
+            'rocm[libraries,devel,device-gfx1103]==10.1.0'
+          rocm-sdk init
+          rocm-sdk path --root
+          test -x "$RUNNER_TEMP/rocm-venv/bin/hipcc"
+          hipcc --version | head -15
+          df -h /
+      - name: Build native HIP gfx1103 from verified source
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          ROCM_PATH=$(rocm-sdk path --root)
+          export ROCM_PATH HIP_PATH="$ROCM_PATH"
+          export PATH="$ROCM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$ROCM_PATH/lib:${LD_LIBRARY_PATH:-}"
+          export CMAKE_PREFIX_PATH="$ROCM_PATH:${CMAKE_PREFIX_PATH:-}"
+          export CCACHE_DIR="$RUNNER_TEMP/rdna-r111-ccache"
+          ccache -M 2G
+          cmake -S "$RUNNER_TEMP/llama-r111" -B "$RUNNER_TEMP/build-hip-r111" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DGGML_HIP=ON -DGGML_HIP_RCCL=OFF \
+            -DGPU_TARGETS=gfx1103 -DLLAMA_CURL=OFF \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_HIP_COMPILER_LAUNCHER=ccache
+          cmake --build "$RUNNER_TEMP/build-hip-r111" --parallel 2 \
+            --target llama-cli llama-server test-backend-ops
+          ccache -s
+          "$RUNNER_TEMP/build-hip-r111/bin/llama-server" --version
+          "$RUNNER_TEMP/build-hip-r111/bin/llama-cli" --version
+      - name: Package binary candidate with hashes (NOT PRODUCTION)
+        shell: bash
+        run: |
+          set -euo pipefail
+          B="$RUNNER_TEMP/build-hip-r111/bin"
+          mkdir -p "$RUNNER_TEMP/rdna-hip-artifact/bin"
+          cp -a "$B"/. "$RUNNER_TEMP/rdna-hip-artifact/bin/"
+          cp tools/benchmarks/rdna_r111_source_lock_20261022.json "$RUNNER_TEMP/rdna-hip-artifact/"
+          printf '%s\n' 'UNQUALIFIED: AMD HIP gfx1103 CPU-cross-build only.' \
+            'No GPU execution nor ROCm runtime portability certification.' \
+            'Runtime requires matching ROCm SDK and libs; test on CT410 under exclusive GPU admission.' \
+            > "$RUNNER_TEMP/rdna-hip-artifact/README-NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/rdna-hip-artifact" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > FILES-SHA256.txt)
+          tar -czf "$RUNNER_TEMP/rdna-hip-r111-gfx1103-CI-UNQUALIFIED.tar.gz" -C "$RUNNER_TEMP" rdna-hip-artifact
+          sha256sum "$RUNNER_TEMP/rdna-hip-r111-gfx1103-CI-UNQUALIFIED.tar.gz"
+          df -h /
+      - name: Preserve candidate for hardware-only QA
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rdna-r111-hip-gfx1103-unqualified
+          path: ${{ runner.temp }}/rdna-hip-r111-gfx1103-CI-UNQUALIFIED.tar.gz
+          retention-days: 7
+          if-no-files-found: error
