@@ -34,6 +34,12 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
+ "b11798-35b":{
+  "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
+  "model":STORE/"Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "flags":["-c","4096","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":13222476000
+ },
  "b11798-9b":{
   "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
   "model":STORE/"Qwen3.8-9B-Distill-Heretic-Uncensored-MTP-Q4_K_M.gguf",
