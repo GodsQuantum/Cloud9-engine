@@ -28,6 +28,18 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","turbo3"],
   "expected_bytes":2790000800
  },
+ "atomic4b-q8v":{
+  "bin":PARENT/"atomic-turboquant-2.0.0-20261016/build-cloud9/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
+ "rdna-r111-hip-4b":{
+  "bin":PARENT/"llama-rdna-r111-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
  "rdna-r111-vulkan-4b":{
   "bin":PARENT/"llama-rdna-r111-vulkan-gfx1103-20261022/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",

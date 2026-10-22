@@ -32,6 +32,7 @@ jobs:
           python3 -B tests/flashnext_ad427_manifest_test.py
           python3 -B tests/quality_protocol_contract_test.py
           python3 -B tests/flashnext_gguf_preflight_test.py
+          python3 -B tests/hip_atomic_kv_tournament_contract_test.py
           python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
