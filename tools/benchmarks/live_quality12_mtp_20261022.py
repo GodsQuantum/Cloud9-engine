@@ -58,6 +58,24 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
+ "rdna-r112-hip-4b":{
+  "bin":PARENT/"llama-rdna-r112-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
+ "upstream-master-4b":{
+  "bin":PARENT/"latest-upstream-vulkan-20261023/package/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
+ "prism-head-4b":{
+  "bin":PARENT/"latest-prism-vulkan-20261023/package/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
  "b11798-4b":{
   "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
@@ -83,6 +101,26 @@ CANDIDATES={
   "expected_bytes":5780090624
  }
 }
+# Historical CANDIDATES remain inspectable for evidence parsing only.
+# Never allow a new live GPU run against retired b11798 or r111.
+LATEST_ONLY_CANDIDATES=frozenset({
+    "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
+    "rdna-r112-hip-4b", "upstream-master-4b", "prism-head-4b",
+})
+assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
+LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")
+
+def validate_latest_only(candidate):
+    """Strict preflight, no filesystem/network/GPU side effects except read manifest."""
+    assert candidate in LATEST_ONLY_CANDIDATES, f"RETIRED_ENGINE_GPU_TEST_DENIED: {candidate}"
+    lock=json.loads(LATEST_SOURCE_MANIFEST.read_text())
+    r=lock["github_repositories"]
+    assert r["rdna"]["release_tag"]=="v14-097cf33d9-r112"
+    assert r["atomic"]["release_tag"]=="b10298-2.0.0"
+    assert r["upstream"]["commit"]=="184f6536024668e8908ab8c86033d56708e62b40"
+    assert r["prism"]["commit"]=="73bfe6cc485554822f80c473a3c0c4f25e80f41b"
+    return lock
+
 def api(path,payload=None,timeout=120):
     data=json.dumps(payload,ensure_ascii=False).encode() if payload is not None else None
     req=urllib.request.Request(f"http://127.0.0.1:{PORT}{path}",
@@ -127,12 +165,13 @@ def prepare_resume(previous,expected,cases,reps):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--candidate",choices=sorted(CANDIDATES),required=True)
+    p.add_argument("--candidate",choices=sorted(LATEST_ONLY_CANDIDATES),required=True)
     p.add_argument("--reps",type=int,default=3)
     p.add_argument("--thermal-pace",action="store_true",help="Cool to <=72 C between requests; does not alter speed measurement per API response")
     p.add_argument("--trial-tag",default="",help="New suffix for immutable A/B evidence; lowercase letters, digits, hyphen")
     p.add_argument("--resume",action="store_true",help="Resume only a matching incomplete recorded benchmark, without rerunning valid cases")
     args=p.parse_args()
+    latest_lock=validate_latest_only(args.candidate)
     assert os.environ.get("CLOUD9_GPU_COEXIST_ADMITTED")=="1"
     assert args.reps>=3 and tctl()<75
     spec=CANDIDATES[args.candidate]
@@ -160,7 +199,8 @@ def main():
       "candidate":args.candidate,"engine_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),
       "model":path.name,"model_bytes":path.stat().st_size,
       "native_speculation":"draft-mtp","native_spec_draft_max":2,
-      "backend":"Cloud9 Radeon 780M Vulkan gfx1103",
+      "backend":"Cloud9 Radeon 780M "+("HIP" if "hip" in args.candidate else "Vulkan")+" gfx1103",
+      "source_version_lock_sha256":hashlib.sha256(LATEST_SOURCE_MANIFEST.read_bytes()).hexdigest(),
       "protocol":grade.PROTOCOL,"repetitions_requested":args.reps,
       "quality_run_kind":"synthetic fictitious tools, code, French, strict JSON, editorial pending",
       "rows":[],"production_eligible":False}
