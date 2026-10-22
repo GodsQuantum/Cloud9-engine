@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "verified_at_utc": "2026-10-22T22:59:15.016652+00:00",
+  "policy": "only latest pinned upstream tags/heads, no legacy binary promoted",
+  "github_repositories": {
+    "rdna": {
+      "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
+      "release_tag": "v14-097cf33d9-r112",
+      "release_commit": "5e9bfc92f11fff6a2a2c08c5e7e43ac3b0e1b786",
+      "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
+      "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
+      "expected_tree": "9a49150e4c32e662d22ba0553777497c2e75434b",
+      "patch_sha256": {
+        "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "e4259056cb4a139b2f4d513575fad6991b893689d6dca1dfe9f3088a0a029672",
+        "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "ffd926059d5bac86a100b2f80403ac3cfce82633def39606707ca3295c2fa8dd",
+        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "4d08fb9ab93596e5b9d76cb527f7f288f6bf1ee4586a6ee784c1c839af922419",
+        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "0112cc263c66f241a9055680b216f73def573ce5b932a7e8a0528eb2268d0523",
+        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "9d6ddf68f040e8083a8e13d7577b3a4327e57cb79c05660595d02c2b5caa3532",
+        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "d3a9d18fd872c924abc99598b0270f0362b768ecb867d8364272a6d8b3ce5f78",
+        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "04cb226bbd61286947dade0080e33e1a91cbe8abda9b6cd25c018f4c6a3541d2",
+        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "574c61b3c32928a94ba27866a0c64c76cb7cc000fe59a5283a7abe27147de484",
+        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "b475ea2fff4ab034c12cc55c826e487bafe820d6e765e4e8b68897428eba2c21",
+        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "1fd9dce459585958f6a0e3960901c3ee47033f82fd79e730a5f450af08833ab3",
+        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "012374ccdd2fd5733a5f58e15fea75b5ab978784053dd58e982be4417f3e8edb",
+        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "fdf22bc9ad483c4681ec103ee8293731d533555c542ec1d9e7ab4620f3495854",
+        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "f546e78febfd3146c353f71227fc171aefe6ecc9f30f65dbfc067f4398a2895d",
+        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "62fd2a1a1bac83f3dcd64639370143bd2361ae68f60996a67112d42f331fcc3d"
+      },
+      "patch_count": 14,
+      "gpu_target": "gfx1103",
+      "gpu_benchmark_certified": false
+    },
+    "upstream": {
+      "repository": "https://github.com/ggml-org/llama.cpp.git",
+      "branch": "master",
+      "commit": "184f6536024668e8908ab8c86033d56708e62b40",
+      "gpu_benchmark_certified": false
+    },
+    "prism": {
+      "repository": "https://github.com/PrismML-Eng/llama.cpp.git",
+      "branch": "prism",
+      "commit": "73bfe6cc485554822f80c473a3c0c4f25e80f41b",
+      "gpu_benchmark_certified": false
+    },
+    "atomic": {
+      "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
+      "release_tag": "b10298-2.0.0",
+      "release_commit": "cda0f9256665845cd9d6f3a0176880883f653a3d",
+      "gpu_benchmark_certified": false
+    },
+    "strata": {
+      "repository": "https://github.com/Niko1221/Strata.git",
+      "release_tag": "v0.2.2",
+      "release_published_utc": "2026-10-21T11:10:21Z",
+      "gpu_benchmark_certified": false
+    }
+  },
+  "source_date": "2026-10-23",
+  "flashnext_gt20_tps_certified": false,
+  "production_approved": false,
+  "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate."
+}
