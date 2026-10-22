@@ -20,7 +20,7 @@ ROOT=Path("/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA")
 MODEL=Path("/srv/lxc/ia-compute/data/models/strata")
 ARCH=ROOT/"Sources/Archive/CT410_DEV_REPATRIATION_20261017/strata-runtime"
 BINARY=ROOT/"Sources/Builds/strata-v022-gfx1103-codespace-hip/strata"
-OUT=ROOT/"Sources/Worklogs/2026-10-22_STRATA_FLASHNEXT_CODER_V0147_GUARDED_REALGPU_V3.log"
+OUT=ROOT/"Sources/Worklogs/2026-10-22_STRATA_FLASHNEXT_CODER_V0147_GUARDED_REALGPU_V4.log"
 LIMIT=7.0
 def command(args,timeout=12):
     p=subprocess.run(args,capture_output=True,text=True,timeout=timeout)
@@ -55,7 +55,7 @@ def runner_arguments(args):
     arg=["--pack",str(pack),"--native",str(shards[0]),"--ple-gguf",str(shards[1]),
        "--ple-io","direct","--mmap-experts","--expert-cache","320",
        "--expert-cache-per-layer","--mtp",str(mtp),"--spec","4",
-       "--spec-min-p","0.5","--suffix-draft","0","--max-context","4096",
+       "--spec-min-p","0.5","--suffix-draft","0","--prefill","512","--max-context","4096",
        "--kv","int8","--pool-workers","6","--adapt-every","0","--pcie-frac","0",
        "--vram-reserve-mib","2048","--tokens","1,2,3","--max-new",str(args.max_new),"--stats"]
     return owned_cmdline(BINARY,arg)
