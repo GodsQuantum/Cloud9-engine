@@ -20,7 +20,7 @@ PARENT=ROOT/"Sources/Builds"
 STORE=Path("/srv/storage/nvme/shared/ai-models/llm/gguf")
 OUT=ROOT/"Sources/Benchmarks/Engine-Tournament/2026-10-22"
 PORT=18229
-GRADER=Path("/tmp/cloud9-real-quality-protocol-20261022/tools/benchmarks/one_engine_quality_protocol_20261022.py")
+GRADER=Path(__file__).resolve().with_name("one_engine_quality_protocol_20261022.py")
 CANDIDATES={
  "atomic4b":{
   "bin":PARENT/"atomic-turboquant-2.0.0-20261016/build-cloud9/bin/llama-server",
