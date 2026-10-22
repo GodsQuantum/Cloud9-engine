@@ -1,6 +1,6 @@
 # Cloud9 inference engines — live qualification, 22 October 2026
 
-**LAB ONLY. Do not deploy or promote any candidate yet.** The single canonical Hall of Fame is the parent project HALL_OF_FAME.json (not this Git repository). It now has 182 records; new records must use Sources/Tools/refresh_hall_of_fame.py --append-stdin and --validate. Preserve historical IDs and original sources.
+**LAB ONLY. Do not deploy or promote any candidate yet.** The single canonical Hall of Fame is the parent project HALL_OF_FAME.json (not this Git repository). It has 187 verified records as of 22 Oct 2026 at 13:45 CEST; new records must use Sources/Tools/refresh_hall_of_fame.py --append-stdin and --validate. Preserve historical IDs and original sources.
 
 ## Actual production inventory (read-only inspection)
 
@@ -31,7 +31,7 @@ Codespaces HIP ROCm 10.1 build targeted gfx1103 with successful native compilati
 
 - TurboQuant is NOT an engine-agnostic feature. The Atomic llama.cpp fork supports KV turbo3/turbo4 with dedicated code. Strata has separate INT8, Q4, K8V4 and KV streaming. Magnitude 0.2.10 exposes dense/affine-k8v4, not a drop-in TurboQuant kernel.
 - Qwen35 GGUF metadata claims 262144 trained context capacity. Neither 128K, 256K nor a million tokens is certified until the runtime has REALLY ingested that number of tokens with no truncation AND recovered multiple markers at separated positions. Quantization saves KV RAM but does not make untrained context windows magically accurate or remove prefill compute/thermal costs.
-- The three scripts under tools/benchmarks are experimental harnesses, never production services. The five-needle witness checks token count via the live tokenizer, five position markers, repeated JSON retrieval and thermal/cgroup admission. They MUST run with CT410 arbiter and watchdog externally and have NOT passed long context on Cloud9 as of this report.
+- The three scripts under tools/benchmarks are experimental harnesses, never production services. The five-needle witness checks token count via the live tokenizer, five position markers, repeated JSON retrieval and thermal/cgroup admission. They MUST run with CT410 arbiter and watchdog externally and have now validated 8,026 and 16,330 actual prompt tokens using five-position retrieval (3/3 each); longer contexts remain UNPROVEN.
 - Keep no more than one LLM engine loaded simultaneously; never compare Strata --bench-tg (without native MTP) against llama.cpp native MTP; use real accepted draft counts, quality, TTFT, prefill, decode and useful context.
 
 ## What qualifies the winner
@@ -39,9 +39,9 @@ Codespaces HIP ROCm 10.1 build targeted gfx1103 with successful native compilati
 For each engine/model/quant SHA, run real native MTP/speculative generation with 3+ trials, read-only function calls, JSON, realistic coding, French creative human rubric, paced multi-position context retrieval 8K,16K,32K,64K,128K,256K and above ONLY if thermally safe. Log peak host RAM, GTT, PSI, temperature, time-to-correct-action and failures. No new winner without green guard and actual model tests. Do NOT stop embedding, PBS, HAOS or critical family services, and do not modify the official GPU safety guard.
 
 
-## Extended 12-case protocol (offline checked, NO GPU run yet)
+## Extended 12-case protocol (offline tests plus three real 36-request GPU runs)
 
-The new tools/benchmarks/one_engine_quality_protocol_20261022.py defines three strict JSON, three fictional read-only tool calls, three realistic line-level code fixes and three French creative/professional/technical requests. Run each three times for 36 total responses per engine/model under native MTP. JSON/arguments/code are machine-gradeable; French constraints are only a mechanical precheck. Editorial originality, scientific correctness and humor must be judged separately on anonymized outputs before promotion. Missing or duplicate evidence fails closed. Tests/quality_protocol_contract_test.py has 7 passing offline tests. This is a BENCHMARK SPECIFICATION, not 36 real completed inference responses.
+The new tools/benchmarks/one_engine_quality_protocol_20261022.py defines three strict JSON, three fictional read-only tool calls, three realistic line-level code fixes and three French creative/professional/technical requests. Run each three times for 36 total responses per engine/model under native MTP. JSON/arguments/code are machine-gradeable; French constraints are only a mechanical precheck. Editorial originality, scientific correctness and humor must be judged separately on anonymized outputs before promotion. Missing or duplicate evidence fails closed. Tests/quality_protocol_contract_test.py has 7 passing offline tests. The benchmark suite was later executed on three GPU variants, producing 108 real inference responses. See the verified results below.
 
 
 ## First independently verified useful contexts — 22 October 11:34 CEST
@@ -56,3 +56,8 @@ The new tools/benchmarks/one_engine_quality_protocol_20261022.py defines three s
 
 - Canonical Hall entries: 2026-10-22:atomic-turboquant2:qwen4b-mtp2-turbo3:five-needle8k and 2026-10-22:atomic-turboquant2:qwen4b-mtp2-turbo3:five-needle16k. Both validated_in_source, original JSONs plus host guard logs under Sources/Benchmarks/Engine-Tournament/2026-10-22 and Sources/Worklogs.
 - Scope: synthetic document retrieval only, not creativity/coding quality or certified 32K,128K,256K,1M. KV compression cannot eliminate context prefill heat and host PSI. Escalation conditional on official GTT/memory/thermal admission.
+
+
+## Benchmarks terminés (22 octobre, 13h45 CEST)
+
+Même Qwen4B GGUF, 36 réponses réelles par variante, 3 essais de 12 cas, MTP2 natif. Atomic TurboQuant : médiane 37,21 tok/s ; JSON 3/9 ; outils 6/9 ; code strict 0/9 ; français formel 7/9 ; brouillons acceptés 1055/1612 (65,45 %). Magnitude 0.2.10 tuning 2 s : 14,75 tok/s ; JSON 3/9 ; outils 9/9 ; code 0/9 ; français 5/9 ; brouillons 263/3140 (8,38 %). Magnitude tuning 60 s : 14,70 tok/s ; mêmes scores et acceptance, chargement 49,14 s contre 9,92 s (tuning 2 s). L'allongement du tuning ne rapporte aucun gain. Les scripts, journaux et JSON natifs demeurent dans le projet Cloud9 ; le Hall of Fame canonique compte 187 entrées validées. Aucun moteur n'a été promu. Le contexte récupéré est prouvé à 8026 et 16330 tokens seulement (5 repères, 3/3 essais), pas au-delà.
