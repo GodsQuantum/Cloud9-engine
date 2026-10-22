@@ -28,6 +28,12 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","turbo3"],
   "expected_bytes":2790000800
  },
+ "b11798-4b":{
+  "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
  "b11798-9b":{
   "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
   "model":STORE/"Qwen3.8-9B-Distill-Heretic-Uncensored-MTP-Q4_K_M.gguf",
@@ -56,6 +62,7 @@ def main():
     p.add_argument("--candidate",choices=sorted(CANDIDATES),required=True)
     p.add_argument("--reps",type=int,default=3)
     p.add_argument("--thermal-pace",action="store_true",help="Cool to <=72 C between requests; does not alter speed measurement per API response")
+    p.add_argument("--trial-tag",default="",help="New suffix for immutable A/B evidence; lowercase letters, digits, hyphen")
     args=p.parse_args()
     assert os.environ.get("CLOUD9_GPU_COEXIST_ADMITTED")=="1"
     assert args.reps>=3 and tctl()<75
@@ -68,6 +75,10 @@ def main():
     grade=importlib.util.module_from_spec(mod);mod.loader.exec_module(grade)
     tag=f"{args.candidate}-quality12x{args.reps}-mtp2-20261022"
     if args.thermal_pace:tag+="-thermalpaced-v2"
+    if args.trial_tag:
+        import re
+        assert re.fullmatch(r"[a-z0-9-]{1,48}",args.trial_tag),"invalid trial suffix"
+        tag+="-"+args.trial_tag
     result_path=OUT/(tag+".json")
     log_path=OUT/(tag+".server.log")
     assert not result_path.exists() and not log_path.exists()
