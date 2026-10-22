@@ -26,6 +26,8 @@ jobs:
           python3 -B tests/backend-release-gate-test.py
           python3 -B tests/turboquant_kv_gate_test.py
           python3 -B tests/single_engine_rank_test.py
+          python3 -B tests/benchmark_protocol_safety_test.py
+          python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
           UP_REPO=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["repository"])')

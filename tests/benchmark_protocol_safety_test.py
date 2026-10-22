@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Offline tests: benchmark scripts cannot produce false evidence from fixture bugs."""
+import hashlib
+import importlib.util
+import pathlib
+import unittest
+
+REPO = pathlib.Path(__file__).resolve().parents[1]
+TOOL = REPO / "tools/benchmarks"
+
+def load(name):
+    p = TOOL / name
+    spec = importlib.util.spec_from_file_location(name[:-3], p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+class SyntheticWitnessTest(unittest.TestCase):
+    def test_five_unique_markers_ordered(self):
+        a = load("synthetic_context_witness_20261022.py")
+        text = a.mktext(12)
+        seen = [text.index(code) for code in a.CODES.values()]
+        self.assertEqual(len(seen), 5)
+        self.assertEqual(seen, sorted(seen))
+        for code in a.CODES.values():
+            self.assertEqual(text.count(code), 1)
+
+    def test_fixture_is_byte_deterministic(self):
+        a = load("synthetic_context_witness_20261022.py")
+        x = a.mktext(8).encode()
+        y = a.mktext(8).encode()
+        self.assertEqual(hashlib.sha256(x).digest(), hashlib.sha256(y).digest())
+
+    def test_turboquant_has_native_mtp_and_distinct_port(self):
+        p = (TOOL/"atomic_turboquant_context_20261022.py").read_text()
+        self.assertIn('"draft-mtp"', p)
+        self.assertIn('"turbo3"', p)
+        self.assertIn("PORT=18227", p)
+        self.assertIn("CLOUD9_GPU_COEXIST_ADMITTED", p)
+
+    def test_magnitude_requires_lease_and_no_real_tools(self):
+        m = load("magnitude_agentic_protocol_20261022.py")
+        p = (TOOL/"magnitude_agentic_protocol_20261022.py").read_text()
+        self.assertIn("CLOUD9_GPU_COEXIST_ADMITTED", p)
+        self.assertIn('"--method","mtp"', p)
+        self.assertIn('"--device","vulkan"', p)
+        self.assertIn('"--tuning-budget","2"', p)
+        self.assertNotIn("systemctl start", p)
+        self.assertNotIn("gh auth", p)
+        self.assertEqual(m.PORT,18230)
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
