@@ -37,3 +37,8 @@ Codespaces HIP ROCm 10.1 build targeted gfx1103 with successful native compilati
 ## What qualifies the winner
 
 For each engine/model/quant SHA, run real native MTP/speculative generation with 3+ trials, read-only function calls, JSON, realistic coding, French creative human rubric, paced multi-position context retrieval 8K,16K,32K,64K,128K,256K and above ONLY if thermally safe. Log peak host RAM, GTT, PSI, temperature, time-to-correct-action and failures. No new winner without green guard and actual model tests. Do NOT stop embedding, PBS, HAOS or critical family services, and do not modify the official GPU safety guard.
+
+
+## Extended 12-case protocol (offline checked, NO GPU run yet)
+
+The new tools/benchmarks/one_engine_quality_protocol_20261022.py defines three strict JSON, three fictional read-only tool calls, three realistic line-level code fixes and three French creative/professional/technical requests. Run each three times for 36 total responses per engine/model under native MTP. JSON/arguments/code are machine-gradeable; French constraints are only a mechanical precheck. Editorial originality, scientific correctness and humor must be judged separately on anonymized outputs before promotion. Missing or duplicate evidence fails closed. Tests/quality_protocol_contract_test.py has 7 passing offline tests. This is a BENCHMARK SPECIFICATION, not 36 real completed inference responses.
