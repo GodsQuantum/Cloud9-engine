@@ -9,7 +9,7 @@ class LatestOnly(unittest.TestCase):
   cls.d=json.loads((R/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
  def test_latest_release_tags(self):
   r=self.d['github_repositories']
-  self.assertEqual(r['rdna']['release_tag'],'v14-097cf33d9-r112')
+  self.assertEqual(r['rdna']['release_tag'],'v14-097cf33d9-r113')
   self.assertEqual(r['strata']['release_tag'],'v0.2.2')
   self.assertEqual(r['atomic']['release_tag'],'b10298-2.0.0')
  def test_strict_commit_and_patch_manifest(self):
@@ -19,9 +19,9 @@ class LatestOnly(unittest.TestCase):
   self.assertEqual(len(r['rdna']['patch_sha256']),14)
   self.assertRegex(r['rdna']['expected_tree'],r'^[0-9a-f]{40}$')
  def test_ci_only_current_source(self):
-  a=(R/'.github/workflows/hip-r112-gfx1103-latest-lab.yml').read_text()
+  a=(R/'.github/workflows/hip-r113-gfx1103-latest-lab.yml').read_text()
   b=(R/'.github/workflows/latest-upstream-prism-vulkan-lab.yml').read_text()
-  self.assertIn('r112',a)
+  self.assertIn('r113',a)
   self.assertNotIn('r111',a)
   self.assertIn('latest_engine_sources_20261023.json',a+b)
   self.assertIn('LATEST_CHANGED_REPIN_REQUIRED',b)
@@ -35,7 +35,7 @@ class LatestOnly(unittest.TestCase):
   spec=U.spec_from_file_location('quality_latest_only',src)
   spec.loader.exec_module(mod)
   self.assertFalse({'b11798-4b','b11798-hermes9b','rdna-r111-vulkan-4b','rdna-r111-hip-4b'} & mod.LATEST_ONLY_CANDIDATES)
-  for name in ('atomic4b','rdna-r112-hip-4b','upstream-master-4b','prism-head-4b'):
+  for name in ('atomic4b','rdna-r113-hip-4b','upstream-master-4b','prism-head-4b'):
    self.assertIn(name,mod.LATEST_ONLY_CANDIDATES)
    self.assertEqual(mod.validate_latest_only(name)['source_date'],'2026-10-23')
   with self.assertRaisesRegex(AssertionError,'RETIRED_ENGINE_GPU_TEST_DENIED'):
