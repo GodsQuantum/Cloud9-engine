@@ -48,6 +48,7 @@ class SyntheticWitnessTest(unittest.TestCase):
         self.assertIn('"b11798-9b"',p)
         self.assertIn('"b11798-4b"',p)
         self.assertIn('"b11798-35b"',p)
+        self.assertIn('"b11798-hermes9b"',p)
         self.assertIn('--thermal-pace',p)
         self.assertIn('--trial-tag',p)
         self.assertIn('re.fullmatch',p)
@@ -57,6 +58,16 @@ class SyntheticWitnessTest(unittest.TestCase):
         self.assertIn('start_new_session=True',p)
         self.assertNotIn("systemctl stop",p)
         self.assertNotIn("docker stop",p)
+
+    def test_hermes9b_gpu_qualification_has_hard_watchdog(self):
+        p=(TOOL/"qwen9b_hermes_guarded_quality_20261022.py").read_text()
+        for marker in ("OFFICIAL_CT410_ALLOW","/run/cloud9-gpu.lock","HARD_RESOURCE_LIMIT",
+                       "SUSTAINED_PRESSURE","PRODUCTION_GPU_CLIENT","GPU_LEASE_LOST",
+                       "SCOPED_CLEANUP","ARC_RESTORED","Candidate NOT certified"):
+            self.assertIn(marker,p)
+        self.assertIn('b11798-hermes9b',p)
+        self.assertNotIn("systemctl stop",p)
+        self.assertNotIn("pct stop",p)
 
     def test_strata_flashnext_uses_hardware_admission_and_scoped_process(self):
         p = (TOOL/"strata_flashnext_guarded_probe_20261022.py").read_text()
