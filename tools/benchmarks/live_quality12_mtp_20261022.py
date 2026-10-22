@@ -40,6 +40,12 @@ CANDIDATES={
   "flags":["-c","4096","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":13222476000
  },
+ "b11798-hermes9b":{
+  "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
+  "model":STORE/"qwen3.8-9b-hermes-fc-tooluse.Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":5778720640
+ },
  "b11798-9b":{
   "bin":PARENT/"llama-b11798-codespace-20261022/bin/llama-server",
   "model":STORE/"Qwen3.8-9B-Distill-Heretic-Uncensored-MTP-Q4_K_M.gguf",
