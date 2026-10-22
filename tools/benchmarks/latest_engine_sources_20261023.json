@@ -59,5 +59,15 @@
   "flashnext_gt20_tps_certified": false,
   "production_approved": false,
   "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate.",
-  "notes_revision": "r113 supersedes r112; prefill-aware host expert pool layout, released 2026-10-22T23:05:09Z; pre-existing upstream/Prism artifacts unaffected"
+  "notes_revision": "r113 supersedes r112; prefill-aware host expert pool layout, released 2026-10-22T23:05:09Z; pre-existing upstream/Prism artifacts unaffected",
+  "lab_candidate_binary_sha256": {
+    "atomic4b": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
+    "atomic4b-q8v": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
+    "atomic4b-hip-turbo3": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
+    "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
+    "upstream-master-4b": "ac9655c655cdda6ebce2d09749aa28f32523ac565705c37e913bda551a873e66",
+    "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
+    "rdna-r113-hip-4b": null
+  },
+  "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification."
 }
