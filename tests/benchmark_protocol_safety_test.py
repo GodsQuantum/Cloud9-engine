@@ -58,6 +58,20 @@ class SyntheticWitnessTest(unittest.TestCase):
         self.assertNotIn("systemctl stop",p)
         self.assertNotIn("docker stop",p)
 
+    def test_strata_flashnext_uses_hardware_admission_and_scoped_process(self):
+        p = (TOOL/"strata_flashnext_guarded_probe_20261022.py").read_text()
+        self.assertIn('OFFICIAL_CT410_ALLOW', p)
+        self.assertIn('/run/cloud9-gpu.lock', p)
+        self.assertIn('PRODUCTION_GPU_CLIENT', p)
+        self.assertIn('GPU_LEASE_LOST', p)
+        self.assertIn('HARD_SAFETY', p)
+        self.assertIn('--ple-gguf', p)
+        self.assertIn('--mmap-experts', p)
+        self.assertIn('--mtp', p)
+        self.assertIn('os.killpg(proc.pid,signal.SIGTERM)', p)
+        self.assertNotIn('systemctl stop', p)
+        self.assertNotIn('pct stop', p)
+
     def test_magnitude_requires_lease_and_no_real_tools(self):
         m = load("magnitude_agentic_protocol_20261022.py")
         p = (TOOL/"magnitude_agentic_protocol_20261022.py").read_text()
