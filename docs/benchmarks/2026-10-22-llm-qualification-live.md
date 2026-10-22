@@ -42,3 +42,17 @@ For each engine/model/quant SHA, run real native MTP/speculative generation with
 ## Extended 12-case protocol (offline checked, NO GPU run yet)
 
 The new tools/benchmarks/one_engine_quality_protocol_20261022.py defines three strict JSON, three fictional read-only tool calls, three realistic line-level code fixes and three French creative/professional/technical requests. Run each three times for 36 total responses per engine/model under native MTP. JSON/arguments/code are machine-gradeable; French constraints are only a mechanical precheck. Editorial originality, scientific correctness and humor must be judged separately on anonymized outputs before promotion. Missing or duplicate evidence fails closed. Tests/quality_protocol_contract_test.py has 7 passing offline tests. This is a BENCHMARK SPECIFICATION, not 36 real completed inference responses.
+
+
+## First independently verified useful contexts — 22 October 11:34 CEST
+
+- Exact GGUF model Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf, 2,790,000,800 bytes, SHA256 7b95847ce1684f98d96f13bad2daaeffcfd2f95ea2ff3821ee68943590a10159.
+- Atomic TurboQuant 2.0.0 native draft-MTP n-max2, Vulkan Radeon780M; K cache q8_0, V cache turbo3. Five fictional markers at separate prompt positions, checked as exact JSON with actual server-reported input tokens; three real repetitions per size. No production interruptions.
+
+| Requested approximate | Actual ingested | Five-marker retrieval | Median PP tok/s | Median decode tok/s | Peak Tctl (C) | Evidence SHA256 |
+|---|---:|---:|---:|---:|---:|---|
+| 8192 | 8026 | 3/3 attempts | 326.71 | 35.21 | 68.25 | d764aa5749cdaf5ee12cb295ef5f2890e34145df351712930cdda03788a97f65 |
+| 16384 | 16330 | 3/3 attempts | 298.25 | 30.66 | 70.875 | e4fd8c4bea478652185be8661c41651f10dc6a8c0718844c42cff0dc303be4fa |
+
+- Canonical Hall entries: 2026-10-22:atomic-turboquant2:qwen4b-mtp2-turbo3:five-needle8k and 2026-10-22:atomic-turboquant2:qwen4b-mtp2-turbo3:five-needle16k. Both validated_in_source, original JSONs plus host guard logs under Sources/Benchmarks/Engine-Tournament/2026-10-22 and Sources/Worklogs.
+- Scope: synthetic document retrieval only, not creativity/coding quality or certified 32K,128K,256K,1M. KV compression cannot eliminate context prefill heat and host PSI. Escalation conditional on official GTT/memory/thermal admission.
