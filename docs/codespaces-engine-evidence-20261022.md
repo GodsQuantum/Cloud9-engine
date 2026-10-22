@@ -37,3 +37,21 @@ Le 22 octobre vers **03:05 Europe/Paris**, CT410 garde officiel `CHECK exclusive
 6. Scoreur `tools/single_engine_rank.py` + `tests/single_engine_rank_test.py` : **8/8 tests unitaires PASS**, preuve insuffisante => refuse de déclarer gagnant ; comparer une frontière de Pareto, puis choisir un seul runtime avec plusieurs modèles interchangeables.
 
 **Statut final de ce document : candidats Codespace qualifiés partiellement, aucun nouveau champion GPU certifié, production inchangée.**
+
+## Qualification Codespaces de Strata et Magnitude — 03 h 29 (22 octobre 2026)
+
+### Strata 0.2.2 HIP gfx1103
+
+Le compilateur AMD ROCm 10.1 et hipBLAS a été téléchargé directement depuis les dépôts officiels AMD et extrait seulement dans l'espace isolé du Codespace (aucun pilote, noyau, mise à jour libc ni package system-wide). Un noyau HIP minimal a produit la section .hip_fatbin pour gfx1103. CMake HIP gfx1103 a réussi ; le target complet strata a été compilé avec Ninja (134 étapes, parallélisme 2, nice15), PASS. SHA-256 du binaire : e883b7db4006200be7b01275bc6fd7a746c08b1e95dc0b3ba203e30139840abd, environ 21 Mo. Le CLI était initialement bloqué par une bibliothèque dynamique rocSOLVER absente du sysroot portable ; celle-ci a été extraite et le test --help a ensuite passé. Le binaire a été transféré en LXC700, répertoire Sources/Builds/strata-v022-gfx1103-codespace-hip ; SHA confirmé, ldd et --help PASS avec le ROCm 10.1 déjà présent localement. Ancien Golden 0.1.45 et CT410 inchangés. Réel GPU/MTP/vitesse/contexte QUALIFICATION TOUJOURS À FAIRE.
+
+### Magnitude 0.2.10 Release
+
+Le binaire optimisé construit dans Codespace (SHA-256 70a18a1fc909490cf7930bbee4d33e7f512b2f17401e0784c101d77166cd5ac8, ~109 Mo) est maintenant en LXC700 : Sources/Builds/magnitude-v0210-codespace-release. Ldd et --help PASS, 13 tests parseur Qwen35 PASS, 46 tests spéculatifs PASS, 1 test exact en-tête GGUF Pym PASS. Aucun poids n'a été transféré au Codespace, aucun nouveau service ni démarrage du modèle.
+
+### Garde mémoire à 03 h 29
+
+Official CT410 CHECK exclusive 14.5 = REFUSED. GTT sûre 13.403 Gio, RAM hôte disponible ~31.06 Gio, Tctl61.4°C, pression PSI quasi zéro, sauvegardes PBS inactives. CT410 plafonnée à 64 Gio par cgroup et embeddings actifs autour de 3.4 Gio RSS ; plusieurs LXC/VM et les agents conservent leur RAM. Un runtime LLM unique dans le futur ne donne pas 96 Gio libres sur le système aujourd'hui. Ne pas contourner garde ni stop de service.
+
+### Décision
+
+Trois couples à benchmarker réellement sous garde : Strata 0.2.2 HIP Radeon780M + Pym Qwen3.6-35B MTP ; Magnitude 0.2.10 Vulkan + même GGUF Pym et MTP ; llama.cpp Golden + Pym MTP (historique ~30.87 tok/s, comparaison strictement non certifiée). On cherche qualité des outils, code, français, vitesse MTP acceptée et contexte réellement récupérable >8K, pas une validation de 262144 tokens natifs par seule métadonnée. Aucun nouveau gagnant certifié ; production inchangée.
