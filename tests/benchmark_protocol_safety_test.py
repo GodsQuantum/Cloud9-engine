@@ -67,6 +67,7 @@ class SyntheticWitnessTest(unittest.TestCase):
         self.assertIn('HARD_SAFETY', p)
         self.assertIn('--ple-gguf', p)
         self.assertIn('--mmap-experts', p)
+        self.assertIn('"--prefill","512"', p)
         self.assertIn('--mtp', p)
         self.assertIn('os.killpg(proc.pid,signal.SIGTERM)', p)
         self.assertNotIn('systemctl stop', p)
