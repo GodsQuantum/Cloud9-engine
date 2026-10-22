@@ -55,6 +55,7 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument("--candidate",choices=sorted(CANDIDATES),required=True)
     p.add_argument("--reps",type=int,default=3)
+    p.add_argument("--thermal-pace",action="store_true",help="Cool to <=72 C between requests; does not alter speed measurement per API response")
     args=p.parse_args()
     assert os.environ.get("CLOUD9_GPU_COEXIST_ADMITTED")=="1"
     assert args.reps>=3 and tctl()<75
@@ -66,6 +67,7 @@ def main():
     mod=importlib.util.spec_from_file_location("one_engine_quality_protocol",GRADER)
     grade=importlib.util.module_from_spec(mod);mod.loader.exec_module(grade)
     tag=f"{args.candidate}-quality12x{args.reps}-mtp2-20261022"
+    if args.thermal_pace:tag+="-thermalpaced-v2"
     result_path=OUT/(tag+".json")
     log_path=OUT/(tag+".server.log")
     assert not result_path.exists() and not log_path.exists()
@@ -102,7 +104,12 @@ def main():
             print("QUALITY_MODEL_READY",args.candidate,"load",result["load_s"],flush=True)
             for rep in range(1,args.reps+1):
                 for case in grade.CASES:
-                    if tctl()>=75:raise RuntimeError("TEMPERATURE_PRE_CASE_EXCEEDS_75C")
+                    if args.thermal_pace:
+                        limit=time.monotonic()+120
+                        while tctl()>72.0:
+                            if time.monotonic()>=limit:raise RuntimeError("TEMPERATURE_COOLDOWN_TIMEOUT")
+                            time.sleep(3)
+                    elif tctl()>=75:raise RuntimeError("TEMPERATURE_PRE_CASE_EXCEEDS_75C")
                     payload=grade.request(case["id"],str(path),rep)
                     payload["cache_prompt"]=False
                     payload["enable_thinking"]=False
