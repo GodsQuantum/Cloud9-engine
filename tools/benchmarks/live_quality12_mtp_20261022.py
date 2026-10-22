@@ -110,15 +110,32 @@ LATEST_ONLY_CANDIDATES=frozenset({
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
 LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")
 
-def validate_latest_only(candidate):
-    """Strict preflight, no filesystem/network/GPU side effects except read manifest."""
+def validate_latest_only(candidate, *, live_api=None, _test_skip_binary_sha=False):
+    """Recheck official upstream refs/releases NOW, fail closed before GPU use.
+
+    `live_api` is injectable solely to run deterministic offline contract tests.
+    """
     assert candidate in LATEST_ONLY_CANDIDATES, f"RETIRED_ENGINE_GPU_TEST_DENIED: {candidate}"
     lock=json.loads(LATEST_SOURCE_MANIFEST.read_text())
-    r=lock["github_repositories"]
-    assert r["rdna"]["release_tag"]=="v14-097cf33d9-r113"
-    assert r["atomic"]["release_tag"]=="b10298-2.0.0"
-    assert r["upstream"]["commit"]=="184f6536024668e8908ab8c86033d56708e62b40"
-    assert r["prism"]["commit"]=="73bfe6cc485554822f80c473a3c0c4f25e80f41b"
+    import importlib.util
+    path=Path(__file__).with_name("verify_latest_sources.py")
+    spec=importlib.util.spec_from_file_location("cloud9_latest_freshness",path)
+    gate=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    attestation=gate.verify_candidate(candidate,lock,
+        api=gate.github_api if live_api is None else live_api)
+    if not _test_skip_binary_sha:
+        expected_sha=lock.get("lab_candidate_binary_sha256",{}).get(candidate)
+        if not isinstance(expected_sha,str) or len(expected_sha)!=64:
+            raise gate.UnverifiedSource(f"LATEST_BINARY_SHA_NOT_CERTIFIED {candidate}")
+        path=CANDIDATES[candidate]["bin"]
+        if not path.is_file():
+            raise gate.UnverifiedSource(f"LATEST_BINARY_MISSING {candidate}")
+        actual_sha=hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual_sha!=expected_sha:
+            raise gate.StaleSource(f"LATEST_BINARY_SHA_MISMATCH_REBUILD {candidate}")
+        attestation["binary_sha256"]=actual_sha
+    lock["_freshness_attestation"]=attestation
     return lock
 
 def api(path,payload=None,timeout=120):
@@ -201,6 +218,7 @@ def main():
       "native_speculation":"draft-mtp","native_spec_draft_max":2,
       "backend":"Cloud9 Radeon 780M "+("HIP" if "hip" in args.candidate else "Vulkan")+" gfx1103",
       "source_version_lock_sha256":hashlib.sha256(LATEST_SOURCE_MANIFEST.read_bytes()).hexdigest(),
+      "source_freshness_attestation":latest_lock["_freshness_attestation"],
       "protocol":grade.PROTOCOL,"repetitions_requested":args.reps,
       "quality_run_kind":"synthetic fictitious tools, code, French, strict JSON, editorial pending",
       "rows":[],"production_eligible":False}
@@ -284,6 +302,10 @@ def main():
                     if e:raise RuntimeError("API_REQUEST_FAILED "+e)
             s=grade.aggregate(result["rows"],args.reps)
             result["quality"]=s["quality"]
+            # Revalidate after GPU run. A newly published release/HEAD makes
+            # otherwise valid evidence historical, NEVER a current champion.
+            final_lock=validate_latest_only(args.candidate)
+            result["source_freshness_end_attestation"]=final_lock["_freshness_attestation"]
             result["status"]="complete_editorial_review_pending"
     except Exception as exc:
         result["status"]="incomplete_or_error"

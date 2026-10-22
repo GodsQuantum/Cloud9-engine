@@ -35,9 +35,18 @@ class LatestOnly(unittest.TestCase):
   spec=U.spec_from_file_location('quality_latest_only',src)
   spec.loader.exec_module(mod)
   self.assertFalse({'b11798-4b','b11798-hermes9b','rdna-r111-vulkan-4b','rdna-r111-hip-4b'} & mod.LATEST_ONLY_CANDIDATES)
+  def api(path):
+    if 'stew675' in path:key='rdna'
+    elif 'AtomicBot-ai' in path:key='atomic'
+    elif 'ggml-org' in path:key='upstream'
+    elif 'PrismML-Eng' in path:key='prism'
+    else:raise AssertionError('UNKNOWN_ENDPOINT '+path)
+    v=self.d['github_repositories'][key]
+    if path.endswith('/releases/latest'):return {'tag_name':v['release_tag']}
+    return {'object':{'type':'commit','sha':v.get('release_commit',v.get('commit'))}}
   for name in ('atomic4b','rdna-r113-hip-4b','upstream-master-4b','prism-head-4b'):
    self.assertIn(name,mod.LATEST_ONLY_CANDIDATES)
-   self.assertEqual(mod.validate_latest_only(name)['source_date'],'2026-10-23')
+   self.assertEqual(mod.validate_latest_only(name,live_api=api,_test_skip_binary_sha=True)['source_date'],'2026-10-23')
   with self.assertRaisesRegex(AssertionError,'RETIRED_ENGINE_GPU_TEST_DENIED'):
    mod.validate_latest_only('rdna-r111-hip-4b')
  def test_no_false_gpu_certification(self):
