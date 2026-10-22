@@ -26,6 +26,20 @@ class LatestOnly(unittest.TestCase):
   self.assertIn('latest_engine_sources_20261023.json',a+b)
   self.assertIn('LATEST_CHANGED_REPIN_REQUIRED',b)
   self.assertFalse((R/'.github/workflows/hip-r111-gfx1103-lab.yml').exists())
+ def test_live_runner_refuses_legacy_engine_versions(self):
+  import importlib.util
+  src=R/'tools/benchmarks/live_quality12_mtp_20261022.py'
+  mod=importlib.util.module_from_spec(importlib.util.spec_from_file_location('quality_latest_only',src))
+  import importlib.util as U
+  U.module_from_spec # noqa
+  spec=U.spec_from_file_location('quality_latest_only',src)
+  spec.loader.exec_module(mod)
+  self.assertFalse({'b11798-4b','b11798-hermes9b','rdna-r111-vulkan-4b','rdna-r111-hip-4b'} & mod.LATEST_ONLY_CANDIDATES)
+  for name in ('atomic4b','rdna-r112-hip-4b','upstream-master-4b','prism-head-4b'):
+   self.assertIn(name,mod.LATEST_ONLY_CANDIDATES)
+   self.assertEqual(mod.validate_latest_only(name)['source_date'],'2026-10-23')
+  with self.assertRaisesRegex(AssertionError,'RETIRED_ENGINE_GPU_TEST_DENIED'):
+   mod.validate_latest_only('rdna-r111-hip-4b')
  def test_no_false_gpu_certification(self):
   self.assertFalse(self.d['production_approved'])
   self.assertFalse(self.d['flashnext_gt20_tps_certified'])
