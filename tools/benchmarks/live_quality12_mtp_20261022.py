@@ -28,6 +28,18 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","turbo3"],
   "expected_bytes":2790000800
  },
+ "atomic4b-hip-turbo3":{
+  "bin":PARENT/"atomic-turboquant-2.0.0-rocm-20261023/build/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","turbo3"],
+  "expected_bytes":2790000800
+ },
+ "atomic4b-hip-q8v":{
+  "bin":PARENT/"atomic-turboquant-2.0.0-rocm-20261023/build/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
  "atomic4b-q8v":{
   "bin":PARENT/"atomic-turboquant-2.0.0-20261016/build-cloud9/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
