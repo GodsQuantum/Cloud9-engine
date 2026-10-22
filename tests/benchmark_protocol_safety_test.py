@@ -66,6 +66,7 @@ class SyntheticWitnessTest(unittest.TestCase):
                        "SCOPED_CLEANUP","ARC_RESTORED","Candidate NOT certified"):
             self.assertIn(marker,p)
         self.assertIn('b11798-hermes9b',p)
+        self.assertIn('"--resume"',p)
         self.assertNotIn("systemctl stop",p)
         self.assertNotIn("pct stop",p)
 
