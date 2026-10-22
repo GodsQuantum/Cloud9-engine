@@ -27,6 +27,7 @@ jobs:
           python3 -B tests/turboquant_kv_gate_test.py
           python3 -B tests/single_engine_rank_test.py
           python3 -B tests/benchmark_protocol_safety_test.py
+          python3 -B tests/quality_protocol_contract_test.py
           python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
