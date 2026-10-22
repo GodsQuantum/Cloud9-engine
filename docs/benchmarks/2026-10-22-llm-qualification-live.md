@@ -61,3 +61,21 @@ The new tools/benchmarks/one_engine_quality_protocol_20261022.py defines three s
 ## Benchmarks terminés (22 octobre, 13h45 CEST)
 
 Même Qwen4B GGUF, 36 réponses réelles par variante, 3 essais de 12 cas, MTP2 natif. Atomic TurboQuant : médiane 37,21 tok/s ; JSON 3/9 ; outils 6/9 ; code strict 0/9 ; français formel 7/9 ; brouillons acceptés 1055/1612 (65,45 %). Magnitude 0.2.10 tuning 2 s : 14,75 tok/s ; JSON 3/9 ; outils 9/9 ; code 0/9 ; français 5/9 ; brouillons 263/3140 (8,38 %). Magnitude tuning 60 s : 14,70 tok/s ; mêmes scores et acceptance, chargement 49,14 s contre 9,92 s (tuning 2 s). L'allongement du tuning ne rapporte aucun gain. Les scripts, journaux et JSON natifs demeurent dans le projet Cloud9 ; le Hall of Fame canonique compte 187 entrées validées. Aucun moteur n'a été promu. Le contexte récupéré est prouvé à 8026 et 16330 tokens seulement (5 repères, 3/3 essais), pas au-delà.
+
+## Flash-Next actual model feasibility + latest MTP source audit — 22 October
+
+**Historical target to beat on Cloud9:** `historical:flashnext-frspec-safe-nogdn` = 17.878 tok/s (Vulkan, GDN fusion off, MTP3, FR-Spec, TurboQuant, Vulkan SET_ROWS, FlashAttention, CPU-WHT; 2026-09-15). A separate GDN fusion experiment logged 18.009 tok/s but was not promoted. The bar is **>20 tok/s sustained on Qwen3.8 Flash-Next**, aspirational **>=25**, NOT the 35B-A3B model.
+
+**Models on Cloud9 verified via metadata-only GGUF preflight:**
+- Coder GSQ-RCO IQ1_M: two complete shards, 58,408,584,928 bytes, qwen4exp, 262,144 context *advertised*, 256 experts/10 active, 1224 tensors; no embedded NextN predictor metadata. External MTP head recovered in archived Strata runtime: qwen4exp-mtp, 889,017,216 bytes, 31 tensors. **Exact predictor-to-Coder fine-tune parity not validated**; must not pair blindly or infer MTP speed.
+- Pym 35B-A3B Q2: 13,222,476,000 bytes, qwen35moe, native MTP layer 1, 262,144 advertised tokens.
+- Qwen3.8 9B Q4 MTP: 5,780,090,624 bytes, qwen35, native MTP layer 1, 262,144 advertised tokens.
+- Header parser reads only metadata, checks total declared shard tensors, contiguous shard names, no model weights; offline unit suite 9 PASS. No GPU inference or context quality is claimed by this step.
+
+**Latest high-value code and tuning references:** the Qwen4Exp MTP wide hyper-connection mixer bug (mean pooling before projection) and corrected Q8 draft head were reported at https://huggingface.co/kingjones777/Qwen3.8-Flash-Next-MTP-Heads-GGUF. Their independent gfx1151 test achieved 31.8 tok/s vs 24.9 no-MTP (+27.7%), NOT a Cloud9 result. Our Atomic 2.0 source `src/models/qwen4exp.cpp` **already preserves the distinct hyper streams**: do not apply the patch twice. On that external hardware, MTP proposal length 1 outperformed 4 for code and summarization; on Cloud9, old Flash-Next MTP3 was fast. Sweep 1,2,3,4 with identical workloads, accepted/proposed counts and thermals, rather than assuming one global number.
+
+A 33-shard uncensored AD-4.27 target-only build (94.53 GB) and experimental 34-shard attached-MTP build (98.21 GB) are published by https://huggingface.co/Navin-Models/Qwen3.8-Flash-Next-Uncensored-AD-4.27-GGUF but gated: cannot silently mix the incompatible formats, and both significantly exceed current safe resident budget. Prefer a tested, appropriately sized Flash-Next quant with matching MTP source and native streaming support. Host observed ~21 GiB MemAvailable and 16 GiB swap in use: **do not start a 58GB Coder model without CT410 official admission**, and do not disable protected VMs, backups, or GPU arbiter to make a benchmark pass.
+
+**Audit of raw 36-call benchmark outputs:** both Atomic4B and Magnitude4B are **semantically wrong**, not merely strict-format wrong, on the tested code fixes: `c_add` retained `return a-b`, `c_bool` produced `true`, `c_dedup` assigned a list but omitted the required return. Thus code 0/9 is a real defect for these particular 4B fine-tunes; keep them as lightweight niche candidates, not default coding/agent engine winners.
+
+No production rollout. No inferred >=20 tok/s on local Flash-Next.
