@@ -38,6 +38,15 @@ class SyntheticWitnessTest(unittest.TestCase):
         self.assertIn("PORT=18227", p)
         self.assertIn("CLOUD9_GPU_COEXIST_ADMITTED", p)
 
+    def test_live_36_quality_calls_require_lock_and_mtp(self):
+        p=(TOOL/"live_quality12_mtp_20261022.py").read_text()
+        self.assertIn("CLOUD9_GPU_COEXIST_ADMITTED",p)
+        self.assertIn('"--spec-type","draft-mtp"',p)
+        self.assertIn('grade.aggregate',p)
+        self.assertIn('start_new_session=True',p)
+        self.assertNotIn("systemctl stop",p)
+        self.assertNotIn("docker stop",p)
+
     def test_magnitude_requires_lease_and_no_real_tools(self):
         m = load("magnitude_agentic_protocol_20261022.py")
         p = (TOOL/"magnitude_agentic_protocol_20261022.py").read_text()
