@@ -8,7 +8,7 @@ import json,os,re,select,signal,subprocess,time,importlib.util
 from pathlib import Path
 
 ROOT=Path("/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA")
-LOG=ROOT/"Sources/Worklogs/2026-10-22_QWEN9B_HERMES_FC_MTP2_QUALITY36_GUARDED_V1.log"
+LOG=ROOT/"Sources/Worklogs/2026-10-22_QWEN9B_HERMES_FC_MTP2_QUALITY36_GUARDED_V2_RESUME.log"
 ARC=Path("/sys/module/zfs/parameters/zfs_arc_max")
 BENCH="/home/arezki/Projets/HomeLab/Moteurs IA/Sources/Scratch/cloud9-engine-qualification-20261022-host/tools/benchmarks/live_quality12_mtp_20261022.py"
 MODEL="qwen3.8-9b-hermes-fc-tooluse.Q4_K_M.gguf"
@@ -82,7 +82,7 @@ def main():
             say("GPU_LEASE_HELD")
             args=["/usr/sbin/pct","exec","700","--","runuser","-u","arezki","--","env",
                 "PYTHONUNBUFFERED=1","CLOUD9_GPU_COEXIST_ADMITTED=1","python3",BENCH,
-                "--candidate","b11798-hermes9b","--reps","3","--thermal-pace","--trial-tag","hermes-v1"]
+                "--candidate","b11798-hermes9b","--reps","3","--thermal-pace","--trial-tag","hermes-v1","--resume"]
             worker=subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,
                 text=True,bufsize=1,start_new_session=True)
             start=time.monotonic()
