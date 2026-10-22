@@ -47,6 +47,7 @@ class SyntheticWitnessTest(unittest.TestCase):
         self.assertNotIn('/tmp/cloud9-real-quality-protocol-',p)
         self.assertIn('"b11798-9b"',p)
         self.assertIn('"b11798-4b"',p)
+        self.assertIn('"rdna-r111-vulkan-4b"',p)
         self.assertIn('"b11798-35b"',p)
         self.assertIn('"b11798-hermes9b"',p)
         self.assertIn('--thermal-pace',p)
