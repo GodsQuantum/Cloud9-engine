@@ -69,12 +69,39 @@ def stop(p):
         os.killpg(p.pid,signal.SIGTERM)
         try:p.wait(timeout=12)
         except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=10)
+def prepare_resume(previous,expected,cases,reps):
+    """Validate and resume only a matching interrupted session.
+
+    This is deliberately pure: no GPU, filesystem or network side effects.
+    """
+    assert previous.get("status") in ("starting","resuming","incomplete_or_error"),"completed evidence may not be resumed"
+    assert all(previous.get(key)==value for key,value in expected.items()),"evidence/model/protocol mismatch"
+    allowed={(rep,case["id"]) for rep in range(1,reps+1) for case in cases}
+    completed=set();valid=[];failed=[]
+    for row in previous.get("rows",[]):
+        ident=(row.get("rep"),row.get("id"))
+        assert ident in allowed,"invalid stored trial identifier"
+        assert ident not in completed and not any((x["rep"],x["id"])==ident for x in failed),"duplicate stored trial identifier"
+        if row.get("error"):
+            failed.append(row)
+        else:
+            valid.append(row)
+            completed.add(ident)
+    assert len(completed)<len(allowed),"all trials already present"
+    previous["rows"]=valid
+    if failed:previous.setdefault("retry_history",[]).extend(failed)
+    previous.pop("error",None)
+    previous["status"]="resuming"
+    previous["resume_valid_cases"]=len(completed)
+    return previous,completed
+
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--candidate",choices=sorted(CANDIDATES),required=True)
     p.add_argument("--reps",type=int,default=3)
     p.add_argument("--thermal-pace",action="store_true",help="Cool to <=72 C between requests; does not alter speed measurement per API response")
     p.add_argument("--trial-tag",default="",help="New suffix for immutable A/B evidence; lowercase letters, digits, hyphen")
+    p.add_argument("--resume",action="store_true",help="Resume only a matching incomplete recorded benchmark, without rerunning valid cases")
     args=p.parse_args()
     assert os.environ.get("CLOUD9_GPU_COEXIST_ADMITTED")=="1"
     assert args.reps>=3 and tctl()<75
@@ -93,7 +120,10 @@ def main():
         tag+="-"+args.trial_tag
     result_path=OUT/(tag+".json")
     log_path=OUT/(tag+".server.log")
-    assert not result_path.exists() and not log_path.exists()
+    if args.resume:
+        assert result_path.is_file() and log_path.is_file(),"cannot resume without existing evidence"
+    else:
+        assert not result_path.exists() and not log_path.exists(),"immutable benchmark evidence already exists"
     OUT.mkdir(parents=True,exist_ok=True)
     result={
       "status":"starting","date":time.strftime("%Y-%m-%dT%H:%M:%S%z"),
@@ -104,9 +134,23 @@ def main():
       "protocol":grade.PROTOCOL,"repetitions_requested":args.reps,
       "quality_run_kind":"synthetic fictitious tools, code, French, strict JSON, editorial pending",
       "rows":[],"production_eligible":False}
+    completed=set()
+    if args.resume:
+        expected={"candidate":args.candidate,"engine_sha256":result["engine_sha256"],
+                  "model":path.name,"model_bytes":path.stat().st_size,
+                  "repetitions_requested":args.reps,"protocol":grade.PROTOCOL}
+        result,completed=prepare_resume(json.loads(result_path.read_text()),
+                                        expected,grade.CASES,args.reps)
+    def save_result():
+        tmp=result_path.with_suffix(".json.pending")
+        tmp.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+        tmp.replace(result_path)
     server=None
     try:
-        with log_path.open("x") as stream:
+        with log_path.open("a" if args.resume else "x") as stream:
+            if args.resume:
+                stream.write("\n=== RESUME candidate "+args.candidate+" rows="+str(len(completed))+" ===\n")
+                stream.flush()
             cmd=[str(binary),"-m",str(path),"--host","127.0.0.1","--port",str(PORT),
                "-ngl","99","-np","1","-b","512","-ub","512","--flash-attn","on",
                "--fit","off","--no-warmup","--no-webui","--no-context-shift",
@@ -123,10 +167,14 @@ def main():
                 except Exception:pass
                 time.sleep(.3)
             else:raise RuntimeError("MODEL_HEALTH_TIMEOUT")
-            result["load_s"]=round(time.monotonic()-started,3)
-            print("QUALITY_MODEL_READY",args.candidate,"load",result["load_s"],flush=True)
+            current_load_s=round(time.monotonic()-started,3)
+            if not args.resume:result["load_s"]=current_load_s
+            result.setdefault("sessions",[]).append({"utc":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime()),
+                "load_s":current_load_s,"resumed":args.resume,"preexisting_cases":len(completed)})
+            print("QUALITY_MODEL_READY",args.candidate,"load",current_load_s,"resumed",args.resume,flush=True)
             for rep in range(1,args.reps+1):
                 for case in grade.CASES:
+                    if (rep,case["id"]) in completed:continue
                     if args.thermal_pace:
                         limit=time.monotonic()+120
                         while tctl()>72.0:
@@ -160,7 +208,7 @@ def main():
                        "draft_proposed":timing.get("draft_n"),
                        "temp_after":tctl()}
                     result["rows"].append(row)
-                    result_path.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+                    save_result()
                     print("QUALITY_CASE",case["id"],rep,"correct",row["correct"],"wall",row["wall_s"],flush=True)
                     if row["temp_after"]>=77.5:raise RuntimeError("HOT_AFTER_CASE")
                     if e:raise RuntimeError("API_REQUEST_FAILED "+e)
@@ -173,7 +221,7 @@ def main():
         print("QUALITY_ABORT",repr(exc),flush=True)
     finally:
         stop(server)
-        result_path.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+        save_result()
         print("QUALITY_DONE",result["status"],"rows",len(result["rows"]),result_path,flush=True)
     if result["status"]!="complete_editorial_review_pending":raise SystemExit(4)
 if __name__=="__main__":main()
