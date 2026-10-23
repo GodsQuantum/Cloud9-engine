@@ -70,6 +70,7 @@ jobs:
           python3 -B tests/native_chimera_master9ff_source_gate_test.py
           python3 -B tests/upstream_master9ff_vulkan_lock_test.py
           python3 -B tests/ci_historical_pins_advisory_test.py
+          python3 -B tests/cloud9_prod4b_exact16k_ct410_tournament_test.py
           python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
