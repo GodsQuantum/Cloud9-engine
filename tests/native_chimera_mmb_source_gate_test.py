@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class NativeMMBCurrentSource(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r118-on-latestf502.json').read_text())
+        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r118-on-latest4231.json').read_text())
         cls.lock=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
         cls.ci=(ROOT/'.github/workflows/lab-native-chimera-mmb-r118-on-latest.yml').read_text()
 
@@ -24,14 +24,14 @@ class NativeMMBCurrentSource(unittest.TestCase):
     def test_exact_manifest_hashes(self):
         self.assertRegex(self.m['donor']['sha256'],r'^[0-9a-f]{64}$')
         self.assertRegex(self.m['port']['resulting_tree'],r'^[0-9a-f]{40}$')
-        self.assertEqual(self.m['port']['source_commit_local'],'5b25371282a146b3eb60cb02e1aa849fb43cd09a')
+        self.assertEqual(self.m['port']['source_commit_local'],'bc5d755f0f1db7800340037b99431da0a4ac3106')
         self.assertEqual(self.m['port']['files_ported'],6)
 
     def test_donor_is_compatible_and_gpu_tests_still_missing(self):
         self.assertIn('MIT',self.m['port']['libraries'])
         self.assertEqual(self.m['port']['backend'],'HIP gfx1103 (NOT GPU-verified)')
-        self.assertTrue(self.m['qualification']['compile'])
-        self.assertTrue(self.m['qualification']['rocm_lab_abi_pass'])
+        self.assertFalse(self.m['qualification']['compile'])
+        self.assertFalse(self.m['qualification']['rocm_lab_abi_pass'])
         self.assertFalse(self.m['qualification']['on_device'])
         self.assertFalse(self.m['qualification']['benchmark'])
         self.assertFalse(self.m['qualification']['production'])

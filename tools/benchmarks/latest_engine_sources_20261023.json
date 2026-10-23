@@ -33,7 +33,7 @@
     "upstream": {
       "repository": "https://github.com/ggml-org/llama.cpp.git",
       "branch": "master",
-      "commit": "f5027fb21307eb264aed483242603d68c87b0fe3",
+      "commit": "4231b23dc2c46661d01157aac5245bdcf03ce4b1",
       "gpu_benchmark_certified": false
     },
     "prism": {
@@ -77,12 +77,12 @@
     "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
-    "upstream-f502-hip-4b": "c271dc4d8d5e74891018191ec0b8439c1df124bccc69064159b7a24ea279cece",
-    "chimera-f502-mmb-off": null,
-    "chimera-f502-mmb-on": null,
-    "chimera-f502-mmb-mmf32": null,
-    "upstream-master-4b": "9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c",
-    "rdna-r118-hip-4b": null
+    "upstream-master-4b": null,
+    "rdna-r118-hip-4b": null,
+    "upstream-4231-hip-4b": null,
+    "chimera-4231-mmb-off": null,
+    "chimera-4231-mmb-on": null,
+    "chimera-4231-mmb-mmf32": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
@@ -96,5 +96,6 @@
   "notes_rdna_r117_current": "Source release r117 published 2026-10-23T10:50:22Z with updated block09 host MoE expert identity, block10 slab and block12 graph/cache. Native MMB block06 has byte-identical diff body vs r116; actual port Git tree still 4cb17809be6b334a62831941d5b38aa25f6b20d6 on latest upstream f502, so existing chimera ELF matches current kernel code, but full fork r117 must rebuild. Any r116 full-fork ABI results remain HISTORICAL, not GPU-candidate.",
   "notes_chimera_r117_live_bin": "GitHub Actions 39943683723 success; patch06 r117 same source tree as r116, but fresh recompile from latest release. Archive SHA c4d45b991a42988456057aa257a1306d6aac857fbcdc902e793229dfa488c2ce; 12 original SHA checks PASS; CT700 ELF loader RPATH relocated, server sha e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810 CLI --version PASS; not GPU qualified.",
   "notes_rdna_r118": "Official r118 released 2026-10-23T12:35:59Z; tag 989e7bc67135773f30568a996fcaf8861b7c3f08. Patch block02 updated MTP prompt-tail readback/hook sync optimization PR206; this is NOT in native MMB-only chimera. Native block06 diff body byte-identical r117, verified identical resulting Git tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. Full r118 HIP candidate must build and be tested from fresh immutable CI. Old r117 full-fork remains historical, not tournament.",
-  "notes_native_mmb_r118_rebuild": "r118 MMB block06 exact source same as r117; new r118 pinned CI artifact NOT YET compiled/verified, old e987022... remains historical pending fresh r118 AB sha."
+  "notes_native_mmb_r118_rebuild": "r118 MMB block06 exact source same as r117; new r118 pinned CI artifact NOT YET compiled/verified, old e987022... remains historical pending fresh r118 AB sha.",
+  "notes_upstream_4231": "Official HEAD 4231b23 after f502: only ggml/src/ggml.c time-us overflow and CI, not HIP kernels. All latest-only LAB candidates repinned, old f502 hashes historical. Full RDNA r118 donor release independent of upstream HEAD; patch06 on new 4231 produces tree 2e7bdc4c447c48759e8ba0a5eae8c82d81a27e40."
 }
