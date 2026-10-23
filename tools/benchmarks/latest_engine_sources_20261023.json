@@ -78,9 +78,9 @@
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
     "upstream-f502-hip-4b": "c271dc4d8d5e74891018191ec0b8439c1df124bccc69064159b7a24ea279cece",
-    "chimera-f502-mmb-off": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
-    "chimera-f502-mmb-on": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
-    "chimera-f502-mmb-mmf32": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
+    "chimera-f502-mmb-off": "e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810",
+    "chimera-f502-mmb-on": "e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810",
+    "chimera-f502-mmb-mmf32": "e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810",
     "upstream-master-4b": "9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c",
     "rdna-r117-hip-4b": null
   },
@@ -93,5 +93,6 @@
   "notes_upstream_f502_hip_baseline_artifact": "CI #39930984426 success, archive a97a83fad6c697debe8d1109e311916a135a0ec5ba9b46cd5f753db8ae45dfd2, 12 ELF SHA-checked pre-relocation, CT700 toolchain ROCm10.1 required for executable, server v0.7.0-dev build11836 f5027fb21; NOT GPU-certified.",
   "notes_rdna_r116_full_fork_artifact": "CI #39927540437 PASS. Artifact original SHA256 9bebf073df08ffe6d9597d6eb02feab363dd9d17c20302d1e9dfb6e5ebd99634. 12 SHA file verification PASS before RPATH relocation; current RDNA r116 release 4541a557; CT700 llama-server/llama-cli --version PASS without global ROCm package changes; postrelocation server 67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76. GPU throughput and agent QA NOT certified.",
   "historical_rdna_r116_binary_sha256": "67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76",
-  "notes_rdna_r117_current": "Source release r117 published 2026-10-23T10:50:22Z with updated block09 host MoE expert identity, block10 slab and block12 graph/cache. Native MMB block06 has byte-identical diff body vs r116; actual port Git tree still 4cb17809be6b334a62831941d5b38aa25f6b20d6 on latest upstream f502, so existing chimera ELF matches current kernel code, but full fork r117 must rebuild. Any r116 full-fork ABI results remain HISTORICAL, not GPU-candidate."
+  "notes_rdna_r117_current": "Source release r117 published 2026-10-23T10:50:22Z with updated block09 host MoE expert identity, block10 slab and block12 graph/cache. Native MMB block06 has byte-identical diff body vs r116; actual port Git tree still 4cb17809be6b334a62831941d5b38aa25f6b20d6 on latest upstream f502, so existing chimera ELF matches current kernel code, but full fork r117 must rebuild. Any r116 full-fork ABI results remain HISTORICAL, not GPU-candidate.",
+  "notes_chimera_r117_live_bin": "GitHub Actions 39943683723 success; patch06 r117 same source tree as r116, but fresh recompile from latest release. Archive SHA c4d45b991a42988456057aa257a1306d6aac857fbcdc902e793229dfa488c2ce; 12 original SHA checks PASS; CT700 ELF loader RPATH relocated, server sha e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810 CLI --version PASS; not GPU qualified."
 }
