@@ -103,11 +103,11 @@ def verify_one(name, meta, api=github_api):
 CANDIDATE_TO_SOURCE = {
     "atomic4b": "atomic", "atomic4b-q8v": "atomic",
     "atomic4b-hip-turbo3": "atomic", "atomic4b-hip-q8v": "atomic",
-    "rdna-r118-hip-4b": "rdna", "upstream-master-4b": "upstream",
+    "rdna-r120-hip-4b": "rdna", "upstream-master-4b": "upstream",
     "prism-head-4b": "prism", "s1-head-4b": "s1",
-    "upstream-4231-hip-4b": "upstream",
-    "chimera-4231-mmb-off": "upstream", "chimera-4231-mmb-on": "upstream",
-    "chimera-4231-mmb-mmf32": "upstream",
+    "upstream-36e-hip-4b": "upstream",
+    "chimera-36e-mmb-off": "upstream", "chimera-36e-mmb-on": "upstream",
+    "chimera-36e-mmb-mmf32": "upstream",
 }
 
 

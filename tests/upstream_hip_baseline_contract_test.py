@@ -7,8 +7,8 @@ class HIPBaselineParity(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
   cls.a=(ROOT/'.github/workflows/lab-upstream-master-hip-gfx1103-latest.yml').read_text()
-  cls.b=(ROOT/'.github/workflows/lab-native-chimera-mmb-r118-on-latest.yml').read_text()
-  cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r118-on-latest4231.json').read_text())
+  cls.b=(ROOT/'.github/workflows/lab-native-chimera-mmb-r120-on-latest.yml').read_text()
+  cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r120-on-latest36e.json').read_text())
   cls.p=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
  def test_identical_native_hip_toolchain(self):
   for s in (self.a,self.b):
