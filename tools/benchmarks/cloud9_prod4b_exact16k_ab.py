@@ -20,10 +20,10 @@ import statistics
 import subprocess
 import time
 
-ROOT = Path('/home/arezki/Projets/HomeLab/Moteurs IA')
+ROOT = Path('/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA')  # HOST filesystem; binaries live in CT700 with translated path
 MODEL = Path('/srv/storage/nvme/shared/ai-models/llm/gguf/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf')
 PROD = ROOT / 'Sources/Builds/production-upstream-a868-reference-20261023/bin/llama-cli'
-LATEST = ROOT / 'Sources/Builds/latest-upstream-masterda2-vulkan-20261023/package/bin/llama-cli'
+LATEST = ROOT / 'Sources/Builds/latest-upstream-master062-vulkan-20261023/package/bin/llama-cli'
 CT = ['sudo', '-n', 'pct', 'exec']
 FLAGS = ('-c', '16384', '-b', '1024', '-ub', '1024', '-t', '8', '-tb', '8',
          '-ngl', '99', '--flash-attn', 'on', '-ctk', 'f16', '-ctv', 'f16',
@@ -39,6 +39,11 @@ PROMPTS = {
                  for i in range(140))
              + '\nDonne seulement la somme 117 + 285, avec le résultat en français.'),
 }
+
+def ct700_path(path):
+    host=Path('/srv/storage/nvme/DEV/Projets')
+    rel=Path(path).relative_to(host)
+    return str(Path('/home/arezki/Projets')/rel)
 
 def shell(args, timeout=9):
     p = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
@@ -136,16 +141,16 @@ def stop_own(executable):
         " except (OSError,ValueError):pass\n"
     )
     return subprocess.run(
-        CT+['700','--','python3','-c',script,str(executable)],
+        CT+['700','--','python3','-c',script,ct700_path(executable)],
         capture_output=True,text=True,timeout=9).stdout.strip()
 
 def run_trial(binary,label,case,rep,folder):
     logpath=folder/f'{label}-{case}-{rep}.log'
-    cli=[str(binary),'-m',str(MODEL),'-p',PROMPTS[case],
+    cli=[ct700_path(binary),'-m',str(MODEL),'-p',PROMPTS[case],
          '-n','128','--seed','23','--temp','0','--simple-io',
          '--no-display-prompt','--perf',*FLAGS]
     run_command=CT+['700','--','runuser','-u','arezki','--','env',
-                    'LD_LIBRARY_PATH='+str(binary.parent),*cli]
+                    'LD_LIBRARY_PATH='+ct700_path(binary.parent),*cli]
     proc=None;abort=None;samples=[];start=time.monotonic()
     try:
         with logpath.open('x') as stdout:
@@ -209,13 +214,13 @@ def main():
         if not path.is_file():raise RuntimeError('MISSING_REQUIRED_FILE '+str(path))
     if MODEL.stat().st_size!=2790000800:raise RuntimeError('WRONG_GGUF')
     # Version attestation before SHA-bound comparatives.
-    for binary,commit in ((PROD,'2bb27e5de'),(LATEST,'da2ee1e7a')):
-        banner=shell(CT+['700','--','runuser','-u','arezki','--',str(binary),'--version'],timeout=15)
+    for binary,commit in ((PROD,'2bb27e5de'),(LATEST,'062ee1e7a')):
+        banner=shell(CT+['700','--','runuser','-u','arezki','--',ct700_path(binary),'--version'],timeout=15)
         if commit not in banner:raise RuntimeError('UNEXPECTED_BINARY_VERSION '+str(binary))
     folder=ROOT/'Sources/Benchmarks/Engine-Tournament/2026-10-23'
     folder.mkdir(parents=True,exist_ok=True)
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    outfile=folder/f'4b-production-vs-da2-16k-{stamp}.json'
+    outfile=folder/f'4b-production-vs-062-16k-{stamp}.json'
     with MODEL.open('rb') as model_file:
         model_sha256 = hashlib.file_digest(model_file,'sha256').hexdigest()
     record={'status':'STARTED','production_changed':False,'production_eligible':False,
@@ -234,7 +239,7 @@ def main():
         if not ready or lock.stdout.readline().strip()!='EXACT16K_EXCLUSIVE_LOCK':
             raise RuntimeError('GPU_LOCK_BUSY')
         for rep in range(1,args.reps+1):
-            backends=[('prod_reference',PROD),('upstream_da2',LATEST)]
+            backends=[('prod_reference',PROD),('upstream_062',LATEST)]
             if rep%2==0:backends.reverse()
             for case in ('short','long'):
                 for label,binary in backends:

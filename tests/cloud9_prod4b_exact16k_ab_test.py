@@ -29,8 +29,12 @@ class ProductionVsLatest16K(unittest.TestCase):
         self.assertIn('--no-spec-draft-backend-sampling',m.FLAGS)
         self.assertIn('draft-mtp',m.FLAGS)
         self.assertNotEqual(m.PROD,m.LATEST)
-        self.assertIn('da2',str(m.LATEST))
+        self.assertIn('062',str(m.LATEST))
         self.assertIn('production-upstream-a868-reference',str(m.PROD))
+        self.assertEqual(m.ct700_path(m.PROD),'/home/arezki/Projets/HomeLab/Moteurs IA/Sources/Builds/production-upstream-a868-reference-20261023/bin/llama-cli')
+        self.assertTrue(str(m.ROOT).startswith('/srv/storage/nvme/DEV/Projets/'))
+        with self.assertRaises(ValueError):
+            m.ct700_path('/etc/passwd')
 
     def test_mem_parser_and_pressure(self):
         data=self.data(swap_free=5000000)

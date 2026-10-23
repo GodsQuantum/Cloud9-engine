@@ -105,9 +105,9 @@ CANDIDATE_TO_SOURCE = {
     "atomic4b-hip-turbo3": "atomic", "atomic4b-hip-q8v": "atomic",
     "rdna-r120-hip-4b": "rdna", "upstream-master-4b": "upstream",
     "prism-head-4b": "prism", "s1-head-4b": "s1",
-    "upstream-da2-hip-4b": "upstream",
-    "chimera-da2-mmb-off": "upstream", "chimera-da2-mmb-on": "upstream",
-    "chimera-da2-mmb-mmf32": "upstream",
+    "upstream-062-hip-4b": "upstream",
+    "chimera-062-mmb-off": "upstream", "chimera-062-mmb-on": "upstream",
+    "chimera-062-mmb-mmf32": "upstream",
 }
 
 

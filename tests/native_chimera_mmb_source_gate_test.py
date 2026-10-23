@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class NativeMMBCurrentSource(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r120-on-latestda2.json').read_text())
+        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r120-on-latest062.json').read_text())
         cls.lock=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
         cls.ci=(ROOT/'.github/workflows/lab-native-chimera-mmb-r120-on-latest.yml').read_text()
 
@@ -24,7 +24,7 @@ class NativeMMBCurrentSource(unittest.TestCase):
     def test_exact_manifest_hashes(self):
         self.assertRegex(self.m['donor']['sha256'],r'^[0-9a-f]{64}$')
         self.assertRegex(self.m['port']['resulting_tree'],r'^[0-9a-f]{40}$')
-        self.assertEqual(self.m['port']['source_commit_local'],'dd905d8c03602465e5797ceee22faa3ba3a34b03')
+        self.assertEqual(self.m['port']['source_commit_local'],'ae6c3d07ee54723b719dd4a4e79a3af744c0f186')
         self.assertEqual(self.m['port']['files_ported'],6)
 
     def test_donor_is_compatible_and_gpu_tests_still_missing(self):
@@ -47,13 +47,13 @@ class NativeMMBCurrentSource(unittest.TestCase):
         self.assertIn('NOT-QUALIFIED.txt',self.ci)
         self.assertIn('--exclude=tests/CMakeLists.txt',self.ci)
 
-    def test_native_da2_cuda_graph_chunking_fix(self):
+    def test_native_062_cuda_graph_chunking_fix(self):
         import hashlib
         repair=self.m['port']['post_port_fix']
         p=ROOT/repair['patch']
         self.assertTrue(p.is_file())
         self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),repair['sha256'])
-        self.assertEqual(repair['resulting_tree'],'c06ba6053bc093436d641ae4bd342c10abab9e68')
+        self.assertEqual(repair['resulting_tree'],'a6c565a3d4928482fed05fdd5fe23a239dab9116')
         self.assertIn('graph->instances.empty()',p.read_text())
         self.assertIn('Repair upstream CUDA graph chunk invalidation',self.ci)
         self.assertIn('DA2_CUDA_GRAPH_INSTANCES_FIX_SOURCE_TREE_PASS',self.ci)
