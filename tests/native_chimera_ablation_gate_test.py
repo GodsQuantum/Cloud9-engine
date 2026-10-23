@@ -48,7 +48,7 @@ class NativeChimeraAB(unittest.TestCase):
    b.validate_latest_only('chimera-062-mmb-on',live_api=newer,_test_skip_binary_sha=True)
  def test_same_compiled_binary_identity_and_hip_baseline_not_ready(self):
   modes=('chimera-062-mmb-off','chimera-062-mmb-on','chimera-062-mmb-mmf32')
-  self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{None})  # newest r120 binary pending CI
+  self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{'532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5'})  # newest r120 same native ELF for MMB modes
   # The baseline ABI is SHA-verified, but it is NOT GPU-qualified yet.
   self.assertIsNone(m['lab_candidate_binary_sha256']['upstream-062-hip-4b'])  # new 062 ABI pending
   self.assertFalse(m.get('production_eligible',False))

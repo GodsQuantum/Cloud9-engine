@@ -31,7 +31,7 @@ class LatestRDNAMTPTailContract(unittest.TestCase):
         self.assertIn('MTP tail block02 remains a separate full fork feature',m['port']['latest_r120_byte_identity'])
         self.assertFalse(m['qualification']['production'])
         self.assertFalse(m['qualification']['FlashNext_gt20_certified'])
-        self.assertIsNone(json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())['lab_candidate_binary_sha256']['rdna-r120-hip-4b'])
+        self.assertRegex(json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())['lab_candidate_binary_sha256']['rdna-r120-hip-4b'], r'^[0-9a-f]{64}$')
 
 if __name__=='__main__':
     unittest.main(verbosity=2)

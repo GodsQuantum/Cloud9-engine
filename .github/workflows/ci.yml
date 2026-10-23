@@ -47,6 +47,7 @@ jobs:
           python3 -B tests/rdna_r120_mtp_tail_source_gate_test.py
           python3 -B tests/cloud9_memory_pressure_profiler_test.py
           python3 -B tests/cloud9_prod4b_exact16k_ab_test.py
+          python3 -B tests/current_lab_artifact_paths_test.py
           python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
