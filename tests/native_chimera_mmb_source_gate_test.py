@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class NativeMMBCurrentSource(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r115-on-latest1ab.json').read_text())
+        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r115-on-latestf64a.json').read_text())
         cls.lock=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
         cls.ci=(ROOT/'.github/workflows/lab-native-chimera-mmb-r115-on-latest.yml').read_text()
 
@@ -22,7 +22,7 @@ class NativeMMBCurrentSource(unittest.TestCase):
     def test_exact_manifest_hashes(self):
         self.assertRegex(self.m['donor']['sha256'],r'^[0-9a-f]{64}$')
         self.assertRegex(self.m['port']['resulting_tree'],r'^[0-9a-f]{40}$')
-        self.assertEqual(self.m['port']['source_commit_local'],'20fcae0afc0c1cdbc2b305ec92b9758671d99331')
+        self.assertEqual(self.m['port']['source_commit_local'],'a3c4c94521464e8a970dd203cd95c55f0e8be06e')
         self.assertEqual(self.m['port']['files_ported'],6)
 
     def test_donor_is_compatible_and_gpu_tests_still_missing(self):
