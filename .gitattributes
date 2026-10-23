@@ -1,0 +1,2 @@
+# The literal patch contains diff context lines of a single space; preserve exact SHA and apply semantics.
+tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-native.patch -whitespace
