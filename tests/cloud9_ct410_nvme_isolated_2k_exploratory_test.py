@@ -21,7 +21,7 @@ class CT410IsolatedSmoketest(unittest.TestCase):
         return value
     def gate(self,host=None,official=None,clients=None,backup=False):
         with patch.object(M,'host_state',return_value=host or self.hw()):
-            with patch.object(M,'official_gpu_check',return_value=official or {'allow':True}):
+            with patch.object(M,'official_gpu_check_4g',return_value=official or {'allow':True}):
                 with patch.object(M,'production_clients',return_value=clients or []):
                     with patch.object(M,'backup_running',return_value=backup):
                         return M.check()
@@ -35,14 +35,20 @@ class CT410IsolatedSmoketest(unittest.TestCase):
         self.assertIn('OFFICIAL_GPU_REJECT',self.gate(official={'allow':False})['reasons'])
     def test_reject_memory_psi_and_min_memory(self):
         self.assertIn('MEMORY_PSI',self.gate(host=self.hw(memory_psi_full_avg10=.35))['reasons'])
-        self.assertIn('RAM_BELOW_23',self.gate(host=self.hw(available_gib=22.9))['reasons'])
+        self.assertIn('RAM_BELOW_24',self.gate(host=self.hw(available_gib=23.9))['reasons'])
     def test_reject_clients_backup_thermal(self):
         self.assertIn('PROD_CLIENT',self.gate(clients=['connection'])['reasons'])
         self.assertIn('BACKUP_STARTED',self.gate(backup=True)['reasons'])
         self.assertIn('TEMP',self.gate(host=self.hw(tctl_c=73))['reasons'])
+    def test_official_4g_lease_is_explicit_and_not_a_bypass(self):
+        source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
+        self.assertIn('CHECK coexist-light 4.0',source)
+        self.assertIn("if not gpu.get('allow'):failures.append('OFFICIAL_GPU_REJECT')",source)
+        self.assertIn("if h['gtt_gib']>4:return 'GTT_LIMIT'",source)
+
     def test_watchdog_preserves_host_ram(self):
         self.assertEqual(M.monitor_bad(self.hw(available_gib=17)),'MEMORY_RESERVE')
-        self.assertEqual(M.monitor_bad(self.hw(gtt_gib=7.1)),'GTT_LIMIT')
+        self.assertEqual(M.monitor_bad(self.hw(gtt_gib=4.1)),'GTT_LIMIT')
         self.assertEqual(M.monitor_bad(self.hw(tctl_c=78)),'THERMAL')
         self.assertIsNone(M.monitor_bad(self.hw()))
     def test_same_flags_and_no_force_16k_claim(self):
@@ -52,6 +58,12 @@ class CT410IsolatedSmoketest(unittest.TestCase):
         source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
         self.assertIn('EXPLORATORY_ONLY_NOT_PRODUCTION_ELIGIBLE',source)
         self.assertIn('never',M.__doc__.lower() if M.__doc__ else 'never')
+    def test_single_candidate_mode_cannot_repeat_prod_baseline(self):
+        source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
+        self.assertIn("parser.add_argument('--candidate-only'",source)
+        self.assertIn("selected=(('vulkan9ff',VULKAN),) if args.candidate_only",source)
+        self.assertIn('for name,binary in selected:',source)
+
     def test_without_execute_does_not_launch_model(self):
         with patch.object(M,'check',return_value={'allow':False,'reasons':['MEMORY_PSI']}):
             with patch.object(M,'trial',side_effect=AssertionError('model must not be loaded')):

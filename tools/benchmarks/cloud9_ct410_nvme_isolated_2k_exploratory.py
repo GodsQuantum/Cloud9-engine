@@ -5,14 +5,24 @@ from pathlib import Path
 from datetime import datetime,timezone
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from cloud9_prod4b_exact16k_ct410_tournament import (MODEL,PROD,VULKAN,EXPECTED_SHA,ROOT,CT,FLAGS,env_for,ct410_path,host_state,official_gpu_check,production_clients,backup_running,parse_llama_timing,stop_own)
+def official_gpu_check_4g():
+    # Same authoritative arbiter, smaller real reservation than the 7 GiB 16K tournament.
+    # This 2K fixture used only 1.934 GiB of GTT on exact production reference.
+    cmd=('import socket,json;'
+         's=socket.create_connection(("192.168.1.200",19755),3);'
+         's.sendall(b"CHECK coexist-light 4.0\\n");'
+         'print(s.recv(8192).decode());s.close()')
+    from cloud9_prod4b_exact16k_ct410_tournament import shell
+    return json.loads(shell(CT+['410','--','python3','-c',cmd],timeout=9))
+
 PROMPT=('En français, écris dix conseils numérotés très concrets pour comparer '
         'deux moteurs LLM locaux. Une phrase détaillée par conseil, sans abréviation.')
 FLAGS2=('-c','2048','-b','512','-ub','512')+FLAGS[6:]
 def check():
-    h=host_state();gpu=official_gpu_check()
+    h=host_state();gpu=official_gpu_check_4g()
     failures=[]
     if not gpu.get('allow'):failures.append('OFFICIAL_GPU_REJECT')
-    if h['available_gib']<23:failures.append('RAM_BELOW_23')
+    if h['available_gib']<24:failures.append('RAM_BELOW_24')
     if h['memory_psi_full_avg10']>=.35:failures.append('MEMORY_PSI')
     if h['gtt_gib']>=1:failures.append('GPU_BUSY')
     if h['tctl_c']>=73:failures.append('TEMP')
@@ -23,7 +33,7 @@ def check():
 def monitor_bad(h):
     if h['available_gib']<18:return 'MEMORY_RESERVE'
     if h['memory_psi_full_avg10']>=1.5:return 'MEMORY_PRESSURE'
-    if h['gtt_gib']>7:return 'GTT_LIMIT'
+    if h['gtt_gib']>4:return 'GTT_LIMIT'
     if h['tctl_c']>=77:return 'THERMAL'
     if h['swap_percent']>=87:return 'SWAP'
 def trial(binary,name,out):
@@ -62,11 +72,14 @@ def trial(binary,name,out):
             except ProcessLookupError:pass
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--execute',action='store_true')
+    parser.add_argument('--candidate-only',action='store_true',
+                        help='Resume a previously incomplete A/B by measuring Vulkan alone; never re-run production')
     args=parser.parse_args();ad=check()
     print('ADMISSION',json.dumps(ad),flush=True)
     if not args.execute:return
     if not ad['allow']:raise SystemExit(3)
-    for name,binary in (('production',PROD),('vulkan9ff',VULKAN)):
+    selected=(('vulkan9ff',VULKAN),) if args.candidate_only else (('production',PROD),('vulkan9ff',VULKAN))
+    for name,binary in selected:
         if not binary.is_file() or hashlib.sha256(binary.read_bytes()).hexdigest()!=EXPECTED_SHA[name]:
             raise RuntimeError('BINARY_PIN_BAD_'+name)
     if not MODEL.is_file() or MODEL.stat().st_size!=2790000800:
@@ -77,7 +90,9 @@ def main():
     record={'status':'STARTED','rows':[],'admission':ad,'max_ctx_tokens':2048,'production_changed':False,
             'qualification':'EXPLORATORY_ONLY_NOT_PRODUCTION_ELIGIBLE',
             'nvme_model_read':str(MODEL),'global_io_psi_ignored_because_USB_NFS_STALL':True,
-            'note':'Global USB filesystem stalls confound run; only compare as exploratory'}
+            'authoritative_GPU_reservation_gib':4.0,
+            'note':'Global USB filesystem stalls confound run; only compare as exploratory',
+            'candidate_only':args.candidate_only}
     evidence=folder/'results.json';evidence.write_text(json.dumps(record,indent=2)+'\n')
     lock=None
     try:
@@ -86,7 +101,7 @@ def main():
              stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
         ready,_,_=select.select([lock.stdout],[],[],8)
         if not ready or lock.stdout.readline().strip()!='GPU_ISOLATED':raise RuntimeError('NO_GPU_LOCK')
-        for name,binary in (('production',PROD),('vulkan9ff',VULKAN)):
+        for name,binary in selected:
             gate=check()
             if not gate['allow']:
                 record.update(status='ADMISSION_LOST',last_gate=gate);break
