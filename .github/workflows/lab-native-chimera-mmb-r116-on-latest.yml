@@ -40,7 +40,8 @@ jobs:
           assert m['base']['commit']==l['github_repositories']['upstream']['commit']
           assert m['donor']['commit']==l['github_repositories']['rdna']['release_commit']
           assert m['donor']['release_tag']==l['github_repositories']['rdna']['release_tag']
-          assert m['qualification']['compile'] is False
+          # The immutable source gate applies even after a previous successful build.
+          # Never reject a valid rebuild merely because CI already certified compilation.
           print('ONLY_NEWEST_SOURCE_LOCKS_MATCH')
           PY
           git clone --filter=blob:none https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/chimera-source"
