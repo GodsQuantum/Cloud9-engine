@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,select,signal,subprocess,sys,time
 from pathlib import Path
 from datetime import datetime,timezone
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from cloud9_prod4b_exact16k_ct410_tournament import (MODEL,PROD,VULKAN,EXPECTED_SHA,ROOT,CT,FLAGS,env_for,ct410_path,host_state,official_gpu_check,production_clients,backup_running,parse_llama_timing,stop_own)
+from cloud9_prod4b_exact16k_ct410_tournament import (MODEL,PROD,VULKAN,HIP,CANDIDATES,EXPECTED_SHA,ROOT,CT,FLAGS,env_for,ct410_path,host_state,official_gpu_check,production_clients,backup_running,parse_llama_timing,stop_own)
 def official_gpu_check_4g():
     # Same authoritative arbiter, smaller real reservation than the 7 GiB 16K tournament.
     # This 2K fixture used only 1.934 GiB of GTT on exact production reference.
@@ -32,21 +32,25 @@ def check():
     return {'allow':not failures,'reasons':failures,'host':h,'official':gpu}
 def monitor_bad(h):
     if h['available_gib']<18:return 'MEMORY_RESERVE'
-    if h['memory_psi_full_avg10']>=1.5:return 'MEMORY_PRESSURE'
+    if h['memory_psi_full_avg10']>=4.0:return 'SEVERE_MEMORY_PRESSURE'
+    # Temporary USB writeback stalls create brief PSI spikes; ordinary
+    # pressure is handled with two consecutive samples, just like 16K guard.
     if h['gtt_gib']>4:return 'GTT_LIMIT'
     if h['tctl_c']>=77:return 'THERMAL'
     if h['swap_percent']>=87:return 'SWAP'
 def trial(binary,name,out):
-    cmd=CT+['410','--','runuser','-u','arezki','--','env',*env_for(binary,'vulkan9ff'),
+    cmd=CT+['410','--','runuser','-u','arezki','--','env',*env_for(binary,name if name in CANDIDATES else 'vulkan9ff'),
         ct410_path(binary),'-m',str(MODEL),'-p',PROMPT,'-n','96','--seed','472649','--temp','0',
         '--simple-io','--no-display-prompt','--perf',*FLAGS2]
-    start=time.monotonic();reason=None;samples=[];proc=None
+    start=time.monotonic();reason=None;samples=[];proc=None;pressure_streak=0
     try:
         with out.open('x') as f:
             proc=subprocess.Popen(cmd,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
             while proc.poll() is None:
                 h=host_state();samples.append(h)
                 reason=monitor_bad(h)
+                pressure_streak=(pressure_streak+1 if h['memory_psi_full_avg10']>=1.5 else 0)
+                if not reason and pressure_streak>=2:reason='SUSTAINED_MEMORY_PRESSURE'
                 if not reason and backup_running():reason='BACKUP_ACTIVE'
                 if not reason and production_clients():reason='PROD_CLIENT'
                 if not reason and time.monotonic()-start>115:reason='TIMEOUT'
@@ -64,6 +68,9 @@ def trial(binary,name,out):
             'reason':reason,'return_code':proc.returncode,'wall_seconds':round(time.monotonic()-start,2),
             **parsed,'min_memory_gib':min([h['available_gib'] for h in samples],default=None),
             'max_gtt_gib':max([h['gtt_gib'] for h in samples],default=None),
+            'max_temp_c':max([h['tctl_c'] for h in samples],default=None),
+            'max_memory_psi_full_avg10':max([h['memory_psi_full_avg10'] for h in samples],default=None),
+            'max_io_psi_full_avg10':max([h['io_psi_full_avg10'] for h in samples],default=None),
             'sha256_log':hashlib.sha256(out.read_bytes()).hexdigest(),'log':str(out)}
     finally:
         if proc and proc.poll() is None:
@@ -73,12 +80,19 @@ def trial(binary,name,out):
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--execute',action='store_true')
     parser.add_argument('--candidate-only',action='store_true',
-                        help='Resume a previously incomplete A/B by measuring Vulkan alone; never re-run production')
+                        help='Measure selected challenger alone, never re-run production')
+    parser.add_argument('--challenger',choices=('vulkan9ff','hipoff','hipon','hipf32'),
+                        default='vulkan9ff',help='Pinned 9ff Vulkan or r120 HIP ablation on the same GGUF and short flags')
+    parser.add_argument('--challenger-first',action='store_true',
+                        help='Counterbalance thermal/cache order: run challenger before production')
     args=parser.parse_args();ad=check()
     print('ADMISSION',json.dumps(ad),flush=True)
     if not args.execute:return
     if not ad['allow']:raise SystemExit(3)
-    selected=(('vulkan9ff',VULKAN),) if args.candidate_only else (('production',PROD),('vulkan9ff',VULKAN))
+    selected=((args.challenger,CANDIDATES[args.challenger]),) if args.candidate_only else (
+        ((args.challenger,CANDIDATES[args.challenger]),('production',PROD))
+        if args.challenger_first else
+        (('production',PROD),(args.challenger,CANDIDATES[args.challenger])))
     for name,binary in selected:
         if not binary.is_file() or hashlib.sha256(binary.read_bytes()).hexdigest()!=EXPECTED_SHA[name]:
             raise RuntimeError('BINARY_PIN_BAD_'+name)
@@ -92,7 +106,8 @@ def main():
             'nvme_model_read':str(MODEL),'global_io_psi_ignored_because_USB_NFS_STALL':True,
             'authoritative_GPU_reservation_gib':4.0,
             'note':'Global USB filesystem stalls confound run; only compare as exploratory',
-            'candidate_only':args.candidate_only}
+            'candidate_only':args.candidate_only,'challenger':args.challenger,
+            'challenger_first':args.challenger_first,'actual_run_order':[name for name,_ in selected]}
     evidence=folder/'results.json';evidence.write_text(json.dumps(record,indent=2)+'\n')
     lock=None
     try:

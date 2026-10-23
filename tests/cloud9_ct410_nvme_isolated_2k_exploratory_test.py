@@ -46,11 +46,27 @@ class CT410IsolatedSmoketest(unittest.TestCase):
         self.assertIn("if not gpu.get('allow'):failures.append('OFFICIAL_GPU_REJECT')",source)
         self.assertIn("if h['gtt_gib']>4:return 'GTT_LIMIT'",source)
 
+    def test_transient_memory_pressure_uses_two_samples_but_severe_immediate(self):
+        source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
+        self.assertIn("pressure_streak>=2",source)
+        self.assertIn("SUSTAINED_MEMORY_PRESSURE",source)
+        self.assertIsNone(M.monitor_bad(self.hw(memory_psi_full_avg10=1.9)))
+        self.assertEqual(M.monitor_bad(self.hw(memory_psi_full_avg10=4.1)),'SEVERE_MEMORY_PRESSURE')
+
     def test_watchdog_preserves_host_ram(self):
         self.assertEqual(M.monitor_bad(self.hw(available_gib=17)),'MEMORY_RESERVE')
         self.assertEqual(M.monitor_bad(self.hw(gtt_gib=4.1)),'GTT_LIMIT')
         self.assertEqual(M.monitor_bad(self.hw(tctl_c=78)),'THERMAL')
         self.assertIsNone(M.monitor_bad(self.hw()))
+    def test_hip_ablation_can_run_on_same_gguf_ct410(self):
+        source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
+        self.assertIn("'hipoff','hipon','hipf32'",source)
+        self.assertIn("*env_for(binary,name if name in CANDIDATES else 'vulkan9ff')",source)
+        self.assertEqual(M.CANDIDATES['hipoff'],M.CANDIDATES['hipon'])
+        self.assertEqual(M.CANDIDATES['hipon'],M.CANDIDATES['hipf32'])
+        self.assertEqual(len({M.EXPECTED_SHA[k] for k in ('hipoff','hipon','hipf32')}),1)
+        self.assertIn('-ngl',M.FLAGS2)
+
     def test_same_flags_and_no_force_16k_claim(self):
         self.assertEqual(M.FLAGS2[:6],('-c','2048','-b','512','-ub','512'))
         self.assertIn('--spec-type',M.FLAGS2)
@@ -58,10 +74,17 @@ class CT410IsolatedSmoketest(unittest.TestCase):
         source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
         self.assertIn('EXPLORATORY_ONLY_NOT_PRODUCTION_ELIGIBLE',source)
         self.assertIn('never',M.__doc__.lower() if M.__doc__ else 'never')
+    def test_counterbalanced_pairing_and_thermal_telemetry(self):
+        source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
+        self.assertIn("parser.add_argument('--challenger-first'",source)
+        self.assertIn("if args.challenger_first else",source)
+        self.assertIn("'actual_run_order':[name for name,_ in selected]",source)
+        self.assertIn("'max_temp_c':",source)
+
     def test_single_candidate_mode_cannot_repeat_prod_baseline(self):
         source=(ROOT/'tools/benchmarks/cloud9_ct410_nvme_isolated_2k_exploratory.py').read_text()
         self.assertIn("parser.add_argument('--candidate-only'",source)
-        self.assertIn("selected=(('vulkan9ff',VULKAN),) if args.candidate_only",source)
+        self.assertIn('selected=((args.challenger,CANDIDATES[args.challenger]),) if args.candidate_only',source)
         self.assertIn('for name,binary in selected:',source)
 
     def test_without_execute_does_not_launch_model(self):
