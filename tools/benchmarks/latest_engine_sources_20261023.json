@@ -72,11 +72,12 @@
     "atomic4b-q8v": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
     "atomic4b-hip-turbo3": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
     "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
-    "upstream-master-4b": null,
+    "upstream-master-4b": "b388a6afabe68e1ec7bc6171e0a63e87d4af66fbf16da247d793c859fa00391e",
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
     "rdna-r115-hip-4b": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
-  "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified."
+  "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
+  "notes_upstream_f64a_artifact": "GitHub Actions success #39913390476, artifact SHA eee8ef96d8994b979a3a1928f2dcd3f511f58c62435d5d6df30c0e27b7a1f002. 12 ELF files precheck sha pass, 11 RPATH $ORIGIN relocation, CLI/server --version PASS b11835 commitf64a49819; NOT GPU-qualified."
 }

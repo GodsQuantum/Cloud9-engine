@@ -7,6 +7,7 @@ class LatestUpstreamVulkan(unittest.TestCase):
   s=(R/'.github/workflows/lab-latest-upstream-masterf64a-vulkan.yml').read_text()
   pin=json.loads((R/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())['github_repositories']['upstream']
   self.assertEqual(pin['commit'],'f64a49819ccbf67a710f9a1927080e25775651ef')
+  self.assertEqual(json.loads((R/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())['lab_candidate_binary_sha256']['upstream-master-4b'], 'b388a6afabe68e1ec7bc6171e0a63e87d4af66fbf16da247d793c859fa00391e')
   for required in ('upstream-master-4b','-DGGML_VULKAN=ON','latest-upstream-masterf64a-vulkan','NOT_GPU_QUALIFIED.txt','git ls-remote','sha256sum'):
    self.assertIn(required,s)
   self.assertNotIn('rdna-r114',s)
