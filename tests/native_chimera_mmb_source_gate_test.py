@@ -15,6 +15,8 @@ class NativeMMBCurrentSource(unittest.TestCase):
 
     def test_port_is_from_actual_latest_donor_and_trunk(self):
         self.assertEqual(self.m['base']['commit'],self.lock['github_repositories']['upstream']['commit'])
+        self.assertIn(self.m['base']['commit'],self.ci)
+        self.assertNotIn('f50249819ccbf67a710f9a1927080e25775651ef',self.ci)
         self.assertEqual(self.m['donor']['commit'],self.lock['github_repositories']['rdna']['release_commit'])
         self.assertEqual(self.m['donor']['release_tag'],self.lock['github_repositories']['rdna']['release_tag'])
         self.assertEqual(self.m['donor']['release_tag'],'v14-097cf33d9-r116')
