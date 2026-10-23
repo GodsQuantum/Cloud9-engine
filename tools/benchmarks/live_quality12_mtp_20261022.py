@@ -65,7 +65,7 @@ CANDIDATES={
   "expected_bytes":2790000800
  },
  "upstream-master-4b":{
-  "bin":PARENT/"latest-upstream-master1ab-vulkan-20261023/package/bin/llama-server",
+  "bin":PARENT/"latest-upstream-masterf64a-vulkan-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800

@@ -33,7 +33,7 @@
     "upstream": {
       "repository": "https://github.com/ggml-org/llama.cpp.git",
       "branch": "master",
-      "commit": "1ab09d632ebc30f171f58547a1110f8d6e9546c0",
+      "commit": "f64a49819ccbf67a710f9a1927080e25775651ef",
       "gpu_benchmark_certified": false
     },
     "prism": {
@@ -66,7 +66,7 @@
   "flashnext_gt20_tps_certified": false,
   "production_approved": false,
   "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate.",
-  "notes_revision": "2026-10-23 08:23 CEST: RDNA latest r115, upstream master HEAD1ab09. Old artifacts are HISTORICAL only, new binary SHA pending until newest CI succeeds.",
+  "notes_revision": "2026-10-23 08:43 CEST: master f64a replaces master1ab (single SYCL-only 7-line change), RDNA r115 remains latest. Fail-closed until exact binary SHA matches new source; GPU not admitted due PSI+swap.",
   "lab_candidate_binary_sha256": {
     "atomic4b": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
     "atomic4b-q8v": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
