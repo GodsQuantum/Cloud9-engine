@@ -70,6 +70,29 @@ jobs:
           if tree!=m['port']['resulting_tree']:raise SystemExit(f'MMB_PORT_TREE_CHANGED expected={m["port"]["resulting_tree"]} got={tree}')
           print('LATEST_NATIVE_MMB_PORT_TREE_PASS',tree)
           PY
+      - name: Repair upstream CUDA graph chunk invalidation before HIP compilation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, json, hashlib, pathlib, subprocess
+          m=json.load(open('tools/chimera/native-mmb-r120-on-latestda2.json'))
+          local=m['port']['post_port_fix']
+          patch=pathlib.Path(local['patch'])
+          assert hashlib.sha256(patch.read_bytes()).hexdigest()==local['sha256']
+          source=pathlib.Path(os.environ['RUNNER_TEMP'])/'chimera-source'
+          target=source/'ggml/src/ggml-cuda/ggml-cuda.cu'
+          text=target.read_text()
+          assert text.count('n_captured += graph->instance != nullptr;')==1
+          subprocess.run(['git','-C',str(source),'apply','--check',str(patch.resolve())],check=True)
+          subprocess.run(['git','-C',str(source),'apply',str(patch.resolve())],check=True)
+          assert 'n_captured += !graph->instances.empty();' in target.read_text()
+          subprocess.run(['git','-C',str(source),'add','ggml/src/ggml-cuda/ggml-cuda.cu'],check=True)
+          subprocess.run(['git','-C',str(source),'diff','--cached','--check'],check=True)
+          actual=subprocess.check_output(['git','-C',str(source),'write-tree'],text=True).strip()
+          assert actual==local['resulting_tree'], (actual,local['resulting_tree'])
+          print('DA2_CUDA_GRAPH_INSTANCES_FIX_SOURCE_TREE_PASS',actual)
+          PY
       - name: Install ROCm HIP gfx1103 isolated to free CI runner
         shell: bash
         run: |

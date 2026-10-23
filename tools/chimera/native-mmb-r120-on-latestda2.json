@@ -33,7 +33,15 @@
     "source_change_note": "Current upstream da2 CUDA graph chunking / LibreSSL + latest r120 patch06 applied without conflicts. Full r120 MTP patch02 and MoE patch09 NOT included in this native MMB-only chimera.",
     "latest_r117_byte_identity": "Proof: r117 block06 diff --git onward exactly equals r116; independent port onto latest upstream f502 yields identical tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. ABI artifact built with r116 patch06 remains same native source code, do not claim full r117 RDNA kernel coverage.",
     "latest_r118_byte_identity": "r118 official block06 diff --git body byte-identical r117; independent git apply onto master f502 yields exact same tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. MTP block02 changed in r118 and is NOT ported by this kernel-only chimera; upstream f502 patch02 fails clean apply and requires manual engineering.",
-    "latest_r120_byte_identity": "r120 patch06 same donor as previous 36e port; latest upstream da2 with CUDA graph chunking yields new git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. MTP tail block02 remains a separate full fork feature."
+    "latest_r120_byte_identity": "r120 patch06 same donor as previous 36e port; latest upstream da2 with CUDA graph chunking yields new git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. MTP tail block02 remains a separate full fork feature.",
+    "post_port_fix": {
+      "reason": "Upstream CUDA graph chunking PR30804 changed graph->instance to vector graph->instances, but pool invalidation still references old field; HIP compilation failed on ggml-cuda.cu:501. Local fix counts nonempty graph->instances instead of deleted pointer.",
+      "patch": "tools/chimera/patches/master-da2-cuda-graph-chunk-invalidation-fix.patch",
+      "sha256": "0a2234517060f9197bac7a391894df331bf4c82ec3e6ff48b0d40b29231f65f7",
+      "resulting_tree": "c06ba6053bc093436d641ae4bd342c10abab9e68",
+      "git_commit_lab": "88d15e3b986c689ac3a98e75dd9821314444c7b3",
+      "upstream_pr_fix_needed": true
+    }
   },
   "qualification": {
     "compile": false,
