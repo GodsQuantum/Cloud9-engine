@@ -328,11 +328,16 @@ def main():
     folder.mkdir(parents=True,exist_ok=True)
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     outfile=folder/f'4b-production-vs-{args.challenger}-{args.profile}-ctx16k-{stamp}.json'
+    trial_dir=folder/f'trials-{args.challenger}-{args.profile}-{stamp}'
+    if outfile.exists() or trial_dir.exists():
+        raise RuntimeError('BENCH_EVIDENCE_DESTINATION_EXISTS_REFUSE_OVERWRITE')
+    trial_dir.mkdir(parents=False,exist_ok=False)
     with MODEL.open('rb') as model_file:
         model_sha256 = hashlib.file_digest(model_file,'sha256').hexdigest()
     record={'status':'STARTED','production_changed':False,'production_eligible':False,
             'flags_identical':list(FLAGS),'model':str(MODEL),
             'model_size_bytes':MODEL.stat().st_size,'model_sha256':model_sha256,
+            'trial_log_directory':str(trial_dir),
             'sha256':{'reference':hashlib.sha256(PROD.read_bytes()).hexdigest(),
                       'latest':hashlib.sha256(latest.read_bytes()).hexdigest()},
             'prompts_sha256':{k:hashlib.sha256(v.encode()).hexdigest() for k,v in prompts.items()},
@@ -358,7 +363,7 @@ def main():
                     if not check['allow']:
                         record.update(status='INCOMPLETE_ADMISSION_LOST',reason=check['reasons'])
                         return
-                    row=run_trial(binary,label,case,rep,folder,args.challenger,prompts[case])
+                    row=run_trial(binary,label,case,rep,trial_dir,args.challenger,prompts[case])
                     record['runs'].append(row)
                     record['status']='PARTIAL'
                     outfile.write_text(json.dumps(record,indent=2,ensure_ascii=False)+'\n')
