@@ -18,17 +18,17 @@ def mock(path):
 
 class NativeChimeraAB(unittest.TestCase):
  def test_three_modes_same_binary_and_model(self):
-  modes=('chimera-36e-mmb-off','chimera-36e-mmb-on','chimera-36e-mmb-mmf32')
+  modes=('chimera-da2-mmb-off','chimera-da2-mmb-on','chimera-da2-mmb-mmf32')
   specs=[b.CANDIDATES[x] for x in modes]
   self.assertEqual(len({str(x['bin']) for x in specs}),1)
-  self.assertIn("latest-chimera-mmb-r120-on-master36e-hip-20261023",str(specs[0]["bin"]))
+  self.assertIn("latest-chimera-mmb-r120-on-masterda2-hip-20261023",str(specs[0]["bin"]))
   self.assertEqual(len({str(x['model']) for x in specs}),1)
   self.assertEqual({x['backend'] for x in specs},{'HIP'})
   self.assertEqual([x['env']['GGML_CUDA_MMB'] for x in specs],['0','1','1'])
   self.assertEqual([x['env']['GGML_CUDA_MMF32'] for x in specs],['0','0','1'])
   self.assertEqual({x['env']['GGML_CUDA_MMB_RDNA3'] for x in specs},{'1'})
  def test_two_independent_current_attestations(self):
-  for name in ('chimera-36e-mmb-off','chimera-36e-mmb-on','chimera-36e-mmb-mmf32'):
+  for name in ('chimera-da2-mmb-off','chimera-da2-mmb-on','chimera-da2-mmb-mmf32'):
    with self.subTest(name=name):
     d=b.validate_latest_only(name,live_api=mock,_test_skip_binary_sha=True)
     a=d['_freshness_attestation']
@@ -39,18 +39,18 @@ class NativeChimeraAB(unittest.TestCase):
    if 'stew675' in path and path.endswith('/releases/latest'):return {'tag_name':'v14-097cf33d9-r119'}
    return mock(path)
   with self.assertRaisesRegex(Exception,'STALE rdna'):
-   b.validate_latest_only('chimera-36e-mmb-on',live_api=newer,_test_skip_binary_sha=True)
+   b.validate_latest_only('chimera-da2-mmb-on',live_api=newer,_test_skip_binary_sha=True)
  def test_trunk_head_changed_denied(self):
   def newer(path):
    if 'ggml-org' in path:return {'object':{'type':'commit','sha':'a'*40}}
    return mock(path)
   with self.assertRaisesRegex(Exception,'STALE upstream'):
-   b.validate_latest_only('chimera-36e-mmb-on',live_api=newer,_test_skip_binary_sha=True)
+   b.validate_latest_only('chimera-da2-mmb-on',live_api=newer,_test_skip_binary_sha=True)
  def test_same_compiled_binary_identity_and_hip_baseline_not_ready(self):
-  modes=('chimera-36e-mmb-off','chimera-36e-mmb-on','chimera-36e-mmb-mmf32')
+  modes=('chimera-da2-mmb-off','chimera-da2-mmb-on','chimera-da2-mmb-mmf32')
   self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{None})  # newest r120 binary pending CI
   # The baseline ABI is SHA-verified, but it is NOT GPU-qualified yet.
-  self.assertIsNone(m['lab_candidate_binary_sha256']['upstream-36e-hip-4b'])  # new 36e ABI pending
+  self.assertIsNone(m['lab_candidate_binary_sha256']['upstream-da2-hip-4b'])  # new da2 ABI pending
   self.assertFalse(m.get('production_eligible',False))
  def test_historical_engine_is_not_allowed(self):
   self.assertNotIn('rdna-r114-hip-4b',b.LATEST_ONLY_CANDIDATES)
