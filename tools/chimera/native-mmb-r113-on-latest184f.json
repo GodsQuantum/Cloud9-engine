@@ -1,0 +1,40 @@
+{
+  "kind": "LAB_NATIVE_CHIMERA_ABLATION_NOT_PRODUCTION",
+  "date": "2026-10-23",
+  "base": {
+    "repo": "ggml-org/llama.cpp",
+    "branch": "master",
+    "commit": "184f6536024668e8908ab8c86033d56708e62b40",
+    "tree": "05c7962b967e69b0c4e01bd1b55aed142d4842d1"
+  },
+  "donor": {
+    "repo": "stew675/llama-cpp-rdna-boosts",
+    "release_tag": "v14-097cf33d9-r113",
+    "commit": "d5679a568db310de4af0f09b4cd1e4878836e315",
+    "patch": "patches/0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch",
+    "sha256": "04cb226bbd61286947dade0080e33e1a91cbe8abda9b6cd25c018f4c6a3541d2"
+  },
+  "port": {
+    "mode": "git apply --exclude=tests/CMakeLists.txt to latest upstream",
+    "resulting_tree": "cff2374c7a0a04a8c9d97b7061f8829a68f71f1f",
+    "source_commit_local": "b3d7705e9f3f6a779224edcc64fec81c92ab6275",
+    "files_ported": 6,
+    "libraries": "MIT llama.cpp (ggml authors) + MIT RDNA Boosts (stew675)",
+    "feature": "MMB quantized prefill and MMF32 deterministic F32 projection kernels",
+    "backend": "HIP gfx1103 (NOT GPU-verified)",
+    "controls": {
+      "disable_mmb": "GGML_CUDA_MMB=0",
+      "enable_mmb": "GGML_CUDA_MMB=1",
+      "rdna3_enable": "GGML_CUDA_MMB_RDNA3=1",
+      "mmf32_optin": "GGML_CUDA_MMF32=1"
+    }
+  },
+  "qualification": {
+    "compile": false,
+    "on_device": false,
+    "benchmark": false,
+    "production": false,
+    "FlashNext_gt20_certified": false
+  },
+  "why_no_automatic_promotion": "An upstream-source patch cleanly applies after excluding a test/CMakeLists.txt hunk; this does not prove HIP compilation, GPU correctness, speed, or an end-to-end chimera."
+}
