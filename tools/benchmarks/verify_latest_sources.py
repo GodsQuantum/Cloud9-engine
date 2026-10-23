@@ -103,7 +103,7 @@ def verify_one(name, meta, api=github_api):
 CANDIDATE_TO_SOURCE = {
     "atomic4b": "atomic", "atomic4b-q8v": "atomic",
     "atomic4b-hip-turbo3": "atomic", "atomic4b-hip-q8v": "atomic",
-    "rdna-r114-hip-4b": "rdna", "upstream-master-4b": "upstream",
+    "rdna-r115-hip-4b": "rdna", "upstream-master-4b": "upstream",
     "prism-head-4b": "prism", "s1-head-4b": "s1",
 }
 

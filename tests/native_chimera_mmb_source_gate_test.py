@@ -9,20 +9,20 @@ ROOT=Path(__file__).resolve().parents[1]
 class NativeMMBCurrentSource(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r114-on-latest184f.json').read_text())
+        cls.m=json.loads((ROOT/'tools/chimera/native-mmb-r115-on-latest1ab.json').read_text())
         cls.lock=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
-        cls.ci=(ROOT/'.github/workflows/lab-native-chimera-mmb-r114-on-latest.yml').read_text()
+        cls.ci=(ROOT/'.github/workflows/lab-native-chimera-mmb-r115-on-latest.yml').read_text()
 
     def test_port_is_from_actual_latest_donor_and_trunk(self):
         self.assertEqual(self.m['base']['commit'],self.lock['github_repositories']['upstream']['commit'])
         self.assertEqual(self.m['donor']['commit'],self.lock['github_repositories']['rdna']['release_commit'])
         self.assertEqual(self.m['donor']['release_tag'],self.lock['github_repositories']['rdna']['release_tag'])
-        self.assertEqual(self.m['donor']['release_tag'],'v14-097cf33d9-r114')
+        self.assertEqual(self.m['donor']['release_tag'],'v14-097cf33d9-r115')
 
     def test_exact_manifest_hashes(self):
         self.assertRegex(self.m['donor']['sha256'],r'^[0-9a-f]{64}$')
         self.assertRegex(self.m['port']['resulting_tree'],r'^[0-9a-f]{40}$')
-        self.assertEqual(self.m['port']['source_commit_local'],'b3d7705e9f3f6a779224edcc64fec81c92ab6275')
+        self.assertEqual(self.m['port']['source_commit_local'],'20fcae0afc0c1cdbc2b305ec92b9758671d99331')
         self.assertEqual(self.m['port']['files_ported'],6)
 
     def test_donor_is_compatible_and_gpu_tests_still_missing(self):

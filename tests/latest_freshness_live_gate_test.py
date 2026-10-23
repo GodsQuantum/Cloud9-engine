@@ -36,17 +36,17 @@ class LiveFreshnessGate(unittest.TestCase):
         self.assertEqual({x['source'] for x in results},{'rdna','upstream','prism','atomic','strata','s1'})
 
     def test_current_candidate_verified_live(self):
-        entry=mod.verify_candidate('rdna-r114-hip-4b',manifest,snapshot)
-        self.assertEqual(entry['track'],'release:v14-097cf33d9-r114')
+        entry=mod.verify_candidate('rdna-r115-hip-4b',manifest,snapshot)
+        self.assertEqual(entry['track'],'release:v14-097cf33d9-r115')
         self.assertTrue(entry['checked_at_utc'])
 
     def test_latest_release_replaces_pin(self):
         def newer(path):
             if 'stew675' in path and path.endswith('/releases/latest'):
-                return {'tag_name':'v14-097cf33d9-r115'}
+                return {'tag_name':'v14-097cf33d9-r116'}
             return snapshot(path)
         with self.assertRaisesRegex(mod.StaleSource, 'r115'):
-            mod.verify_candidate('rdna-r114-hip-4b',manifest,newer)
+            mod.verify_candidate('rdna-r115-hip-4b',manifest,newer)
 
     def test_latest_head_change_replaces_pin(self):
         def newer(path):
@@ -71,7 +71,7 @@ class LiveFreshnessGate(unittest.TestCase):
             if 'stew675' in path and '/git/tags/' in path:
                 return {'object':{'type':'commit','sha':manifest['github_repositories']['rdna']['release_commit']}}
             return snapshot(path)
-        self.assertEqual(mod.verify_candidate('rdna-r114-hip-4b',manifest,tagged)['source'],'rdna')
+        self.assertEqual(mod.verify_candidate('rdna-r115-hip-4b',manifest,tagged)['source'],'rdna')
 
     def test_offline_is_unverified_not_approved(self):
         def no_network(path):

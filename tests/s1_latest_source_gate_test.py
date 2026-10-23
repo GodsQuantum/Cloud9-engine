@@ -15,7 +15,7 @@ class CurrentS1Source(unittest.TestCase):
   self.assertEqual(d['branch'],'s1-public')
   self.assertEqual(d['commit'],'28316b0e6658ae57575d557dcf41ba09836ceb71')
   self.assertFalse(d['gpu_benchmark_certified'])
-  self.assertIsNone(self.s['lab_candidate_binary_sha256']['s1-head-4b'])
+  self.assertEqual(self.s['lab_candidate_binary_sha256']['s1-head-4b'], '5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6')
  def test_crossbuilt_not_gpu_promoted(self):
   self.assertIn('GGML_VULKAN=ON',self.w)
   self.assertIn('verify_latest_sources.py --candidate s1-head-4b',self.w)

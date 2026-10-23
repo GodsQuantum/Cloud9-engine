@@ -4,20 +4,20 @@
   "base": {
     "repo": "ggml-org/llama.cpp",
     "branch": "master",
-    "commit": "184f6536024668e8908ab8c86033d56708e62b40",
-    "tree": "05c7962b967e69b0c4e01bd1b55aed142d4842d1"
+    "commit": "1ab09d632ebc30f171f58547a1110f8d6e9546c0",
+    "tree": "24ba04e04359b22a34ae7eaa92fe25b47ce5f592"
   },
   "donor": {
     "repo": "stew675/llama-cpp-rdna-boosts",
-    "release_tag": "v14-097cf33d9-r114",
-    "commit": "bb8d6d84b5a6e01223fb23682247edd2ed36a20d",
+    "release_tag": "v14-097cf33d9-r115",
+    "commit": "b281fc47f09cefc8cbe6e0224cfb6e84a420ac35",
     "patch": "patches/0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch",
-    "sha256": "f6de5844d8cf6362d87f81c014e0428834babda7e2af5b1a1e722084aaa49a37"
+    "sha256": "f1b5867c419bb6d45ae3c2d54e6c4d5f2debe2496ddcf828f78eacf121a7fa9b"
   },
   "port": {
     "mode": "git apply --exclude=tests/CMakeLists.txt to latest upstream",
-    "resulting_tree": "cff2374c7a0a04a8c9d97b7061f8829a68f71f1f",
-    "source_commit_local": "b3d7705e9f3f6a779224edcc64fec81c92ab6275",
+    "resulting_tree": "0b277c011e2a56e07195448a840ccf3d835624f8",
+    "source_commit_local": "20fcae0afc0c1cdbc2b305ec92b9758671d99331",
     "files_ported": 6,
     "libraries": "MIT llama.cpp (ggml authors) + MIT RDNA Boosts (stew675)",
     "feature": "MMB quantized prefill and MMF32 deterministic F32 projection kernels",
@@ -28,7 +28,8 @@
       "rdna3_enable": "GGML_CUDA_MMB_RDNA3=1",
       "mmf32_optin": "GGML_CUDA_MMF32=1"
     },
-    "same_source_code_as_r113": "Compared block06 patches line-by-line: only the initial email From hash changes in r114; all diff --git sections are byte-identical and resulting patched Git tree is unchanged."
+    "same_source_code_as_r113": "Compared block06 patches line-by-line: only the initial email From hash changes in r114; all diff --git sections are byte-identical and resulting patched Git tree is unchanged.",
+    "same_source_code_as_r114": "RDNA block06 patch body is exactly identical in r114 and r115 (only email From changes). Ported independently onto upstream HEAD1ab and validated target Git tree."
   },
   "qualification": {
     "compile": false,
