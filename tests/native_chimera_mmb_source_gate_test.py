@@ -47,6 +47,18 @@ class NativeMMBCurrentSource(unittest.TestCase):
         self.assertIn('NOT-QUALIFIED.txt',self.ci)
         self.assertIn('--exclude=tests/CMakeLists.txt',self.ci)
 
+    def test_native_da2_cuda_graph_chunking_fix(self):
+        import hashlib
+        repair=self.m['port']['post_port_fix']
+        p=ROOT/repair['patch']
+        self.assertTrue(p.is_file())
+        self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),repair['sha256'])
+        self.assertEqual(repair['resulting_tree'],'c06ba6053bc093436d641ae4bd342c10abab9e68')
+        self.assertIn('graph->instances.empty()',p.read_text())
+        self.assertIn('Repair upstream CUDA graph chunk invalidation',self.ci)
+        self.assertIn('DA2_CUDA_GRAPH_INSTANCES_FIX_SOURCE_TREE_PASS',self.ci)
+        self.assertFalse(self.m['qualification']['production'])
+
     def test_cannot_be_a_production_candidate_just_by_compiling(self):
         self.assertNotIn('native-mmb',self.lock['lab_candidate_binary_sha256'])
         self.assertFalse(self.m['qualification']['production'])
