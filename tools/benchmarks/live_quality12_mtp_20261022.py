@@ -58,8 +58,8 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
- "rdna-r113-hip-4b":{
-  "bin":PARENT/"llama-rdna-r113-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+ "rdna-r114-hip-4b":{
+  "bin":PARENT/"llama-rdna-r114-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
@@ -105,7 +105,7 @@ CANDIDATES={
 # Never allow a new live GPU run against retired b11798 or r111.
 LATEST_ONLY_CANDIDATES=frozenset({
     "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
-    "rdna-r113-hip-4b", "upstream-master-4b", "prism-head-4b",
+    "rdna-r114-hip-4b", "upstream-master-4b", "prism-head-4b",
 })
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
 LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")

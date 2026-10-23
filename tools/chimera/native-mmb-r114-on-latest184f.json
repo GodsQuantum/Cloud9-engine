@@ -9,10 +9,10 @@
   },
   "donor": {
     "repo": "stew675/llama-cpp-rdna-boosts",
-    "release_tag": "v14-097cf33d9-r113",
-    "commit": "d5679a568db310de4af0f09b4cd1e4878836e315",
+    "release_tag": "v14-097cf33d9-r114",
+    "commit": "bb8d6d84b5a6e01223fb23682247edd2ed36a20d",
     "patch": "patches/0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch",
-    "sha256": "04cb226bbd61286947dade0080e33e1a91cbe8abda9b6cd25c018f4c6a3541d2"
+    "sha256": "f6de5844d8cf6362d87f81c014e0428834babda7e2af5b1a1e722084aaa49a37"
   },
   "port": {
     "mode": "git apply --exclude=tests/CMakeLists.txt to latest upstream",
@@ -27,7 +27,8 @@
       "enable_mmb": "GGML_CUDA_MMB=1",
       "rdna3_enable": "GGML_CUDA_MMB_RDNA3=1",
       "mmf32_optin": "GGML_CUDA_MMF32=1"
-    }
+    },
+    "same_source_code_as_r113": "Compared block06 patches line-by-line: only the initial email From hash changes in r114; all diff --git sections are byte-identical and resulting patched Git tree is unchanged."
   },
   "qualification": {
     "compile": false,
