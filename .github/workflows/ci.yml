@@ -44,6 +44,8 @@ jobs:
           python3 -B tests/upstream_hip_baseline_contract_test.py
           python3 -B tests/upstream_current_vulkan_baseline_contract_test.py
           python3 -B tests/native_chimera_ablation_gate_test.py
+          python3 -B tests/rdna_r118_mtp_tail_source_gate_test.py
+          python3 -B tests/cloud9_memory_pressure_profiler_test.py
           python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
