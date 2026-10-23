@@ -1,0 +1,14 @@
+{
+  "type": "LAB_ONLY_LATEST_UPSTREAM_VULKAN_PIN",
+  "base_repo": "https://github.com/ggml-org/llama.cpp.git",
+  "branch": "master",
+  "source_commit": "9ff0d7e90f0faaa7c16017e6dcf9cf91c50a100e",
+  "source_tree": "60bf42018da47404b7260ee2bebd108b6c1b511f",
+  "reference_hardware": "AMD Radeon 780M gfx1103 RADV",
+  "compiled": false,
+  "on_device_verified": false,
+  "quality_verified": false,
+  "production_approved": false,
+  "no_benchmark_claim": true,
+  "note": "Lab artifact only. Original 062 binaries are historical and never relabeled 9ff."
+}

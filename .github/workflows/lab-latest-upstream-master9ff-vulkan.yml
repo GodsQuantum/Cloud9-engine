@@ -1,0 +1,83 @@
+name: LAB pinned upstream master9ff Vulkan for Cloud9
+
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-latest-upstream-master9ff-vulkan.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lab-current-upstream-master9ff-vulkan
+  cancel-in-progress: false
+
+jobs:
+  compile:
+    name: Build pinned latest upstream master9ff Vulkan (not GPU-qualified)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 130
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Recheck all upstream source pin before source selection
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote https://github.com/ggml-org/llama.cpp.git refs/heads/master | cut -f1)" = "9ff0d7e90f0faaa7c16017e6dcf9cf91c50a100e" || { echo UPSTREAM_MOVED_REPIN_REQUIRED; exit 9; }
+          python3 -m json.tool tools/benchmarks/upstream-master9ff-vulkan-lock.json >/dev/null
+      - name: Install Vulkan SDK and build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build build-essential libnuma-dev libvulkan-dev glslc spirv-headers patchelf
+      - name: Retrieve only current upstream master branch pinned to exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          url=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/upstream-master9ff-vulkan-lock.json"))["base_repo"])')
+          branch=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/upstream-master9ff-vulkan-lock.json"))["branch"])')
+          sha=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/upstream-master9ff-vulkan-lock.json"))["source_commit"])')
+          current=$(git ls-remote "$url" "refs/heads/$branch" | cut -f1)
+          test "$current" = "$sha" || { echo "LATEST_UPSTREAM_MOVED_REPIN_REQUIRED"; exit 9; }
+          git clone --filter=blob:none "$url" "$RUNNER_TEMP/upstream-source"
+          git -C "$RUNNER_TEMP/upstream-source" checkout --detach "$sha"
+          test "$(git -C "$RUNNER_TEMP/upstream-source" rev-parse HEAD)" = "$sha"
+          test -e "$RUNNER_TEMP/upstream-source/ggml/src/ggml-vulkan/CMakeLists.txt" || echo 'UPSTREAM Vulkan CMake integration verified via top-level CMake only'
+          echo "LATEST_UPSTREAM_SOURCE_VERIFIED $sha"
+      - name: Compile current UPSTREAM Vulkan for binary QA on Cloud9
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S "$RUNNER_TEMP/upstream-source" -B "$RUNNER_TEMP/upstream-build" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/upstream-build" --parallel 2 --target llama-server llama-cli test-backend-ops
+          "$RUNNER_TEMP/upstream-build/bin/llama-server" --version
+          "$RUNNER_TEMP/upstream-build/bin/llama-cli" --version
+      - name: Latest pin and output SHA gate; NO GPU certification
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote https://github.com/ggml-org/llama.cpp.git refs/heads/master | cut -f1)" = "9ff0d7e90f0faaa7c16017e6dcf9cf91c50a100e" || { echo UPSTREAM_MOVED_REPIN_REQUIRED; exit 9; }
+          D="$RUNNER_TEMP/package"
+          mkdir -p "$D/bin"
+          cp -a "$RUNNER_TEMP/upstream-build/bin/." "$D/bin/"
+          cp tools/benchmarks/upstream-master9ff-vulkan-lock.json "$D/"
+          cp "$RUNNER_TEMP/upstream-source/LICENSE" "$D/UPSTREAM-MIT-LICENSE"
+          printf '%s\n' 'Experimental upstream master9ff Vulkan binary. No Cloud9 GPU, Qwen4B or FlashNext test.' > "$D/NOT_GPU_QUALIFIED.txt"
+          (cd "$D" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf latest-upstream-master9ff-vulkan-gfx1103-uncertified.tar.gz -C "$RUNNER_TEMP" package
+          sha256sum latest-upstream-master9ff-vulkan-gfx1103-uncertified.tar.gz
+      - name: Preserve UPSTREAM latest Vulkan artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: latest-upstream-master9ff-vulkan-uncertified
+          path: latest-upstream-master9ff-vulkan-gfx1103-uncertified.tar.gz
+          retention-days: 7
+          if-no-files-found: error
