@@ -44,10 +44,10 @@ jobs:
           print('ONLY_NEWEST_SOURCE_LOCKS_MATCH')
           PY
           git clone --filter=blob:none https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/chimera-source"
-          git -C "$RUNNER_TEMP/chimera-source" checkout f50249819ccbf67a710f9a1927080e25775651ef
+          git -C "$RUNNER_TEMP/chimera-source" checkout f5027fb21307eb264aed483242603d68c87b0fe3
           git clone --filter=blob:none https://github.com/stew675/llama-cpp-rdna-boosts.git "$RUNNER_TEMP/donor-r116"
           git -C "$RUNNER_TEMP/donor-r116" checkout 4541a55749f9253cce31fb129d4b4e82646a9d54
-          test "$(git -C "$RUNNER_TEMP/chimera-source" rev-parse HEAD)" = f50249819ccbf67a710f9a1927080e25775651ef
+          test "$(git -C "$RUNNER_TEMP/chimera-source" rev-parse HEAD)" = f5027fb21307eb264aed483242603d68c87b0fe3
           test "$(git -C "$RUNNER_TEMP/donor-r116" rev-parse HEAD)" = 4541a55749f9253cce31fb129d4b4e82646a9d54
       - name: Port only latest donor MMB kernels to latest llama, verify tree
         shell: bash
