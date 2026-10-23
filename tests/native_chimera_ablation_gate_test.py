@@ -21,7 +21,7 @@ class NativeChimeraAB(unittest.TestCase):
   modes=('chimera-f502-mmb-off','chimera-f502-mmb-on','chimera-f502-mmb-mmf32')
   specs=[b.CANDIDATES[x] for x in modes]
   self.assertEqual(len({str(x['bin']) for x in specs}),1)
-  self.assertIn("latest-chimera-mmb-r117-on-masterf502-hip-20261023",str(specs[0]["bin"]))
+  self.assertIn("latest-chimera-mmb-r118-on-masterf502-hip-20261023",str(specs[0]["bin"]))
   self.assertEqual(len({str(x['model']) for x in specs}),1)
   self.assertEqual({x['backend'] for x in specs},{'HIP'})
   self.assertEqual([x['env']['GGML_CUDA_MMB'] for x in specs],['0','1','1'])
@@ -36,7 +36,7 @@ class NativeChimeraAB(unittest.TestCase):
     self.assertEqual(a['rdna_donor']['commit'],m['github_repositories']['rdna']['release_commit'])
  def test_donor_release_changed_denied(self):
   def newer(path):
-   if 'stew675' in path and path.endswith('/releases/latest'):return {'tag_name':'v14-097cf33d9-r118'}
+   if 'stew675' in path and path.endswith('/releases/latest'):return {'tag_name':'v14-097cf33d9-r119'}
    return mock(path)
   with self.assertRaisesRegex(Exception,'STALE rdna'):
    b.validate_latest_only('chimera-f502-mmb-on',live_api=newer,_test_skip_binary_sha=True)
@@ -48,7 +48,7 @@ class NativeChimeraAB(unittest.TestCase):
    b.validate_latest_only('chimera-f502-mmb-on',live_api=newer,_test_skip_binary_sha=True)
  def test_same_compiled_binary_identity_and_hip_baseline_not_ready(self):
   modes=('chimera-f502-mmb-off','chimera-f502-mmb-on','chimera-f502-mmb-mmf32')
-  self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{'e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810'})
+  self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{None})  # newest r118 binary pending CI
   # The baseline ABI is SHA-verified, but it is NOT GPU-qualified yet.
   self.assertEqual(m['lab_candidate_binary_sha256']['upstream-f502-hip-4b'], 'c271dc4d8d5e74891018191ec0b8439c1df124bccc69064159b7a24ea279cece')
   self.assertFalse(m.get('production_eligible',False))
