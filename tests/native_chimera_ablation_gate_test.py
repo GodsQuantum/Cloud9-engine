@@ -45,11 +45,12 @@ class NativeChimeraAB(unittest.TestCase):
    return mock(path)
   with self.assertRaisesRegex(Exception,'STALE upstream'):
    b.validate_latest_only('chimera-f502-mmb-on',live_api=newer,_test_skip_binary_sha=True)
- def test_not_executable_without_real_sha(self):
-  for name in ('chimera-f502-mmb-off','chimera-f502-mmb-on','chimera-f502-mmb-mmf32','upstream-f502-hip-4b'):
-   self.assertIsNone(m['lab_candidate_binary_sha256'][name])
-   with self.assertRaisesRegex(Exception,'LATEST_BINARY_SHA_NOT_CERTIFIED'):
-    b.validate_latest_only(name,live_api=mock)
+ def test_same_compiled_binary_identity_and_hip_baseline_not_ready(self):
+  modes=('chimera-f502-mmb-off','chimera-f502-mmb-on','chimera-f502-mmb-mmf32')
+  self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{'3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa'})
+  self.assertIsNone(m['lab_candidate_binary_sha256']['upstream-f502-hip-4b'])
+  with self.assertRaisesRegex(Exception,'LATEST_BINARY_SHA_NOT_CERTIFIED'):
+   b.validate_latest_only('upstream-f502-hip-4b',live_api=mock)
  def test_historical_engine_is_not_allowed(self):
   self.assertNotIn('rdna-r114-hip-4b',b.LATEST_ONLY_CANDIDATES)
   self.assertNotIn('b11798-4b',b.LATEST_ONLY_CANDIDATES)

@@ -33,11 +33,14 @@
     "source_change_note": "Latest f502 differs from f64a only in CANN const qualifiers; RDNA r116 block06 code unchanged vs r115; new native port independently applied and Git tree checked."
   },
   "qualification": {
-    "compile": false,
+    "compile": true,
     "on_device": false,
     "benchmark": false,
     "production": false,
-    "FlashNext_gt20_certified": false
+    "FlashNext_gt20_certified": false,
+    "ci_run_id": 39928244453,
+    "artifact_elf_server_sha256": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
+    "rocm_lab_abi_pass": true
   },
   "why_no_automatic_promotion": "An upstream-source patch cleanly applies after excluding a test/CMakeLists.txt hunk; this does not prove HIP compilation, GPU correctness, speed, or an end-to-end chimera."
 }
