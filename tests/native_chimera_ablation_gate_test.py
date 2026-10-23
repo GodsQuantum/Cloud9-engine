@@ -36,7 +36,7 @@ class NativeChimeraAB(unittest.TestCase):
     self.assertEqual(a['rdna_donor']['commit'],m['github_repositories']['rdna']['release_commit'])
  def test_donor_release_changed_denied(self):
   def newer(path):
-   if 'stew675' in path and path.endswith('/releases/latest'):return {'tag_name':'v14-097cf33d9-r117'}
+   if 'stew675' in path and path.endswith('/releases/latest'):return {'tag_name':'v14-097cf33d9-r118'}
    return mock(path)
   with self.assertRaisesRegex(Exception,'STALE rdna'):
    b.validate_latest_only('chimera-f502-mmb-on',live_api=newer,_test_skip_binary_sha=True)
