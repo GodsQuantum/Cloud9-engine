@@ -1,0 +1,55 @@
+{
+  "kind": "LAB_NATIVE_CHIMERA_ABLATION_NOT_PRODUCTION",
+  "date": "2026-10-23",
+  "base": {
+    "repo": "ggml-org/llama.cpp",
+    "branch": "master",
+    "commit": "9ff0d7e90f0faaa7c16017e6dcf9cf91c50a100e",
+    "tree": "60bf42018da47404b7260ee2bebd108b6c1b511f"
+  },
+  "donor": {
+    "repo": "stew675/llama-cpp-rdna-boosts",
+    "release_tag": "v14-097cf33d9-r120",
+    "commit": "ece2d7531b8630413770f61db46ff0700e6a8999",
+    "patch": "patches/0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch",
+    "sha256": "3d98feb0cd211ee5e8cb5919023c04f9a298e7f9f2be422541552fa93be039c2"
+  },
+  "port": {
+    "mode": "git apply --exclude=tests/CMakeLists.txt to latest upstream",
+    "resulting_tree": "73feeff15bdf0194fa14eec88f70dfc5d1c0750f",
+    "source_commit_local": null,
+    "files_ported": 6,
+    "libraries": "MIT llama.cpp (ggml authors) + MIT RDNA Boosts (stew675)",
+    "feature": "MMB quantized prefill and MMF32 deterministic F32 projection kernels",
+    "backend": "HIP gfx1103 (NOT GPU-verified)",
+    "controls": {
+      "disable_mmb": "GGML_CUDA_MMB=0",
+      "enable_mmb": "GGML_CUDA_MMB=1",
+      "rdna3_enable": "GGML_CUDA_MMB_RDNA3=1",
+      "mmf32_optin": "GGML_CUDA_MMF32=1"
+    },
+    "same_source_code_as_r113": "Compared block06 patches line-by-line: only the initial email From hash changes in r114; all diff --git sections are byte-identical and resulting patched Git tree is unchanged.",
+    "same_source_code_as_r114": "RDNA block06 patch body is exactly identical in r114 and r115 (only email From changes). Ported independently onto upstream HEAD1ab and validated target Git tree.",
+    "source_change_note": "Latest upstream 06230cb Qwen4Exp QSA no kq_mask + stepfun tensor GPU; RDNA r120 patch06 compatible. Additional upstream CUDA graph vector bug fixed by local post-port source patch; full RDNA patch02/09 NOT ported.",
+    "latest_r117_byte_identity": "Proof: r117 block06 diff --git onward exactly equals r116; independent port onto latest upstream f502 yields identical tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. ABI artifact built with r116 patch06 remains same native source code, do not claim full r117 RDNA kernel coverage.",
+    "latest_r118_byte_identity": "r118 official block06 diff --git body byte-identical r117; independent git apply onto master f502 yields exact same tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. MTP block02 changed in r118 and is NOT ported by this kernel-only chimera; upstream f502 patch02 fails clean apply and requires manual engineering.",
+    "latest_r120_byte_identity": "r120 patch06 same donor as previous 36e port; latest upstream da2 with CUDA graph chunking yields new git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. MTP tail block02 remains a separate full fork feature.",
+    "upstream_native_cuda_graph_fix": {
+      "commit": "9ff0d7e90f0faaa7c16017e6dcf9cf91c50a100e",
+      "predicate": "n_captured += graph->instances.size();",
+      "local_patch_required": false,
+      "note": "Upstream commit 9ff0d7e fixes chunked CUDA graphs; do not apply the historical patch to this source."
+    }
+  },
+  "qualification": {
+    "compile": false,
+    "on_device": false,
+    "benchmark": false,
+    "production": false,
+    "FlashNext_gt20_certified": false,
+    "ci_run_id": null,
+    "artifact_elf_server_sha256": null,
+    "rocm_lab_abi_pass": false
+  },
+  "why_no_automatic_promotion": "Source patch and upstream graph fix passed in isolated CT700 worktree; HIP compiler, GPU speed, quality, production routing and rollback remain unverified."
+}
