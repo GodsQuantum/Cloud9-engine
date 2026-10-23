@@ -100,6 +100,14 @@ class PinnedCt410Tournament(unittest.TestCase):
   self.assertEqual(result['status'],'PREFLIGHT_ONLY')
   self.assertEqual(result['profile'],'near-full')
 
+ def test_repeated_tournaments_have_unique_protected_evidence(self):
+  source=(ROOT/'tools/benchmarks/cloud9_prod4b_exact16k_ct410_tournament.py').read_text()
+  self.assertIn("trial_dir=folder/f'trials-{args.challenger}-{args.profile}-{stamp}'",source)
+  self.assertIn("row=run_trial(binary,label,case,rep,trial_dir",source)
+  self.assertIn("BENCH_EVIDENCE_DESTINATION_EXISTS_REFUSE_OVERWRITE",source)
+  self.assertIn("trial_dir.mkdir(parents=False,exist_ok=False)",source)
+  self.assertIn("'trial_log_directory':str(trial_dir)",source)
+
  def test_preflight_never_launches_model(self):
   guard={'allow':False,'reasons':['IO_PSI_GE_5']}
   for c in M.CANDIDATES:
