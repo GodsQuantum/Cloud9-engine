@@ -4,8 +4,8 @@
   "base": {
     "repo": "ggml-org/llama.cpp",
     "branch": "master",
-    "commit": "da2ee1e7a640445fc562fe5529598cee1917e0f5",
-    "tree": "5f918164f8f419f96e2c3efd38dedf22a6fff001"
+    "commit": "06230cb8775899cceef146c19cd447a947ecac5b",
+    "tree": "2169876aec012d77875d4e37731472d9fb4f6ae8"
   },
   "donor": {
     "repo": "stew675/llama-cpp-rdna-boosts",
@@ -16,8 +16,8 @@
   },
   "port": {
     "mode": "git apply --exclude=tests/CMakeLists.txt to latest upstream",
-    "resulting_tree": "7e1d84012fe899901b1e282a2e8d902848c99a0c",
-    "source_commit_local": "dd905d8c03602465e5797ceee22faa3ba3a34b03",
+    "resulting_tree": "f3523ab4b022255e930a4d93d530454f6b177da9",
+    "source_commit_local": "ae6c3d07ee54723b719dd4a4e79a3af744c0f186",
     "files_ported": 6,
     "libraries": "MIT llama.cpp (ggml authors) + MIT RDNA Boosts (stew675)",
     "feature": "MMB quantized prefill and MMF32 deterministic F32 projection kernels",
@@ -30,16 +30,16 @@
     },
     "same_source_code_as_r113": "Compared block06 patches line-by-line: only the initial email From hash changes in r114; all diff --git sections are byte-identical and resulting patched Git tree is unchanged.",
     "same_source_code_as_r114": "RDNA block06 patch body is exactly identical in r114 and r115 (only email From changes). Ported independently onto upstream HEAD1ab and validated target Git tree.",
-    "source_change_note": "Current upstream da2 CUDA graph chunking / LibreSSL + latest r120 patch06 applied without conflicts. Full r120 MTP patch02 and MoE patch09 NOT included in this native MMB-only chimera.",
+    "source_change_note": "Latest upstream 06230cb Qwen4Exp QSA no kq_mask + stepfun tensor GPU; RDNA r120 patch06 compatible. Additional upstream CUDA graph vector bug fixed by local post-port source patch; full RDNA patch02/09 NOT ported.",
     "latest_r117_byte_identity": "Proof: r117 block06 diff --git onward exactly equals r116; independent port onto latest upstream f502 yields identical tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. ABI artifact built with r116 patch06 remains same native source code, do not claim full r117 RDNA kernel coverage.",
     "latest_r118_byte_identity": "r118 official block06 diff --git body byte-identical r117; independent git apply onto master f502 yields exact same tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. MTP block02 changed in r118 and is NOT ported by this kernel-only chimera; upstream f502 patch02 fails clean apply and requires manual engineering.",
     "latest_r120_byte_identity": "r120 patch06 same donor as previous 36e port; latest upstream da2 with CUDA graph chunking yields new git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. MTP tail block02 remains a separate full fork feature.",
     "post_port_fix": {
-      "reason": "Upstream CUDA graph chunking PR30804 changed graph->instance to vector graph->instances, but pool invalidation still references old field; HIP compilation failed on ggml-cuda.cu:501. Local fix counts nonempty graph->instances instead of deleted pointer.",
-      "patch": "tools/chimera/patches/master-da2-cuda-graph-chunk-invalidation-fix.patch",
+      "reason": "Upstream CUDA graph chunking PR30804 changes graph->instance to instances vector, forgot pool invalidation. Still exists in newest HEAD062; fix count non-empty instances. Compile needs fresh CI.",
+      "patch": "tools/chimera/patches/cuda-graph-chunk-invalidation-compat.patch",
       "sha256": "0a2234517060f9197bac7a391894df331bf4c82ec3e6ff48b0d40b29231f65f7",
-      "resulting_tree": "c06ba6053bc093436d641ae4bd342c10abab9e68",
-      "git_commit_lab": "88d15e3b986c689ac3a98e75dd9821314444c7b3",
+      "resulting_tree": "a6c565a3d4928482fed05fdd5fe23a239dab9116",
+      "git_commit_lab": "ae6c3d07ee54723b719dd4a4e79a3af744c0f186",
       "upstream_pr_fix_needed": true
     }
   },

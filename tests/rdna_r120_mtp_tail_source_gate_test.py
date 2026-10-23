@@ -25,9 +25,9 @@ class LatestRDNAMTPTailContract(unittest.TestCase):
         self.assertNotIn('rdna-r117-patches',workflow)
 
     def test_native_mmb_is_not_misrepresented_as_full_mtp_hybrid(self):
-        m=json.loads((ROOT/'tools/chimera/native-mmb-r120-on-latestda2.json').read_text())
+        m=json.loads((ROOT/'tools/chimera/native-mmb-r120-on-latest062.json').read_text())
         self.assertEqual(m['donor']['release_tag'],'v14-097cf33d9-r120')
-        self.assertEqual(m['port']['resulting_tree'],'7e1d84012fe899901b1e282a2e8d902848c99a0c')
+        self.assertEqual(m['port']['resulting_tree'],'f3523ab4b022255e930a4d93d530454f6b177da9')
         self.assertIn('MTP tail block02 remains a separate full fork feature',m['port']['latest_r120_byte_identity'])
         self.assertFalse(m['qualification']['production'])
         self.assertFalse(m['qualification']['FlashNext_gt20_certified'])
