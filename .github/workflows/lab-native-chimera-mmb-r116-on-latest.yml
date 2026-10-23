@@ -1,18 +1,18 @@
-name: LAB native chimera MMB r115 on latest llama
+name: LAB native chimera MMB r116 on latest llama
 
 on:
   push:
     branches: [lab/20261022-one-engine-qualification]
     paths:
-      - .github/workflows/lab-native-chimera-mmb-r115-on-latest.yml
-      - tools/chimera/native-mmb-r115-on-latestf64a.json
+      - .github/workflows/lab-native-chimera-mmb-r116-on-latest.yml
+      - tools/chimera/native-mmb-r116-on-latestf502.json
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: lab-native-mmb-gfx1103-r115-latest
+  group: lab-native-mmb-gfx1103-r116-latest
   cancel-in-progress: false
 
 jobs:
@@ -28,14 +28,14 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/benchmarks/verify_latest_sources.py --all
-          python3 -m json.tool tools/chimera/native-mmb-r115-on-latestf64a.json >/dev/null
+          python3 -m json.tool tools/chimera/native-mmb-r116-on-latestf502.json >/dev/null
       - name: Retrieve pinned current source and proven MMB donor
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json
-          m=json.load(open('tools/chimera/native-mmb-r115-on-latestf64a.json'))
+          m=json.load(open('tools/chimera/native-mmb-r116-on-latestf502.json'))
           l=json.load(open('tools/benchmarks/latest_engine_sources_20261023.json'))
           assert m['base']['commit']==l['github_repositories']['upstream']['commit']
           assert m['donor']['commit']==l['github_repositories']['rdna']['release_commit']
@@ -44,21 +44,21 @@ jobs:
           print('ONLY_NEWEST_SOURCE_LOCKS_MATCH')
           PY
           git clone --filter=blob:none https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/chimera-source"
-          git -C "$RUNNER_TEMP/chimera-source" checkout f64a49819ccbf67a710f9a1927080e25775651ef
-          git clone --filter=blob:none https://github.com/stew675/llama-cpp-rdna-boosts.git "$RUNNER_TEMP/donor-r115"
-          git -C "$RUNNER_TEMP/donor-r115" checkout b281fc47f09cefc8cbe6e0224cfb6e84a420ac35
-          test "$(git -C "$RUNNER_TEMP/chimera-source" rev-parse HEAD)" = f64a49819ccbf67a710f9a1927080e25775651ef
-          test "$(git -C "$RUNNER_TEMP/donor-r115" rev-parse HEAD)" = b281fc47f09cefc8cbe6e0224cfb6e84a420ac35
+          git -C "$RUNNER_TEMP/chimera-source" checkout f50249819ccbf67a710f9a1927080e25775651ef
+          git clone --filter=blob:none https://github.com/stew675/llama-cpp-rdna-boosts.git "$RUNNER_TEMP/donor-r116"
+          git -C "$RUNNER_TEMP/donor-r116" checkout 4541a55749f9253cce31fb129d4b4e82646a9d54
+          test "$(git -C "$RUNNER_TEMP/chimera-source" rev-parse HEAD)" = f50249819ccbf67a710f9a1927080e25775651ef
+          test "$(git -C "$RUNNER_TEMP/donor-r116" rev-parse HEAD)" = 4541a55749f9253cce31fb129d4b4e82646a9d54
       - name: Port only latest donor MMB kernels to latest llama, verify tree
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import os,json,hashlib,subprocess,pathlib
-          m=json.load(open('tools/chimera/native-mmb-r115-on-latestf64a.json'))
+          m=json.load(open('tools/chimera/native-mmb-r116-on-latestf502.json'))
           root=pathlib.Path(os.environ['RUNNER_TEMP'])
           source=root/'chimera-source'
-          p=root/'donor-r115'/m['donor']['patch']
+          p=root/'donor-r116'/m['donor']['patch']
           assert hashlib.sha256(p.read_bytes()).hexdigest()==m['donor']['sha256']
           assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD^{tree}'],text=True).strip()==m['base']['tree']
           subprocess.run(['git','-C',str(source),'apply','--check','--exclude=tests/CMakeLists.txt',str(p)],check=True)
@@ -115,18 +115,18 @@ jobs:
           D="$RUNNER_TEMP/chimera-uncertified"
           mkdir -p "$D/bin"
           cp -a "$RUNNER_TEMP/chimera-build/bin/." "$D/bin/"
-          cp tools/chimera/native-mmb-r115-on-latestf64a.json "$D/"
+          cp tools/chimera/native-mmb-r116-on-latestf502.json "$D/"
           cp tools/benchmarks/latest_engine_sources_20261023.json "$D/"
           cp "$RUNNER_TEMP/chimera-source/LICENSE" "$D/UPSTREAM-MIT-LICENSE"
-          cp "$RUNNER_TEMP/donor-r115/LICENSE" "$D/RDNA-DONOR-MIT-LICENSE"
-          echo 'LAB only. Newest upstream+RDNA r115 MMB/MMF32. No hardware GPU or quality claim.' > "$D/NOT-QUALIFIED.txt"
+          cp "$RUNNER_TEMP/donor-r116/LICENSE" "$D/RDNA-DONOR-MIT-LICENSE"
+          echo 'LAB only. Newest upstream+RDNA r116 MMB/MMF32. No hardware GPU or quality claim.' > "$D/NOT-QUALIFIED.txt"
           (cd "$D" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > BIN-SHA256SUMS.txt)
-          tar -czf chimera-mmb-r115-on-latestf64a-hip-uncertified.tar.gz -C "$RUNNER_TEMP" chimera-uncertified
-          sha256sum chimera-mmb-r115-on-latestf64a-hip-uncertified.tar.gz
+          tar -czf chimera-mmb-r116-on-latestf502-hip-uncertified.tar.gz -C "$RUNNER_TEMP" chimera-uncertified
+          sha256sum chimera-mmb-r116-on-latestf502-hip-uncertified.tar.gz
       - name: Upload experimental chimera binaries
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: native-mmb-r115-on-latestf64a-hip-uncertified
-          path: chimera-mmb-r115-on-latestf64a-hip-uncertified.tar.gz
+          name: native-mmb-r116-on-latestf502-hip-uncertified
+          path: chimera-mmb-r116-on-latestf502-hip-uncertified.tar.gz
           retention-days: 7
           if-no-files-found: error

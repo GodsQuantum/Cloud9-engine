@@ -58,14 +58,14 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
- "rdna-r115-hip-4b":{
-  "bin":PARENT/"llama-rdna-r115-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+ "rdna-r116-hip-4b":{
+  "bin":PARENT/"llama-rdna-r116-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
  "upstream-master-4b":{
-  "bin":PARENT/"latest-upstream-masterf64a-vulkan-20261023/package/bin/llama-server",
+  "bin":PARENT/"latest-upstream-masterf502-vulkan-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
@@ -80,6 +80,37 @@ CANDIDATES={
   "bin":PARENT/"latest-prism-vulkan-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "expected_bytes":2790000800
+ },
+ "chimera-f502-mmb-off":{
+  "bin":PARENT/"latest-chimera-mmb-r115-on-masterf502-hip-20261023/package/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "env":{"GGML_CUDA_MMB":"0","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"0"},
+  "backend":"HIP",
+  "expected_bytes":2790000800
+ },
+ "chimera-f502-mmb-on":{
+  "bin":PARENT/"latest-chimera-mmb-r115-on-masterf502-hip-20261023/package/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "env":{"GGML_CUDA_MMB":"1","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"0"},
+  "backend":"HIP",
+  "expected_bytes":2790000800
+ },
+ "chimera-f502-mmb-mmf32":{
+  "bin":PARENT/"latest-chimera-mmb-r115-on-masterf502-hip-20261023/package/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "env":{"GGML_CUDA_MMB":"1","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"1"},
+  "backend":"HIP",
+  "expected_bytes":2790000800
+ },
+ "upstream-f502-hip-4b":{
+  "bin":PARENT/"latest-upstream-masterf502-hip-20261023/package/bin/llama-server",
+  "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
+  "backend":"HIP",
   "expected_bytes":2790000800
  },
  "b11798-4b":{
@@ -111,7 +142,8 @@ CANDIDATES={
 # Never allow a new live GPU run against retired b11798 or r111.
 LATEST_ONLY_CANDIDATES=frozenset({
     "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
-    "rdna-r115-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
+    "rdna-r116-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
+    "chimera-f502-mmb-off", "chimera-f502-mmb-on", "chimera-f502-mmb-mmf32", "upstream-f502-hip-4b",
 })
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
 LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")
@@ -130,6 +162,11 @@ def validate_latest_only(candidate, *, live_api=None, _test_skip_binary_sha=Fals
     spec.loader.exec_module(gate)
     attestation=gate.verify_candidate(candidate,lock,
         api=gate.github_api if live_api is None else live_api)
+    if candidate.startswith("chimera-f502-"):
+        # A native hybrid MUST revalidate BOTH contemporary source branches,
+        # never accept only the trunk while the RDNA donor advances.
+        attestation["rdna_donor"]=gate.verify_one("rdna",lock["github_repositories"]["rdna"],
+             gate.github_api if live_api is None else live_api)
     if not _test_skip_binary_sha:
         expected_sha=lock.get("lab_candidate_binary_sha256",{}).get(candidate)
         if not isinstance(expected_sha,str) or len(expected_sha)!=64:
@@ -222,7 +259,8 @@ def main():
       "candidate":args.candidate,"engine_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),
       "model":path.name,"model_bytes":path.stat().st_size,
       "native_speculation":"draft-mtp","native_spec_draft_max":2,
-      "backend":"Cloud9 Radeon 780M "+("HIP" if "hip" in args.candidate else "Vulkan")+" gfx1103",
+      "backend":"Cloud9 Radeon 780M "+spec.get("backend",("HIP" if "hip" in args.candidate else "Vulkan"))+" gfx1103",
+      "ablation_environment":spec.get("env",{}),
       "source_version_lock_sha256":hashlib.sha256(LATEST_SOURCE_MANIFEST.read_bytes()).hexdigest(),
       "source_freshness_attestation":latest_lock["_freshness_attestation"],
       "protocol":grade.PROTOCOL,"repetitions_requested":args.reps,
@@ -251,7 +289,7 @@ def main():
                "--jinja","--reasoning","off","--reasoning-budget","0",
                "--spec-type","draft-mtp","--spec-draft-n-max","2"]+spec["flags"]
             server=subprocess.Popen(cmd,stdout=stream,stderr=subprocess.STDOUT,
-               env={**os.environ,"LD_LIBRARY_PATH":str(binary.parent)+":"+os.environ.get("LD_LIBRARY_PATH","")},
+               env={**os.environ,"LD_LIBRARY_PATH":str(binary.parent)+":"+os.environ.get("LD_LIBRARY_PATH",""),**spec.get("env",{})},
                start_new_session=True)
             started=time.monotonic()
             for i in range(150):

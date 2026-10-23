@@ -5,26 +5,26 @@
   "github_repositories": {
     "rdna": {
       "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
-      "release_tag": "v14-097cf33d9-r115",
-      "release_commit": "b281fc47f09cefc8cbe6e0224cfb6e84a420ac35",
+      "release_tag": "v14-097cf33d9-r116",
+      "release_commit": "4541a55749f9253cce31fb129d4b4e82646a9d54",
       "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
       "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
-      "expected_tree": "4f7139cad8da1a57732e10d2d109f6711b45a77e",
+      "expected_tree": "39c7614ee31b664021cd3b19e4494a465a6c1c1f",
       "patch_sha256": {
-        "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "f33f1d20dd3aa4ceb43023422ab5e4a833e6949b056b247df401e87304ec22d3",
-        "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "0156d863fc93d20ef4256a1220737061c365c7753f1c32e9a7010f7790c9c09b",
-        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "d085723b2d710944f09f6e00c05e2397a6dcb92e6676e76ef5533e0fa8ef83ef",
-        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "a0f53eb6036db2fd03825646eef4af9b3a96719c285f17a7040cbf3a0b3448db",
-        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "98be6ab38dccb9e3a961cb21df401b4661c1936b0ba844128a1f92669ac08ef9",
-        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "bd6ae287d2ec6bc0095163fe1a421d8d90a23819e42237e8e1889fd2d305eada",
-        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "f1b5867c419bb6d45ae3c2d54e6c4d5f2debe2496ddcf828f78eacf121a7fa9b",
-        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "d0260197bcc56b516e6f6b10f24343c1e8e5f59b69da954215e4602ddc26e29a",
-        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "ee59a6029d81306857ef8b652e8b751ce2851fc19401c1e39493274a2b9ca1e5",
-        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "a011bae8f53a85b5c3329d1ae88e7fd4bf4afbc4b40aa894033b54077f35c710",
-        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "e1be080534997292d1a9f9651ac116812c7fc68262bb709af1a34b364710f46b",
-        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "e1c868a66edb577d975a1de63b17549ff5e2517e310b5fcfcb0c447dd3de808d",
-        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "7a8b0cc18733c79ef92f00b15d1c007c04e454ac5ac9728b5ebc26b4cfb17a55",
-        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "8bdebc244c5c26e0c1832b25769b60a541f6679c1f16544a0c717bda29033250"
+        "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "4189daf619087a02989f6b3325016296d61abbfa82dac04fe65ed45068df07c0",
+        "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "547f16e074b1eca8d8e00840c678b854909bae6ccbefedd6a9fe1b7bd85a51b8",
+        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "bb8f8743841b07b8a099a1147fe573bfb7a91b07130b9eb4828b187689f43951",
+        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "06fad6ecdbd5d26525323f116d78b09ec7ab079098b079a77dc98162cb8250f3",
+        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "ce9d0bed6af025869d0a9a32ae24cb08ea360ecb16f7f03092147cbb66e5a52e",
+        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "16acb2b98462a1c812a1f98745b65866a9218d4d82f8596c19d58631c72dbefe",
+        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "7e0ba6a08cadf842e44dd91fe9876d9d25380b4d72448e894e1d5f0c29c296a2",
+        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "f1ebbedfa52d816d54a6feb4c484dca5c6e9b74f5aee6d5141d0b5a7f43a8d97",
+        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "57ea3ff1d7fdc6f2ddb3320bc20d449472c494db414e4852ede2d2b3c008fcd3",
+        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "fe691e69ce6331be0682d7c89fe83a51a0e633d8f5bb45373f7ccab51a0acb73",
+        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "740eb602575a2e66c3ab7223f9fc59c8d82254eb087b4ec86e7f9e716cc60c55",
+        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "73ee9bcac17a3aba394f605f1c30c3692d8be4f872533b802474d9387ebcb5aa",
+        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "d2ed8ea06d57460c9ba78c74e55bc6717a70ab0a3909c47038dde5dfea3644c5",
+        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "d72450d0a1868649a2111b9c80881e0640632dd5c9902125643452856db7f3c7"
       },
       "patch_count": 14,
       "gpu_target": "gfx1103",
@@ -33,7 +33,7 @@
     "upstream": {
       "repository": "https://github.com/ggml-org/llama.cpp.git",
       "branch": "master",
-      "commit": "f64a49819ccbf67a710f9a1927080e25775651ef",
+      "commit": "f5027fb21307eb264aed483242603d68c87b0fe3",
       "gpu_benchmark_certified": false
     },
     "prism": {
@@ -50,9 +50,12 @@
     },
     "strata": {
       "repository": "https://github.com/Niko1221/Strata.git",
-      "release_tag": "v0.2.2",
-      "release_published_utc": "2026-10-21T11:10:21Z",
-      "gpu_benchmark_certified": false
+      "release_tag": "v0.2.3",
+      "release_published_utc": "2026-10-23T07:44:52Z",
+      "gpu_benchmark_certified": false,
+      "engine_embedded_version": "0.1.48",
+      "released_engine_manifest_sha256": "044b25317041220275ff8853b13ca52c90aa22ed77af0be06cef6c2613523e6",
+      "known_gfx1103_support": "UNVERIFIED; linux-amd-strixhalo prebuilt primarily gfx1151, no official Linux gfx1103 package listed; do not claim compatibility"
     },
     "s1": {
       "repository": "https://github.com/vahpetr/llama.cpp-s1-fork.git",
@@ -66,18 +69,23 @@
   "flashnext_gt20_tps_certified": false,
   "production_approved": false,
   "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate.",
-  "notes_revision": "2026-10-23 08:43 CEST: master f64a replaces master1ab (single SYCL-only 7-line change), RDNA r115 remains latest. Fail-closed until exact binary SHA matches new source; GPU not admitted due PSI+swap.",
+  "notes_revision": "2026-10-23 10:40: newest upstream HEAD f5027fb (CANN const qualifiers vs f64a) and RDNA latest r116 (multi-GPU load staging block08; MMB block06 source unchanged). All old binaries historical, newest blocked until SHA/ABI QA.",
   "lab_candidate_binary_sha256": {
     "atomic4b": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
     "atomic4b-q8v": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
     "atomic4b-hip-turbo3": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
     "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
-    "upstream-master-4b": "b388a6afabe68e1ec7bc6171e0a63e87d4af66fbf16da247d793c859fa00391e",
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
-    "rdna-r115-hip-4b": null
+    "rdna-r116-hip-4b": null,
+    "upstream-f502-hip-4b": null,
+    "chimera-f502-mmb-off": null,
+    "chimera-f502-mmb-on": null,
+    "chimera-f502-mmb-mmf32": null,
+    "upstream-master-4b": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
-  "notes_upstream_f64a_artifact": "GitHub Actions success #39913390476, artifact SHA eee8ef96d8994b979a3a1928f2dcd3f511f58c62435d5d6df30c0e27b7a1f002. 12 ELF files precheck sha pass, 11 RPATH $ORIGIN relocation, CLI/server --version PASS b11835 commitf64a49819; NOT GPU-qualified."
+  "notes_upstream_f64a_artifact": "GitHub Actions success #39913390476, artifact SHA eee8ef96d8994b979a3a1928f2dcd3f511f58c62435d5d6df30c0e27b7a1f002. 12 ELF files precheck sha pass, 11 RPATH $ORIGIN relocation, CLI/server --version PASS b11835 commitf64a49819; NOT GPU-qualified.",
+  "latest_native_chimera_ablation_policy": "3 isolated MMB/MMF32 env variants on same newest native HIP ELF plus exact newest upstream HIP baseline. Both latest donor r115 and trunk f64a live-attested for each hybrid. All blocked until official SHA pinned/CT410 GPU guard allows."
 }
