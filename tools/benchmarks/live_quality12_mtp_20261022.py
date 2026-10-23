@@ -83,7 +83,7 @@ CANDIDATES={
   "expected_bytes":2790000800
  },
  "chimera-f502-mmb-off":{
-  "bin":PARENT/"latest-chimera-mmb-r115-on-masterf502-hip-20261023/package/bin/llama-server",
+  "bin":PARENT/"latest-chimera-mmb-r116-on-masterf502-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "env":{"GGML_CUDA_MMB":"0","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"0"},
@@ -91,7 +91,7 @@ CANDIDATES={
   "expected_bytes":2790000800
  },
  "chimera-f502-mmb-on":{
-  "bin":PARENT/"latest-chimera-mmb-r115-on-masterf502-hip-20261023/package/bin/llama-server",
+  "bin":PARENT/"latest-chimera-mmb-r116-on-masterf502-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "env":{"GGML_CUDA_MMB":"1","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"0"},
@@ -99,7 +99,7 @@ CANDIDATES={
   "expected_bytes":2790000800
  },
  "chimera-f502-mmb-mmf32":{
-  "bin":PARENT/"latest-chimera-mmb-r115-on-masterf502-hip-20261023/package/bin/llama-server",
+  "bin":PARENT/"latest-chimera-mmb-r116-on-masterf502-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "env":{"GGML_CUDA_MMB":"1","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"1"},
