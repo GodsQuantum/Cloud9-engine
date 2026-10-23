@@ -38,6 +38,7 @@ class NativeMMBCurrentSource(unittest.TestCase):
 
     def test_ci_builds_on_runner_not_local_cloud9(self):
         self.assertIn('ubuntu-24.04',self.ci)
+        self.assertNotIn("m['qualification']['compile'] is False",self.ci)
         self.assertIn('GPU_TARGETS=gfx1103',self.ci)
         self.assertIn('verify_latest_sources.py --all',self.ci)
         self.assertIn('MMB_KERNEL_NOT_COMPILED',self.ci)
