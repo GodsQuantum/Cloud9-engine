@@ -30,7 +30,11 @@ class NativeMMBCurrentSource(unittest.TestCase):
     def test_donor_is_compatible_and_gpu_tests_still_missing(self):
         self.assertIn('MIT',self.m['port']['libraries'])
         self.assertEqual(self.m['port']['backend'],'HIP gfx1103 (NOT GPU-verified)')
-        self.assertEqual(set(self.m['qualification'].values()),{False})
+        self.assertTrue(self.m['qualification']['compile'])
+        self.assertTrue(self.m['qualification']['rocm_lab_abi_pass'])
+        self.assertFalse(self.m['qualification']['on_device'])
+        self.assertFalse(self.m['qualification']['benchmark'])
+        self.assertFalse(self.m['qualification']['production'])
 
     def test_ci_builds_on_runner_not_local_cloud9(self):
         self.assertIn('ubuntu-24.04',self.ci)
