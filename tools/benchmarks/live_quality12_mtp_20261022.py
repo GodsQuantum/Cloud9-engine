@@ -58,14 +58,14 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
- "rdna-r118-hip-4b":{
-  "bin":PARENT/"llama-rdna-r118-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+ "rdna-r120-hip-4b":{
+  "bin":PARENT/"llama-rdna-r120-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
  "upstream-master-4b":{
-  "bin":PARENT/"latest-upstream-master4231-vulkan-20261023/package/bin/llama-server",
+  "bin":PARENT/"latest-upstream-master36e-vulkan-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
@@ -82,32 +82,32 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
- "chimera-4231-mmb-off":{
-  "bin":PARENT/"latest-chimera-mmb-r118-on-master4231-hip-20261023/package/bin/llama-server",
+ "chimera-36e-mmb-off":{
+  "bin":PARENT/"latest-chimera-mmb-r120-on-master36e-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "env":{"GGML_CUDA_MMB":"0","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"0"},
   "backend":"HIP",
   "expected_bytes":2790000800
  },
- "chimera-4231-mmb-on":{
-  "bin":PARENT/"latest-chimera-mmb-r118-on-master4231-hip-20261023/package/bin/llama-server",
+ "chimera-36e-mmb-on":{
+  "bin":PARENT/"latest-chimera-mmb-r120-on-master36e-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "env":{"GGML_CUDA_MMB":"1","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"0"},
   "backend":"HIP",
   "expected_bytes":2790000800
  },
- "chimera-4231-mmb-mmf32":{
-  "bin":PARENT/"latest-chimera-mmb-r118-on-master4231-hip-20261023/package/bin/llama-server",
+ "chimera-36e-mmb-mmf32":{
+  "bin":PARENT/"latest-chimera-mmb-r120-on-master36e-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "env":{"GGML_CUDA_MMB":"1","GGML_CUDA_MMB_RDNA3":"1","GGML_CUDA_MMF32":"1"},
   "backend":"HIP",
   "expected_bytes":2790000800
  },
- "upstream-4231-hip-4b":{
-  "bin":PARENT/"latest-upstream-master4231-hip-20261023/package/bin/llama-server",
+ "upstream-36e-hip-4b":{
+  "bin":PARENT/"latest-upstream-master36e-hip-20261023/package/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "backend":"HIP",
@@ -142,8 +142,8 @@ CANDIDATES={
 # Never allow a new live GPU run against retired b11798 or r111.
 LATEST_ONLY_CANDIDATES=frozenset({
     "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
-    "rdna-r118-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
-    "chimera-4231-mmb-off", "chimera-4231-mmb-on", "chimera-4231-mmb-mmf32", "upstream-4231-hip-4b",
+    "rdna-r120-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
+    "chimera-36e-mmb-off", "chimera-36e-mmb-on", "chimera-36e-mmb-mmf32", "upstream-36e-hip-4b",
 })
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
 LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")
@@ -162,7 +162,7 @@ def validate_latest_only(candidate, *, live_api=None, _test_skip_binary_sha=Fals
     spec.loader.exec_module(gate)
     attestation=gate.verify_candidate(candidate,lock,
         api=gate.github_api if live_api is None else live_api)
-    if candidate.startswith("chimera-4231-"):
+    if candidate.startswith("chimera-36e-"):
         # A native hybrid MUST revalidate BOTH contemporary source branches,
         # never accept only the trunk while the RDNA donor advances.
         attestation["rdna_donor"]=gate.verify_one("rdna",lock["github_repositories"]["rdna"],

@@ -1,22 +1,22 @@
-name: LAB latest upstream master4231 Vulkan for Cloud9
+name: LAB latest upstream master36e Vulkan for Cloud9
 
 on:
   push:
     branches: [lab/20261022-one-engine-qualification]
     paths:
-      - .github/workflows/lab-latest-upstream-master4231-vulkan.yml
+      - .github/workflows/lab-latest-upstream-master36e-vulkan.yml
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: lab-current-upstream-master4231-vulkan
+  group: lab-current-upstream-master36e-vulkan
   cancel-in-progress: false
 
 jobs:
   compile:
-    name: Build pinned latest upstream master4231 Vulkan (not GPU-qualified)
+    name: Build pinned latest upstream master36e Vulkan (not GPU-qualified)
     runs-on: ubuntu-24.04
     timeout-minutes: 130
     steps:
@@ -70,14 +70,14 @@ jobs:
           cp -a "$RUNNER_TEMP/upstream-build/bin/." "$D/bin/"
           cp tools/benchmarks/latest_engine_sources_20261023.json "$D/"
           cp "$RUNNER_TEMP/upstream-source/LICENSE" "$D/UPSTREAM-MIT-LICENSE"
-          printf '%s\n' 'Experimental upstream master4231 Vulkan binary. No Cloud9 GPU, Qwen4B or FlashNext test.' > "$D/NOT_GPU_QUALIFIED.txt"
+          printf '%s\n' 'Experimental upstream master36e Vulkan binary. No Cloud9 GPU, Qwen4B or FlashNext test.' > "$D/NOT_GPU_QUALIFIED.txt"
           (cd "$D" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
-          tar -czf latest-upstream-master4231-vulkan-gfx1103-uncertified.tar.gz -C "$RUNNER_TEMP" package
-          sha256sum latest-upstream-master4231-vulkan-gfx1103-uncertified.tar.gz
+          tar -czf latest-upstream-master36e-vulkan-gfx1103-uncertified.tar.gz -C "$RUNNER_TEMP" package
+          sha256sum latest-upstream-master36e-vulkan-gfx1103-uncertified.tar.gz
       - name: Preserve UPSTREAM latest Vulkan artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: latest-upstream-master4231-vulkan-uncertified
-          path: latest-upstream-master4231-vulkan-gfx1103-uncertified.tar.gz
+          name: latest-upstream-master36e-vulkan-uncertified
+          path: latest-upstream-master36e-vulkan-gfx1103-uncertified.tar.gz
           retention-days: 7
           if-no-files-found: error
