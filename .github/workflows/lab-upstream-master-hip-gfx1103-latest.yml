@@ -1,0 +1,100 @@
+name: LAB latest upstream llama HIP gfx1103 baseline
+
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-upstream-master-hip-gfx1103-latest.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: current-upstream-hip-lab
+  cancel-in-progress: false
+
+jobs:
+  hip-baseline:
+    name: Current upstream HEAD HIP 780M — GPU QA NOT DONE
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify source is actually latest upstream
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 tools/benchmarks/verify_latest_sources.py --candidate upstream-master-4b
+      - name: Reproduce current pinned upstream HEAD exactly
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"]["upstream"]["repository"])')
+          branch=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"]["upstream"]["branch"])')
+          commit=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"]["upstream"]["commit"])')
+          current=$(git ls-remote "$repo" "refs/heads/$branch" | cut -f1)
+          test "$current" = "$commit" || { echo "UPSTREAM_HEAD_MOVED_REPIN_REQUIRED"; exit 9; }
+          git clone --filter=blob:none "$repo" "$RUNNER_TEMP/upstream-head"
+          git -C "$RUNNER_TEMP/upstream-head" checkout --detach "$commit"
+          test "$(git -C "$RUNNER_TEMP/upstream-head" rev-parse HEAD)" = "$commit"
+          echo "EXACT_CURRENT_SOURCE $commit"
+      - name: Isolate HIP and ROCm 10.1 toolchain on free CPU runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build ccache patchelf libnuma-dev
+          python3 -m venv "$RUNNER_TEMP/rocm-venv"
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://stable.repo.amd.com/rocm/whl-next/ \
+            'rocm[libraries,devel,device-gfx1103]==10.1.0'
+          rocm-sdk init
+          hipcc --version | head -10
+      - name: Compile HIP gfx1103 baseline with exact chimera flags
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          ROCM_PATH=$(rocm-sdk path --root)
+          export ROCM_PATH HIP_PATH="$ROCM_PATH"
+          export PATH="$ROCM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$ROCM_PATH/lib:${LD_LIBRARY_PATH:-}"
+          export CMAKE_PREFIX_PATH="$ROCM_PATH:${CMAKE_PREFIX_PATH:-}"
+          export CCACHE_DIR="$RUNNER_TEMP/ci-ccache"
+          ccache -M 2G
+          cmake -S "$RUNNER_TEMP/upstream-head" -B "$RUNNER_TEMP/upstream-hip-build" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DGGML_HIP=ON -DGGML_HIP_RCCL=OFF \
+            -DGPU_TARGETS=gfx1103 -DLLAMA_CURL=OFF \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_HIP_COMPILER_LAUNCHER=ccache
+          cmake --build "$RUNNER_TEMP/upstream-hip-build" --parallel 2 \
+            --target llama-server llama-cli test-backend-ops
+          "$RUNNER_TEMP/upstream-hip-build/bin/llama-server" --version
+          "$RUNNER_TEMP/upstream-hip-build/bin/llama-cli" --version
+      - name: Verify freshness again and package unqualified comparison
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/benchmarks/verify_latest_sources.py --candidate upstream-master-4b
+          D="$RUNNER_TEMP/upstream-hip-baseline"
+          mkdir -p "$D/bin"
+          cp -a "$RUNNER_TEMP/upstream-hip-build/bin/." "$D/bin/"
+          cp tools/benchmarks/latest_engine_sources_20261023.json "$D/"
+          cp "$RUNNER_TEMP/upstream-head/LICENSE" "$D/MIT-LICENSE"
+          printf '%s\n' 'Unpatched upstream HIP, source frozen at current HEAD, benchmark only.' \
+            'NO Cloud9 GPU execution, no correctness or throughput certification.' > "$D/NO_GPU_CERTIFICATION.txt"
+          (cd "$D" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf latest-upstream-master-hip-gfx1103-uncertified.tar.gz -C "$RUNNER_TEMP" upstream-hip-baseline
+          sha256sum latest-upstream-master-hip-gfx1103-uncertified.tar.gz
+      - name: Upload latest HIP baseline
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: latest-upstream-master-hip-uncertified
+          path: latest-upstream-master-hip-gfx1103-uncertified.tar.gz
+          retention-days: 7
+          if-no-files-found: error
