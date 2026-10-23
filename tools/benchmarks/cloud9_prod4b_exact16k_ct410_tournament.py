@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -43,7 +44,7 @@ FLAGS = ('-c', '16384', '-b', '1024', '-ub', '1024', '-t', '8', '-tb', '8',
          '--spec-type', 'draft-mtp', '--spec-draft-n-max', '2',
          '--spec-draft-p-min', '0', '--no-spec-draft-backend-sampling',
          '--lazy-mode', 'off', '--poll', '100', '--poll-batch', '0',
-         '--fit', 'off', '--no-warmup', '--reasoning', 'off')
+         '--fit', 'off', '--no-warmup', '--reasoning', 'off', '--no-context-shift')
 PROMPTS = {
     'short': 'Calcule 117 + 285 puis réponds en français, en une phrase.',
     'long': ('Voici un texte entièrement fictif. Lis-le avant de répondre.\n'
@@ -52,6 +53,27 @@ PROMPTS = {
                  for i in range(140))
              + '\nDonne seulement la somme 117 + 285, avec le résultat en français.'),
 }
+
+
+NEEDLE5_FULL_REFERENCE_SHA256 = 'c0d5e7e338aac5e84260d5393b37605daa80c6fdb5efe0203b583ec7c345c32c'
+NEEDLE5_CODES = {'alpha':'VTR-9385','beta':'MQR-5281','gamma':'BDV-1947',
+                 'delta':'JKP-6032','omega':'FNC-7824'}
+NEEDLE5_REPEATS = 33  # Historical 35 reps = tokenizer 16,319; 33 leaves headroom in 16K.
+
+def near_full_context_fixture():
+    """Reuse historical 5-needle generator exactly, without loading any model/GPU."""
+    path=Path(__file__).resolve().with_name('atomic_turboquant_context_20261022.py')
+    spec=importlib.util.spec_from_file_location('cloud9_needle_fixture',path)
+    module=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    if hashlib.sha256(module.mktext(35).encode()).hexdigest()!=NEEDLE5_FULL_REFERENCE_SHA256:
+        raise RuntimeError('HISTORICAL_NEEDLE5_FIXTURE_CHANGED')
+    if module.CODES!=NEEDLE5_CODES:
+        raise RuntimeError('NEEDLE5_EXPECTED_MARKERS_CHANGED')
+    fixture=module.mktext(NEEDLE5_REPEATS)
+    if len(fixture)>120000:
+        raise RuntimeError('NEEDLE5_EXCEEDS_SAFE_ARG_LENGTH')
+    return fixture
 
 def ct410_path(path):
     path=Path(path)
@@ -164,9 +186,59 @@ def stop_own(executable):
         CT+['410','--','python3','-c',script,ct410_path(executable)],
         capture_output=True,text=True,timeout=9).stdout.strip()
 
-def run_trial(binary,label,case,rep,folder,challenger):
+
+def parse_llama_timing(output):
+    """Parse real llama.cpp timings, with explicit token counts when present.
+
+    CLI verbosity differs between old prod (2bb) and new 9ff, hence support
+    both printed compact 'Prompt: ... t/s' and perf-context token timing.
+    A 16K *capacity* is not proof of 16K tokens actually processed.
+    """
+    compact = {}
+    for key,pattern in (('pp',r'Prompt:\s*([0-9.]+) t/s'),
+                        ('tg',r'Generation:\s*([0-9.]+) t/s')):
+        hits=list(re.finditer(pattern,output,re.I))
+        if hits:compact[key]=float(hits[-1].group(1))
+    detailed={}
+    patterns={
+      'pp':r'prompt eval time\s*=\s*[0-9.]+\s*ms\s*/\s*(\d+)\s*tokens?\s*\([^)]*?([0-9.]+)\s*tokens? per second',
+      'tg':r'(?<!prompt )\beval time\s*=\s*[0-9.]+\s*ms\s*/\s*(\d+)\s*tokens?\s*\([^)]*?([0-9.]+)\s*tokens? per second',
+    }
+    for key,pattern in patterns.items():
+        hits=list(re.finditer(pattern,output,re.I))
+        if hits:
+            match=hits[-1]
+            detailed[key]={'tokens':int(match.group(1)),'tokens_per_sec':float(match.group(2))}
+    result={k:detailed[k]['tokens_per_sec'] if k in detailed else compact[k]
+            for k in ('pp','tg') if k in detailed or k in compact}
+    count={k:detailed[k]['tokens'] for k in detailed}
+    valid_speed=all(k in result and result[k]>0 for k in ('pp','tg'))
+    return {'speed_tps':result,'token_counts':count,
+            'timings_parseable':valid_speed,
+            'full_16k_tokens_measured':count.get('pp',0)>=15360,
+            'generation_sample_at_least_16_tokens':count.get('tg',0)>=16,
+            'timing_format':'detailed' if len(detailed)==2 else 'mixed_or_compact'}
+
+
+
+def grade_needle5_output(output):
+    """Recognize a strict five-key model JSON response, never count prompt alone."""
+    required=set(NEEDLE5_CODES)
+    decoder=json.JSONDecoder()
+    for match in re.finditer(r'[{]',output):
+        try:
+            decoded,_=decoder.raw_decode(output[match.start():])
+        except (ValueError,TypeError):
+            continue
+        if isinstance(decoded,dict) and set(decoded)==required:
+            count=sum(decoded.get(k)==v for k,v in NEEDLE5_CODES.items())
+            return {'evaluated':True,'matching_codes':count,'passed':count==5}
+    return {'evaluated':False,'matching_codes':0,'passed':False}
+
+
+def run_trial(binary,label,case,rep,folder,challenger,prompt):
     logpath=folder/f'{label}-{case}-{rep}.log'
-    cli=[ct410_path(binary),'-m',str(MODEL),'-p',PROMPTS[case],
+    cli=[ct410_path(binary),'-m',str(MODEL),'-p',prompt,
          '-n','128','--seed','23','--temp','0','--simple-io',
          '--no-display-prompt','--perf',*FLAGS]
     run_command=CT+['410','--','runuser','-u','arezki','--','env',
@@ -196,16 +268,20 @@ def run_trial(binary,label,case,rep,folder,challenger):
                     os.killpg(proc.pid,signal.SIGKILL)
                     proc.wait(timeout=4)
         output=logpath.read_text(errors='replace')
-        speed={}
-        for key,pattern in (('pp',r'Prompt:\s*([0-9.]+) t/s'),
-                            ('tg',r'Generation:\s*([0-9.]+) t/s')):
-            match=re.search(pattern,output,re.I)
-            if match:speed[key]=float(match.group(1))
+        timing=parse_llama_timing(output)
+        is_near_full=(case=='needle5')
+        context_depth_valid=(
+            not is_near_full or 14500<=timing['token_counts'].get('pp',0)<=16128)
+        graded=grade_needle5_output(output) if is_near_full else None
         return {'backend':label,'case':case,'rep':rep,
-                'pass':proc.returncode==0 and not abort and len(speed)==2,
-                'exit_code':proc.returncode,'abort_reason':abort,
-                'wall_s':round(time.monotonic()-start,3),'speed_tps':speed,
-                'mentions_expected_402':'402' in output,
+                'pass':proc.returncode==0 and not abort and
+                       timing['timings_parseable'] and context_depth_valid,
+                'exit_code':proc.returncode,
+                'abort_reason':abort or ('CONTEXT_DEPTH_UNVERIFIED' if not context_depth_valid else None),
+                'wall_s':round(time.monotonic()-start,3),
+                **timing,'context_depth_valid':context_depth_valid,
+                'five_needle_quality':graded,
+                'capacity_16k_only':not is_near_full,
                 'telemetry':samples,
                 'raw_log_sha256':hashlib.sha256(logpath.read_bytes()).hexdigest()}
     finally:
@@ -223,13 +299,15 @@ def main():
     p.add_argument('--reps',type=int,default=3)
     p.add_argument('--challenger',choices=sorted(CANDIDATES),default='vulkan9ff',
                    help='Same CT410, same production GGUF/flags, isolated LAB backend')
+    p.add_argument('--profile',choices=('short-long','near-full'),default='short-long',
+                   help='short-long measures throughput in a 16K-capacity window; near-full is five-needle depth with verified token count')
     args=p.parse_args()
     if not 1<=args.reps<=3:p.error('reps must be 1, 2, or 3')
     a=admission()
     latest=CANDIDATES[args.challenger]
     if not args.execute or not a['allow']:
         print(json.dumps({'status':'PREFLIGHT_ONLY' if not args.execute else 'GPU_BLOCKED',
-                          'admission':a,'challenger':args.challenger},indent=2))
+                          'admission':a,'challenger':args.challenger,'profile':args.profile},indent=2))
         if args.execute and not a['allow']:
             raise SystemExit(3)  # requested run REFUSED, never a successful benchmark
         return
@@ -245,10 +323,11 @@ def main():
         banner=shell(CT+['410','--','runuser','-u','arezki','--',
                          'env',*env_for(binary,args.challenger),ct410_path(binary),'--version'],timeout=15)
         if commit not in banner:raise RuntimeError('UNEXPECTED_BINARY_VERSION '+str(binary))
+    prompts=PROMPTS if args.profile=='short-long' else {'needle5':near_full_context_fixture()}
     folder=ROOT/'Sources/Benchmarks/Engine-Tournament/2026-10-23'
     folder.mkdir(parents=True,exist_ok=True)
     stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    outfile=folder/f'4b-production-vs-{args.challenger}-16k-{stamp}.json'
+    outfile=folder/f'4b-production-vs-{args.challenger}-{args.profile}-ctx16k-{stamp}.json'
     with MODEL.open('rb') as model_file:
         model_sha256 = hashlib.file_digest(model_file,'sha256').hexdigest()
     record={'status':'STARTED','production_changed':False,'production_eligible':False,
@@ -256,8 +335,12 @@ def main():
             'model_size_bytes':MODEL.stat().st_size,'model_sha256':model_sha256,
             'sha256':{'reference':hashlib.sha256(PROD.read_bytes()).hexdigest(),
                       'latest':hashlib.sha256(latest.read_bytes()).hexdigest()},
-            'prompts_sha256':{k:hashlib.sha256(v.encode()).hexdigest() for k,v in PROMPTS.items()},
-            'admission':a,'challenger':args.challenger,'lab_stage_only':True,'runs':[]}
+            'prompts_sha256':{k:hashlib.sha256(v.encode()).hexdigest() for k,v in prompts.items()},
+            'admission':a,'challenger':args.challenger,'profile':args.profile,
+            'lab_stage_only':True,'context_window_capacity_tokens':16384,
+            'near_full_context_coverage_certification':False,
+            'note':'Actual input token depth is taken only from llama.cpp run logs, not estimated from context capacity.',
+            'runs':[]}
     lock=None
     try:
         lock=subprocess.Popen(CT+['410','--','flock','-n','/run/cloud9-gpu.lock',
@@ -269,13 +352,13 @@ def main():
         for rep in range(1,args.reps+1):
             backends=[('prod_reference',PROD),(args.challenger,latest)]
             if rep%2==0:backends.reverse()
-            for case in ('short','long'):
+            for case in prompts:
                 for label,binary in backends:
                     check=admission()
                     if not check['allow']:
                         record.update(status='INCOMPLETE_ADMISSION_LOST',reason=check['reasons'])
                         return
-                    row=run_trial(binary,label,case,rep,folder,args.challenger)
+                    row=run_trial(binary,label,case,rep,folder,args.challenger,prompts[case])
                     record['runs'].append(row)
                     record['status']='PARTIAL'
                     outfile.write_text(json.dumps(record,indent=2,ensure_ascii=False)+'\n')
@@ -283,6 +366,15 @@ def main():
                         record['status']='INTERRUPTED'
                         return
         record['status']='COMPLETE_EXPLORATORY_REVIEW_PENDING'
+        record['near_full_context_coverage_certification']=(
+            args.profile=='near-full' and all(
+                14500<=row['token_counts'].get('pp',0)<=16128 for row in record['runs']))
+        record['needle5_quality_all_passed']=(
+            args.profile=='near-full' and all(
+                row.get('five_needle_quality') and row['five_needle_quality']['passed']
+                for row in record['runs']))
+        record['production_eligible']=False
+
     finally:
         if lock and lock.poll() is None:
             try:
