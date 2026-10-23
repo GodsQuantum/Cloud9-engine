@@ -5,26 +5,26 @@
   "github_repositories": {
     "rdna": {
       "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
-      "release_tag": "v14-097cf33d9-r117",
-      "release_commit": "8b4708d10d3b591da6d57f07255692edfb35ee27",
+      "release_tag": "v14-097cf33d9-r118",
+      "release_commit": "989e7bc67135773f30568a996fcaf8861b7c3f08",
       "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
       "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
-      "expected_tree": "8cb64b69150d3134a830b9033c0043beb3b19e91",
+      "expected_tree": "30e902e2e2ee62ff716b7633ffdc1064c1014a3e",
       "patch_sha256": {
         "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "4189daf619087a02989f6b3325016296d61abbfa82dac04fe65ed45068df07c0",
         "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "547f16e074b1eca8d8e00840c678b854909bae6ccbefedd6a9fe1b7bd85a51b8",
-        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "bb8f8743841b07b8a099a1147fe573bfb7a91b07130b9eb4828b187689f43951",
-        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "06fad6ecdbd5d26525323f116d78b09ec7ab079098b079a77dc98162cb8250f3",
-        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "ce9d0bed6af025869d0a9a32ae24cb08ea360ecb16f7f03092147cbb66e5a52e",
-        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "16acb2b98462a1c812a1f98745b65866a9218d4d82f8596c19d58631c72dbefe",
-        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "7e0ba6a08cadf842e44dd91fe9876d9d25380b4d72448e894e1d5f0c29c296a2",
-        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "f1ebbedfa52d816d54a6feb4c484dca5c6e9b74f5aee6d5141d0b5a7f43a8d97",
-        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "57ea3ff1d7fdc6f2ddb3320bc20d449472c494db414e4852ede2d2b3c008fcd3",
-        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "20b46b9a8306e8f21eb66f6bd112d5382b669e4ba02c4fdbe9dee8f0350d8261",
-        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "acbb27fe74039d9e4e2c549add426bcd4218edf63712f9d0442d343a7258715f",
-        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "53dab7b7e5398c66f9499cf29017c62d4b5e35ef7c09ae65458d7c6269f7badf",
-        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "77b1d568c5b1e4f066dd7422476e5b3d8cdb3e6a99788913c2d03a7c61d14da3",
-        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "395132f5a8b58a9c443df3a936a4f4be7dd096da834da2f7ebd6d0b1f9f63aab"
+        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "c2b5aeb13f4bec1632296a6433443594309756b9fc7a0c736946027a7617075a",
+        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "858c37851483ca5ecc9768c23e7ee57e1e2ea80ffc821ff77e23305413ee817b",
+        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "0f52c787854b035f2addcd40f5b795cf5e807e30f332f550599645e2551df0fd",
+        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "2ed049edb1f397a65dde6d701267e874172e024a2e75b1eb0e38e183c14b8579",
+        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "15ece32411d8ed5234e3b9249d57139037846868c6bb77b1c9ee0305bc54e839",
+        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "039bf71562b54e12fd9ece6543eb3d2b075f411d63a070f0f702a19160ddf2fc",
+        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "7fc4d84bc7e416ebc4299b1247ec6c3fad32cc2f69adb26aac0a5a79118c2a7e",
+        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "2faccf42476065715de510401707388ac91159b0289873c4a04f58bbcbfbd54a",
+        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "23f93508aacb852f9748580a7ec8360fd7dea8b94276719ad658e63ff96713d4",
+        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "15ef7152813080ec09f663d56f43d9c63f54f55fcbe866846c487db2be922f5b",
+        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "285a2c09a819d98e56dc9c888b726e0a1e470090f9472d4be144ed7c1154cb93",
+        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "8509f4e0f9629b6558de97f8a1757da6f82ed0c70f05ae1de7a1c6fd9017faca"
       },
       "patch_count": 14,
       "gpu_target": "gfx1103",
@@ -78,11 +78,11 @@
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
     "upstream-f502-hip-4b": "c271dc4d8d5e74891018191ec0b8439c1df124bccc69064159b7a24ea279cece",
-    "chimera-f502-mmb-off": "e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810",
-    "chimera-f502-mmb-on": "e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810",
-    "chimera-f502-mmb-mmf32": "e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810",
+    "chimera-f502-mmb-off": null,
+    "chimera-f502-mmb-on": null,
+    "chimera-f502-mmb-mmf32": null,
     "upstream-master-4b": "9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c",
-    "rdna-r117-hip-4b": null
+    "rdna-r118-hip-4b": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
@@ -94,5 +94,7 @@
   "notes_rdna_r116_full_fork_artifact": "CI #39927540437 PASS. Artifact original SHA256 9bebf073df08ffe6d9597d6eb02feab363dd9d17c20302d1e9dfb6e5ebd99634. 12 SHA file verification PASS before RPATH relocation; current RDNA r116 release 4541a557; CT700 llama-server/llama-cli --version PASS without global ROCm package changes; postrelocation server 67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76. GPU throughput and agent QA NOT certified.",
   "historical_rdna_r116_binary_sha256": "67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76",
   "notes_rdna_r117_current": "Source release r117 published 2026-10-23T10:50:22Z with updated block09 host MoE expert identity, block10 slab and block12 graph/cache. Native MMB block06 has byte-identical diff body vs r116; actual port Git tree still 4cb17809be6b334a62831941d5b38aa25f6b20d6 on latest upstream f502, so existing chimera ELF matches current kernel code, but full fork r117 must rebuild. Any r116 full-fork ABI results remain HISTORICAL, not GPU-candidate.",
-  "notes_chimera_r117_live_bin": "GitHub Actions 39943683723 success; patch06 r117 same source tree as r116, but fresh recompile from latest release. Archive SHA c4d45b991a42988456057aa257a1306d6aac857fbcdc902e793229dfa488c2ce; 12 original SHA checks PASS; CT700 ELF loader RPATH relocated, server sha e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810 CLI --version PASS; not GPU qualified."
+  "notes_chimera_r117_live_bin": "GitHub Actions 39943683723 success; patch06 r117 same source tree as r116, but fresh recompile from latest release. Archive SHA c4d45b991a42988456057aa257a1306d6aac857fbcdc902e793229dfa488c2ce; 12 original SHA checks PASS; CT700 ELF loader RPATH relocated, server sha e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810 CLI --version PASS; not GPU qualified.",
+  "notes_rdna_r118": "Official r118 released 2026-10-23T12:35:59Z; tag 989e7bc67135773f30568a996fcaf8861b7c3f08. Patch block02 updated MTP prompt-tail readback/hook sync optimization PR206; this is NOT in native MMB-only chimera. Native block06 diff body byte-identical r117, verified identical resulting Git tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. Full r118 HIP candidate must build and be tested from fresh immutable CI. Old r117 full-fork remains historical, not tournament.",
+  "notes_native_mmb_r118_rebuild": "r118 MMB block06 exact source same as r117; new r118 pinned CI artifact NOT YET compiled/verified, old e987022... remains historical pending fresh r118 AB sha."
 }
