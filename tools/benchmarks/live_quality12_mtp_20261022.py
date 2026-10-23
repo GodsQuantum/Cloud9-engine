@@ -58,8 +58,8 @@ CANDIDATES={
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
  },
- "rdna-r116-hip-4b":{
-  "bin":PARENT/"llama-rdna-r116-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
+ "rdna-r117-hip-4b":{
+  "bin":PARENT/"llama-rdna-r117-hip-gfx1103-actions-20261023/rdna-hip-artifact/bin/llama-server",
   "model":STORE/"Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
   "flags":["-c","8192","-ctk","q8_0","-ctv","q8_0"],
   "expected_bytes":2790000800
@@ -142,7 +142,7 @@ CANDIDATES={
 # Never allow a new live GPU run against retired b11798 or r111.
 LATEST_ONLY_CANDIDATES=frozenset({
     "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
-    "rdna-r116-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
+    "rdna-r117-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
     "chimera-f502-mmb-off", "chimera-f502-mmb-on", "chimera-f502-mmb-mmf32", "upstream-f502-hip-4b",
 })
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)

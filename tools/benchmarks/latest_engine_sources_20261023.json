@@ -5,11 +5,11 @@
   "github_repositories": {
     "rdna": {
       "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
-      "release_tag": "v14-097cf33d9-r116",
-      "release_commit": "4541a55749f9253cce31fb129d4b4e82646a9d54",
+      "release_tag": "v14-097cf33d9-r117",
+      "release_commit": "8b4708d10d3b591da6d57f07255692edfb35ee27",
       "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
       "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
-      "expected_tree": "39c7614ee31b664021cd3b19e4494a465a6c1c1f",
+      "expected_tree": "8cb64b69150d3134a830b9033c0043beb3b19e91",
       "patch_sha256": {
         "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "4189daf619087a02989f6b3325016296d61abbfa82dac04fe65ed45068df07c0",
         "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "547f16e074b1eca8d8e00840c678b854909bae6ccbefedd6a9fe1b7bd85a51b8",
@@ -20,11 +20,11 @@
         "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "7e0ba6a08cadf842e44dd91fe9876d9d25380b4d72448e894e1d5f0c29c296a2",
         "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "f1ebbedfa52d816d54a6feb4c484dca5c6e9b74f5aee6d5141d0b5a7f43a8d97",
         "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "57ea3ff1d7fdc6f2ddb3320bc20d449472c494db414e4852ede2d2b3c008fcd3",
-        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "fe691e69ce6331be0682d7c89fe83a51a0e633d8f5bb45373f7ccab51a0acb73",
-        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "740eb602575a2e66c3ab7223f9fc59c8d82254eb087b4ec86e7f9e716cc60c55",
-        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "73ee9bcac17a3aba394f605f1c30c3692d8be4f872533b802474d9387ebcb5aa",
-        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "d2ed8ea06d57460c9ba78c74e55bc6717a70ab0a3909c47038dde5dfea3644c5",
-        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "d72450d0a1868649a2111b9c80881e0640632dd5c9902125643452856db7f3c7"
+        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "20b46b9a8306e8f21eb66f6bd112d5382b669e4ba02c4fdbe9dee8f0350d8261",
+        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "acbb27fe74039d9e4e2c549add426bcd4218edf63712f9d0442d343a7258715f",
+        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "53dab7b7e5398c66f9499cf29017c62d4b5e35ef7c09ae65458d7c6269f7badf",
+        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "77b1d568c5b1e4f066dd7422476e5b3d8cdb3e6a99788913c2d03a7c61d14da3",
+        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "395132f5a8b58a9c443df3a936a4f4be7dd096da834da2f7ebd6d0b1f9f63aab"
       },
       "patch_count": 14,
       "gpu_target": "gfx1103",
@@ -77,12 +77,12 @@
     "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
-    "rdna-r116-hip-4b": null,
     "upstream-f502-hip-4b": "c271dc4d8d5e74891018191ec0b8439c1df124bccc69064159b7a24ea279cece",
     "chimera-f502-mmb-off": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
     "chimera-f502-mmb-on": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
     "chimera-f502-mmb-mmf32": "3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa",
-    "upstream-master-4b": "9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c"
+    "upstream-master-4b": "9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c",
+    "rdna-r117-hip-4b": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
@@ -90,5 +90,8 @@
   "latest_native_chimera_ablation_policy": "3 isolated MMB/MMF32 env variants on same newest native HIP ELF plus exact newest upstream HIP baseline. Both latest donor r115 and trunk f64a live-attested for each hybrid. All blocked until official SHA pinned/CT410 GPU guard allows.",
   "notes_latest_upstream_f502_artifact": "GitHub Actions #39927540493 SUCCESS 2026-10-23; pinned source f5027fb; artifact sha256 8499087d28aeac9b427e56daa5bdb150bae35c15ee482b34148da1ef652ba46a; archive safe extracted, 12 ELF validated against upstream SHA256SUMS, 11 RPATH relocated, llama-server and CLI --version PASS build11836; server binary sha256 9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c; GPU test STILL PENDING.",
   "notes_native_chimera_r116_hip": "Source lock latest f502+RDNA r116; GitHub Actions run39928244453 SUCCESS; GH artifact ID12491216327 sha ZIP6cccd4970e6579344705e594ef5ddb154527fe00ec96e33c8c78bbc52c2da7c3; tar9b939e46531a5b2ea40f5cf01449d94066031c83f3669e3333aacf033bfcb621; all12 ELF original SHAs,11 RPATH relocations, CT700 ROCm /opt/rocm/lib ABI + llama cli/server version PASS; three ablations share server SHA 3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa; GPU smoke/quality NOT YET certified; CT410 ROCm libs MISSING.",
-  "notes_upstream_f502_hip_baseline_artifact": "CI #39930984426 success, archive a97a83fad6c697debe8d1109e311916a135a0ec5ba9b46cd5f753db8ae45dfd2, 12 ELF SHA-checked pre-relocation, CT700 toolchain ROCm10.1 required for executable, server v0.7.0-dev build11836 f5027fb21; NOT GPU-certified."
+  "notes_upstream_f502_hip_baseline_artifact": "CI #39930984426 success, archive a97a83fad6c697debe8d1109e311916a135a0ec5ba9b46cd5f753db8ae45dfd2, 12 ELF SHA-checked pre-relocation, CT700 toolchain ROCm10.1 required for executable, server v0.7.0-dev build11836 f5027fb21; NOT GPU-certified.",
+  "notes_rdna_r116_full_fork_artifact": "CI #39927540437 PASS. Artifact original SHA256 9bebf073df08ffe6d9597d6eb02feab363dd9d17c20302d1e9dfb6e5ebd99634. 12 SHA file verification PASS before RPATH relocation; current RDNA r116 release 4541a557; CT700 llama-server/llama-cli --version PASS without global ROCm package changes; postrelocation server 67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76. GPU throughput and agent QA NOT certified.",
+  "historical_rdna_r116_binary_sha256": "67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76",
+  "notes_rdna_r117_current": "Source release r117 published 2026-10-23T10:50:22Z with updated block09 host MoE expert identity, block10 slab and block12 graph/cache. Native MMB block06 has byte-identical diff body vs r116; actual port Git tree still 4cb17809be6b334a62831941d5b38aa25f6b20d6 on latest upstream f502, so existing chimera ELF matches current kernel code, but full fork r117 must rebuild. Any r116 full-fork ABI results remain HISTORICAL, not GPU-candidate."
 }
