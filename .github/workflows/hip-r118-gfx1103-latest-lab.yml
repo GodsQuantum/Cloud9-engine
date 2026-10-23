@@ -59,6 +59,13 @@ jobs:
           actual=$(git -C "$RUNNER_TEMP/llama-r118" rev-parse HEAD^{tree})
           test "$actual" = "$expected" || { echo "PATCH_TREE_MISMATCH $actual != $expected"; exit 17; }
           echo "R118_PATCH_TREE_PASS $actual"
+          # Source-level feature contract; avoid shipping a "latest" fork that
+          # lost the r118 PR206 tail-readback GPU sync avoidance.
+          grep -q 'LLAMA_MTP_TAIL_READBACK' "$RUNNER_TEMP/llama-r118/common/speculative.cpp"
+          grep -q 'prompt_batch_unneeded' "$RUNNER_TEMP/llama-r118/common/speculative.cpp"
+          grep -q 'llama_set_embeddings_nextn_from' "$RUNNER_TEMP/llama-r118/src/llama-context.cpp"
+          grep -q 'llama_set_embeddings_nextn_from' "$RUNNER_TEMP/llama-r118/src/llama-ext.h"
+          echo 'R118_MTP_TAIL_READBACK_SOURCE_CONTRACT_PASS: kill switch preserved; GPU speed unverified'
       - name: Install official AMD ROCm SDK 10.1 in isolated venv
         shell: bash
         run: |
