@@ -21,6 +21,7 @@ class NativeChimeraAB(unittest.TestCase):
   modes=('chimera-f502-mmb-off','chimera-f502-mmb-on','chimera-f502-mmb-mmf32')
   specs=[b.CANDIDATES[x] for x in modes]
   self.assertEqual(len({str(x['bin']) for x in specs}),1)
+  self.assertIn("latest-chimera-mmb-r116-on-masterf502-hip-20261023",str(specs[0]["bin"]))
   self.assertEqual(len({str(x['model']) for x in specs}),1)
   self.assertEqual({x['backend'] for x in specs},{'HIP'})
   self.assertEqual([x['env']['GGML_CUDA_MMB'] for x in specs],['0','1','1'])
@@ -48,9 +49,9 @@ class NativeChimeraAB(unittest.TestCase):
  def test_same_compiled_binary_identity_and_hip_baseline_not_ready(self):
   modes=('chimera-f502-mmb-off','chimera-f502-mmb-on','chimera-f502-mmb-mmf32')
   self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{'3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa'})
-  self.assertIsNone(m['lab_candidate_binary_sha256']['upstream-f502-hip-4b'])
-  with self.assertRaisesRegex(Exception,'LATEST_BINARY_SHA_NOT_CERTIFIED'):
-   b.validate_latest_only('upstream-f502-hip-4b',live_api=mock)
+  # The baseline ABI is SHA-verified, but it is NOT GPU-qualified yet.
+  self.assertEqual(m['lab_candidate_binary_sha256']['upstream-f502-hip-4b'], 'c271dc4d8d5e74891018191ec0b8439c1df124bccc69064159b7a24ea279cece')
+  self.assertFalse(m.get('production_eligible',False))
  def test_historical_engine_is_not_allowed(self):
   self.assertNotIn('rdna-r114-hip-4b',b.LATEST_ONLY_CANDIDATES)
   self.assertNotIn('b11798-4b',b.LATEST_ONLY_CANDIDATES)
