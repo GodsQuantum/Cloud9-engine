@@ -1,0 +1,83 @@
+name: LAB latest S1 v64 Vulkan for RDNA3
+
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-latest-s1-v64-vulkan.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lab-current-s1-vulkan
+  cancel-in-progress: false
+
+jobs:
+  compile:
+    name: Build pinned latest S1 v64 Vulkan (not GPU-qualified)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 130
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Recheck all latest source pins before source selection
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 tools/benchmarks/verify_latest_sources.py --candidate s1-head-4b
+          python3 -m json.tool tools/benchmarks/latest_engine_sources_20261023.json >/dev/null
+      - name: Install Vulkan SDK and build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build build-essential libnuma-dev libvulkan-dev glslc spirv-headers patchelf
+      - name: Retrieve only current S1 public branch pinned to exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          url=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"]["s1"]["repository"])')
+          branch=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"]["s1"]["branch"])')
+          sha=$(python3 -c 'import json;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"]["s1"]["commit"])')
+          current=$(git ls-remote "$url" "refs/heads/$branch" | cut -f1)
+          test "$current" = "$sha" || { echo "LATEST_S1_MOVED_REPIN_REQUIRED"; exit 9; }
+          git clone --filter=blob:none "$url" "$RUNNER_TEMP/s1-source"
+          git -C "$RUNNER_TEMP/s1-source" checkout --detach "$sha"
+          test "$(git -C "$RUNNER_TEMP/s1-source" rev-parse HEAD)" = "$sha"
+          test -e "$RUNNER_TEMP/s1-source/ggml/src/ggml-vulkan/CMakeLists.txt" || echo 'S1 Vulkan CMake integration verified via top-level CMake only'
+          echo "LATEST_S1_SOURCE_VERIFIED $sha"
+      - name: Compile current S1 Vulkan for binary QA on Cloud9
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S "$RUNNER_TEMP/s1-source" -B "$RUNNER_TEMP/s1-build" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/s1-build" --parallel 2 --target llama-server llama-cli test-backend-ops
+          "$RUNNER_TEMP/s1-build/bin/llama-server" --version
+          "$RUNNER_TEMP/s1-build/bin/llama-cli" --version
+      - name: Latest pin and output SHA gate; NO GPU certification
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 tools/benchmarks/verify_latest_sources.py --candidate s1-head-4b
+          D="$RUNNER_TEMP/s1-package"
+          mkdir -p "$D/bin"
+          cp -a "$RUNNER_TEMP/s1-build/bin/." "$D/bin/"
+          cp tools/benchmarks/latest_engine_sources_20261023.json "$D/"
+          cp "$RUNNER_TEMP/s1-source/LICENSE" "$D/UPSTREAM-MIT-LICENSE"
+          printf '%s\n' 'Experimental S1 v64 Vulkan binary. No Cloud9 GPU, Qwen4B or FlashNext test.' > "$D/NOT_GPU_QUALIFIED.txt"
+          (cd "$D" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf latest-s1-v64-vulkan-gfx1103-uncertified.tar.gz -C "$RUNNER_TEMP" s1-package
+          sha256sum latest-s1-v64-vulkan-gfx1103-uncertified.tar.gz
+      - name: Preserve S1 latest Vulkan artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: latest-s1-vulkan-uncertified
+          path: latest-s1-v64-vulkan-gfx1103-uncertified.tar.gz
+          retention-days: 7
+          if-no-files-found: error

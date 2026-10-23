@@ -14,7 +14,7 @@ class LatestOnly(unittest.TestCase):
   self.assertEqual(r['atomic']['release_tag'],'b10298-2.0.0')
  def test_strict_commit_and_patch_manifest(self):
   r=self.d['github_repositories']
-  for k in ('rdna','upstream','prism','atomic'):
+  for k in ('rdna','upstream','prism','atomic','s1'):
    v=r[k]; self.assertRegex(v.get('commit',v.get('release_commit','')),r'^[0-9a-f]{40}$')
   self.assertEqual(len(r['rdna']['patch_sha256']),14)
   self.assertRegex(r['rdna']['expected_tree'],r'^[0-9a-f]{40}$')
@@ -40,11 +40,12 @@ class LatestOnly(unittest.TestCase):
     elif 'AtomicBot-ai' in path:key='atomic'
     elif 'ggml-org' in path:key='upstream'
     elif 'PrismML-Eng' in path:key='prism'
+    elif 'vahpetr' in path:key='s1'
     else:raise AssertionError('UNKNOWN_ENDPOINT '+path)
     v=self.d['github_repositories'][key]
     if path.endswith('/releases/latest'):return {'tag_name':v['release_tag']}
     return {'object':{'type':'commit','sha':v.get('release_commit',v.get('commit'))}}
-  for name in ('atomic4b','rdna-r114-hip-4b','upstream-master-4b','prism-head-4b'):
+  for name in ('atomic4b','rdna-r114-hip-4b','upstream-master-4b','prism-head-4b','s1-head-4b'):
    self.assertIn(name,mod.LATEST_ONLY_CANDIDATES)
    self.assertEqual(mod.validate_latest_only(name,live_api=api,_test_skip_binary_sha=True)['source_date'],'2026-10-23')
   with self.assertRaisesRegex(AssertionError,'RETIRED_ENGINE_GPU_TEST_DENIED'):
