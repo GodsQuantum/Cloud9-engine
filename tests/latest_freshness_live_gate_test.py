@@ -19,6 +19,7 @@ def snapshot(path):
     elif 'Niko1221' in path: k='strata'
     elif 'ggml-org' in path: k='upstream'
     elif 'PrismML-Eng' in path: k='prism'
+    elif 'vahpetr' in path: k='s1'
     else: raise AssertionError('Unexpected API endpoint: '+path)
     entry = manifest['github_repositories'][k]
     if path.endswith('/releases/latest'):
@@ -31,8 +32,8 @@ def snapshot(path):
 class LiveFreshnessGate(unittest.TestCase):
     def test_all_five_sources_current(self):
         results=mod.verify_all(manifest,snapshot)
-        self.assertEqual(len(results),5)
-        self.assertEqual({x['source'] for x in results},{'rdna','upstream','prism','atomic','strata'})
+        self.assertEqual(len(results),6)
+        self.assertEqual({x['source'] for x in results},{'rdna','upstream','prism','atomic','strata','s1'})
 
     def test_current_candidate_verified_live(self):
         entry=mod.verify_candidate('rdna-r114-hip-4b',manifest,snapshot)

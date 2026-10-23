@@ -53,6 +53,13 @@
       "release_tag": "v0.2.2",
       "release_published_utc": "2026-10-21T11:10:21Z",
       "gpu_benchmark_certified": false
+    },
+    "s1": {
+      "repository": "https://github.com/vahpetr/llama.cpp-s1-fork.git",
+      "branch": "s1-public",
+      "commit": "28316b0e6658ae57575d557dcf41ba09836ceb71",
+      "gpu_benchmark_certified": false,
+      "provenance": "S1 v64 current branch head; Vulkan coopmat/GDN/QSA/MTP donor; originally Strix Halo gfx1151; Cloud9 gfx1103 not yet qualified."
     }
   },
   "source_date": "2026-10-23",
@@ -67,7 +74,8 @@
     "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
     "upstream-master-4b": "ac9655c655cdda6ebce2d09749aa28f32523ac565705c37e913bda551a873e66",
     "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
-    "rdna-r114-hip-4b": null
+    "rdna-r114-hip-4b": null,
+    "s1-head-4b": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification."
 }

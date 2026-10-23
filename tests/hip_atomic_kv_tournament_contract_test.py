@@ -23,7 +23,7 @@ class HybridCandidateSafety(unittest.TestCase):
         cls.module = load()
 
     def test_same_weights_between_all_four_engines(self):
-        names = ("atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v", "b11798-4b", "rdna-r111-vulkan-4b", "rdna-r111-hip-4b")
+        names = ("atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v", "b11798-4b", "rdna-r111-vulkan-4b", "rdna-r111-hip-4b", "s1-head-4b")
         specs = [self.module.CANDIDATES[name] for name in names]
         self.assertEqual(len({str(s["model"]) for s in specs}), 1)
         self.assertEqual({s["expected_bytes"] for s in specs}, {2790000800})
