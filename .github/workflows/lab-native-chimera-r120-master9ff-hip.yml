@@ -42,10 +42,11 @@ jobs:
           python3 - <<'PY'
           import json
           m=json.load(open('tools/chimera/native-mmb-r120-on-latest9ff.json'))
-          l=json.load(open('tools/benchmarks/latest_engine_sources_20261023.json'))
-          assert m['base']['commit']==l['github_repositories']['upstream']['commit']
-          assert m['donor']['commit']==l['github_repositories']['rdna']['release_commit']
-          assert m['donor']['release_tag']==l['github_repositories']['rdna']['release_tag']
+          # The 062 manifest is a historical benchmark artifact, NOT this 9ff source lock.
+          assert m['base']['commit']=='9ff0d7e90f0faaa7c16017e6dcf9cf91c50a100e'
+          assert m['base']['tree']=='60bf42018da47404b7260ee2bebd108b6c1b511f'
+          assert m['donor']['commit']=='ece2d7531b8630413770f61db46ff0700e6a8999'
+          assert m['donor']['release_tag']=='v14-097cf33d9-r120'
           # The immutable source gate applies even after a previous successful build.
           # Never reject a valid rebuild merely because CI already certified compilation.
           print('ONLY_NEWEST_SOURCE_LOCKS_MATCH')

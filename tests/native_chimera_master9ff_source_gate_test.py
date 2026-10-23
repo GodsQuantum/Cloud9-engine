@@ -33,6 +33,7 @@ class NativeChimeraMaster9ffContract(unittest.TestCase):
 
     def test_locked_ci_no_false_gpu_certification(self):
         self.assertIn('UPSTREAM_MOVED_REPIN_REQUIRED', self.ci)
+        self.assertNotIn("json.load(open('tools/benchmarks/latest_engine_sources_20261023.json'))", self.ci)
         self.assertIn('RDNA_DONOR_MOVED_REPIN_REQUIRED', self.ci)
         self.assertIn('-DGGML_HIP=ON', self.ci)
         self.assertIn('GPU_TARGETS=gfx1103', self.ci)
