@@ -33,7 +33,7 @@
     "upstream": {
       "repository": "https://github.com/ggml-org/llama.cpp.git",
       "branch": "master",
-      "commit": "36e36e63a54fc8f85b95e9c499a022b597e478dd",
+      "commit": "da2ee1e7a640445fc562fe5529598cee1917e0f5",
       "gpu_benchmark_certified": false
     },
     "prism": {
@@ -82,10 +82,10 @@
     "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
     "upstream-master-4b": null,
     "rdna-r120-hip-4b": null,
-    "upstream-36e-hip-4b": null,
-    "chimera-36e-mmb-off": null,
-    "chimera-36e-mmb-on": null,
-    "chimera-36e-mmb-mmf32": null
+    "upstream-da2-hip-4b": null,
+    "chimera-da2-mmb-off": null,
+    "chimera-da2-mmb-on": null,
+    "chimera-da2-mmb-mmf32": null
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
@@ -102,5 +102,6 @@
   "notes_native_mmb_r118_rebuild": "r118 MMB block06 exact source same as r117; new r118 pinned CI artifact NOT YET compiled/verified, old e987022... remains historical pending fresh r118 AB sha.",
   "notes_upstream_4231": "Official HEAD 4231b23 after f502: only ggml/src/ggml.c time-us overflow and CI, not HIP kernels. All latest-only LAB candidates repinned, old f502 hashes historical. Full RDNA r118 donor release independent of upstream HEAD; patch06 on new 4231 produces tree 2e7bdc4c447c48759e8ba0a5eae8c82d81a27e40.",
   "notes_upstream4231_current_vulkan_4b": "GitHub workflow 39958281197 SUCCESS, 12 original archive ELF hashes PASS and archive SHA bce39a4a2e6e10bf35726b304e0c331e46340203f8a8680c20542c21aad65819; relocated CT700 server --version PASS; current standalone upstream source 4231 binary 2c998e676af30d4efb648f0682a740ab6810da613b16411e571eb99b9cf6bb27. Real GPU short CLI 34.2 tok/s, longer 90-line prompt PP473.7 TG31.7, API4 median TG37.7 tok/s 3/4 quality; final canonical 36x3 QA pending. Independent rdna latest r119 release does NOT invalidate pinned standalone upstream 4231 source, but all-source CI requires separate RDNA repin before green.",
-  "notes_20261023_1728": "Host real 36/36 upstream4231 Vulkan completed at 15:53 as historical and was superior vs production catalog on one long-prompt test but code accuracy 0/9. At 17:22 official newest upstream36e and RDNA r120, signed tag peeled commit ece2; all current candidates invalidated pending fresh compile and identical GPU QA. RDNA block06 diff body identical r118 but donor block09 updated host-resident MoE. Archived r118/4231 binaries kept for evidence; no promotion without exact current candidate and comparable 16K prod baseline."
+  "notes_20261023_1728": "Host real 36/36 upstream4231 Vulkan completed at 15:53 as historical and was superior vs production catalog on one long-prompt test but code accuracy 0/9. At 17:22 official newest upstream36e and RDNA r120, signed tag peeled commit ece2; all current candidates invalidated pending fresh compile and identical GPU QA. RDNA block06 diff body identical r118 but donor block09 updated host-resident MoE. Archived r118/4231 binaries kept for evidence; no promotion without exact current candidate and comparable 16K prod baseline.",
+  "notes_upstream_da2": "Official HEAD da2ee1e (2026-10-23) +2 commits after 36e: CUDA graph chunking #30804 modifies ggml-cuda.cu/common.cuh, vendor LibreSSL 4.4.0. Latest r120 patch06 reapplied natively onto master da2 resulting Git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. All old 36e GPU artifacts historical; new Vulkan/HIP binaries null until Github Actions completed and verified."
 }

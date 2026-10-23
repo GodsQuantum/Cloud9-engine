@@ -4,8 +4,8 @@
   "base": {
     "repo": "ggml-org/llama.cpp",
     "branch": "master",
-    "commit": "36e36e63a54fc8f85b95e9c499a022b597e478dd",
-    "tree": "381c4884c38e02cd30f2b427f2afa786710618b4"
+    "commit": "da2ee1e7a640445fc562fe5529598cee1917e0f5",
+    "tree": "5f918164f8f419f96e2c3efd38dedf22a6fff001"
   },
   "donor": {
     "repo": "stew675/llama-cpp-rdna-boosts",
@@ -16,8 +16,8 @@
   },
   "port": {
     "mode": "git apply --exclude=tests/CMakeLists.txt to latest upstream",
-    "resulting_tree": "36737065c11f9d5206c578b16683ce53f2c4feb6",
-    "source_commit_local": "0b45e4c4c9484931645da551bb7fe0efe8e66101",
+    "resulting_tree": "7e1d84012fe899901b1e282a2e8d902848c99a0c",
+    "source_commit_local": "dd905d8c03602465e5797ceee22faa3ba3a34b03",
     "files_ported": 6,
     "libraries": "MIT llama.cpp (ggml authors) + MIT RDNA Boosts (stew675)",
     "feature": "MMB quantized prefill and MMF32 deterministic F32 projection kernels",
@@ -30,10 +30,10 @@
     },
     "same_source_code_as_r113": "Compared block06 patches line-by-line: only the initial email From hash changes in r114; all diff --git sections are byte-identical and resulting patched Git tree is unchanged.",
     "same_source_code_as_r114": "RDNA block06 patch body is exactly identical in r114 and r115 (only email From changes). Ported independently onto upstream HEAD1ab and validated target Git tree.",
-    "source_change_note": "New upstream HEAD36e plus r120 MMB patch06 applied cleanly. r120 donor block06 diff body equals r118, but r120 host-resident MoE block09 changed. Full MTP block02 remains absent in native MMB-only chimera.",
+    "source_change_note": "Current upstream da2 CUDA graph chunking / LibreSSL + latest r120 patch06 applied without conflicts. Full r120 MTP patch02 and MoE patch09 NOT included in this native MMB-only chimera.",
     "latest_r117_byte_identity": "Proof: r117 block06 diff --git onward exactly equals r116; independent port onto latest upstream f502 yields identical tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. ABI artifact built with r116 patch06 remains same native source code, do not claim full r117 RDNA kernel coverage.",
     "latest_r118_byte_identity": "r118 official block06 diff --git body byte-identical r117; independent git apply onto master f502 yields exact same tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. MTP block02 changed in r118 and is NOT ported by this kernel-only chimera; upstream f502 patch02 fails clean apply and requires manual engineering.",
-    "latest_r120_byte_identity": "r120 patch06 diff --git body byte-identical r118; ported on current upstream36e and Git tree 36737065c11f9d5206c578b16683ce53f2c4feb6; MTP tail block02 remains a separate full fork feature."
+    "latest_r120_byte_identity": "r120 patch06 same donor as previous 36e port; latest upstream da2 with CUDA graph chunking yields new git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. MTP tail block02 remains a separate full fork feature."
   },
   "qualification": {
     "compile": false,
