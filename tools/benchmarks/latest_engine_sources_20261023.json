@@ -82,10 +82,11 @@
     "chimera-f502-mmb-off": null,
     "chimera-f502-mmb-on": null,
     "chimera-f502-mmb-mmf32": null,
-    "upstream-master-4b": null
+    "upstream-master-4b": "9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c"
   },
   "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
   "notes_upstream_f64a_artifact": "GitHub Actions success #39913390476, artifact SHA eee8ef96d8994b979a3a1928f2dcd3f511f58c62435d5d6df30c0e27b7a1f002. 12 ELF files precheck sha pass, 11 RPATH $ORIGIN relocation, CLI/server --version PASS b11835 commitf64a49819; NOT GPU-qualified.",
-  "latest_native_chimera_ablation_policy": "3 isolated MMB/MMF32 env variants on same newest native HIP ELF plus exact newest upstream HIP baseline. Both latest donor r115 and trunk f64a live-attested for each hybrid. All blocked until official SHA pinned/CT410 GPU guard allows."
+  "latest_native_chimera_ablation_policy": "3 isolated MMB/MMF32 env variants on same newest native HIP ELF plus exact newest upstream HIP baseline. Both latest donor r115 and trunk f64a live-attested for each hybrid. All blocked until official SHA pinned/CT410 GPU guard allows.",
+  "notes_latest_upstream_f502_artifact": "GitHub Actions #39927540493 SUCCESS 2026-10-23; pinned source f5027fb; artifact sha256 8499087d28aeac9b427e56daa5bdb150bae35c15ee482b34148da1ef652ba46a; archive safe extracted, 12 ELF validated against upstream SHA256SUMS, 11 RPATH relocated, llama-server and CLI --version PASS build11836; server binary sha256 9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c; GPU test STILL PENDING."
 }
