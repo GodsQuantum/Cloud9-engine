@@ -1,5 +1,12 @@
 name: LAB Cloud9 NextN Scheduler Reserve A-B Candidate (Vulkan)
 on:
+  push:
+    branches:
+      - lab/20261022-one-engine-qualification
+    paths:
+      - .github/workflows/lab-chimera-nextn-vulkan-ab.yml
+      - tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch
+      - tests/chimera_nextn_revert_lab_test.py
   workflow_dispatch:
 permissions:
   contents: read
