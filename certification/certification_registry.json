@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "product": "GodsQuantum/Cloud9-engine on Cloud9 Radeon780M gfx1103",
+  "as_of": "2026-10-25",
+  "principle": "NEVER invalidate or re-run a historic proof without a specific changed engine/weight/backend/quant/context risk; a source CI pass is not GPU model certification",
+  "canonical_hall_of_fame": "HALL_OF_FAME.json",
+  "hall_record_count_at_audit": 190,
+  "engine_current_id": "Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB",
+  "engine_current_sha256": "2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262",
+  "catalog_sha256": "82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288",
+  "historic_proofs_not_current_build_certification": [
+    "C01",
+    "C02",
+    "C03"
+  ],
+  "current_narrow_proofs": [
+    "C04",
+    "C05",
+    "C06",
+    "C07"
+  ],
+  "minimum_production_path": [
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C14",
+    "C15"
+  ],
+  "full_product_path": [
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C15"
+  ],
+  "status_legend": {
+    "HISTORICAL_VALID": "evidence valid on old exact engine, reusable workload not transferable release",
+    "CURRENT_PASS_LIMITED": "current build/service passed narrow test only",
+    "PARTIAL": "some evidence but criteria not complete",
+    "BLOCKED_RESOURCE": "not safe to run until memory/IO recovered",
+    "NOT_RUN": "not executed on current scope"
+  },
+  "gates": [
+    {
+      "id": "C01",
+      "title": "Historique: noyau Vulkan MUL_MAT_ID 921/921",
+      "status": "HISTORICAL_VALID",
+      "scope": "Cloud9 Engine 534cda00; NOT current master9ae chimera",
+      "evidence": [
+        {
+          "project_path": "Cloud9 Engine/docs/benchmarks.md",
+          "sha256": "15acfa78a5cd8cbf1310006ec8a0c0603c64c8ab1071d895eb7574196e5eaea8",
+          "note": "921/921 shader/backend tests old engine"
+        }
+      ],
+      "remaining": "Do not re-run old 921 cases unless exact kernel touched",
+      "acceptance": "Historic proof stays pinned to old engine and SHA",
+      "measured": {
+        "kernel_correctness_cases_passed": 921,
+        "cases_total": 921,
+        "runtime": "2026-09-16 old Cloud9 engine",
+        "limitations": "Old 534cda kernel only"
+      }
+    },
+    {
+      "id": "C02",
+      "title": "Historique: cinq aiguilles 8K réelles 3/3",
+      "status": "HISTORICAL_VALID",
+      "scope": "Atomic TurboQuant 2.0.0 Qwen4 Q4_K_M Vulkan Q8K Turbo3V",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-8192-reps3.json",
+          "sha256": "d764aa5749cdaf5ee12cb295ef5f2890e34145df351712930cdda03788a97f65",
+          "note": "8026 prompt tokens, five position retrieval 3/3"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-22_1127_ATOMIC_TURBO3_4B_MTP2_NEEDLE5_GUARDED.log",
+          "sha256": "79a38b0c1148b226c5079092c2ea44926f3d60714a288bb19d1b69fec964a3ff",
+          "note": "historical original log"
+        }
+      ],
+      "remaining": "Only port fixture to current chimera; never rebuild the historic test",
+      "acceptance": "5 markers retrieved with same or stronger protocol on current master9ae",
+      "measured": {
+        "prompt_tokens_consumed": 8026,
+        "five_markers_exact_retrieval": "3/3",
+        "engine": "Atomic TurboQuant 2.0.0"
+      }
+    },
+    {
+      "id": "C03",
+      "title": "Historique: cinq aiguilles 16K réelles 3/3",
+      "status": "HISTORICAL_VALID",
+      "scope": "Atomic TurboQuant 2.0.0 Qwen4 Q4_K_M Vulkan Q8K Turbo3V",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-16384-reps3.json",
+          "sha256": "e4fd8c4bea478652185be8661c41651f10dc6a8c0718844c42cff0dc303be4fa",
+          "note": "16330 prompt tokens, five position retrieval 3/3"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-22_1131_ATOMIC_TURBO3_4B_MTP2_NEEDLE5_16K_GUARDED.log",
+          "sha256": "656840fbd3d4e88b031335e862b552620c849ceb08166be1836fb12222649b37",
+          "note": "historical original log"
+        }
+      ],
+      "remaining": "Only certify current chimera relevant context; keep 16330-token source benchmark",
+      "acceptance": "current chimera 8K/16K full effective context with markers, no truncation",
+      "measured": {
+        "prompt_tokens_consumed": 16330,
+        "five_markers_exact_retrieval": "3/3",
+        "engine": "Atomic TurboQuant 2.0.0"
+      }
+    },
+    {
+      "id": "C04",
+      "title": "CI chimera native MMB MTP Turbo source / backend guard",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "Cloud9 chimera master9ae source Vulkan/HIP CPU build, NOT GPU TurboQuant",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "202 local Python tests, Vulkan usable, Turbo backend protection"
+        }
+      ],
+      "remaining": "Need separate GPU Turbo K/V validation before claim TurboQuant runtime production",
+      "acceptance": "native build and guard remain green; no untested backend activation",
+      "measured": {
+        "python_tests_passed": 202,
+        "ci": "last relevant CI success 5cf4e66; newest b855a12 in progress during audit"
+      }
+    },
+    {
+      "id": "C05",
+      "title": "CT410 router safe nonpreemptive, stable services",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "active 2026-10-25 CT410 guarded 9-model catalog; only one worker",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "router hash 2ce83aed, official GPU guard, VoiceStudio Speaches AutoSubs preserved"
+        }
+      ],
+      "remaining": "Prove stress and crash recovery and no interruptions under concurrent agent traffic",
+      "acceptance": "workload cannot stop embeddings, AutoSubs, VoiceStudio, Speaches or PBS"
+    },
+    {
+      "id": "C06",
+      "title": "Chimera native Qwen4 real GPU 2K + strict read-only tool",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "opt-in Qwen4 Q4_K_M, MTP draft, Vulkan, f16 KV, ctx2048, threads6 batch256",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/Chimera_optional_native_router_after_tuning.json",
+          "sha256": "5eda99f010e92f3ef14c62e291f93a8bc1884ab13a29c5f13714ab1fe6b71277",
+          "note": "32 generated @33.7565 tok/s; one strict Proxmox tool, 5.369s cold"
+        }
+      ],
+      "remaining": "Tool quality is only 1 case; incorrect technical suggestions in chat observed",
+      "acceptance": "repeatable matched live QA without regression and with proper args",
+      "measured": {
+        "decode_tps": 33.756523992721654,
+        "prefill_tps": 394.8046352198254,
+        "wall_seconds": 5.369,
+        "strict_tool_correct": "1/1"
+      }
+    },
+    {
+      "id": "C07",
+      "title": "OpenBMB MiniCPM5+DSpark live speed and tool",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "MiniCPM5-2B Heretic derivative Q6_K and separate DSpark 2.6B, ctx16384 in catalog",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/OpenBMB_MiniCPM5_2B_DSpark_real_decode.json",
+          "sha256": "ff7957d134f361480660075d3be873d8be9663f99df202e42ae5bb9c8eba3333",
+          "note": "137 tokens @22.1551 tok/s, NOT historic 47.73"
+        },
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/OpenBMB_MiniCPM5_2B_agentic_guarded.json",
+          "sha256": "c637caf5f8f930c9a91110f4e411eccc1e27dba9cfe0427da91378d091c9c6da",
+          "note": "one correct tool case, stopped by PSI"
+        }
+      ],
+      "remaining": "Not 3/3 scenario suite nor untouched OpenBMB weights",
+      "acceptance": "role-specific tool/extraction thresholds with same weights",
+      "measured": {
+        "decode_tps": 22.155087239728633,
+        "tool_strict_correct": "1/1",
+        "historical_catalog_decode_tps_not_repeated": 47.73
+      }
+    },
+    {
+      "id": "C08",
+      "title": "Current chimera long effective context 8K 16K and maximum useful",
+      "status": "NOT_RUN",
+      "scope": "current master9ae; historical Atomic 8K/16K proofs C02/C03 reusable as protocol",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-16384-reps3.json",
+          "sha256": "e4fd8c4bea478652185be8661c41651f10dc6a8c0718844c42cff0dc303be4fa",
+          "note": "reusable existing fixture"
+        }
+      ],
+      "remaining": "Port fixture and run on current chimera at 8K,16K then stretch to 32/64/128K+ only if supported and safe",
+      "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed"
+    },
+    {
+      "id": "C09",
+      "title": "Functional agentic JSON tools coding and French regression",
+      "status": "PARTIAL",
+      "scope": "new chimera has 1/1 correct read-only tool, older engine has distinct 36-case trials",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/Chimera_optional_native_router_after_tuning.json",
+          "sha256": "5eda99f010e92f3ef14c62e291f93a8bc1884ab13a29c5f13714ab1fe6b71277",
+          "note": "single strict read-only tool PASS"
+        }
+      ],
+      "remaining": "Complete existing 12 fixtures x 3, add strict code patch/JS YAML JSON negative/adversarial and FR checks",
+      "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption"
+    },
+    {
+      "id": "C10",
+      "title": "Multi-agent concurrency and performance envelope",
+      "status": "NOT_RUN",
+      "scope": "current native router and experimental Qwen4 chimera, 1 active model-worker",
+      "evidence": [],
+      "remaining": "Existing server cannot simply be called multiworker; benchmark slots 1/2/4 and use real router queue/reloads; native llama server supports parallel decoding",
+      "acceptance": "p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls"
+    },
+    {
+      "id": "C11",
+      "title": "Host memory/GPU sharing/PBS stability reboot proof",
+      "status": "BLOCKED_RESOURCE",
+      "scope": "Cloud9 92GiB, 19.5GiB zram near full, runtime ZFS ARC4.5GiB not boot-persistent",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "temporary ARC guard and swap constraints"
+        }
+      ],
+      "remaining": "Root cause high swap+IO PSI, set tested persistent memory policy without forcing cache drop/swapoff or reboot without warning",
+      "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
+    },
+    {
+      "id": "C12",
+      "title": "Feature speed parity and Turbo KV real backend GPU",
+      "status": "NOT_RUN",
+      "scope": "MMB MTP TurboQuant mixed; current f16 KV only",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "real chimera Vulkan GPU 33.7565 t/s, Turbo GPU not certified"
+        }
+      ],
+      "remaining": "Compare same GGUF, prompts, quant, context+flags and MTP on/off with upstream; GPU KV Turbo3 Q/V is blocked until numerical+accuracy correct; no fake win",
+      "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
+    },
+    {
+      "id": "C13",
+      "title": "Four role-selected models and FlashNext >20 t/s",
+      "status": "PARTIAL",
+      "scope": "old catalog 8 small+large; Qwen4/miniCPM real; FlashNext still historic 17.878",
+      "evidence": [
+        {
+          "project_path": "Sources/Records/BENCHMARK_LEDGER.jsonl",
+          "sha256": "a57072c3493d80eaba1180e11149201b9352b72e6f1a29e13ff98f7f850f2762",
+          "note": "historic FlashNext 17.878 and older candidates"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "current selected Qwen4 / OpenBMB"
+        }
+      ],
+      "remaining": "Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4",
+      "acceptance": "per role latency, quality and useful context proven on the target device"
+    },
+    {
+      "id": "C14",
+      "title": "OmniRoute Dify n8n Paperclip end-to-end",
+      "status": "PARTIAL",
+      "scope": "OmniRoute provider active; combo unchanged, no agent-level end-to-end tests",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_LOCAL_AGENTS_READINESS_OMNIROUTE_NATIVE.md",
+          "sha256": "a83ce191d08b110433dfe77b5943b165e318b69a1ef24d11dd114a6d0f288c4b",
+          "note": "active native provider 8090 and 4-small-model Cloud9-Engine combo"
+        }
+      ],
+      "remaining": "Test Dify/n8n/Paperclip agents in read-only realistic tasks, 2 separate identities/profile constraints; ensure no repeated model switch",
+      "acceptance": "real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges"
+    },
+    {
+      "id": "C15",
+      "title": "Controlled v1 release default / rollback and live monitoring",
+      "status": "NOT_RUN",
+      "scope": "experimental chimera deliberately opt-in LAB only",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "versioned optional release and pre-change backup"
+        }
+      ],
+      "remaining": "Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning",
+      "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
+    }
+  ],
+  "hall_recent_record_ids": [
+    "2026-10-25:cloud9-native-chimera-master9ae-vulkan:Qwen4-2K-native-strict-tool",
+    "2026-10-25:openbmb-minicpm5-2b-heretic-Q6K-dspark:live137tokens"
+  ],
+  "source_integrity_update": "HALL_OF_FAME.json was appended via existing native --append-stdin, validated 190 records/1342 evidence; no old record overwritten."
+}
