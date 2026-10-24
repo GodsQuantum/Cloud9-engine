@@ -1,0 +1,33 @@
+name: Cloud9 Evidence and Handoff
+
+on:
+  push:
+    branches:
+      - main
+      - lab/**
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  certification-provenance:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout with two commits for update validation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+      - name: Validate immutable certification proof registry and generated handoff
+        run: |
+          python3 -B tools/qualification/check_proof_registry.py --check
+          python3 -B -m unittest discover -s tests -p "certification_provenance_test.py" -q
+      - name: Require evidence/handoff update alongside engine or test changes
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            python3 -B tools/qualification/check_commit_sync.py
+          fi

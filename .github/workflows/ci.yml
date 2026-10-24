@@ -13,6 +13,29 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Dependencies
         run: sudo apt-get update && sudo apt-get install -y shellcheck cmake ninja-build ccache libvulkan-dev glslc spirv-headers
+      # Repo CI validates pinned source contracts, tests and reproducible builds.
+      # Historical pin drift is reported, not mistaken for a broken codebase.
+      # Candidate workflows retain independent fail-closed source freshness gates.
+      - name: Audit live source freshness (advisory; candidate gates fail closed)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python3 tools/benchmarks/verify_latest_sources.py --all > "$RUNNER_TEMP/live-sources-audit.txt" 2>&1; then
+            echo "ALL_HISTORICAL_SOURCE_PINS_CURRENT"
+            cat "$RUNNER_TEMP/live-sources-audit.txt"
+          else
+            rc=$?
+            echo "::warning title=Historical source pin drift::Live source audit exit $rc; previous compiled artifacts remain immutable and cannot be promoted without requalification."
+            cat "$RUNNER_TEMP/live-sources-audit.txt"
+            {
+              echo '## Source freshness is advisory for repository CI'
+              echo 'A historical candidate pin is stale or not verifiable. Candidate build/promotion gates remain fail-closed.'
+              echo 'Live source audit result follows:'
+              sed 's/^/    /' "$RUNNER_TEMP/live-sources-audit.txt"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Static checks
         run: |
           python3 -m json.tool sources.lock >/dev/null
@@ -25,6 +48,30 @@ jobs:
           python3 -B tests/model-specialty-contract-test.py
           python3 -B tests/backend-release-gate-test.py
           python3 -B tests/turboquant_kv_gate_test.py
+          python3 -B tests/single_engine_rank_test.py
+          python3 -B tests/benchmark_protocol_safety_test.py
+          python3 -B tests/resumable_quality_evidence_test.py
+          python3 -B tests/rdna_source_lock_contract_test.py
+          python3 -B tests/flashnext_ad427_manifest_test.py
+          python3 -B tests/quality_protocol_contract_test.py
+          python3 -B tests/flashnext_gguf_preflight_test.py
+          python3 -B tests/hip_atomic_kv_tournament_contract_test.py
+          python3 -B tests/latest_only_source_lock_test.py
+          python3 -B tests/latest_freshness_live_gate_test.py
+          python3 -B tests/native_chimera_mmb_source_gate_test.py
+          python3 -B tests/s1_latest_source_gate_test.py
+          python3 -B tests/upstream_hip_baseline_contract_test.py
+          python3 -B tests/upstream_current_vulkan_baseline_contract_test.py
+          python3 -B tests/native_chimera_ablation_gate_test.py
+          python3 -B tests/rdna_r120_mtp_tail_source_gate_test.py
+          python3 -B tests/cloud9_memory_pressure_profiler_test.py
+          python3 -B tests/cloud9_prod4b_exact16k_ab_test.py
+          python3 -B tests/current_lab_artifact_paths_test.py
+          python3 -B tests/native_chimera_master9ff_source_gate_test.py
+          python3 -B tests/upstream_master9ff_vulkan_lock_test.py
+          python3 -B tests/ci_historical_pins_advisory_test.py
+          python3 -B tests/cloud9_prod4b_exact16k_ct410_tournament_test.py
+          python3 -m py_compile tools/benchmarks/*.py
       - name: Apply Cloud9 patchset to locked upstream
         run: |
           UP_REPO=$(python3 -c 'import json; print(json.load(open("sources.lock"))["upstream"]["repository"])')

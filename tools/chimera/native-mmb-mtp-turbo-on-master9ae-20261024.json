@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "kind": "LAB_SOURCE_CHIMERA_MMB_MTP_TURBOQUANT_VULKAN_NOT_PRODUCTION",
+  "date": "2026-10-24",
+  "base": {
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "commit": "9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2",
+    "tree": "3be23ccb41236df3d19222de88805d6e32e67b6e"
+  },
+  "donor_rdna": {
+    "repository": "https://github.com/stew675/llama-cpp-rdna-boosts",
+    "commit": "ece2d7531b8630413770f61db46ff0700e6a8999",
+    "release": "v14-097cf33d9-r120",
+    "patches": [
+      {
+        "feature": "mmb",
+        "sha256": "3d98feb0cd211ee5e8cb5919023c04f9a298e7f9f2be422541552fa93be039c2",
+        "upstream_donor_file": "patches/0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch"
+      },
+      {
+        "feature": "mtp-prompt-tail",
+        "sha256": "a4d1e996e4775d5b7723d5d5467cae0e18331fd8d909b87461676ef5faee8e19",
+        "upstream_donor_file": "archive/work/mtp-prefill-tail/0001-speculative-LLAMA_MTP_INGEST_TAIL-tokens-feeds-the-M.patch"
+      },
+      {
+        "feature": "mtp-copy-last-row",
+        "sha256": "2202a393e1887829724ab60db03639c9a7f35df82eaa0ecb7ecaccee2869f15b",
+        "upstream_donor_file": "archive/work/mtp-prefill-tail/0002-speculative-draft_mtp-copies-only-the-last-target-ro.patch"
+      },
+      {
+        "feature": "mtp-tail-no-readback",
+        "sha256": "de9b7eaef5926d8f1f9c6ede54b800456a170e942fc3c4a6052d3951a588e05b",
+        "upstream_donor_file": "archive/work/mtp-tail-readback/0001-MTP-prompt-tail-no-target-nextn-readback-or-hook-syn.patch"
+      }
+    ]
+  },
+  "donor_atomic": "Cloud9 Engine legacy upstream TurboQuant3/4 native port (Sep 2026); Atomic TurboQuant stable2 cda0f92 has additional types and kernels NOT merged",
+  "donor_atomic_patches": [
+    {
+      "source": "0001-cloud9-port-TurboQuant3-4-core-types-onto-upstream-8.patch",
+      "sha256": "7517c88f85ecd306418bc8949ead9fbaff8c69fba7c02626a632a29b2fa34403",
+      "bytes": 24959
+    },
+    {
+      "source": "0002-cloud9-complete-TurboQuant-CPU-core-and-upstream-nat.patch",
+      "sha256": "a1f952d47139f79114782f250676753d6f9a8802dc7cc8263707fd8d44fb7a51",
+      "bytes": 64098
+    },
+    {
+      "source": "0003-cloud9-add-correct-Vulkan-TurboQuant-SET_ROWS.patch",
+      "sha256": "e9fc54416e76202239e90dbb31b8855016fc97965ea6ab1d0ba901781b9d9b44",
+      "bytes": 26352
+    },
+    {
+      "source": "0004-cloud9-enable-Vulkan-FlashAttention-for-TurboQuant-K.patch",
+      "sha256": "9b794635f790eba62e174af799a7cb07611ed7bbd98bef40a5a59a3e90b0e27f",
+      "bytes": 7077
+    },
+    {
+      "source": "0005-cloud9-teach-llama-bench-TurboQuant-KV-cache-types.patch",
+      "sha256": "f0f952540271ffebe216be3dd1232900d5cd798c7fb2ffecc0b574dfda2efe78",
+      "bytes": 1890
+    },
+    {
+      "source": "0006-test-gate-Cloud9-TurboQuant-upstream-port.patch",
+      "sha256": "77bf9f85a5f3cdaa9e42cf55421ab9b7e6a2fe3184568a12d3c59ab5a6dcfa82",
+      "bytes": 1484
+    },
+    {
+      "source": "0007-fix-preserve-upstream-token-history-after-TurboQuant.patch",
+      "sha256": "0c0c278930cf2a12d480cc8be25accbf95a0622aa60debf988d4673b55113e12",
+      "bytes": 933
+    },
+    {
+      "source": "0008-cloud9-tune-RDNA3-UMA-Vulkan-MMID-for-sparse-MoE.patch",
+      "sha256": "07c29ffd1207f0c5696cfb842ec76752561c64114a7aa3726b92e72400ebe385",
+      "bytes": 3848
+    }
+  ],
+  "port": {
+    "patch": "tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-turbo-native.patch",
+    "patch_sha256": "78963e52ad075b6692c89d37120318ace60fb608277c15fd629e2ff4e225c596",
+    "resulting_tree": "e5a7c5726b7c136e2933bae6c21ac27540b16d5b",
+    "files_changed": 42
+  },
+  "features": [
+    "MMB RDNA r120",
+    "MMF32 opt-in",
+    "MTP prompt-tail + NextN skip",
+    "Turbo2/3/4 KV WHT core",
+    "TurboQuant CPU quant functions",
+    "Vulkan SET_ROWS and FlashAttention for TurboQuant",
+    "RDNA3 UMA Vulkan MMID tuning"
+  ],
+  "rebases": [
+    "manual src/llama-context.cpp NextN async decoder (from parent)",
+    "manual llama-graph.cpp new attention method",
+    "manual llama-impl.h helper after hadamard",
+    "llama-kv-cache.cpp turbo V rotate guard"
+  ],
+  "scope": "TurboQuant3/4 old Cloud9 Vulkan/CPU cache bridge, not full Atomic2 weights nor latest HIP kernels",
+  "qualification": {
+    "source_apply": false,
+    "cpu_compile": false,
+    "vulkan_compile": false,
+    "hip_compile": false,
+    "gpu_test": false,
+    "quality": false,
+    "production": false
+  }
+}

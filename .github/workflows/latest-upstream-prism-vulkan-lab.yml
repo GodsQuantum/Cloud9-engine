@@ -1,0 +1,71 @@
+name: LAB latest upstream and Prism Vulkan
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: latest-vulkan-baselines-lab
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Latest pinned ${{ matrix.source }} Vulkan (GPU-unqualified)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 130
+    strategy:
+      fail-fast: false
+      matrix:
+        source: [upstream, prism]
+    env:
+      SOURCE: ${{ matrix.source }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Vulkan build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build build-essential libnuma-dev libvulkan-dev glslc spirv-headers patchelf
+      - name: Checkout exact newest lab pin and refuse stale branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool tools/benchmarks/latest_engine_sources_20261023.json >/dev/null
+          url=$(python3 -c 'import json,os;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"][os.environ["SOURCE"]]["repository"])')
+          branch=$(python3 -c 'import json,os;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"][os.environ["SOURCE"]]["branch"])')
+          sha=$(python3 -c 'import json,os;print(json.load(open("tools/benchmarks/latest_engine_sources_20261023.json"))["github_repositories"][os.environ["SOURCE"]]["commit"])')
+          current=$(git ls-remote "$url" "refs/heads/$branch" | cut -f1)
+          test "$current" = "$sha" || { echo "LATEST_CHANGED_REPIN_REQUIRED actual=$current expected=$sha"; exit 9; }
+          git clone --filter=blob:none "$url" "$RUNNER_TEMP/latest-engine-source"
+          git -C "$RUNNER_TEMP/latest-engine-source" checkout --detach "$sha"
+          test "$(git -C "$RUNNER_TEMP/latest-engine-source" rev-parse HEAD)" = "$sha"
+          echo "LATEST_SOURCE_PIN_VERIFIED $SOURCE $sha"
+      - name: Compile Vulkan server and CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S "$RUNNER_TEMP/latest-engine-source" -B "$RUNNER_TEMP/build-vulkan" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/build-vulkan" --parallel 2 --target llama-cli llama-server
+          "$RUNNER_TEMP/build-vulkan/bin/llama-server" --version
+          "$RUNNER_TEMP/build-vulkan/bin/llama-cli" --version
+      - name: Package only LAB artifact with SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/package/bin"
+          cp -a "$RUNNER_TEMP/build-vulkan/bin/." "$RUNNER_TEMP/package/bin/"
+          cp tools/benchmarks/latest_engine_sources_20261023.json "$RUNNER_TEMP/package/"
+          printf '%s\n' 'NOT GPU-CERTIFIED; CPU compiled on GitHub Actions; Cloud9 test required' > "$RUNNER_TEMP/package/NO_GPU_CERTIFICATION.txt"
+          (cd "$RUNNER_TEMP/package" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf "latest-${SOURCE}-vulkan-uncertified.tar.gz" -C "$RUNNER_TEMP/package" .
+      - name: Preserve isolated candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: latest-${{ matrix.source }}-vulkan-uncertified
+          path: latest-${{ matrix.source }}-vulkan-uncertified.tar.gz
+          if-no-files-found: error
+          retention-days: 7

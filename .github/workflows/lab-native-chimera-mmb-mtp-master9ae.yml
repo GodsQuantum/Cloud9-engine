@@ -1,0 +1,93 @@
+name: LAB Cloud9 native chimera master9ae MMB plus MTP
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-native-chimera-mmb-mtp-master9ae.yml
+      - tools/chimera/native-mmb-mtp-r120-on-master9ae-20261024.json
+      - tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-native.patch
+      - tools/chimera/verify_native_mmb_mtp_port.py
+      - tests/native_mmb_mtp_merged_source_test.py
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lab-native-mmb-mtp-master9ae
+  cancel-in-progress: false
+jobs:
+  cpu-source-compile:
+    name: Reproduce exact native source tree and compile MTP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Validate source contract
+        run: |
+          set -euo pipefail
+          python3 tools/chimera/verify_native_mmb_mtp_port.py
+          python3 -m unittest discover -s tests -p native_mmb_mtp_merged_source_test.py -v
+      - name: Fetch exact upstream HEAD and apply native merged port
+        run: |
+          set -euo pipefail
+          git clone -q --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/native"
+          git -C "$RUNNER_TEMP/native" fetch -q --depth 1 origin 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          git -C "$RUNNER_TEMP/native" checkout -q --detach 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          python3 tools/chimera/verify_native_mmb_mtp_port.py --source "$RUNNER_TEMP/native" --apply
+      - name: Compile CPU paths and core API (no GPU claim)
+        run: |
+          set -euo pipefail
+          cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/cpu" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_NATIVE=OFF -DGGML_VULKAN=OFF -DGGML_CUDA=OFF -DGGML_HIP=OFF -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/cpu" --parallel 3 --target llama-server test-backend-ops
+          "$RUNNER_TEMP/cpu/bin/llama-server" --version
+  hip-gfx1103:
+    name: Compile ONE MMB MMF32 MTP binary for HIP gfx1103
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Reconstruct identical source and exact tree
+        run: |
+          set -euo pipefail
+          git clone -q --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/native"
+          git -C "$RUNNER_TEMP/native" fetch -q --depth 1 origin 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          git -C "$RUNNER_TEMP/native" checkout -q --detach 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          python3 tools/chimera/verify_native_mmb_mtp_port.py --source "$RUNNER_TEMP/native" --apply
+      - name: Install ROCm HIP gfx1103 build toolchain
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build ccache patchelf libnuma-dev
+          python3 -m venv "$RUNNER_TEMP/rocm-venv"
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://stable.repo.amd.com/rocm/whl-next/ 'rocm[libraries,devel,device-gfx1103]==10.1.0'
+          rocm-sdk init
+      - name: Compile actual native combined MMB MTP
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          ROCM_PATH=$(rocm-sdk path --root)
+          export ROCM_PATH HIP_PATH="$ROCM_PATH"
+          export PATH="$ROCM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$ROCM_PATH/lib"
+          export CMAKE_PREFIX_PATH="$ROCM_PATH"
+          cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/hip" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_HIP=ON -DGGML_HIP_RCCL=OFF -DGPU_TARGETS=gfx1103 -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/hip" --parallel 2 --target llama-server llama-cli test-backend-ops | tee "$RUNNER_TEMP/hip.log"
+          grep -q mmb.cu "$RUNNER_TEMP/hip.log"
+          grep -q mmf32.cu "$RUNNER_TEMP/hip.log"
+          "$RUNNER_TEMP/hip/bin/llama-server" --version
+          mkdir -p "$RUNNER_TEMP/cloud9-native-lab"
+          cp -a "$RUNNER_TEMP/hip/bin" "$RUNNER_TEMP/cloud9-native-lab/bin"
+          cp tools/chimera/native-mmb-mtp-r120-on-master9ae-20261024.json "$RUNNER_TEMP/cloud9-native-lab/manifest.json"
+          cp "$RUNNER_TEMP/native/LICENSE" "$RUNNER_TEMP/cloud9-native-lab/UPSTREAM-LICENSE"
+          echo "LAB only. No real GPU benchmark, quality or production certification." > "$RUNNER_TEMP/cloud9-native-lab/NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/cloud9-native-lab" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf cloud9-native-lab-master9ae-mmb-mtp-gfx1103.tar.gz -C "$RUNNER_TEMP" cloud9-native-lab
+          sha256sum cloud9-native-lab-master9ae-mmb-mtp-gfx1103.tar.gz
+      - name: Upload HIP lab binaries
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-master9ae-r120-mmb-mtp-gfx1103-lab
+          path: cloud9-native-lab-master9ae-mmb-mtp-gfx1103.tar.gz
+          retention-days: 7
+          if-no-files-found: error

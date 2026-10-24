@@ -1,0 +1,109 @@
+{
+  "schema_version": 2,
+  "verified_at_utc": "2026-10-22T22:59:15.016652+00:00",
+  "policy": "only latest pinned upstream tags/heads, no legacy binary promoted",
+  "github_repositories": {
+    "rdna": {
+      "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
+      "release_tag": "v14-097cf33d9-r120",
+      "release_commit": "ece2d7531b8630413770f61db46ff0700e6a8999",
+      "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
+      "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
+      "expected_tree": "0fd9827d791c4e63e26dd658a0e9c5216ca95933",
+      "patch_sha256": {
+        "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "fd5af5baa8c2c5caee6929942cec21c7515db37aec51704c95bbb8b85071a922",
+        "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "4e54f5d425fc2b775162751be44f3efe52e7711416820dab973bc3d6b34f2c2b",
+        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "95354d073d80bc1d571d05e2a4e350fdcaf8f072dc12173575cc7851d7dbb6cc",
+        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "a3450599f2731a2aac241d3647ca7f6d705ba99e6421fe450e06b288e19cccf2",
+        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "d02c5d7fd0b8ccfb000419f86e118cba9a3c47aee1dcadfa8d1515a008eef9f5",
+        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "8d1a57b4c4110d1f6af1e8c9b0bfbf0e128666502094cd76b8841b39606e5544",
+        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "3d98feb0cd211ee5e8cb5919023c04f9a298e7f9f2be422541552fa93be039c2",
+        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "e787926ff80cbe03e927c3dd0e7f8ef0db9c24d60889a0508f5dd1ed8591c32f",
+        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "ee7dabd64e5be08ad414cc9cb59a8e3c98412165b35ca6ca4183a68837d609c6",
+        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "5efa0dd6c90d3ef62ae95b728f30415432902c125d9f3627698bc84a1ab51d27",
+        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "9c89440b3c52726df2d4f2ec1c15b845e33fc8395aea85157ee556ace8429772",
+        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "9a19e70b5afaa3c21864c3469241d419ff9ddf5dd1e5bcec8c861824d16e43e8",
+        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "1f52675d48a59a89d87347a23a4e8e173ad4396b155fe9fef866a6c22559789e",
+        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "fff56d69dbb512c9e6ec4df2593c72e5af0c599c5be49dc46bf23ddfb2ca3327"
+      },
+      "patch_count": 14,
+      "gpu_target": "gfx1103",
+      "gpu_benchmark_certified": false
+    },
+    "upstream": {
+      "repository": "https://github.com/ggml-org/llama.cpp.git",
+      "branch": "master",
+      "commit": "06230cb8775899cceef146c19cd447a947ecac5b",
+      "gpu_benchmark_certified": false
+    },
+    "prism": {
+      "repository": "https://github.com/PrismML-Eng/llama.cpp.git",
+      "branch": "prism",
+      "commit": "73bfe6cc485554822f80c473a3c0c4f25e80f41b",
+      "gpu_benchmark_certified": false
+    },
+    "atomic": {
+      "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
+      "release_tag": "b10298-2.0.0",
+      "release_commit": "cda0f9256665845cd9d6f3a0176880883f653a3d",
+      "gpu_benchmark_certified": false
+    },
+    "strata": {
+      "repository": "https://github.com/Niko1221/Strata.git",
+      "release_tag": "v0.2.3.1",
+      "release_published_utc": "2026-10-23T13:45:22Z",
+      "gpu_benchmark_certified": false,
+      "engine_embedded_version": "UNVERIFIED_FOR_NEW_TAG",
+      "released_engine_manifest_sha256": "UNVERIFIED_FOR_NEW_TAG",
+      "known_gfx1103_support": "UNVERIFIED; linux-amd-strixhalo prebuilt primarily gfx1151, no official Linux gfx1103 package listed; do not claim compatibility",
+      "release_commit": "7ddc17a38fe7f31637e895ecfba58c2cd43d65ec",
+      "notes": "Latest hotfix v0.2.3.1, engine build/package metadata must be separately verified before any benchmark.",
+      "annotated_tag_object_sha": "9bc5216413cefc7d1e4dd5f3f9d2f31aef6228f1"
+    },
+    "s1": {
+      "repository": "https://github.com/vahpetr/llama.cpp-s1-fork.git",
+      "branch": "s1-public",
+      "commit": "28316b0e6658ae57575d557dcf41ba09836ceb71",
+      "gpu_benchmark_certified": false,
+      "provenance": "S1 v64 current branch head; Vulkan coopmat/GDN/QSA/MTP donor; originally Strix Halo gfx1151; Cloud9 gfx1103 not yet qualified."
+    }
+  },
+  "source_date": "2026-10-23",
+  "flashnext_gt20_tps_certified": false,
+  "production_approved": false,
+  "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate.",
+  "notes_revision": "2026-10-23 10:40: newest upstream HEAD f5027fb (CANN const qualifiers vs f64a) and RDNA latest r116 (multi-GPU load staging block08; MMB block06 source unchanged). All old binaries historical, newest blocked until SHA/ABI QA.",
+  "lab_candidate_binary_sha256": {
+    "atomic4b": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
+    "atomic4b-q8v": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
+    "atomic4b-hip-turbo3": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
+    "atomic4b-hip-q8v": "d4678f9f08b7de435c9f317a7023900f2ce7b3a4ee4aff49da4d59f5ab5a141f",
+    "prism-head-4b": "bc2bc23ee984eb580553352b38707ac9701c0e3deef3e9187342569094137796",
+    "s1-head-4b": "5af45b72c01f8ebb2adb4db11427ac97406f60d7779a0926a846952c8abc0db6",
+    "upstream-master-4b": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da",
+    "rdna-r120-hip-4b": "f54946500fde2e260fa6c01772164d0ce74741ac11be25bdcb21917a15f83557",
+    "upstream-062-hip-4b": null,
+    "chimera-062-mmb-off": "532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5",
+    "chimera-062-mmb-on": "532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5",
+    "chimera-062-mmb-mmf32": "532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5"
+  },
+  "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
+  "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
+  "notes_upstream_f64a_artifact": "GitHub Actions success #39913390476, artifact SHA eee8ef96d8994b979a3a1928f2dcd3f511f58c62435d5d6df30c0e27b7a1f002. 12 ELF files precheck sha pass, 11 RPATH $ORIGIN relocation, CLI/server --version PASS b11835 commitf64a49819; NOT GPU-qualified.",
+  "latest_native_chimera_ablation_policy": "3 isolated MMB/MMF32 env variants on same newest native HIP ELF plus exact newest upstream HIP baseline. Both latest donor r115 and trunk f64a live-attested for each hybrid. All blocked until official SHA pinned/CT410 GPU guard allows.",
+  "notes_latest_upstream_f502_artifact": "GitHub Actions #39927540493 SUCCESS 2026-10-23; pinned source f5027fb; artifact sha256 8499087d28aeac9b427e56daa5bdb150bae35c15ee482b34148da1ef652ba46a; archive safe extracted, 12 ELF validated against upstream SHA256SUMS, 11 RPATH relocated, llama-server and CLI --version PASS build11836; server binary sha256 9ac70a0399d0e0375dd4a68a4c5d835f5bdda9b4589ff8156fabd1d025ecc39c; GPU test STILL PENDING.",
+  "notes_native_chimera_r116_hip": "Source lock latest f502+RDNA r116; GitHub Actions run39928244453 SUCCESS; GH artifact ID12491216327 sha ZIP6cccd4970e6579344705e594ef5ddb154527fe00ec96e33c8c78bbc52c2da7c3; tar9b939e46531a5b2ea40f5cf01449d94066031c83f3669e3333aacf033bfcb621; all12 ELF original SHAs,11 RPATH relocations, CT700 ROCm /opt/rocm/lib ABI + llama cli/server version PASS; three ablations share server SHA 3bb89f0a1999ff6a415530fba32ce5a8ad7bc23dc2d9a7182f062addc46696aa; GPU smoke/quality NOT YET certified; CT410 ROCm libs MISSING.",
+  "notes_upstream_f502_hip_baseline_artifact": "CI #39930984426 success, archive a97a83fad6c697debe8d1109e311916a135a0ec5ba9b46cd5f753db8ae45dfd2, 12 ELF SHA-checked pre-relocation, CT700 toolchain ROCm10.1 required for executable, server v0.7.0-dev build11836 f5027fb21; NOT GPU-certified.",
+  "notes_rdna_r116_full_fork_artifact": "CI #39927540437 PASS. Artifact original SHA256 9bebf073df08ffe6d9597d6eb02feab363dd9d17c20302d1e9dfb6e5ebd99634. 12 SHA file verification PASS before RPATH relocation; current RDNA r116 release 4541a557; CT700 llama-server/llama-cli --version PASS without global ROCm package changes; postrelocation server 67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76. GPU throughput and agent QA NOT certified.",
+  "historical_rdna_r116_binary_sha256": "67ec4eb7fe587b62219b63201564ab4ad55ae2f8eba4b4ab01f01503556bda76",
+  "notes_rdna_r117_current": "Source release r117 published 2026-10-23T10:50:22Z with updated block09 host MoE expert identity, block10 slab and block12 graph/cache. Native MMB block06 has byte-identical diff body vs r116; actual port Git tree still 4cb17809be6b334a62831941d5b38aa25f6b20d6 on latest upstream f502, so existing chimera ELF matches current kernel code, but full fork r117 must rebuild. Any r116 full-fork ABI results remain HISTORICAL, not GPU-candidate.",
+  "notes_chimera_r117_live_bin": "GitHub Actions 39943683723 success; patch06 r117 same source tree as r116, but fresh recompile from latest release. Archive SHA c4d45b991a42988456057aa257a1306d6aac857fbcdc902e793229dfa488c2ce; 12 original SHA checks PASS; CT700 ELF loader RPATH relocated, server sha e987022084a2e03f07c33c606f034a6cb55b3db873fce5a8f025ec8f3f08e810 CLI --version PASS; not GPU qualified.",
+  "notes_rdna_r118": "Official r118 released 2026-10-23T12:35:59Z; tag 989e7bc67135773f30568a996fcaf8861b7c3f08. Patch block02 updated MTP prompt-tail readback/hook sync optimization PR206; this is NOT in native MMB-only chimera. Native block06 diff body byte-identical r117, verified identical resulting Git tree 4cb17809be6b334a62831941d5b38aa25f6b20d6. Full r118 HIP candidate must build and be tested from fresh immutable CI. Old r117 full-fork remains historical, not tournament.",
+  "notes_native_mmb_r118_rebuild": "r118 MMB block06 exact source same as r117; new r118 pinned CI artifact NOT YET compiled/verified, old e987022... remains historical pending fresh r118 AB sha.",
+  "notes_upstream_4231": "Official HEAD 4231b23 after f502: only ggml/src/ggml.c time-us overflow and CI, not HIP kernels. All latest-only LAB candidates repinned, old f502 hashes historical. Full RDNA r118 donor release independent of upstream HEAD; patch06 on new 4231 produces tree 2e7bdc4c447c48759e8ba0a5eae8c82d81a27e40.",
+  "notes_upstream4231_current_vulkan_4b": "GitHub workflow 39958281197 SUCCESS, 12 original archive ELF hashes PASS and archive SHA bce39a4a2e6e10bf35726b304e0c331e46340203f8a8680c20542c21aad65819; relocated CT700 server --version PASS; current standalone upstream source 4231 binary 2c998e676af30d4efb648f0682a740ab6810da613b16411e571eb99b9cf6bb27. Real GPU short CLI 34.2 tok/s, longer 90-line prompt PP473.7 TG31.7, API4 median TG37.7 tok/s 3/4 quality; final canonical 36x3 QA pending. Independent rdna latest r119 release does NOT invalidate pinned standalone upstream 4231 source, but all-source CI requires separate RDNA repin before green.",
+  "notes_20261023_1728": "Host real 36/36 upstream4231 Vulkan completed at 15:53 as historical and was superior vs production catalog on one long-prompt test but code accuracy 0/9. At 17:22 official newest upstream36e and RDNA r120, signed tag peeled commit ece2; all current candidates invalidated pending fresh compile and identical GPU QA. RDNA block06 diff body identical r118 but donor block09 updated host-resident MoE. Archived r118/4231 binaries kept for evidence; no promotion without exact current candidate and comparable 16K prod baseline.",
+  "notes_upstream_da2": "Official HEAD da2ee1e (2026-10-23) +2 commits after 36e: CUDA graph chunking #30804 modifies ggml-cuda.cu/common.cuh, vendor LibreSSL 4.4.0. Latest r120 patch06 reapplied natively onto master da2 resulting Git tree 7e1d84012fe899901b1e282a2e8d902848c99a0c. All old 36e GPU artifacts historical; new Vulkan/HIP binaries null until Github Actions completed and verified.",
+  "notes_latest_062": "HEAD06230cb (after da2): Qwen4Exp QSA selection no kq_mask PR30965 (FlashNext-relevant) + stepfun/laguna tensor-parallel GPU selection. r120 patch6 reapplied clean; CUDA graph invalidation compat fix still necessary. Old da2 4B and r120 sources are historical; new 062 artifacts require CI and GPU proof.",
+  "notes_20261023_2038_binary_certification": "Latest Github CI 39999901259 native r120 MMB + master062 HIP SUCCESS; 39999901307 upstream Vulkan SUCCESS; both artifacts original SHA256 12/12 verified; LXC700 and CT410 inactive ELF --version PASS, RPATH isolated, CT700 binaries hashed and pinned; GPU quality/performance NOT certified. Older RDNA r120 full fork ELF CT700 loader repaired and source tag stable. No production promotion. Runner candidate paths corrected to actual archive layouts."
+}

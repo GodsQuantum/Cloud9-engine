@@ -4,7 +4,8 @@
   "upstream": {
     "repository": "https://github.com/ggml-org/llama.cpp.git",
     "branch": "master",
-    "commit": "25747b08e7a0f9a59a2089ce6b98d2229b76042a"
+    "commit": "9febe63d5a379f8568bae7116a5b2ba844a4a4a6",
+    "qualification": "experimental_branch_only_build_pass_baseline_4b_short_gpu_pass_patched_gpu_pending"
   },
   "atomic": {
     "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
@@ -25,7 +26,7 @@
     "backend_patchset": "patches/upstream-latest"
   },
   "patchset": "patches/upstream-latest",
-  "policy": "upstream production; Prism ternary lab/runtime; Atomic compatibility lab; hardware + performance gate before promotion",
+  "policy": "EXPERIMENTAL LAB BRANCH ONLY b11798 plus Cloud9 Phoenix RDNA3 UMA patch; GPU quality context and rollback tests pending; NOT production",
   "legacy_patchset": "patches/upstream",
-  "observed_on": "2026-10-16"
+  "observed_on": "2026-10-22"
 }

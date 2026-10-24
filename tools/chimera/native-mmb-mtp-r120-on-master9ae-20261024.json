@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "kind": "LAB_NATIVE_CHIMERA_ACTUAL_SOURCE_PORT_NOT_PROMOTED",
+  "name": "cloud9-native-master9ae-r120-mmb-mtp",
+  "date": "2026-10-24",
+  "base": {
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "commit": "9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2",
+    "tree": "3be23ccb41236df3d19222de88805d6e32e67b6e"
+  },
+  "donor": {
+    "repository": "https://github.com/stew675/llama-cpp-rdna-boosts",
+    "commit": "ece2d7531b8630413770f61db46ff0700e6a8999",
+    "release": "v14-097cf33d9-r120",
+    "patches": [
+      {
+        "feature": "mmb",
+        "sha256": "3d98feb0cd211ee5e8cb5919023c04f9a298e7f9f2be422541552fa93be039c2",
+        "upstream_donor_file": "patches/0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch"
+      },
+      {
+        "feature": "mtp-prompt-tail",
+        "sha256": "a4d1e996e4775d5b7723d5d5467cae0e18331fd8d909b87461676ef5faee8e19",
+        "upstream_donor_file": "archive/work/mtp-prefill-tail/0001-speculative-LLAMA_MTP_INGEST_TAIL-tokens-feeds-the-M.patch"
+      },
+      {
+        "feature": "mtp-copy-last-row",
+        "sha256": "2202a393e1887829724ab60db03639c9a7f35df82eaa0ecb7ecaccee2869f15b",
+        "upstream_donor_file": "archive/work/mtp-prefill-tail/0002-speculative-draft_mtp-copies-only-the-last-target-ro.patch"
+      },
+      {
+        "feature": "mtp-tail-no-readback",
+        "sha256": "de9b7eaef5926d8f1f9c6ede54b800456a170e942fc3c4a6052d3951a588e05b",
+        "upstream_donor_file": "archive/work/mtp-tail-readback/0001-MTP-prompt-tail-no-target-nextn-readback-or-hook-syn.patch"
+      }
+    ]
+  },
+  "port": {
+    "patch": "tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-native.patch",
+    "patch_sha256": "9eab9e5389fc46c52c0f839cac3bae66acca8e4086f6706143c43b2a9bbea3b6",
+    "resulting_tree": "5796dc8a2dadabaf502bb23bdb94eb5db57b936a",
+    "files_changed": 12,
+    "implemented": [
+      "MMB quantized prefill",
+      "MMF32 optin",
+      "LLAMA_MTP_INGEST_TAIL",
+      "MTP last row D2H reduction",
+      "per-seq NextN readback skip"
+    ],
+    "manual_port_rebase": "src/llama-context.cpp latest 9ae async decoder changed; no old readback_sync, conditional skip adapted for n_tokens_prev and preserving vision/M-RoPE rows",
+    "source_compatibility": "llama.cpp HEAD exact; C++ compile and HIP target required before qualification"
+  },
+  "controls": {
+    "mmb": "GGML_CUDA_MMB=0/1",
+    "mmf32": "GGML_CUDA_MMF32=0/1",
+    "mtp_tail": "LLAMA_MTP_INGEST_TAIL=0/unset default, >0 opt-in"
+  },
+  "qualification": {
+    "source_apply": false,
+    "cpu_compile": false,
+    "hip_compile": false,
+    "device_gpu": false,
+    "performance": false,
+    "production": false
+  },
+  "no_promotion_reason": "GPU official guard currently refuses large models and memory/IO pressure. CI compilation pending."
+}

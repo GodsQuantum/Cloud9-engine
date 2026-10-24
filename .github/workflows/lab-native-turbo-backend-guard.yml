@@ -1,0 +1,138 @@
+name: LAB Cloud9 fail closed TurboQuant GPU backend policy
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-native-turbo-backend-guard.yml
+      - tools/chimera/native-mmb-mtp-turbo-adaptive-backend-guard-20261024.json
+      - tools/chimera/patches/20261024-master9ae-r120-turbo-adaptive-backend-guard.patch
+      - tools/chimera/verify_native_turbo_backend_guard.py
+      - tests/native_turbo_backend_guard_test.py
+      - src/llama-cloud9-turbo-backend-policy.h
+      - tests/test-cloud9-turbo-backend-policy.cpp
+      - tools/chimera/test_turboquant_chunked_dequant.c
+      - tools/chimera/test_turboquant_wht_roundtrip.c
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lab-cloud9-turbo-policy-master9ae-${{ github.sha }}
+  cancel-in-progress: false
+jobs:
+  vulkan:
+    name: Vulkan gfx1103 compatible source and shader CPU builder
+    # Manual dispatch is reserved for packaging the HIP build without rebuilding Vulkan.
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Validate exact combined source manifest
+        run: |
+          set -euo pipefail
+          python3 tools/chimera/verify_native_turbo_backend_guard.py
+          python3 -m unittest discover -s tests -p native_turbo_backend_guard_test.py -v
+      - name: Rebuild exact upstream base + fused patch
+        run: |
+          set -euo pipefail
+          git clone -q --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/native"
+          git -C "$RUNNER_TEMP/native" fetch -q --depth 1 origin 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          git -C "$RUNNER_TEMP/native" checkout -q --detach 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          python3 tools/chimera/verify_native_turbo_backend_guard.py --source "$RUNNER_TEMP/native" --apply
+      - name: Compile new Vulkan TurboQuant shaders and MTP CPU code
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ninja-build cmake libvulkan-dev glslc glslang-tools spirv-headers
+          cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/vulkan" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DGGML_CUDA=OFF -DGGML_HIP=OFF -DGGML_NATIVE=OFF -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/vulkan" --parallel 2 --target llama-server test-backend-ops test-quantize-fns test-speculative-adaptive test-cloud9-turbo-backend-policy
+          "$RUNNER_TEMP/vulkan/bin/llama-server" --version
+          "$RUNNER_TEMP/vulkan/bin/llama-server" --help > "$RUNNER_TEMP/cli-help.txt" 2>&1
+          grep -q 'draft-mtp-adaptive' "$RUNNER_TEMP/cli-help.txt"
+          grep -q 'spec-draft-n-min-adaptive' "$RUNNER_TEMP/cli-help.txt"
+          grep -q 'spec-draft-n-start' "$RUNNER_TEMP/cli-help.txt"
+          ctest --test-dir "$RUNNER_TEMP/vulkan" -R '^(test-speculative-adaptive|test-cloud9-turbo-backend-policy)$' --output-on-failure
+          "$RUNNER_TEMP/vulkan/bin/test-cloud9-turbo-backend-policy" | grep 'TURBO_GPU_BACKEND_FAIL_CLOSED 20/20 PASS'
+          "$RUNNER_TEMP/vulkan/bin/test-quantize-fns"
+          cc -O2 -Wall -Wextra -I "$RUNNER_TEMP/native/ggml/include" tools/chimera/test_turboquant_chunked_dequant.c -L "$RUNNER_TEMP/vulkan/bin" -Wl,-rpath,"$RUNNER_TEMP/vulkan/bin" -lggml -lggml-base -lm -o "$RUNNER_TEMP/test-turbo-kv-numeric"
+          LD_LIBRARY_PATH="$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/test-turbo-kv-numeric" | tee "$RUNNER_TEMP/turbo-quant-numeric.log"
+          grep -q 'TURBO_KV_CHUNKED_NUMERIC 15/15 PASS' "$RUNNER_TEMP/turbo-quant-numeric.log"
+          cc -O2 -Wall -Wextra -I "$RUNNER_TEMP/native/ggml/include" tools/chimera/test_turboquant_wht_roundtrip.c -L "$RUNNER_TEMP/vulkan/bin" -Wl,-rpath,"$RUNNER_TEMP/vulkan/bin" -lggml -lggml-base -lm -o "$RUNNER_TEMP/test-turbo-wht-quality"
+          LD_LIBRARY_PATH="$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/test-turbo-wht-quality" | tee "$RUNNER_TEMP/turbo-wht-quality.log"
+          grep -q 'TURBO_KV_WHT_RECONSTRUCTION 9/9 PASS' "$RUNNER_TEMP/turbo-wht-quality.log"
+          mkdir -p "$RUNNER_TEMP/native-adaptive-vulkan-lab"
+          cp -a "$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/native-adaptive-vulkan-lab/bin"
+          cp tools/chimera/native-mmb-mtp-turbo-adaptive-backend-guard-20261024.json "$RUNNER_TEMP/native-adaptive-vulkan-lab/manifest.json"
+          cp "$RUNNER_TEMP/native/LICENSE" "$RUNNER_TEMP/native-adaptive-vulkan-lab/LICENSE"
+          echo "LAB policy denies Turbo KV on HIP/CUDA/MUSA/Metal, allows CPU or Vulkan. CPU/Vulkan unit tested, GPU inference NOT certified. NOT PRODUCTION." > "$RUNNER_TEMP/native-adaptive-vulkan-lab/NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/native-adaptive-vulkan-lab"; find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf cloud9-native-adaptive-turbo-policy-vulkan.tar.gz -C "$RUNNER_TEMP" native-adaptive-vulkan-lab
+          sha256sum cloud9-native-adaptive-turbo-policy-vulkan.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cloud9-native-adaptive-turbo-policy-vulkan-lab
+          path: cloud9-native-adaptive-turbo-policy-vulkan.tar.gz
+          retention-days: 7
+          if-no-files-found: error
+  hip:
+    name: HIP gfx1103 fused code compiler gate
+    # The previous HIP job of run 40044201484 continues independently.
+    # Avoid rebuilding HIP for a Vulkan-only CI dependency correction.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Recreate exact native source
+        run: |
+          set -euo pipefail
+          git clone -q --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/native"
+          git -C "$RUNNER_TEMP/native" fetch -q --depth 1 origin 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          git -C "$RUNNER_TEMP/native" checkout -q --detach 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          python3 tools/chimera/verify_native_turbo_backend_guard.py --source "$RUNNER_TEMP/native" --apply
+      - name: Install ROCm 10.1 HIP compiler gfx1103
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ninja-build cmake libnuma-dev
+          python3 -m venv "$RUNNER_TEMP/rocm-venv"
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://stable.repo.amd.com/rocm/whl-next/ 'rocm[libraries,devel,device-gfx1103]==10.1.0'
+          rocm-sdk init
+      - name: Native HIP compile — Turbo KV may require separate kernel port
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          ROCM_PATH=$(rocm-sdk path --root)
+          export ROCM_PATH HIP_PATH="$ROCM_PATH"
+          export PATH="$ROCM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$ROCM_PATH/lib"
+          export CMAKE_PREFIX_PATH="$ROCM_PATH"
+          cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/hip" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_HIP=ON -DGGML_HIP_RCCL=OFF -DGPU_TARGETS=gfx1103 -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/hip" --parallel 2 --target llama-server llama-cli test-backend-ops test-speculative-adaptive test-cloud9-turbo-backend-policy | tee "$RUNNER_TEMP/hip.log"
+          grep -q mmb.cu "$RUNNER_TEMP/hip.log"
+          grep -q mmf32.cu "$RUNNER_TEMP/hip.log"
+          "$RUNNER_TEMP/hip/bin/llama-server" --version
+          "$RUNNER_TEMP/hip/bin/llama-server" --help > "$RUNNER_TEMP/cli-help.txt" 2>&1
+          grep -q 'draft-mtp-adaptive' "$RUNNER_TEMP/cli-help.txt"
+          grep -q 'spec-draft-n-min-adaptive' "$RUNNER_TEMP/cli-help.txt"
+          "$RUNNER_TEMP/hip/bin/test-speculative-adaptive"
+          "$RUNNER_TEMP/hip/bin/test-cloud9-turbo-backend-policy" | grep 'TURBO_GPU_BACKEND_FAIL_CLOSED 20/20 PASS'
+          # HIP compilation does not certify TurboQuant kernel execution:
+          # the port includes the CPU/Vulkan codec but not Atomic2 HIP Turbo WHT/FA.
+          test -f "$RUNNER_TEMP/hip/bin/libggml-hip.so.0.27.0"
+          mkdir -p "$RUNNER_TEMP/native-adaptive-hip-lab"
+          cp -a "$RUNNER_TEMP/hip/bin" "$RUNNER_TEMP/native-adaptive-hip-lab/bin"
+          cp tools/chimera/native-mmb-mtp-turbo-adaptive-backend-guard-20261024.json "$RUNNER_TEMP/native-adaptive-hip-lab/manifest.json"
+          cp "$RUNNER_TEMP/native/LICENSE" "$RUNNER_TEMP/native-adaptive-hip-lab/LICENSE"
+          echo "LAB policy rejects HIP Turbo KV before cache allocation. Native HIP compiler test only; GPU inference untested. NOT PRODUCTION." > "$RUNNER_TEMP/native-adaptive-hip-lab/NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/native-adaptive-hip-lab"; find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf cloud9-native-adaptive-turbo-policy-hip-gfx1103.tar.gz -C "$RUNNER_TEMP" native-adaptive-hip-lab
+          sha256sum cloud9-native-adaptive-turbo-policy-hip-gfx1103.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cloud9-native-adaptive-turbo-policy-hip-gfx1103-lab
+          path: cloud9-native-adaptive-turbo-policy-hip-gfx1103.tar.gz
+          retention-days: 7
+          if-no-files-found: error
