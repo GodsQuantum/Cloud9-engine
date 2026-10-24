@@ -9,6 +9,7 @@ on:
       - tools/chimera/verify_native_mmb_mtp_turbo.py
       - tests/native_mmb_mtp_turbo_source_test.py
       - tools/chimera/test_turboquant_chunked_dequant.c
+      - tools/chimera/test_turboquant_wht_roundtrip.c
   workflow_dispatch:
 permissions:
   contents: read
@@ -48,6 +49,9 @@ jobs:
           cc -O2 -Wall -Wextra -I "$RUNNER_TEMP/native/ggml/include" tools/chimera/test_turboquant_chunked_dequant.c -L "$RUNNER_TEMP/vulkan/bin" -Wl,-rpath,"$RUNNER_TEMP/vulkan/bin" -lggml -lggml-base -lm -o "$RUNNER_TEMP/test-turbo-kv-numeric"
           LD_LIBRARY_PATH="$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/test-turbo-kv-numeric" | tee "$RUNNER_TEMP/turbo-quant-numeric.log"
           grep -q 'TURBO_KV_CHUNKED_NUMERIC 15/15 PASS' "$RUNNER_TEMP/turbo-quant-numeric.log"
+          cc -O2 -Wall -Wextra -I "$RUNNER_TEMP/native/ggml/include" tools/chimera/test_turboquant_wht_roundtrip.c -L "$RUNNER_TEMP/vulkan/bin" -Wl,-rpath,"$RUNNER_TEMP/vulkan/bin" -lggml -lggml-base -lm -o "$RUNNER_TEMP/test-turbo-wht-quality"
+          LD_LIBRARY_PATH="$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/test-turbo-wht-quality" | tee "$RUNNER_TEMP/turbo-wht-quality.log"
+          grep -q 'TURBO_KV_WHT_RECONSTRUCTION 9/9 PASS' "$RUNNER_TEMP/turbo-wht-quality.log"
           mkdir -p "$RUNNER_TEMP/native-vulkan-lab"
           cp -a "$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/native-vulkan-lab/bin"
           cp tools/chimera/native-mmb-mtp-turbo-on-master9ae-20261024.json "$RUNNER_TEMP/native-vulkan-lab/manifest.json"
