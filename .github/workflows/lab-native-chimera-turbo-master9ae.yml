@@ -37,7 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ninja-build cmake libvulkan-dev glslc glslang-tools
+          sudo apt-get install -y --no-install-recommends ninja-build cmake libvulkan-dev glslc glslang-tools spirv-headers
           cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/vulkan" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DGGML_CUDA=OFF -DGGML_HIP=OFF -DGGML_NATIVE=OFF -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF
           cmake --build "$RUNNER_TEMP/vulkan" --parallel 2 --target llama-server test-backend-ops test-quantize-fns
           "$RUNNER_TEMP/vulkan/bin/llama-server" --version
@@ -57,6 +57,9 @@ jobs:
           if-no-files-found: error
   hip:
     name: HIP gfx1103 fused code compiler gate
+    # The previous HIP job of run 40044201484 continues independently.
+    # Avoid rebuilding HIP for a Vulkan-only CI dependency correction.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 160
     steps:
