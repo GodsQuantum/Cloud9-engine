@@ -1,0 +1,60 @@
+name: LAB Cloud9 native adaptive MTP plus Turbo source
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-native-mtp-adaptive-master9ae.yml
+      - tools/chimera/native-mmb-mtp-turbo-adaptive-master9ae-20261024.json
+      - tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-turbo-adaptive-experimental.patch
+      - tools/chimera/verify_native_mtp_adaptive.py
+      - tests/native_mtp_adaptive_merged_test.py
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cpu-qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Verify exact source port, immutable donor and experimental status
+        run: |
+          set -euo pipefail
+          python3 tools/chimera/verify_native_mtp_adaptive.py
+          python3 -m unittest discover -s tests -p native_mtp_adaptive_merged_test.py -v
+      - name: Checkout pinned upstream and reconstruct actual native C++ tree
+        run: |
+          set -euo pipefail
+          git clone -q --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/native"
+          git -C "$RUNNER_TEMP/native" fetch -q --depth 1 origin 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          git -C "$RUNNER_TEMP/native" checkout -q --detach 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          python3 tools/chimera/verify_native_mtp_adaptive.py --source "$RUNNER_TEMP/native" --apply
+      - name: Compile native MTP adaptive server and source-tree test
+        run: |
+          set -euo pipefail
+          cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/cpu" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_NATIVE=OFF -DGGML_VULKAN=OFF -DGGML_CUDA=OFF -DGGML_HIP=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_SERVER=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/cpu" --parallel 3 --target llama-server test-speculative-adaptive
+          "$RUNNER_TEMP/cpu/bin/llama-server" --version
+          "$RUNNER_TEMP/cpu/bin/llama-server" --help > "$RUNNER_TEMP/cli-help.txt" 2>&1
+          grep -q 'draft-mtp-adaptive' "$RUNNER_TEMP/cli-help.txt"
+          grep -q 'spec-draft-n-min-adaptive' "$RUNNER_TEMP/cli-help.txt"
+          grep -q 'spec-draft-n-start' "$RUNNER_TEMP/cli-help.txt"
+          ctest --test-dir "$RUNNER_TEMP/cpu" -R '^test-speculative-adaptive$' --output-on-failure
+          echo 'NATIVE_ADAPTIVE_CPU_COMPILE_AND_CTEST_PASS'
+      - name: Package CPU-only lab binary with manifest and explicit limitations
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/native-adaptive-lab"
+          cp -a "$RUNNER_TEMP/cpu/bin" "$RUNNER_TEMP/native-adaptive-lab/bin"
+          cp tools/chimera/native-mmb-mtp-turbo-adaptive-master9ae-20261024.json "$RUNNER_TEMP/native-adaptive-lab/manifest.json"
+          cp "$RUNNER_TEMP/native/LICENSE" "$RUNNER_TEMP/native-adaptive-lab/LICENSE"
+          echo "EXPERIMENTAL CPU-only. Native adaptive MTP unit PASS; Vulkan, HIP, GPU QA and production NOT certified. No model promotion." > "$RUNNER_TEMP/native-adaptive-lab/NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/native-adaptive-lab"; find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf cloud9-native-adaptive-mtp-cpu-only.tar.gz -C "$RUNNER_TEMP" native-adaptive-lab
+          sha256sum cloud9-native-adaptive-mtp-cpu-only.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cloud9-native-adaptive-mtp-cpu-lab
+          path: cloud9-native-adaptive-mtp-cpu-only.tar.gz
+          retention-days: 7
+          if-no-files-found: error
