@@ -39,6 +39,10 @@ class AgenticToolProtocolTest(unittest.TestCase):
  def test_narrative_without_real_tool_fails(self):
   r={"choices":[{"message":{"content":"J ai vérifié tous les logs."}}]}
   self.assertFalse(B.score(r,self.case)["passed"])
+ def test_native_single_tool_policy_in_executed_payload(self):
+  source=(R/"tools/local_agents/bench_native_agent_tools.py").read_text()
+  self.assertIn('"tool_choice":"required","parallel_tool_calls":False',source)
+  self.assertNotIn('"tool_choice":"auto","max_tokens":180',source)
  def test_fixture_schema(self):
   with tempfile.TemporaryDirectory() as tmp:
    p=Path(tmp)/"fixtures.json"
