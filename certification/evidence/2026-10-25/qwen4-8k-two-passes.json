@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-25",
+  "validation": "validated_in_source",
+  "model": "Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+  "engine": "Cloud9 native chimera master9ae MMB MTP adaptive TurboQuant code, Vulkan gfx1103, f16 KV",
+  "id": "2026-10-25:chimera-master9ae:qwen4-8k-five-needle-partial-2of3",
+  "kind": "current_gpu_long_context_partial",
+  "variant_or_protocol": "8K five-marker real tokenizer 8015, actual prompt 8026, ctx8704, MTP2, reps seeds 43 and 44; third NOT run due memory pressure",
+  "metrics": {
+    "correct_repetitions": 2,
+    "repetitions_planned": 3,
+    "prompt_tokens_each": 8026,
+    "markers_correct_each": 5,
+    "decode_tps": [
+      8.035,
+      8.622
+    ],
+    "prefill_tps": [
+      325.188,
+      273.622
+    ]
+  },
+  "configuration": {
+    "backend": "Vulkan",
+    "ctx_allocated": 8704,
+    "kv_k": "f16",
+    "kv_v": "f16",
+    "native_guard": "coexist-light"
+  },
+  "sources": [
+    "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json"
+  ],
+  "notes": "PARTIAL ONLY, no 3/3 and no 16K certification on this binary. Third repetition halted on host PSI.",
+  "context": {
+    "allocated_tokens": 8704,
+    "actual_input_tokens_each": 8026,
+    "long_context_validated_partial_only": true,
+    "repetitions_passed": 2,
+    "repetitions_required": 3
+  }
+}

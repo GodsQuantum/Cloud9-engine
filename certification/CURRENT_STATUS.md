@@ -3,6 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
+Hall of Fame: 192 records; 6 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -15,8 +16,8 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C05 | CT410 router safe nonpreemptive, stable services | CURRENT_PASS_LIMITED | Prove stress and crash recovery and no interruptions under concurrent agent traffic |
 | C06 | Chimera native Qwen4 real GPU 2K + strict read-only tool | CURRENT_PASS_LIMITED | Tool quality is only 1 case; incorrect technical suggestions in chat observed |
 | C07 | OpenBMB MiniCPM5+DSpark live speed and tool | CURRENT_PASS_LIMITED | Not 3/3 scenario suite nor untouched OpenBMB weights |
-| C08 | Current chimera long effective context 8K 16K and maximum useful | NOT_RUN | 8K generator inherited from Atomic proved reusable: latest master9ae loaded with 12288 context and built an 8015-token synthetic fixture, but official GPU guardian stopped BEFORE any inference due drop 25.045 to 22.151 GiB available and PSI-full 0.54; zero of 3 prompts run. Next: memory headroom >=27GiB prelaunch then run 8K/16K with full prompt ingestion and strict 5 markers. |
-| C09 | Functional agentic JSON tools coding and French regression | PARTIAL | Complete existing 12 fixtures x 3, add strict code patch/JS YAML JSON negative/adversarial and FR checks |
+| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | On master9ae Qwen4 Vulkan (ctx8704), 8K five markers correct in both seeded repeats 1 and 2, both consumed 8026 input tokens. Third repeat stopped when memory PSI reached 2.31; 16K on current chimera still not tested. Preserve proofs and run ONLY seeded rep 3 when GPU-safe, then 16K. |
+| C09 | Functional agentic JSON tools coding and French regression | PARTIAL | Chimera current opt-in Qwen4 completed 1/36 read-only strict native tool scenario, correct pve.get_ct_config JSON; GPU runtime PSI caused checkpointed pause. New native test harness supports --resume without duplicating completed cases; finish 35 remaining when admitted, add code/FR regressions. |
 | C10 | Multi-agent concurrency and performance envelope | NOT_RUN | Existing server cannot simply be called multiworker; benchmark slots 1/2/4 and use real router queue/reloads; native llama server supports parallel decoding |
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold. |
 | C12 | Feature speed parity and Turbo KV real backend GPU | NOT_RUN | Compare same GGUF, prompts, quant, context+flags and MTP on/off with upstream; GPU KV Turbo3 Q/V is blocked until numerical+accuracy correct; no fake win |
