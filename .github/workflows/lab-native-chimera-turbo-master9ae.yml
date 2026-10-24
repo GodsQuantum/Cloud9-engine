@@ -8,6 +8,7 @@ on:
       - tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-turbo-native.patch
       - tools/chimera/verify_native_mmb_mtp_turbo.py
       - tests/native_mmb_mtp_turbo_source_test.py
+      - tools/chimera/test_turboquant_chunked_dequant.c
   workflow_dispatch:
 permissions:
   contents: read
@@ -17,6 +18,8 @@ concurrency:
 jobs:
   vulkan:
     name: Vulkan gfx1103 compatible source and shader CPU builder
+    # Manual dispatch is reserved for packaging the HIP build without rebuilding Vulkan.
+    if: github.event_name != 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 100
     steps:
@@ -41,6 +44,10 @@ jobs:
           cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/vulkan" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DGGML_CUDA=OFF -DGGML_HIP=OFF -DGGML_NATIVE=OFF -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF
           cmake --build "$RUNNER_TEMP/vulkan" --parallel 2 --target llama-server test-backend-ops test-quantize-fns
           "$RUNNER_TEMP/vulkan/bin/llama-server" --version
+          "$RUNNER_TEMP/vulkan/bin/test-quantize-fns"
+          cc -O2 -Wall -Wextra -I "$RUNNER_TEMP/native/ggml/include" tools/chimera/test_turboquant_chunked_dequant.c -L "$RUNNER_TEMP/vulkan/bin" -Wl,-rpath,"$RUNNER_TEMP/vulkan/bin" -lggml -lggml-base -lm -o "$RUNNER_TEMP/test-turbo-kv-numeric"
+          LD_LIBRARY_PATH="$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/test-turbo-kv-numeric" | tee "$RUNNER_TEMP/turbo-quant-numeric.log"
+          grep -q 'TURBO_KV_CHUNKED_NUMERIC 15/15 PASS' "$RUNNER_TEMP/turbo-quant-numeric.log"
           mkdir -p "$RUNNER_TEMP/native-vulkan-lab"
           cp -a "$RUNNER_TEMP/vulkan/bin" "$RUNNER_TEMP/native-vulkan-lab/bin"
           cp tools/chimera/native-mmb-mtp-turbo-on-master9ae-20261024.json "$RUNNER_TEMP/native-vulkan-lab/manifest.json"
@@ -95,3 +102,20 @@ jobs:
           grep -q mmb.cu "$RUNNER_TEMP/hip.log"
           grep -q mmf32.cu "$RUNNER_TEMP/hip.log"
           "$RUNNER_TEMP/hip/bin/llama-server" --version
+          # HIP compilation does not certify TurboQuant kernel execution:
+          # the port includes the CPU/Vulkan codec but not Atomic2 HIP Turbo WHT/FA.
+          test -f "$RUNNER_TEMP/hip/bin/libggml-hip.so.0.27.0"
+          mkdir -p "$RUNNER_TEMP/native-hip-lab"
+          cp -a "$RUNNER_TEMP/hip/bin" "$RUNNER_TEMP/native-hip-lab/bin"
+          cp tools/chimera/native-mmb-mtp-turbo-on-master9ae-20261024.json "$RUNNER_TEMP/native-hip-lab/manifest.json"
+          cp "$RUNNER_TEMP/native/LICENSE" "$RUNNER_TEMP/native-hip-lab/LICENSE"
+          echo "LAB only. HIP MMB MTP compiled. Atomic2 HIP TurboQuant kernels NOT implemented or certified. GPU tests absent. Never use Turbo KV with this HIP binary." > "$RUNNER_TEMP/native-hip-lab/NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/native-hip-lab"; find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf cloud9-native-mmb-mtp-turbo-hip-gfx1103.tar.gz -C "$RUNNER_TEMP" native-hip-lab
+          sha256sum cloud9-native-mmb-mtp-turbo-hip-gfx1103.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cloud9-native-mmb-mtp-turbo-hip-gfx1103-lab
+          path: cloud9-native-mmb-mtp-turbo-hip-gfx1103.tar.gz
+          retention-days: 7
+          if-no-files-found: error
