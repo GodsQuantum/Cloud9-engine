@@ -30,3 +30,23 @@ Do not enable CLOUD9_ENGINE_ALLOW_SERVICE_PREEMPTION=1 without a protected maint
 - Only cloud9-engine-router.service restarted; embeddings remained active. CT400 OmniRoute active, eight model identifiers unchanged.
 - Live POST Pym 35B returned HTTP 503 exclusive-maintenance-opt-in; no GPU worker loaded, no service preemption.
 - DEV 194 Python unit tests PASS; same binary copied CT410 LAB and 12/12 tests PASS. Not a GPU inference certification.
+
+
+## GPU pinned-service coexistence LAB extension
+
+VoiceStudio retains renderD128 while idle, and AutoSubs Aligner GPU also retains
+it even with no loaded ASR models. Neither service is stopped for lightweight
+coexistence models. Revised source: cloud9-model-router-idle-coexist-20261024.py.
+
+Native coexist-light rules:
+- VoiceStudio may share only with no established 3900/7443 connections; never stopped.
+- AutoSubs Aligner may share only if native health reports status ok with an
+  empty loaded_models list, with no established request on port 8007.
+- Both must have their full Docker IDs matched in proc cgroups. Unknown
+  processes remain blocked. Embeddings and Speaches are already recognized.
+- Guardian checks for RAM/GTT/PSI happen twice; GPU lock remains mandatory.
+- Exclusive GPU mode still requires explicit maintenance opt-in.
+
+Five unit tests for safe idle/known process matching plus an isolated HTTP
+smoke pass on CT410. New GPU sharing is NOT yet an inference certification.
+If a service regresses, restore prior router source and restart only the router.
