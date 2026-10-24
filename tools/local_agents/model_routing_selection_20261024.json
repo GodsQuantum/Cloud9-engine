@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "date": "2026-10-24",
+  "status": "LAB_SELECTION_NOT_PROMOTED",
+  "objective": "Locally routed models for Cloud9 infrastructure and Dify/n8n agents through existing native Cloud9 router and OmniRoute",
+  "limits": {
+    "one_gpu_worker_at_a_time": true,
+    "gpu_guard_must_allow": true,
+    "no_production_router_change": true,
+    "no_automatic_infrastructure_ssh_or_admin_without_permitted_agent_profile": true
+  },
+  "roles": [
+    {
+      "role": "fast_extract",
+      "model_id": "Cloud9-MiniCPM5-2B-DSpark",
+      "quality_gate": "short extraction and tool smoke",
+      "priority": "existing",
+      "uncensored_required": true,
+      "historical_decode_tps": 47.73
+    },
+    {
+      "role": "structured_tools",
+      "model_id": "Cloud9-Qwen3.8-4B-Heretic",
+      "quality_gate": "JSON schemas, tool-calling and instruction fidelity 12x3; historical quality failures must be retested",
+      "priority": "existing",
+      "uncensored_required": true,
+      "historical_decode_tps": 25.81
+    },
+    {
+      "role": "complex_reasoning",
+      "model_id": "Cloud9-Pym-35B-A3B-MTP",
+      "quality_gate": "real agent workflow and tool execution under 8K context",
+      "priority": "existing",
+      "uncensored_required": false,
+      "historical_decode_tps": 30.87
+    },
+    {
+      "role": "uncensored_complex",
+      "model_id": "Cloud9-Qwen3.6-35B-A3B-Heretic",
+      "quality_gate": "agentic reliability and latency in 16K context",
+      "priority": "existing",
+      "uncensored_required": true,
+      "historical_long_decode_tps": 10.29
+    }
+  ],
+  "not_yet_admitted": [
+    {
+      "role": "middle_agent_9b",
+      "model_id": "Cloud9-Qwen3.8-9B-Heretic-Candidate",
+      "gguf": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38-9b-heretic-mtp/Qwen3.8-9B-Distill-Heretic-Uncensored-MTP-Q4_K_M.gguf",
+      "reason": "Resident GGUF but not in active route catalog, long-context quality/tool reliability not certified. Prior different quant 9B failed corrected-line code 0/3."
+    },
+    {
+      "role": "flash_next",
+      "model_id": "Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M",
+      "shards": [
+        "/srv/lxc/ia-compute/data/models/strata/coder-iq1m/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf",
+        "/srv/lxc/ia-compute/data/models/strata/coder-iq1m/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00002-of-00002.gguf"
+      ],
+      "reason": "58.4GB total: exceeds 40GiB normal router fuse, requires distinct runtime, quant+model verification and isolated compute/GPU resource lease."
+    }
+  ],
+  "success_gates": [
+    "Endpoint /health and /v1/models accessible from OmniRoute LXC400",
+    "Every active selected GGUF and backend binary exists",
+    "All selected aliases unique and the existing production catalog unchanged",
+    "GPU guardian admission before any model load; never bypass",
+    "Native individual model tool/JSON/agentic tasks and 8K/16K quality",
+    "Multi-agent contention and context-switch without service preemption",
+    "Read-only integration from OmniRoute to Dify/n8n; no credential exposure",
+    "Explicit promotion and rollback after measurable wins"
+  ]
+}
