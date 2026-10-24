@@ -6,7 +6,7 @@ Moteur disponible: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 
 SHA routeur: 2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262
 SHA catalogue: 82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288
-GitHub evidence snapshot count: 6; SHA validated without a running Cloud9 host.
+GitHub evidence snapshot count: 7; SHA validated without a running Cloud9 host.
 Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avant les gates restants.
 
 ## Certifié dans sa portée et A NE PAS REFAIRE
@@ -25,7 +25,7 @@ Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avan
 - C09 (PARTIAL) Chimera current opt-in Qwen4 completed 1/36 read-only strict native tool scenario, correct pve.get_ct_config JSON; GPU runtime PSI caused checkpointed pause. New native test harness supports --resume without duplicating completed cases; finish 35 remaining when admitted, add code/FR regressions.. Réussite: no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption
 - C10 (NOT_RUN) Existing server cannot simply be called multiworker; benchmark slots 1/2/4 and use real router queue/reloads; native llama server supports parallel decoding. Réussite: p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls
 - C11 (BLOCKED_RESOURCE) PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold.. Réussite: stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions
-- C12 (NOT_RUN) Compare same GGUF, prompts, quant, context+flags and MTP on/off with upstream; GPU KV Turbo3 Q/V is blocked until numerical+accuracy correct; no fake win. Réussite: hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain
+- C12 (NOT_RUN) Source-only experimental LAB candidate prepared for upstream llama.cpp Vulkan MTP reservation regression #30688: revert five lines from commit 1a3011cc0 in isolated master9ae chimera, resulting Git tree d122b09e38c4e5397601c1ade0c3c6cc3aea39cc. Still requires compiler CI, numerical validity and matched guarded GPU A/B: NOT production and no speed gain claimed.. Réussite: hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain
 - C13 (PARTIAL) Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4. Réussite: per role latency, quality and useful context proven on the target device
 - C14 (PARTIAL) Test Dify/n8n/Paperclip agents in read-only realistic tasks, 2 separate identities/profile constraints; ensure no repeated model switch. Réussite: real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges
 - C15 (NOT_RUN) Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning. Réussite: published tag/release, observable health/p95, canary auto rollback, user can select it natively

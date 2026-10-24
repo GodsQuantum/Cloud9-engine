@@ -3,3 +3,4 @@ tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-native.patch -whitespace
 tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-turbo-native.patch -whitespace
 tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-turbo-adaptive-experimental.patch -whitespace
 tools/chimera/patches/20261024-master9ae-r120-turbo-adaptive-backend-guard.patch -whitespace
+tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch -whitespace

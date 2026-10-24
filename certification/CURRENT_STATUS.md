@@ -3,7 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
-Hall of Fame: 192 records; 6 raw proofs mirrored with SHA on GitHub.
+Hall of Fame: 192 records; 7 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -20,7 +20,7 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C09 | Functional agentic JSON tools coding and French regression | PARTIAL | Chimera current opt-in Qwen4 completed 1/36 read-only strict native tool scenario, correct pve.get_ct_config JSON; GPU runtime PSI caused checkpointed pause. New native test harness supports --resume without duplicating completed cases; finish 35 remaining when admitted, add code/FR regressions. |
 | C10 | Multi-agent concurrency and performance envelope | NOT_RUN | Existing server cannot simply be called multiworker; benchmark slots 1/2/4 and use real router queue/reloads; native llama server supports parallel decoding |
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold. |
-| C12 | Feature speed parity and Turbo KV real backend GPU | NOT_RUN | Compare same GGUF, prompts, quant, context+flags and MTP on/off with upstream; GPU KV Turbo3 Q/V is blocked until numerical+accuracy correct; no fake win |
+| C12 | Feature speed parity and Turbo KV real backend GPU | NOT_RUN | Source-only experimental LAB candidate prepared for upstream llama.cpp Vulkan MTP reservation regression #30688: revert five lines from commit 1a3011cc0 in isolated master9ae chimera, resulting Git tree d122b09e38c4e5397601c1ade0c3c6cc3aea39cc. Still requires compiler CI, numerical validity and matched guarded GPU A/B: NOT production and no speed gain claimed. |
 | C13 | Four role-selected models and FlashNext >20 t/s | PARTIAL | Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4 |
 | C14 | OmniRoute Dify n8n Paperclip end-to-end | PARTIAL | Test Dify/n8n/Paperclip agents in read-only realistic tasks, 2 separate identities/profile constraints; ensure no repeated model switch |
 | C15 | Controlled v1 release default / rollback and live monitoring | NOT_RUN | Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning |
