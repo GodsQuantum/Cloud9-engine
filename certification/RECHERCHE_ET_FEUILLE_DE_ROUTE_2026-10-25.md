@@ -1,3 +1,13 @@
+## Actualisation 25 octobre, 01:25 : preuves actuelles
+
+- Le Hall of Fame canonique passe de 190 à **192 enregistrements**, via l'outil d'ajout natif; 1344 références de preuve. Les deux nouveaux enregistrements sont explicitement **PARTIAL**, pas des certifications finales.
+- **C08 PARTIAL** : sur la chimère master9ae Vulkan Qwen4, deux répétitions réelles 8K en graines 43/44 ont ingéré 8026 tokens chacune et retrouvé les 5 marqueurs; les vitesses de génération étaient ~8,0 et 8,6 tokens/s, contre 33,76 tokens/s sur la courte sélection d'outil. Troisième graine non exécutée après pression mémoire; 16K sur ce binaire reste non testé.
+- **C09 PARTIAL** : un appel d'outil Proxmox correct sur 36 tests planifiés, décodage mesuré à 34,58 tokens/s. Le résultat et le curseur sont enregistrés; le runner existant sait reprendre sans rejouer les tests réussis. Arrêt sur PSI.
+- **222 tests Python passent**. Six fichiers bruts (preuves JSON, nouveaux enregistrements du Hall of Fame, worklog) sont copiés **dans le GitHub du projet**, avec empreintes SHA vérifiées par la CI même en l'absence de connexion au serveur Cloud9.
+- Aucun démarrage GPU n'est forcé si l'arbitre refuse, et le job PBS quotidien reste activé. Les six gates de production ne sont pas terminés.
+
+---
+
 # Cloud9 Engine — audit historique, accélération et calendrier de jalons
 
 Date: 25 octobre 2026. État = un moteur Qwen 4B optionnel utilisable, PAS encore la release par défaut de tous les agents.

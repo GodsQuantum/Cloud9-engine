@@ -35,6 +35,16 @@ def validate(data, project=None):
                 path=project/rel
                 assert path.is_file(), "Missing: " + str(path)
                 assert sha(path) == e["sha256"], "Historic/attached proof changed: " + str(path)
+    for item in data.get("repo_proof_snapshots",[]):
+        relative=Path(item["repo_path"])
+        assert not relative.is_absolute() and ".." not in relative.parts
+        filename=REPO/relative
+        assert filename.is_file(), "GitHub evidence missing: "+str(filename)
+        assert sha(filename)==item["sha256"], "GitHub evidence digest mismatch: "+str(filename)
+        if project is not None:
+            original=project/item["project_path"]
+            assert original.is_file(), "Project original evidence missing: "+str(original)
+            assert sha(original)==item["sha256"], "Git and Project evidence differ: "+str(original)
     for k in ("minimum_production_path","full_product_path","historic_proofs_not_current_build_certification"):
         assert all(v in ids for v in data[k]),k
     assert set(data["minimum_production_path"]).issubset(data["full_product_path"])
@@ -44,6 +54,7 @@ def render_status(d):
     parts=["# Cloud9 Engine - matrice canonique de certification", "",
       "Date du registre: "+d["as_of"], "",
       "Moteur disponible sur demande: "+d["engine_current_id"],
+      "Hall of Fame: "+str(d["hall_record_count_at_audit"])+" records; "+str(len(d.get("repo_proof_snapshots",[])))+" raw proofs mirrored with SHA on GitHub.",
       "",
       "Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.",
       "",
@@ -76,6 +87,7 @@ def render_handoff(d):
      "Registre mis à jour: "+d["as_of"], "",
      "Moteur disponible: "+d["engine_current_id"],"",
      "SHA routeur: "+d["engine_current_sha256"],"SHA catalogue: "+d["catalog_sha256"],
+     "GitHub evidence snapshot count: "+str(len(d.get("repo_proof_snapshots",[])))+"; SHA validated without a running Cloud9 host.",
      "Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avant les gates restants.",
      "","## Certifié dans sa portée et A NE PAS REFAIRE",""]
     for g in d["gates"]:

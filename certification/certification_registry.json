@@ -4,7 +4,7 @@
   "as_of": "2026-10-25",
   "principle": "NEVER invalidate or re-run a historic proof without a specific changed engine/weight/backend/quant/context risk; a source CI pass is not GPU model certification",
   "canonical_hall_of_fame": "HALL_OF_FAME.json",
-  "hall_record_count_at_audit": 190,
+  "hall_record_count_at_audit": 192,
   "engine_current_id": "Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB",
   "engine_current_sha256": "2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262",
   "catalog_sha256": "82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288",
@@ -199,7 +199,7 @@
     {
       "id": "C08",
       "title": "Current chimera long effective context 8K 16K and maximum useful",
-      "status": "NOT_RUN",
+      "status": "PARTIAL",
       "scope": "current master9ae; historical Atomic 8K/16K proofs C02/C03 reusable as protocol",
       "evidence": [
         {
@@ -211,9 +211,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_8K_GUARD_STOP_NO_INFERENCE.json",
           "sha256": "5fe1ebbf72a0a0931c70f469f4f1f4cf7ed831089990aa024cf017c9bc3f2325",
           "note": "Unsuccessful guarded 8K initialization; inference NOT executed, no five marker pass claimed"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
+          "sha256": "db5678ef0ada0a03817514eced77a47b31128e036d216d8c6f191e56bcbc8d5b",
+          "note": "Real 8K 1/3 all five markers, remaining stopped for memory pressure"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
+          "sha256": "68f81916c490c4c6091029175dfdb5a3183dbea7aee4d857f6be0f2555237c80",
+          "note": "Reused real five-marker 8K: Qwen4 master9ae Vulkan two runs both 5/5; third paused on PSI"
         }
       ],
-      "remaining": "8K generator inherited from Atomic proved reusable: latest master9ae loaded with 12288 context and built an 8015-token synthetic fixture, but official GPU guardian stopped BEFORE any inference due drop 25.045 to 22.151 GiB available and PSI-full 0.54; zero of 3 prompts run. Next: memory headroom >=27GiB prelaunch then run 8K/16K with full prompt ingestion and strict 5 markers.",
+      "remaining": "On master9ae Qwen4 Vulkan (ctx8704), 8K five markers correct in both seeded repeats 1 and 2, both consumed 8026 input tokens. Third repeat stopped when memory PSI reached 2.31; 16K on current chimera still not tested. Preserve proofs and run ONLY seeded rep 3 when GPU-safe, then 16K.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -223,6 +233,25 @@
         "after_load_mem_available_gib": 22.151,
         "after_load_psi_full_avg10": 0.54,
         "status": "guardian_stopped_before_inference"
+      },
+      "measured_8k_single": {
+        "prompt_tokens": 8026,
+        "correct_markers": 5,
+        "repetitions_run": 1,
+        "repetitions_required": 3,
+        "decode_tps": 9.47569,
+        "prefill_tps": 326.32954
+      },
+      "measured_8k_2of3": {
+        "ctx": 8704,
+        "prompt_tokens_each": 8026,
+        "repetitions_passed": 2,
+        "repetitions_required": 3,
+        "mark_correct_each": 5,
+        "decode_tps": [
+          8.035247659541493,
+          8.622268911086572
+        ]
       }
     },
     {
@@ -235,10 +264,22 @@
           "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/Chimera_optional_native_router_after_tuning.json",
           "sha256": "5eda99f010e92f3ef14c62e291f93a8bc1884ab13a29c5f13714ab1fe6b71277",
           "note": "single strict read-only tool PASS"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
+          "sha256": "77c87809f07171664d7a8af0951c95d5b2667a3cd863e37f97b80b5b0d3f3c8b",
+          "note": "One real strict safe Proxmox tool call 1/1; rest of 36 checkpointed and halted on PSI"
         }
       ],
-      "remaining": "Complete existing 12 fixtures x 3, add strict code patch/JS YAML JSON negative/adversarial and FR checks",
-      "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption"
+      "remaining": "Chimera current opt-in Qwen4 completed 1/36 read-only strict native tool scenario, correct pve.get_ct_config JSON; GPU runtime PSI caused checkpointed pause. New native test harness supports --resume without duplicating completed cases; finish 35 remaining when admitted, add code/FR regressions.",
+      "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption",
+      "measured_c09_checkpoint": {
+        "cases_passed": 1,
+        "cases_executed": 1,
+        "cases_planned": 36,
+        "decode_tps": 34.578918014500836,
+        "status": "paused_resource_pressure"
+      }
     },
     {
       "id": "C10",
@@ -337,8 +378,42 @@
   ],
   "hall_recent_record_ids": [
     "2026-10-25:cloud9-native-chimera-master9ae-vulkan:Qwen4-2K-native-strict-tool",
-    "2026-10-25:openbmb-minicpm5-2b-heretic-Q6K-dspark:live137tokens"
+    "2026-10-25:openbmb-minicpm5-2b-heretic-Q6K-dspark:live137tokens",
+    "2026-10-25:chimera-master9ae:qwen4-8k-five-needle-partial-2of3",
+    "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
-  "source_integrity_update": "HALL_OF_FAME.json was appended via existing native --append-stdin, validated 190 records/1342 evidence; no old record overwritten.",
-  "latest_attempt_note": "25-Oct ~00:55 backup schedule temporarily disabled and 00:30 job stopped cleanly; schedule restored enabled=1. 8K current chimera built 8015 tokens but no inference, guardian refused after preload. C08 remains NOT_RUN."
+  "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
+  "latest_attempt_note": "25 Oct ~01:10–01:17: Current master9ae Qwen4 8K 2/3 five-needle successes at ctx8704 (8026 tokens each), third stopped PSI 2.31. C09 checkpoint1/36 strict tool success at 34.58 tokens/s, remaining paused PSI0.65. New checkpoint+resume native bench tested 9 guard/duplicate cases. PBS daily backup remains enabled.",
+  "repo_proof_snapshots": [
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
+      "sha256": "db5678ef0ada0a03817514eced77a47b31128e036d216d8c6f191e56bcbc8d5b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
+      "sha256": "68f81916c490c4c6091029175dfdb5a3183dbea7aee4d857f6be0f2555237c80"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
+      "sha256": "77c87809f07171664d7a8af0951c95d5b2667a3cd863e37f97b80b5b0d3f3c8b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/qwen4-8k-two-passes.json",
+      "project_path": "Sources/Records/2026-10-25_CHIMERA_CONTEXT_AND_TOOLS_HOF/qwen4-8k-two-passes.json",
+      "sha256": "adf3938ada1e934ea62d03d63634bb2523b32aca3a11b184c39b4e8356cab7c2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/qwen4-agentic-one-case.json",
+      "project_path": "Sources/Records/2026-10-25_CHIMERA_CONTEXT_AND_TOOLS_HOF/qwen4-agentic-one-case.json",
+      "sha256": "212657c08e9ac6290e2148d60b967bb170ae66f46c62fde7c1bd9f03e66c5604"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_0125_CHIMERA_8K_TWO_PASSES_AGENTIC_CHECKPOINT.md",
+      "project_path": "Sources/Worklogs/2026-10-25_0125_CHIMERA_8K_TWO_PASSES_AGENTIC_CHECKPOINT.md",
+      "sha256": "ca604a76d28ad34ddf1fea307ed15ab320ed76e532cf34a496a636a0dad52764"
+    }
+  ]
 }
