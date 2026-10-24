@@ -74,6 +74,50 @@ class RouterSafeAdmission(unittest.TestCase):
   stop=[x.lineno for x in calls if isinstance(x.func,ast.Attribute) and x.func.attr=="stop_worker_locked"]
   self.assertTrue(guard and stop)
   self.assertLess(min(guard),min(stop))
+ def test_existing_worker_is_preserved_on_denial(self):
+  # Execute the real method (extracted from the source), with a fake worker
+  # that must survive a guardian denial during a model switch.
+  import threading,time
+  klass=ast.ClassDef(name="IsolatedRouter",bases=[],keywords=[],
+      body=[METHODS["ensure_worker_locked"]],decorator_list=[])
+  code=ast.fix_missing_locations(ast.Module(body=[klass],type_ignores=[]))
+  def deny(_):
+   raise RuntimeError("GUARD_DENIED")
+  scope={"Path":Path,"os":os,"time":time,"catalog":{"defaults":{}},
+         "model_oversize_decision":lambda *a,**k:(True,"within-generic-limit"),
+         "guardian_preflight":deny}
+  exec(compile(code,str(SOURCE),"exec"),scope)
+  old=type("FakeWorker",(),{"poll":lambda self:None})()
+  class State(scope["IsolatedRouter"]):
+   worker=old
+   worker_model="KNOWN_WORKER"
+   active=0
+   cv=threading.Condition()
+   stopped=False
+   def stop_worker_locked(self):self.stopped=True
+  st=State()
+  with self.assertRaisesRegex(RuntimeError,"GUARD_DENIED"):
+   st.ensure_worker_locked(self.m)
+  self.assertFalse(st.stopped)
+  self.assertIs(st.worker,old)
+  self.assertEqual(st.worker_model,"KNOWN_WORKER")
+ def test_same_model_reused_without_rechecking_guard(self):
+  import threading,time
+  klass=ast.ClassDef(name="IsolatedRouter",bases=[],keywords=[],
+      body=[METHODS["ensure_worker_locked"]],decorator_list=[])
+  code=ast.fix_missing_locations(ast.Module(body=[klass],type_ignores=[]))
+  scope={"Path":Path,"os":os,"time":time,"catalog":{"defaults":{}},
+         "model_oversize_decision":lambda *a,**k:(True,"within-generic-limit"),
+         "guardian_preflight":lambda _:(_ for _ in ()).throw(RuntimeError("unexpected guardian call"))}
+  exec(compile(code,str(SOURCE),"exec"),scope)
+  old=type("FakeWorker",(),{"poll":lambda self:None})()
+  class State(scope["IsolatedRouter"]):
+   worker=old
+   worker_model="test-4B"
+  st=State()
+  st.ensure_worker_locked(self.m)
+  self.assertIs(st.worker,old)
+  self.assertEqual(st.worker_model,"test-4B")
  def test_no_automatic_exclusive_fallback(self):
   body=ast.get_source_segment(SOURCE.read_text(),METHODS["acquire_gpu"])
   self.assertNotIn("falling back to exclusive",body)
