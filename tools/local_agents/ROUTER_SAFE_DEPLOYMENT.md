@@ -50,3 +50,8 @@ Native coexist-light rules:
 Five unit tests for safe idle/known process matching plus an isolated HTTP
 smoke pass on CT410. New GPU sharing is NOT yet an inference certification.
 If a service regresses, restore prior router source and restart only the router.
+
+
+## Optional chimera per-model speed tuning, deployed
+
+CT410 current native route SHA256 2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262. Model Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB is now opt-in and specifically uses 6 threads and batch256. All other eight model records and standard 8-thread behavior remain unchanged. One successful routed strict tool call measured 33.7565 tok/s, 5.369s cold total; tested only at ctx2048 with f16 KV. Native router policy and rollback remain documented above. For the 9-model catalog, changes must be applied from PVE host (CT410 ZFS idmapped), never rename the file inside CT410.
