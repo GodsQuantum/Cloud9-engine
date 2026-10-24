@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "kind": "LAB_NATIVE_CHIMERA_MTP_ADAPTIVE_EXPERIMENTAL_NOT_PRODUCTION",
+  "date": "2026-10-24",
+  "source_upstream": {
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "commit": "9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2",
+    "tree": "3be23ccb41236df3d19222de88805d6e32e67b6e"
+  },
+  "base_turbo_tree": "e5a7c5726b7c136e2933bae6c21ac27540b16d5b",
+  "donor_adaptive": {
+    "source": "https://github.com/stew675/llama-cpp-rdna-boosts",
+    "release": "v14-097cf33d9-r120",
+    "patch_sha256": "95354d073d80bc1d571d05e2a4e350fdcaf8f072dc12173575cc7851d7dbb6cc",
+    "initial_patch_reject_hunks": 24,
+    "conflicts_archived": "Sources/Worklogs/Adaptive-MTP/2026-10-24/conflicts"
+  },
+  "port": {
+    "patch": "tools/chimera/patches/20261024-master9ae-r120-mmb-mtp-turbo-adaptive-experimental.patch",
+    "patch_sha256": "7703895422145ca6a71a139d85bb31b8df486bdb0649bf6342daf8a8aaee243c",
+    "resulting_tree": "b736cfe2fe66014d988e41c6e39fee0d9665d265",
+    "files_changed": 58,
+    "native_features": [
+      "MMB+MMF32",
+      "MTP prompt tail/nextn readback",
+      "Cloud9 legacy Turbo KV Vulkan",
+      "RDNA adaptive MTP controller",
+      "CLI draft-mtp-adaptive and depth flags",
+      "LLAMA_MTP_TAIL_READBACK kill switch",
+      "native CTest for controller"
+    ]
+  },
+  "notes": "Native code compiled locally CPU and 1/1 CTest. Full donor patch did not apply cleanly; conflicts archived, some existing source methods reused. No GPU quality certification; some donor recurrent rollback integration remains unproven.",
+  "qualification": {
+    "source_apply": false,
+    "cpu_native_build": true,
+    "adaptive_native_ctest": true,
+    "cli_help": true,
+    "vulkan_compile": false,
+    "hip_compile": false,
+    "gpu_execution": false,
+    "agentic_quality": false,
+    "production": false
+  }
+}
