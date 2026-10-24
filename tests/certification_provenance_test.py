@@ -25,7 +25,7 @@ class ProofRegistryTest(unittest.TestCase):
   self.assertEqual((R/"certification/NEXT_HANDOFF.md").read_text(),M.render_handoff(self.d))
  def test_repo_raw_benchmarks_shas_pinned_even_without_cloud9_host(self):
   self.assertEqual(self.d["hall_record_count_at_audit"],192)
-  self.assertEqual(len(self.d["repo_proof_snapshots"]),6)
+  self.assertEqual(len(self.d["repo_proof_snapshots"]),7)
   M.validate(self.d)
   altered=json.loads(json.dumps(self.d))
   altered["repo_proof_snapshots"][0]["sha256"]="0"*64
