@@ -12,7 +12,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: lab-cloud9-native-turbo-master9ae
+  group: lab-cloud9-native-turbo-master9ae-${{ github.sha }}
   cancel-in-progress: false
 jobs:
   vulkan:
