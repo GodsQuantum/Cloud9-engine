@@ -40,9 +40,27 @@ LAB_START_MEM_GIB = 27.0 if TARGET==8192 else 30.0
 LAB_START_MAX_SWAP_PCT = 95.0
 LAB_START_MAX_PSI_FULL = 0.35
 def lab_start_preflight(state):
-    return (state.get("mem_available_gib",0)>=LAB_START_MEM_GIB and
-            state.get("swap_used_percent",100)<LAB_START_MAX_SWAP_PCT and
+    # Official PVE guardian must still grant CHECK coexist-light reserve before
+    # reaching this stricter LAB-only check. Normal mode uses 27 GiB at 8K.
+    stable=(state.get("swap_used_percent",100)<LAB_START_MAX_SWAP_PCT and
             state.get("psi_memory_full_avg10",99)<LAB_START_MAX_PSI_FULL)
+    if not stable: return False
+    if state.get("mem_available_gib",0)>=LAB_START_MEM_GIB: return True
+    # Narrow fallback ONLY for 8K following additive native ZRAM2 setup:
+    # keep 20-21 GiB runtime floor and watchdog; never bypass official guard.
+    if TARGET!=8192: return False
+    zram2=pathlib.Path("/sys/block/zram2")
+    try:
+        resident_ready=(int((zram2/"disksize").read_text())>=4*1024**3 and
+                        (zram2/"initstate").read_text().strip()=="1")
+    except (OSError, ValueError):
+        return False
+    return (resident_ready and
+            state.get("swap_total_gib",0)>=23.0 and
+            state.get("swap_used_percent",100)<83.0 and
+            state.get("mem_available_gib",0)>=24.6 and
+            state.get("psi_memory_full_avg10",99)<0.10 and
+            state.get("safe_total_gtt_gib",0)>=7.2)
 WATCH_STOP=threading.Event()
 WATCH_EVENTS=[]
 OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulkan-guardian","backend":"Vulkan","model":"Qwen3.8-4B-Heretic MTP Q4_K_M","lab_only":True,"production_promoted":False,"status":"not_started","target_tokens":TARGET,
