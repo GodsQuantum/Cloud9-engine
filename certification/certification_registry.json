@@ -246,9 +246,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_2210_C08_NATIVE_8K_3OF3_PASS.md",
           "sha256": "cea5947fa2d81de9018a072ee6a40e17ef0b13d0316d6ddc584752533f933713",
           "note": "Qwen4 master9ae native 8K five markers 3/3, exact seed3 8026 input, 8.48 tokens/s; no watchdog"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C08_NATIVE_16K_WATCHDOG_FAIL_NO_SCORE.json",
+          "sha256": "0991f95f197a4d25a41de20dd2d3f893e33ad99c4754796a4bc1a9328fa03daf",
+          "note": "Actual current chimera 16K f16 KV first attempt failed watchdog PSI2.11 before full prompt; no successful row"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
+          "sha256": "00b1e4a6fc26d5d88b899cfb06cd46ab8187de55b0fadd9036406b9c0b47f6d3",
+          "note": "Actual current chimera 16K f16 KV first attempt failed watchdog PSI2.11 before full prompt; no successful row"
         }
       ],
-      "remaining": "Native current chimera Qwen4 8K EXACT 3/3 five-marker retrieval PASSED f16 KV at 8026 prompt tokens, latest seed3 8.4806 tok/s and zero watchdog. C08 still PARTIAL for current chimera 16K (three seeded runs) and larger useful context; do not replay historic Atomic proofs or promote NextN/Turbo3.",
+      "remaining": "Current native 8K 3/3 five-marker correct; current native 16K f16 KV attempt FAILED safely during prefill at ~6400 tokens (full host memory PSI2.11, MemAvailable23.395GiB), 0 full 16K answers and 0 scored reps; watchdog and own-LAB hung cleanup. Do not certify 16K, NextN or Turbo3. Require resource/memory optimization and distinct immutable trial with 3x5-marker pass, plus official guard.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -532,7 +542,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 around 23:00 Paris: C09 strict tools 36/36, current native Qwen4 8K 3/3, C10 guarded queued clients 42/42 (one decoding slot; p95 total9.04s); 2/4 GPU slots, 16K, NextN, agents and production canary unfinished.",
+  "latest_attempt_note": "2026-10-25 23:10 Paris: CURRENT Qwen4 native 8K 3/3 correct; C09 36/36; C10 42/42 client queue ONE native slot. First 16K current f16 KV trial failed at ~6400 tokens due strict host PSI full2.11, with no score and LAB-only child forcibly cleaned after stuck shutdown. Production default unchanged, no C15 canary. Evidence frozen.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -708,6 +718,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
       "project_path": "Sources/Worklogs/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
       "sha256": "da1e0b413fbc5b82fcd3f76700e7c427249075c99083242cd16345c7178dc9a0"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C08_NATIVE_16K_WATCHDOG_FAIL_NO_SCORE.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C08_NATIVE_16K_WATCHDOG_FAIL_NO_SCORE.json",
+      "sha256": "0991f95f197a4d25a41de20dd2d3f893e33ad99c4754796a4bc1a9328fa03daf"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
+      "sha256": "00b1e4a6fc26d5d88b899cfb06cd46ab8187de55b0fadd9036406b9c0b47f6d3"
     }
   ],
   "nextn_lab_candidate": {

@@ -46,21 +46,29 @@ def lab_start_preflight(state):
             state.get("psi_memory_full_avg10",99)<LAB_START_MAX_PSI_FULL)
     if not stable: return False
     if state.get("mem_available_gib",0)>=LAB_START_MEM_GIB: return True
-    # Narrow fallback ONLY for 8K following additive native ZRAM2 setup:
-    # keep 20-21 GiB runtime floor and watchdog; never bypass official guard.
-    if TARGET!=8192: return False
+    # Native ZRAM2 coexistence fallback is LAB-only, without relaxing the
+    # authoritative GPU guardian, emergency watchdog or 20/21 GiB runtime floor.
     zram2=pathlib.Path("/sys/block/zram2")
     try:
         resident_ready=(int((zram2/"disksize").read_text())>=4*1024**3 and
                         (zram2/"initstate").read_text().strip()=="1")
     except (OSError, ValueError):
         return False
-    return (resident_ready and
-            state.get("swap_total_gib",0)>=23.0 and
-            state.get("swap_used_percent",100)<83.0 and
-            state.get("mem_available_gib",0)>=24.6 and
-            state.get("psi_memory_full_avg10",99)<0.10 and
-            state.get("safe_total_gtt_gib",0)>=7.2)
+    if not resident_ready or state.get("swap_total_gib",0)<23:
+        return False
+    if TARGET==8192:
+        return (state.get("swap_used_percent",100)<83.0 and
+                state.get("mem_available_gib",0)>=24.6 and
+                state.get("psi_memory_full_avg10",99)<0.10 and
+                state.get("safe_total_gtt_gib",0)>=7.2)
+    # 16K: stricter than 8K; 6.2 GiB pre-admission already mandatory and
+    # a guarded failure must not be retried on the same immutable trial ID.
+    if TARGET==16384:
+        return (state.get("swap_used_percent",100)<78.0 and
+                state.get("mem_available_gib",0)>=25.3 and
+                state.get("psi_memory_full_avg10",99)<0.05 and
+                state.get("safe_total_gtt_gib",0)>=7.8)
+    return False
 WATCH_STOP=threading.Event()
 WATCH_EVENTS=[]
 OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulkan-guardian","backend":"Vulkan","model":"Qwen3.8-4B-Heretic MTP Q4_K_M","lab_only":True,"production_promoted":False,"status":"not_started","target_tokens":TARGET,
