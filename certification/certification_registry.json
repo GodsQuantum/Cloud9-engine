@@ -349,10 +349,10 @@
         {
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
           "sha256": "f4c371bf851ed8a04a50964950cc270d8e5b7a3aa7ab1d81c905bac1bd9b164e",
-          "note": "Negative quality proof: experimental Vulkan K q8_0 / V turbo3 8K full prompt but all five markers wrong, decode3.51 tok/s; not a speed-certificate"
+          "note": "Negative quality proof: experimental Vulkan K q8_0 / V turbo3 8K full prompt but failed 5/5 criterion (per-marker wrong count not recorded), decode3.51 tok/s; not a speed-certificate"
         }
       ],
-      "remaining": "NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, five markers wrong). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance.",
+      "remaining": "NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, 5/5 extraction criterion failed (per-marker wrong count not recorded)). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
