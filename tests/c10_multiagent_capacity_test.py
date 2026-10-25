@@ -27,6 +27,19 @@ class CapacityGuardTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "OFFICIAL_GUARDIAN_DENIED"):
                 b.preflight(b.MODEL_ID, "http://x", "http://y", "localhost")
 
+    def test_postload_start_floor_not_confused_with_runtime_stop(self):
+        guard={"allow":False,"reasons":["host MemAvailable 22.7 GiB < start floor 24.0 GiB"],
+               "mem_available_gib":22.7,"psi_memory_full_avg10":0.08,"swap_used_percent":80.2}
+        with mock.patch.object(b,"fetch_json",side_effect=[{"worker_model":b.MODEL_ID},[{"id":0}]]), mock.patch.object(b,"guardian_check",return_value=guard):
+            self.assertEqual(b.preflight(b.MODEL_ID,"http://x","http://y","localhost")["native_slots"],1)
+
+    def test_postload_runtime_pressure_must_stop(self):
+        guard={"allow":False,"reasons":["host MemAvailable 22.7 GiB < start floor 24.0 GiB"],
+               "mem_available_gib":22.7,"psi_memory_full_avg10":0.75,"swap_used_percent":80.2}
+        with mock.patch.object(b,"fetch_json",return_value={"worker_model":b.MODEL_ID}), mock.patch.object(b,"guardian_check",return_value=guard):
+            with self.assertRaisesRegex(ValueError,"LOADED_WORKER_RUNTIME_PRESSURE"):
+                b.preflight(b.MODEL_ID,"http://x","http://y","localhost")
+
     def test_unloaded_worker_denied_before_gpu_guard(self):
         with mock.patch.object(b, "fetch_json", return_value={"worker_model": None}), \
              mock.patch.object(b, "guardian_check") as guard:
@@ -36,13 +49,13 @@ class CapacityGuardTest(unittest.TestCase):
 
     def test_worker_native_slots_grounded_not_client_count(self):
         with mock.patch.object(b, "fetch_json", side_effect=[{"worker_model": b.MODEL_ID}, [{"id": 0}]]), \
-             mock.patch.object(b, "guardian_check", return_value={"allow": True, "mem_available_gib": 28}):
+             mock.patch.object(b, "guardian_check", return_value={"allow": True, "mem_available_gib": 28,"psi_memory_full_avg10":0.0,"swap_used_percent":80}):
             d = b.preflight(b.MODEL_ID, "http://x", "http://y", "localhost")
             self.assertEqual(d["native_slots"], 1)
         self.assertFalse(b.summarize([{"phase":"tool","passed":True,"wall_seconds":1}], 1)["server_true_parallelism_proven"])
 
     def test_busy_worker_is_rejected(self):
-        with mock.patch.object(b,"fetch_json",side_effect=[{"worker_model":b.MODEL_ID},[{"id":0,"is_processing":True}]]), mock.patch.object(b,"guardian_check",return_value={"allow":True}):
+        with mock.patch.object(b,"fetch_json",side_effect=[{"worker_model":b.MODEL_ID},[{"id":0,"is_processing":True}]]), mock.patch.object(b,"guardian_check",return_value={"allow":True,"mem_available_gib":28,"psi_memory_full_avg10":0.0,"swap_used_percent":80}):
             with self.assertRaisesRegex(ValueError,"NATIVE_WORKER_BUSY"):
                 b.preflight(b.MODEL_ID,"http://x","http://y","localhost")
 

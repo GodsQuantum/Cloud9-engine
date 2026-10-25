@@ -1,0 +1,115 @@
+{
+  "utc": "2026-10-25T21:17:46.939657+00:00",
+  "connection_audit": {
+    "checked_at_utc": "2026-10-25T21:17:39Z",
+    "mode": "read-only",
+    "native_provider": {
+      "exists": true,
+      "name": "Cloud9 llama.cpp — Radeon 780M · Modèles Hall of Fame",
+      "enabled": true,
+      "status": "active",
+      "points_to_cloud9_8090": true
+    },
+    "combo": {
+      "exists": true,
+      "name": "Cloud9-Engine",
+      "strategy": "priority",
+      "model_count": 4,
+      "models": [
+        {
+          "id": "Cloud9-Qwen3.8-4B-Heretic",
+          "exists_in_router_catalog": true,
+          "group": "small",
+          "uncensored": true
+        },
+        {
+          "id": "Cloud9-MiniCPM5-2B-DSpark",
+          "exists_in_router_catalog": true,
+          "group": "small",
+          "uncensored": true
+        },
+        {
+          "id": "Cloud9-Ling3-Tiny-Uncensored",
+          "exists_in_router_catalog": true,
+          "group": "small",
+          "uncensored": true
+        },
+        {
+          "id": "Cloud9-LFM2.5-2.6B-Uncensored",
+          "exists_in_router_catalog": true,
+          "group": "small",
+          "uncensored": true
+        }
+      ]
+    },
+    "selected_roles": {
+      "Cloud9-MiniCPM5-2B-DSpark": {
+        "catalog_available": true,
+        "in_native_cloud9_combo": true
+      },
+      "Cloud9-Qwen3.8-4B-Heretic": {
+        "catalog_available": true,
+        "in_native_cloud9_combo": true
+      },
+      "Cloud9-Pym-35B-A3B-MTP": {
+        "catalog_available": true,
+        "in_native_cloud9_combo": false
+      },
+      "Cloud9-Qwen3.6-35B-A3B-Heretic": {
+        "catalog_available": true,
+        "in_native_cloud9_combo": false
+      }
+    },
+    "errors": [],
+    "static_native_connection_valid": true,
+    "model_inference_certified": false,
+    "all_agents_integrated": false,
+    "single_generation_worker_caveat": true
+  },
+  "service_health": {
+    "omniroute": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "n8n-main": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "n8n-worker": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "dify-api-1": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "dify-worker-1": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "mcpproxy": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "open-webui": {
+      "return_code": 0,
+      "output": "healthy"
+    },
+    "paperclip-systemd": {
+      "return_code": 0,
+      "output": "active"
+    },
+    "router-systemd": {
+      "return_code": 0,
+      "output": "active"
+    },
+    "embedding-systemd": {
+      "return_code": 0,
+      "output": "active"
+    }
+  },
+  "mode": "read_only",
+  "requests_to_agents_or_llm": 0,
+  "real_agent_workflow_certified": false,
+  "omniroute_combo_modified": false
+}
