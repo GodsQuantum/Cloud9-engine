@@ -1,0 +1,69 @@
+{
+  "engine": "Atomic TurboQuant 2.0.0",
+  "backend": "Vulkan RADV gfx1103",
+  "candidate_role": "QUALIFICATION_ONLY",
+  "production_promoted": false,
+  "source_native_build": "/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA/Sources/Builds/atomic-turboquant-2.0.0-20261016/build-cloud9/bin",
+  "CT410_staged_native_bin": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin",
+  "original_launcher_sha256": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
+  "relocated_launcher_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+  "elf_relocation_rpath": "$ORIGIN",
+  "elf_relocated": [
+    {
+      "name": "libggml-base.so.0.18.1",
+      "sha256": "e5294176685853543e1aabd7b9437bf6477efe0adeb9084966c6aae3bb597c3a"
+    },
+    {
+      "name": "libggml-cpu.so.0.18.1",
+      "sha256": "407d798f6a5f3eb3bff65531342ef0c2154135ff91621d7c91571f98a0c71046"
+    },
+    {
+      "name": "libggml-rpc.so.0.18.1",
+      "sha256": "3fdde4b6449846df1697d456a2a6c3f59e59992670c2f1bce774801b341a51b1"
+    },
+    {
+      "name": "libggml-vulkan.so.0.18.1",
+      "sha256": "7307124243babc05259a0ae5832cd399b28b0af4cf0b204c56b605044b97ede5"
+    },
+    {
+      "name": "libggml.so.0.18.1",
+      "sha256": "7164c92163b0baf5fe3963dce61fb384e3f1da0da97b5ab1356218feb460b8e9"
+    },
+    {
+      "name": "libllama-bench-impl.so",
+      "sha256": "50cc8194113a69cd1bbb9f0293e359c31632a5a22d4f2cbda4bef0d8944771f3"
+    },
+    {
+      "name": "libllama-common.so.0.0.1",
+      "sha256": "1d907656f4f12f5900a7f324a8692efb1c20b86ecaca32d45a0e951f24aad634"
+    },
+    {
+      "name": "libllama-server-impl.so",
+      "sha256": "3411f6729f80e5257b022ae260904a9227c49ec7307f36c379e35cb66cdada6c"
+    },
+    {
+      "name": "libllama.so.0.0.1",
+      "sha256": "c5f0557888a419a06ff678b39b0df60546700d37c26913f25ac3a3afb02f1986"
+    },
+    {
+      "name": "libmtmd.so.0.0.1",
+      "sha256": "2a4b0958ab304a460fae4ba9bf8246d9c9bb900b447bd285db48c8a4365b0f5b"
+    },
+    {
+      "name": "llama-bench",
+      "sha256": "b060e8c0d2537a876254f9cc8c6ecd11795e3a96116d75f851a3523e8673ffd8"
+    },
+    {
+      "name": "llama-server",
+      "sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a"
+    },
+    {
+      "name": "test-backend-ops",
+      "sha256": "2ab359c38f6bcde8b8edb97c3b9f7e20dfac777290dc6b4af87c918a3f44224d"
+    }
+  ],
+  "existing_16K_qualified_proof": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-16384-reps3.json",
+  "existing_16K_five_markers": "3/3 exact 16,330 tokens on October 22",
+  "quality_36": "3/9 JSON exact, 6/9 tool choice, 0/9 code, 7/9 French exact; NOT safe all-purpose agent engine",
+  "new_live_GPU_inference_certified": false
+}
