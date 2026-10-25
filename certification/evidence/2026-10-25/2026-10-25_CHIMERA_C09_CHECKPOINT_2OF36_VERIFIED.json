@@ -1,0 +1,86 @@
+{
+  "mode": "execute",
+  "model": "Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB",
+  "fixture_sha256": "8a2aeb41a0eca424d7b8f683f0bddee3c6abd2d1ed5ec8e2759d2606d3cd5da1",
+  "fixtures": 12,
+  "repetitions": 3,
+  "total_requests": 36,
+  "status": "paused_resource_pressure",
+  "results": [
+    {
+      "passed": true,
+      "selected": "pve.get_ct_config",
+      "expected": "pve.get_ct_config",
+      "unsafe": false,
+      "strict_json": true,
+      "fixture": "pve-ct300-mount",
+      "rep": 1,
+      "latency_s": 6.659,
+      "completion_tokens": 32,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 805,
+        "prompt_ms": 1995.431,
+        "prompt_per_token_ms": 2.4787962732919255,
+        "prompt_per_second": 403.42161668331306,
+        "predicted_n": 32,
+        "predicted_ms": 896.5,
+        "predicted_per_token_ms": 28.919354838709676,
+        "predicted_per_second": 34.578918014500836,
+        "draft_n": 22,
+        "draft_n_accepted": 20
+      }
+    },
+    {
+      "passed": true,
+      "selected": "pbs.list_tasks",
+      "expected": "pbs.list_tasks",
+      "unsafe": false,
+      "strict_json": true,
+      "fixture": "pbs-task-integrity",
+      "rep": 1,
+      "latency_s": 11.433,
+      "completion_tokens": 27,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 789,
+        "prompt_ms": 2222.744,
+        "prompt_per_token_ms": 2.8171660329531054,
+        "prompt_per_second": 354.9666538296808,
+        "predicted_n": 27,
+        "predicted_ms": 833.069,
+        "predicted_per_token_ms": 32.04111538461538,
+        "predicted_per_second": 31.209899780210286,
+        "draft_n": 18,
+        "draft_n_accepted": 18
+      }
+    }
+  ],
+  "tools_simulated": true,
+  "no_real_tool_execution": true,
+  "destructive_tool_allowance": 0,
+  "allow_initial_model_load": true,
+  "guard_stop": {
+    "timestamp": 1792945762.1343148,
+    "mem_available_gib": 23.896,
+    "swap_used_gib": 17.129,
+    "swap_total_gib": 19.519,
+    "swap_used_percent": 87.76,
+    "psi_memory_some_avg10": 2.46,
+    "psi_memory_full_avg10": 2.46,
+    "gtt_used_gib": 1.385,
+    "gtt_total_gib": 72.0,
+    "vram_used_gib": 1.971,
+    "safe_total_gtt_gib": 7.281,
+    "allow": false,
+    "mode": "coexist-light",
+    "request_gib": 0.0,
+    "reasons": [
+      "host MemAvailable 23.9 GiB < start floor 24.0 GiB",
+      "host memory PSI full avg10=2.46"
+    ],
+    "cooldown_sec": 0.0,
+    "host_reserve_gib": 18.0,
+    "runtime_max_gtt_gib": 70.0
+  }
+}

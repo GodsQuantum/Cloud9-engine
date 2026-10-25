@@ -274,9 +274,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
           "sha256": "77c87809f07171664d7a8af0951c95d5b2667a3cd863e37f97b80b5b0d3f3c8b",
           "note": "One real strict safe Proxmox tool call 1/1; rest of 36 checkpointed and halted on PSI"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_2OF36_VERIFIED.json",
+          "sha256": "3c4abf676cb4876f4a938c39794529494ae696f1339362a1da00aff9791eb89a",
+          "note": "Real checkpointed native C09 advanced from 1/36 to 2/36, both strict read-only tool calls correct; paused official memory guard after rep1 second scenario."
         }
       ],
-      "remaining": "Chimera current opt-in Qwen4 completed 1/36 read-only strict native tool scenario, correct pve.get_ct_config JSON; GPU runtime PSI caused checkpointed pause. New native test harness supports --resume without duplicating completed cases; finish 35 remaining when admitted, add code/FR regressions.",
+      "remaining": "Read-only native Qwen4 C09 now 2/36 strict correct; second case pbs-task-integrity 11.433 seconds. Remaining 34 distinct case/repetitions untested. Resume original immutable fixture+mutable CT410 checkpoint, skipping first two, only when GPU/memory guard permits; add FR/code regression.",
       "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption",
       "measured_c09_checkpoint": {
         "cases_passed": 1,
@@ -340,9 +345,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
           "sha256": "faa396b03cc6f62ec35bc0b2e18dd0344d076e631fc342296a3f7782b14f55df",
           "note": "Vulkan CI success, verified archive 12 members, native CT410 loader and unit tests; NO GPU inference claim"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
+          "sha256": "f4c371bf851ed8a04a50964950cc270d8e5b7a3aa7ab1d81c905bac1bd9b164e",
+          "note": "Negative quality proof: experimental Vulkan K q8_0 / V turbo3 8K full prompt but all five markers wrong, decode3.51 tok/s; not a speed-certificate"
         }
       ],
-      "remaining": "Reproduced exact master9ae source with 5-line NextN reserve revert; GitHub CI run40144538324 SUCCESS and host ABI/unit test PASS after standard $ORIGIN patchelf relocation. Binary staged INACTIVE on CT410. Runtime GPU correctness and performance NOT tested; need matched K/V quant+batch source candidate A/B and scheduler graph stability before promotion.",
+      "remaining": "NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, five markers wrong). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -360,6 +370,11 @@
           "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
           "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
           "note": "current selected Qwen4 / OpenBMB"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
+          "sha256": "f3b3c0fc70029cb0ed712efb6d68cb4c66cb7be9b8b9dab417353504c22e57cc",
+          "note": "Official Nemotron 3.5 Bolt 74B-A9B/E4B source research; candidates only, no weights downloaded nor GPU benchmark"
         }
       ],
       "remaining": "Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4",
@@ -415,7 +430,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "25Oct02:15 native candidate CI success and ELF stage, swap>98 GPU test blocked. OmniRoute sqlite read-only confirms llama-cpp connection active, 4 stable Cloud9-Engine combo models, CT410 9 catalog models; chimera LAB excluded from default, actual E2E agent workflow still untested. | 25Oct02:13: C08 missing 8K rep3 retried exactly once, guard stopped after load BEFORE inference, PSI2.32 / MemAvailable22.681GiB; remains 2/3. JSON and MD mirrored with immutable SHA; no extra Hall of Fame result.",
+  "latest_attempt_note": "2026-10-25 17:33 Europe/Paris: C09 resumed from checkpoint1/36, second safe tool pbs-task-integrity passed, total2/36. Guardian memory PSI paused continuation. C12 Turbo3 8K proved negative five-marker correctness, 3.51 tok/s; not a candidate for production. New Nemotron 74B/E4B research candidate only, no hardware bench. Historical 192 HOF retained.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -476,6 +491,21 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_0214_C08_REP3_NOT_EXECUTED_AFTER_GUARD.md",
       "project_path": "Sources/Worklogs/2026-10-25_0214_C08_REP3_NOT_EXECUTED_AFTER_GUARD.md",
       "sha256": "c6148a3ad6c4a366ce904c0bcc8ad90152354bf844b4272a560c46d33b459525"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_2OF36_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_2OF36_VERIFIED.json",
+      "sha256": "3c4abf676cb4876f4a938c39794529494ae696f1339362a1da00aff9791eb89a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
+      "sha256": "f4c371bf851ed8a04a50964950cc270d8e5b7a3aa7ab1d81c905bac1bd9b164e"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
+      "project_path": "Sources/Worklogs/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
+      "sha256": "f3b3c0fc70029cb0ed712efb6d68cb4c66cb7be9b8b9dab417353504c22e57cc"
     }
   ],
   "nextn_lab_candidate": {
