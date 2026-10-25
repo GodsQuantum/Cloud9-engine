@@ -335,7 +335,7 @@
     {
       "id": "C10",
       "title": "Multi-agent concurrency and performance envelope",
-      "status": "PARTIAL",
+      "status": "CURRENT_PASS_LIMITED",
       "scope": "current native router and experimental Qwen4 chimera, 1 active model-worker",
       "evidence": [
         {
@@ -357,9 +357,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_2230_C10_POSTLOAD_AND_C14_AGENT_HEALTH.md",
           "sha256": "f932904e2f65aaf018c92e350fb04b67e68b6e3149267eb36f7353d788950355",
           "note": "C10 preloaded exact model postload guard correction; no performance pass"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C10_NATIVE_CLIENT_QUEUE_42OF42_PASS.json",
+          "sha256": "593877e6854bd4080e0eb8f8fe9f82e348d77c0fcd57602c9fcdaae74783c492",
+          "note": "42/42 native Qwen4 client queue one slot, 21/21 tool and 21/21 SSE correct; native parallel not proven"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
+          "sha256": "da1e0b413fbc5b82fcd3f76700e7c427249075c99083242cd16345c7178dc9a0",
+          "note": "42/42 native Qwen4 client queue one slot, 21/21 tool and 21/21 SSE correct; native parallel not proven"
         }
       ],
-      "remaining": "C10 native server has one generation slot; only 1/42 guarded client requests correct (2.8433s). Resume same checkpoint (no repeats) after precise model pre-admission; LAB C10 now distinguishes post-load survival (MemAvailable>=21GiB, memory PSI full<0.5, swap<=96) from new-worker 24GiB admission, and aborts all non-start-floor guardian reasons. 1/2/4 client queue quality, p95 stream latency and true native 4 slots unproven.",
+      "remaining": "C10 client queue 42/42 for fan-outs 1,2,4 across 3 repetitions; 21/21 safe tool selection, 21/21 streaming, p95 total 9.0427s, p95 first stream fragment 6.5728s. Native llama worker has ONLY one decoding slot, so real 2/4 GPU parallel decode, exact ITL and long soak remain. Test explicit native --parallel N safely before claiming full multiagent GPU production.",
       "acceptance": "p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls"
     },
     {
@@ -522,7 +532,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 22:10 Europe/Paris: C09 36/36 strict simulated tools zero unsafe, C08 current Qwen4 8K five-needle 3/3 verified; seed3 8026 prompt tokens, decode8.4806/s, prefill317.971/s, 0 watchdog. Current 16K, C10, C14, C15 remain. | 22:20 C10 real slot1 and first tool request correct 2.8433s; PSI1.70 stop; new crash-safe --resume whole-group semantics+24s official guard cooldown, no automatic bypass. | 22:30 C10 postload survival correction (matches C09 21GiB floor, PSI<.5, swap<=96, official new-load guard unchanged), 12 unit tests. C14 process/provision read-only healthy but not E2E.",
+  "latest_attempt_note": "2026-10-25 around 23:00 Paris: C09 strict tools 36/36, current native Qwen4 8K 3/3, C10 guarded queued clients 42/42 (one decoding slot; p95 total9.04s); 2/4 GPU slots, 16K, NextN, agents and production canary unfinished.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -688,6 +698,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2230_C10_POSTLOAD_AND_C14_AGENT_HEALTH.md",
       "project_path": "Sources/Worklogs/2026-10-25_2230_C10_POSTLOAD_AND_C14_AGENT_HEALTH.md",
       "sha256": "f932904e2f65aaf018c92e350fb04b67e68b6e3149267eb36f7353d788950355"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C10_NATIVE_CLIENT_QUEUE_42OF42_PASS.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C10_NATIVE_CLIENT_QUEUE_42OF42_PASS.json",
+      "sha256": "593877e6854bd4080e0eb8f8fe9f82e348d77c0fcd57602c9fcdaae74783c492"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
+      "sha256": "da1e0b413fbc5b82fcd3f76700e7c427249075c99083242cd16345c7178dc9a0"
     }
   ],
   "nextn_lab_candidate": {
