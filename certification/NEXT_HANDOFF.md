@@ -6,7 +6,7 @@ Moteur disponible: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 
 SHA routeur: 2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262
 SHA catalogue: 82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288
-GitHub evidence snapshot count: 39; SHA validated without a running Cloud9 host.
+GitHub evidence snapshot count: 41; SHA validated without a running Cloud9 host.
 Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avant les gates restants.
 
 ## Certifié dans sa portée et A NE PAS REFAIRE
@@ -23,7 +23,7 @@ Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avan
 
 ## Restant et ordonné
 
-- C08 (PARTIAL) 8K current chimera native f16 3/3 correct. 16K f16 failed at 6400 tokens because memory PSI full2.11; 16K q8_0 alternate had no safe preflight window and NO inference; still 0 scored 16K. Watchdog cleanup now targets own stuck LAB child with bounded TERM/KILL. Await demonstrably stable host resources, same full 16K five-marker suite all three reps. Do not lower official guardian or promote experimental Turbo3/NextN.. Réussite: same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed
+- C08 (PARTIAL) GGUF qwen35.context_length=262144 verified locally; current Chimera 8K five-marker 3/3 PASS; 16K f16 failed memory PSI2.11 and 16K q8 no safe preflight. PRODUCT TARGET 128K with progressive 32K/64K/128K full five-marker 3-rep trials, full prompt and latency/memory metrics under official guard. 256K stretch. Estimated attention-only q8 KV:32K0.598GiB,64K1.195,128K2.391,256K4.781. No production capability claims without live tests.. Réussite: same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed
 - C09 (CURRENT_PASS_LIMITED) 36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion.. Réussite: no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption
 - C10 (CURRENT_PASS_LIMITED) C10 client queue 42/42 for fan-outs 1,2,4 across 3 repetitions; 21/21 safe tool selection, 21/21 streaming, p95 total 9.0427s, p95 first stream fragment 6.5728s. Native llama worker has ONLY one decoding slot, so real 2/4 GPU parallel decode, exact ITL and long soak remain. Test explicit native --parallel N safely before claiming full multiagent GPU production.. Réussite: p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls
 - C11 (BLOCKED_RESOURCE) Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability.. Réussite: stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions

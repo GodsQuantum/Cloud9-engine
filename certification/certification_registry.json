@@ -261,9 +261,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
           "sha256": "1e2878a1b3fbfa623ef3fd474d6cb17cc58503461ff0f3ceefd7335b5541a1f1",
           "note": "16K Q8 no safe preflight; own LAB child watchdog cleanup bounded; no new inference"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_QWEN35_4B_REAL_GGUF_LONG_CONTEXT_CAPABILITY.json",
+          "sha256": "184ad9ed09cd0dfb991dc0168cef70e40c54f4eadbdadee6f275c97ce4e0cf59",
+          "note": "Actual local GGUF header native context262144 and estimated static 32/64/128/256K KV envelope; NONE above 8K GPU certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
+          "sha256": "a36a1b2bf31ae1546f6bf8d4e2312ee3d7d04e5d3920560a7563041739ba4368",
+          "note": "Actual local GGUF header native context262144 and estimated static 32/64/128/256K KV envelope; NONE above 8K GPU certified"
         }
       ],
-      "remaining": "8K current chimera native f16 3/3 correct. 16K f16 failed at 6400 tokens because memory PSI full2.11; 16K q8_0 alternate had no safe preflight window and NO inference; still 0 scored 16K. Watchdog cleanup now targets own stuck LAB child with bounded TERM/KILL. Await demonstrably stable host resources, same full 16K five-marker suite all three reps. Do not lower official guardian or promote experimental Turbo3/NextN.",
+      "remaining": "GGUF qwen35.context_length=262144 verified locally; current Chimera 8K five-marker 3/3 PASS; 16K f16 failed memory PSI2.11 and 16K q8 no safe preflight. PRODUCT TARGET 128K with progressive 32K/64K/128K full five-marker 3-rep trials, full prompt and latency/memory metrics under official guard. 256K stretch. Estimated attention-only q8 KV:32K0.598GiB,64K1.195,128K2.391,256K4.781. No production capability claims without live tests.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -552,7 +562,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 23:20 Paris: C09 36/36 and C10 42/42 native queued clients one slot PASS; Qwen4 native f16 8K 3/3 PASS; f16 16K fails strict watchdog memory PSI2.11 during 6400-token prefill, q8 16K variant NEVER admitted safely in 115.7s. LAB watchdog child cleanup bounded. Authenticated OmniRoute model ID Chimera absent in 3 allowed clients; C14/C15 unfinished. Defaults unchanged.",
+  "latest_attempt_note": "2026-10-25 23:20 Paris: C09 36/36 and C10 42/42 native queued clients one slot PASS; Qwen4 native f16 8K 3/3 PASS; f16 16K fails strict watchdog memory PSI2.11 during 6400-token prefill, q8 16K variant NEVER admitted safely in 115.7s. LAB watchdog child cleanup bounded. Authenticated OmniRoute model ID Chimera absent in 3 allowed clients; C14/C15 unfinished. Defaults unchanged. | 2026-10-25 23:40: ACTUAL GGUF context 262144, agentic target128K not 16K. Offline KV estimates and six unit tests pass. Full 16K+ runtime not certified, default routes untouched.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -748,6 +758,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
       "project_path": "Sources/Worklogs/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
       "sha256": "3c5127998a12d54231a489554a8c5440a4acb3f0e403f3e864fd6801002a4b8c"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_QWEN35_4B_REAL_GGUF_LONG_CONTEXT_CAPABILITY.json",
+      "project_path": "Sources/Worklogs/2026-10-25_QWEN35_4B_REAL_GGUF_LONG_CONTEXT_CAPABILITY.json",
+      "sha256": "184ad9ed09cd0dfb991dc0168cef70e40c54f4eadbdadee6f275c97ce4e0cf59"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
+      "sha256": "a36a1b2bf31ae1546f6bf8d4e2312ee3d7d04e5d3920560a7563041739ba4368"
     }
   ],
   "nextn_lab_candidate": {

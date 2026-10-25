@@ -3,7 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
-Hall of Fame: 192 records; 39 raw proofs mirrored with SHA on GitHub.
+Hall of Fame: 192 records; 41 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -16,7 +16,7 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C05 | CT410 router safe nonpreemptive, stable services | CURRENT_PASS_LIMITED | Prove stress and crash recovery and no interruptions under concurrent agent traffic |
 | C06 | Chimera native Qwen4 real GPU 2K + strict read-only tool | CURRENT_PASS_LIMITED | Tool quality is only 1 case; incorrect technical suggestions in chat observed |
 | C07 | OpenBMB MiniCPM5+DSpark live speed and tool | CURRENT_PASS_LIMITED | Not 3/3 scenario suite nor untouched OpenBMB weights |
-| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | 8K current chimera native f16 3/3 correct. 16K f16 failed at 6400 tokens because memory PSI full2.11; 16K q8_0 alternate had no safe preflight window and NO inference; still 0 scored 16K. Watchdog cleanup now targets own stuck LAB child with bounded TERM/KILL. Await demonstrably stable host resources, same full 16K five-marker suite all three reps. Do not lower official guardian or promote experimental Turbo3/NextN. |
+| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | GGUF qwen35.context_length=262144 verified locally; current Chimera 8K five-marker 3/3 PASS; 16K f16 failed memory PSI2.11 and 16K q8 no safe preflight. PRODUCT TARGET 128K with progressive 32K/64K/128K full five-marker 3-rep trials, full prompt and latency/memory metrics under official guard. 256K stretch. Estimated attention-only q8 KV:32K0.598GiB,64K1.195,128K2.391,256K4.781. No production capability claims without live tests. |
 | C09 | Functional agentic JSON tools coding and French regression | CURRENT_PASS_LIMITED | 36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion. |
 | C10 | Multi-agent concurrency and performance envelope | CURRENT_PASS_LIMITED | C10 client queue 42/42 for fan-outs 1,2,4 across 3 repetitions; 21/21 safe tool selection, 21/21 streaming, p95 total 9.0427s, p95 first stream fragment 6.5728s. Native llama worker has ONLY one decoding slot, so real 2/4 GPU parallel decode, exact ITL and long soak remain. Test explicit native --parallel N safely before claiming full multiagent GPU production. |
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability. |

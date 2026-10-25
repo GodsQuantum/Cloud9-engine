@@ -1,0 +1,75 @@
+{
+  "model_metadata": {
+    "version": 3,
+    "tensor_count": 441,
+    "general.architecture": "qwen35",
+    "general.name": "Qwen3.5 4B EmperoAI Qwen3.8 Distill",
+    "qwen35.context_length": 262144,
+    "qwen35.attention.head_count_kv": 4,
+    "qwen35.attention.key_length": 256,
+    "qwen35.attention.value_length": 256,
+    "qwen35.full_attention_interval": 4,
+    "qwen35.block_count": 33
+  },
+  "source_file_bytes": 2790000800,
+  "native_supported_context_tokens": 262144,
+  "context_envelope": [
+    {
+      "tokens": 8192,
+      "assumed_full_attention_layers": 9,
+      "estimated_KV_f16_GiB": 0.281,
+      "estimated_KV_q8_0_GiB": 0.149,
+      "not_included": "weights, Mamba/SSM state, compute buffers, Vulkan scratch, runtime, prompt or host/system RAM",
+      "evidence_class": "THEORETICAL_APPROXIMATION_NOT_GPU_CERTIFICATION"
+    },
+    {
+      "tokens": 16384,
+      "assumed_full_attention_layers": 9,
+      "estimated_KV_f16_GiB": 0.562,
+      "estimated_KV_q8_0_GiB": 0.299,
+      "not_included": "weights, Mamba/SSM state, compute buffers, Vulkan scratch, runtime, prompt or host/system RAM",
+      "evidence_class": "THEORETICAL_APPROXIMATION_NOT_GPU_CERTIFICATION"
+    },
+    {
+      "tokens": 32768,
+      "assumed_full_attention_layers": 9,
+      "estimated_KV_f16_GiB": 1.125,
+      "estimated_KV_q8_0_GiB": 0.598,
+      "not_included": "weights, Mamba/SSM state, compute buffers, Vulkan scratch, runtime, prompt or host/system RAM",
+      "evidence_class": "THEORETICAL_APPROXIMATION_NOT_GPU_CERTIFICATION"
+    },
+    {
+      "tokens": 65536,
+      "assumed_full_attention_layers": 9,
+      "estimated_KV_f16_GiB": 2.25,
+      "estimated_KV_q8_0_GiB": 1.195,
+      "not_included": "weights, Mamba/SSM state, compute buffers, Vulkan scratch, runtime, prompt or host/system RAM",
+      "evidence_class": "THEORETICAL_APPROXIMATION_NOT_GPU_CERTIFICATION"
+    },
+    {
+      "tokens": 131072,
+      "assumed_full_attention_layers": 9,
+      "estimated_KV_f16_GiB": 4.5,
+      "estimated_KV_q8_0_GiB": 2.391,
+      "not_included": "weights, Mamba/SSM state, compute buffers, Vulkan scratch, runtime, prompt or host/system RAM",
+      "evidence_class": "THEORETICAL_APPROXIMATION_NOT_GPU_CERTIFICATION"
+    },
+    {
+      "tokens": 262144,
+      "assumed_full_attention_layers": 9,
+      "estimated_KV_f16_GiB": 9.0,
+      "estimated_KV_q8_0_GiB": 4.781,
+      "not_included": "weights, Mamba/SSM state, compute buffers, Vulkan scratch, runtime, prompt or host/system RAM",
+      "evidence_class": "THEORETICAL_APPROXIMATION_NOT_GPU_CERTIFICATION"
+    }
+  ],
+  "policy": {
+    "routine_prompt": "8K-32K after proven admission",
+    "large_single_task": "64K after 5-marker full-inference certification",
+    "agentic_target": "128K with retrieval/memory, capacity and latency proofs required",
+    "architecture_max": "262K advertised GGUF metadata; not a measured usable window",
+    "guard": "must keep official GPU coexistence and model-specific admission thresholds",
+    "production_promoted": false,
+    "full_inference_above_8k_certified": false
+  }
+}
