@@ -335,16 +335,26 @@
     {
       "id": "C10",
       "title": "Multi-agent concurrency and performance envelope",
-      "status": "NOT_RUN",
+      "status": "PARTIAL",
       "scope": "current native router and experimental Qwen4 chimera, 1 active model-worker",
       "evidence": [
         {
           "project_path": "Sources/Worklogs/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
           "sha256": "99b6e4751822aa59280422b8d81de309cb77c445b6f0a62c144665cc48d97f16",
           "note": "Read-only safe C10 runner staged and dry-run on CT410; ten CPU tests PASS; NO real GPU benchmark; C10 NOT_RUN"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C10_CAPACITY_1OF42_PSI_STOP.json",
+          "sha256": "99a9623b056c334e7518eb79ed45f125897c45256a10592a127bff2d77761009",
+          "note": "Native real C10 initial slot1, 1/42 correct and PSI1.70 stop, resumable group checkpoint guard"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2220_C10_RESUMABLE_GROUPS_GUARD_COOLDOWN.md",
+          "sha256": "301feb6b502b4f4ac5839e55eef9fac86e238c785760b028a4cbe55a827e1486",
+          "note": "Native real C10 initial slot1, 1/42 correct and PSI1.70 stop, resumable group checkpoint guard"
         }
       ],
-      "remaining": "C10 remains NOT_RUN on real GPU. New LAB-only C10 harness has 10 passing static unit tests + CT410 dry-run, hashes synced. After C09 36/36, run only under guardian with exact existing idle worker, verify native slots then 1/2/4 client concurrency, streamed TTFT and inter-chunk timings. No service changes and never mistake client queuing for native decoding parallelism.",
+      "remaining": "C10 real native slot count ONE, first of 42 HTTP client-concurrency requests correct in 2.8433s; subsequent group stopped by official guardian at memory PSI1.70. Resume original CT410 checkpoint with --execute --resume under guardian; new harness skips completed whole groups and bounds guardian PSI cooldown to 24s. Test 1/2/4 client queues x3 and streaming; do NOT claim 4 native decoding slots.",
       "acceptance": "p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls"
     },
     {
@@ -502,7 +512,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 22:10 Europe/Paris: C09 36/36 strict simulated tools zero unsafe, C08 current Qwen4 8K five-needle 3/3 verified; seed3 8026 prompt tokens, decode8.4806/s, prefill317.971/s, 0 watchdog. Current 16K, C10, C14, C15 remain.",
+  "latest_attempt_note": "2026-10-25 22:10 Europe/Paris: C09 36/36 strict simulated tools zero unsafe, C08 current Qwen4 8K five-needle 3/3 verified; seed3 8026 prompt tokens, decode8.4806/s, prefill317.971/s, 0 watchdog. Current 16K, C10, C14, C15 remain. | 22:20 C10 real slot1 and first tool request correct 2.8433s; PSI1.70 stop; new crash-safe --resume whole-group semantics+24s official guard cooldown, no automatic bypass.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -648,6 +658,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2210_C08_NATIVE_8K_3OF3_PASS.md",
       "project_path": "Sources/Worklogs/2026-10-25_2210_C08_NATIVE_8K_3OF3_PASS.md",
       "sha256": "cea5947fa2d81de9018a072ee6a40e17ef0b13d0316d6ddc584752533f933713"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C10_CAPACITY_1OF42_PSI_STOP.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C10_CAPACITY_1OF42_PSI_STOP.json",
+      "sha256": "99a9623b056c334e7518eb79ed45f125897c45256a10592a127bff2d77761009"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2220_C10_RESUMABLE_GROUPS_GUARD_COOLDOWN.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2220_C10_RESUMABLE_GROUPS_GUARD_COOLDOWN.md",
+      "sha256": "301feb6b502b4f4ac5839e55eef9fac86e238c785760b028a4cbe55a827e1486"
     }
   ],
   "nextn_lab_candidate": {

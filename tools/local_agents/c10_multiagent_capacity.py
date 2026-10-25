@@ -70,6 +70,36 @@ def preflight(model, base, worker, guardian_host):
             "guardian": {k: g.get(k) for k in ("allow", "mem_available_gib", "psi_memory_full_avg10", "swap_used_percent", "reasons")}}
 
 
+def guarded_cooldown_preflight(model, base, worker, host):
+    # The official guardian remains authoritative; wait only for transient
+    # loader/inference PSI to subside without changing thresholds or services.
+    last = None
+    for i in range(13):
+        try:
+            return preflight(model, base, worker, host)
+        except ValueError as exc:
+            last = exc
+            if "OFFICIAL_GUARDIAN_DENIED" not in str(exc):
+                raise
+            g = guardian_check(host)
+            if g.get("mem_available_gib",0)<21 or g.get("swap_used_percent",100)>96:
+                raise
+            if i<12:
+                time.sleep(2)
+    raise last
+
+
+def completed_group_rows(rows, phase, clients, rep):
+    group=[r for r in rows if r.get("phase")==phase and
+           r.get("client_concurrency")==clients and r.get("rep")==rep]
+    keys=[r.get("client") for r in group]
+    if len(keys)!=len(set(keys)) or any(not r.get("passed") or r.get("unsafe") for r in group):
+        raise ValueError("C10_INVALID_RESUME_CHECKPOINT_GROUP")
+    if group and (len(group)!=clients or set(keys)!=set(range(clients))):
+        raise ValueError("C10_PARTIAL_GROUP_UNQUALIFIED_NO_AUTOMATIC_REPLAY")
+    return len(group)==clients
+
+
 def tool_request(base, model, fixture, rep, client):
     payload = {"model": model, "temperature": 0, "seed": 8000 + rep * 10 + client,
         "stream": False, "parallel_tool_calls": False, "tool_choice": "required",
@@ -147,6 +177,7 @@ def main(argv=None):
     ap.add_argument("--fixture", default=FIXTURE)
     ap.add_argument("--repetitions", type=int, default=3)
     ap.add_argument("--output")
+    ap.add_argument("--resume",action="store_true",help="Resume only entire completed groups; never duplicate successes")
     a = ap.parse_args(argv)
     if a.repetitions != 3:
         ap.error("C10 qualification requires three repetitions")
@@ -159,16 +190,34 @@ def main(argv=None):
     if not a.output:
         ap.error("--output is mandatory for --execute")
     out = Path(a.output)
-    if out.exists():
-        ap.error("IMMUTABLE_EVIDENCE_COLLISION; supply a fresh --output")
     if a.model != MODEL_ID:
         ap.error("ONLY_EXACT_CHIMERA_LAB_ALLOWED")
+    if a.resume and not out.is_file():
+        ap.error("C10_RESUME_CHECKPOINT_MISSING")
+    if out.exists() and not a.resume:
+        ap.error("IMMUTABLE_EVIDENCE_COLLISION; use --resume for a checkpoint")
     fixtures = fixture_list(fixture_file)
-    pilot = preflight(a.model, a.base, a.worker, a.guardian_host)
-    report = {"status": "running", "model": a.model, "lab_only": True,
-        "safe_simulated_tools": True, "no_worker_load_or_preemption": True,
-        "fixture_sha256": hashlib.sha256(fixture_file.read_bytes()).hexdigest(),
-        "baseline": pilot, "native_slots": pilot["native_slots"], "rows": []}
+    pinned_fixture = hashlib.sha256(fixture_file.read_bytes()).hexdigest()
+    pilot = guarded_cooldown_preflight(a.model, a.base, a.worker, a.guardian_host)
+    if a.resume:
+        report = json.loads(out.read_text())
+        if (report.get("model")!=a.model or
+            report.get("fixture_sha256")!=pinned_fixture or
+            report.get("native_slots")!=pilot["native_slots"] or
+            report.get("lab_only") is not True):
+            ap.error("C10_RESUME_METADATA_MISMATCH")
+        for phase in ("tool","stream"):
+            for clients in (1,2,4):
+                for rep in range(1,4):
+                    completed_group_rows(report.get("rows",[]),phase,clients,rep)
+        if len(report.get("rows",[]))>42:
+            ap.error("C10_CHECKPOINT_TOO_MANY_ROWS")
+    else:
+        report = {"status": "running", "model": a.model, "lab_only": True,
+            "safe_simulated_tools": True, "no_worker_load_or_preemption": True,
+            "fixture_sha256": pinned_fixture,
+            "baseline": pilot, "native_slots": pilot["native_slots"], "rows": []}
+    report["status"]="running"
     def save():
         out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     save()
@@ -176,7 +225,9 @@ def main(argv=None):
         for phase in ("tool", "stream"):
             for clients in (1, 2, 4):
                 for rep in range(1, 4):
-                    current = preflight(a.model, a.base, a.worker, a.guardian_host)
+                    if completed_group_rows(report["rows"],phase,clients,rep):
+                        continue
+                    current = guarded_cooldown_preflight(a.model, a.base, a.worker, a.guardian_host)
                     if current["native_slots"] != pilot["native_slots"]:
                         raise RuntimeError("NATIVE_SLOT_COUNT_CHANGED")
                     with ThreadPoolExecutor(max_workers=clients) as pool:
