@@ -336,9 +336,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_0100_PBS_PAUSE_RECOVERY_AND_8K_LAB.md",
           "sha256": "f9bd68a3ae056537c7d92ad3ee38cbf3634b7aa1ad1a92d79b3a6716b94b7b45",
           "note": "User-authorized short PBS backup pause, native stop, original schedule restored and measured 8K memory insufficiency"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C11_HOST_IO_ZRAM_PRESSURE_OBSERVED.json",
+          "sha256": "356b6c45bb2c3008eefa40945d9ae1c1880876079999750f2e33b4b5f2803fcd",
+          "note": "Read-only 3-second host diskstats+PSI/ZRAM snapshot, confirmed storage pressure; no modifications"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
+          "sha256": "f87c5a86f3343d881cbc20e713c648733af1c0631bf0511c7c82125876a0fd6e",
+          "note": "Read-only 3-second host diskstats+PSI/ZRAM snapshot, confirmed storage pressure; no modifications"
         }
       ],
-      "remaining": "PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold.",
+      "remaining": "C11 remains BLOCKED_RESOURCE: ZRAM >95% full during GPU qualification, sdc ZFS and sdg USB PBS backup datastore simultaneously showed >2.8s busy time per 3s observation, IO PSI full elevated; one D-state find process persists. Busy disks do NOT prove failure. Preserve services; qualify under sustainable RAM/IO load and after only user-authorized reboot.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -461,7 +471,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications. | 21:25 C10 non-invasive, already-loaded-worker LAB harness staged on CT410 and ten CPU tests pass; no real GPU benchmark, gate NOT_RUN. | 21:35 C08 LAB-only strict RAM/ZRAM/PSI admission mirrored to CT410; no inference/production change.",
+  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications. | 21:25 C10 non-invasive, already-loaded-worker LAB harness staged on CT410 and ten CPU tests pass; no real GPU benchmark, gate NOT_RUN. | 21:35 C08 LAB-only strict RAM/ZRAM/PSI admission mirrored to CT410; no inference/production change. | 21:40 C11 diskstat sdc ZFS 2896ms / sdg USB PBS 2933ms busy over 3s, high IO PSI and near-full ZRAM; no interventions.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -567,6 +577,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
       "project_path": "Sources/Worklogs/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
       "sha256": "dd9851f373f8a22bd9ef6b417889b1af01da222a300dc1beb1d2b3e96da4e74b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C11_HOST_IO_ZRAM_PRESSURE_OBSERVED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C11_HOST_IO_ZRAM_PRESSURE_OBSERVED.json",
+      "sha256": "356b6c45bb2c3008eefa40945d9ae1c1880876079999750f2e33b4b5f2803fcd"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
+      "sha256": "f87c5a86f3343d881cbc20e713c648733af1c0631bf0511c7c82125876a0fd6e"
     }
   ],
   "nextn_lab_candidate": {

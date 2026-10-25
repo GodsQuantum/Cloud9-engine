@@ -1,0 +1,21 @@
+{
+  "interval_seconds": 3,
+  "read_only": true,
+  "disks": {
+    "sdc": {
+      "operations": 1076,
+      "busy_ms": 2896
+    },
+    "sdg": {
+      "operations": 234,
+      "busy_ms": 2933
+    },
+    "nvme0n1": {
+      "operations": 647,
+      "busy_ms": 80
+    }
+  },
+  "io_psi": "some avg10=22.53 avg60=19.99 avg300=17.51 total=179469211840\nfull avg10=19.69 avg60=16.66 avg300=14.14 total=149826252358\n",
+  "mem_psi": "some avg10=0.00 avg60=0.29 avg300=1.07 total=6146847845\nfull avg10=0.00 avg60=0.26 avg300=1.05 total=6053302642\n",
+  "swaps": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n/dev/zram0                              partition\t12078076\t12066256\t100\n/dev/zram1                              partition\t8388604\t\t7782920\t\t80\n"
+}
