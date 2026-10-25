@@ -221,9 +221,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
           "sha256": "68f81916c490c4c6091029175dfdb5a3183dbea7aee4d857f6be0f2555237c80",
           "note": "Reused real five-marker 8K: Qwen4 master9ae Vulkan two runs both 5/5; third paused on PSI"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
+          "sha256": "d928ff4a16ee430a530d52ec0d25730e729eb1175946bb01d910917d597b1d4c",
+          "note": "Missing seeded rep3 attempted once more 2026-10-25 02:13: model loaded, guardian stop before inference PSI 2.32 / MemAvailable22.681 GiB; C08 stays 2/3"
         }
       ],
-      "remaining": "On master9ae Qwen4 Vulkan (ctx8704), 8K five markers correct in both seeded repeats 1 and 2, both consumed 8026 input tokens. Third repeat stopped when memory PSI reached 2.31; 16K on current chimera still not tested. Preserve proofs and run ONLY seeded rep 3 when GPU-safe, then 16K.",
+      "remaining": "8K Qwen4 master9ae seeded repeats 1 and 2 each 5/5 correct (8026 prompt tokens), no third success; a new rep3-only attempt 25 Oct 02:13 loaded successfully but failed guard BEFORE inference, MemAvailable 22.681 GiB and full PSI 2.32. Run only seeded rep3 after stable resource margin; then 16K current chimera. Do not repeat historical Atomic 8K/16K.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -410,7 +415,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "25Oct02:15 native candidate CI success and ELF stage, swap>98 GPU test blocked. OmniRoute sqlite read-only confirms llama-cpp connection active, 4 stable Cloud9-Engine combo models, CT410 9 catalog models; chimera LAB excluded from default, actual E2E agent workflow still untested.",
+  "latest_attempt_note": "25Oct02:15 native candidate CI success and ELF stage, swap>98 GPU test blocked. OmniRoute sqlite read-only confirms llama-cpp connection active, 4 stable Cloud9-Engine combo models, CT410 9 catalog models; chimera LAB excluded from default, actual E2E agent workflow still untested. | 25Oct02:13: C08 missing 8K rep3 retried exactly once, guard stopped after load BEFORE inference, PSI2.32 / MemAvailable22.681GiB; remains 2/3. JSON and MD mirrored with immutable SHA; no extra Hall of Fame result.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -461,6 +466,16 @@
       "repo_path": "certification/evidence/2026-10-25/omniroute-native-model-route-readonly-audit.json",
       "project_path": "Sources/Worklogs/2026-10-25_0215_OMNIROUTE_ROUTER_READONLY_AUDIT.json",
       "sha256": "f2fb15f84058b8c32a13c6b49f1f3282d3de0dee5baae4c33f2d4395084527d2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
+      "sha256": "d928ff4a16ee430a530d52ec0d25730e729eb1175946bb01d910917d597b1d4c"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_0214_C08_REP3_NOT_EXECUTED_AFTER_GUARD.md",
+      "project_path": "Sources/Worklogs/2026-10-25_0214_C08_REP3_NOT_EXECUTED_AFTER_GUARD.md",
+      "sha256": "c6148a3ad6c4a366ce904c0bcc8ad90152354bf844b4272a560c46d33b459525"
     }
   ],
   "nextn_lab_candidate": {
