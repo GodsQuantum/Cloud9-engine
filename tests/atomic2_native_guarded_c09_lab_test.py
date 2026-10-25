@@ -52,5 +52,11 @@ class AtomicLabSafe(unittest.TestCase):
   wrong=copy.deepcopy(valid);wrong["kv_v"]="f16"
   with self.assertRaisesRegex(ValueError,"METADATA"):
    namespace["verify_checkpoint"](wrong,"a","fixture",allowed)
+ def test_bounded_same_native_guard_cooldown(self):
+  s=SRC.read_text()
+  self.assertIn("for i in range(11)",s)
+  self.assertIn("time.sleep(2)",s)
+  self.assertIn("wait_for_bounded_runtime_admission()",s)
+  self.assertIn("state.get(\"psi_memory_full_avg10\",99)>=2.0",s)
  def test_model_no_prod(self):self.assertIn('assert man["production_promoted"] is False',SRC.read_text())
 if __name__=="__main__":unittest.main()
