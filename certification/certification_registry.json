@@ -354,9 +354,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
           "sha256": "67bac6a8cbb161fa412e42c901d2d03b222356178803209ffdd21797c8cd29a2",
           "note": "C09 complete and native non-intrusive zram2 activation audit"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_C09_CHECKPOINT_FIRST_2OF36.json",
+          "sha256": "a667f115fbb1f8cc63c83c39ec6fe2f7a4a0b7edee2447efc7597a4b16bb6739",
+          "note": "Atomic2 new live same simulated C09 fixture: 2/36 correct and zero unsafe; guardian PSI1.35 pause"
         }
       ],
-      "remaining": "36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion.",
+      "remaining": "Current native Chimera diagnostic C09 36/36 strict safe PASS. Exact same suite on restored Atomic2 original native Vulkan / q8_0 K turbo3 V only 2/36 correct, zero unsafe; host memory PSI1.35 paused. Atomic2 checkpoint resumable without duplicates and strict guardian. Never equate this simplified tool benchmark with full strict JSON/coding creative QA, where historical Atomic2 scored 3/9 JSON, 6/9 tools, 0/9 code.",
       "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption",
       "measured_c09_checkpoint": {
         "cases_passed": 1,
@@ -487,9 +492,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
           "sha256": "e84618c2a84ca8d91cdc9d31d84a269251ec0c9dadf91decbfd08203125235c4",
           "note": "Immutable LAB benchmark guard and no-inference policy denial; not a new performance or correctness pass"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
+          "sha256": "4a2324729c6dade899d335c47628f97948d11df18ff101e50c7d89490100d3d6",
+          "note": "Exact Atomic2 original native Vulkan backend 13 ELF staged inactive CT410 with original SHA pinned"
         }
       ],
-      "remaining": "NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, 5/5 extraction criterion failed (per-marker wrong count not recorded)). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance.",
+      "remaining": "Best historical 16K native same-GGUF speed/recall champion Atomic TurboQuant2 Vulkan (16K five needle 3/3, median30.6577t/s) staged into CT410 LAB as exact original binary SHA, 13 ELF relocated RPATH $ORIGIN; version/ldd PASS. Only 2/36 fresh current same tool-suite calls; qualify remaining C09, current matched 16K+ and 128K under guard. Chimera 16K strict watchdog failed; do not promote Turbo3 cache result from Atomic onto different chimera fork (past Turbo3 chimera real quality failure).",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -564,9 +574,19 @@
           "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
           "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
           "note": "versioned optional release and pre-change backup"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_HARDWARE_ENGINE_SELECTION_MATRIX.json",
+          "sha256": "45d407bbb8fe9332fa3978c9d6a55e53160f67398d10e8db499dbb2a79c98613",
+          "note": "Evidence-based winner decision: Atomic2 faster 16K but historical coding/JSON fails; full product unqualified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0023_ENGINE_WINNER_QA_FAIL_CLOSED.md",
+          "sha256": "86cff1d4c0b1ef4cb583f43b4f6a15165a32f9bc80ec8caecf67ede3e5ea6ffb",
+          "note": "Read-only hardware winner summary and safety/qualification gates; no production cutover"
         }
       ],
-      "remaining": "Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning",
+      "remaining": "FAIL_CLOSED no all-purpose production winner yet. Atomic2 leads verified historical 16K speed/recall but historical 36 QA fails JSON3/9 tools6/9 coding0/9, current same-suite C09 only2/36. Chimera passes simple diagnostic suite36/36 but 16K mid-prefill watchdog failed, 128K never scored. Need complete same-GGUF quality, native 32K/64K/128K, real n8n/Dify/Paperclip/E2E boundaries, rollback and 24h coexistence canary; stable OmniRoute 4-model combo unchanged. Candidate Atomic2 staged LAB only.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -577,7 +597,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "25 Oct 2026: 128K native GGUF metadata confirmed, 5-marker multi-position fixture CPU test PASS. 32/64/128K real CT410 guarded preflight each denied before GPU, no runtime quality. PBS six verifications failed to quiesce after native stop CLI; scheduler preserved. Previous 8K3/3, C09 36/36, C10 queue42/42 remain; full production not certified.",
+  "latest_attempt_note": "2026-10-26 00:23 Paris: audit hardware best 8845HS/96GiB/780M: Atom TurboQuant2 Vulkan historical 16K 3/3 exact and30.6577t/s, but QA36 JSON3/9 tools6/9 code0/9; restored ORIGINAL ELF into CT410 LAB ($ORIGIN libs and SHA audited). Same current Chimera C09 diagnostic fixture on Atom:2/36 safe before guardian PSI1.35 pause. New strict resumable checkpoint bench and read-only fail-closed engine selector unit tests. No all-purpose production winner nor service changes.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -798,6 +818,26 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
       "project_path": "Sources/Worklogs/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
       "sha256": "c3337b392028aea9e53763305eb2dbe2c829f22469ac63ceb4abc57b3bf606ac"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_C09_CHECKPOINT_FIRST_2OF36.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_C09_CHECKPOINT_FIRST_2OF36.json",
+      "sha256": "a667f115fbb1f8cc63c83c39ec6fe2f7a4a0b7edee2447efc7597a4b16bb6739"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
+      "sha256": "4a2324729c6dade899d335c47628f97948d11df18ff101e50c7d89490100d3d6"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_HARDWARE_ENGINE_SELECTION_MATRIX.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_HARDWARE_ENGINE_SELECTION_MATRIX.json",
+      "sha256": "45d407bbb8fe9332fa3978c9d6a55e53160f67398d10e8db499dbb2a79c98613"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0023_ENGINE_WINNER_QA_FAIL_CLOSED.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0023_ENGINE_WINNER_QA_FAIL_CLOSED.md",
+      "sha256": "86cff1d4c0b1ef4cb583f43b4f6a15165a32f9bc80ec8caecf67ede3e5ea6ffb"
     }
   ],
   "nextn_lab_candidate": {
