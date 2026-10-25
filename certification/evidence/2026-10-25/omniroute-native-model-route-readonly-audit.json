@@ -1,0 +1,26 @@
+{
+  "timestamp_utc": "2026-10-25T00:15:41.381952+00:00",
+  "kind": "read_only_sensitive_fields_excluded",
+  "omniroute_provider": [
+    {
+      "provider": "llama-cpp",
+      "name": "Cloud9 llama.cpp — Radeon 780M · Modèles Hall of Fame",
+      "enabled": true,
+      "test_status": "active"
+    }
+  ],
+  "stable_combo": "Cloud9-Engine",
+  "stable_combo_id": "4016a9f3-3437-4006-a207-c38bb2276ad7",
+  "stable_combo_strategy": "priority",
+  "stable_combo_models": [
+    "llama-cpp/Cloud9-Qwen3.8-4B-Heretic",
+    "llama-cpp/Cloud9-MiniCPM5-2B-DSpark",
+    "llama-cpp/Cloud9-Ling3-Tiny-Uncensored",
+    "llama-cpp/Cloud9-LFM2.5-2.6B-Uncensored"
+  ],
+  "current_ct410_model_count": 9,
+  "chimera_ct410_exposed": true,
+  "chimera_in_automatic_combo": false,
+  "no_configuration_changed": true,
+  "certification_note": "This verifies provider active and stable models unchanged, NOT end-to-end agent tools or dynamic OmniRoute model list authorization"
+}

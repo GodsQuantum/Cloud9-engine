@@ -370,10 +370,22 @@
           "project_path": "Sources/Worklogs/2026-10-24_LOCAL_AGENTS_READINESS_OMNIROUTE_NATIVE.md",
           "sha256": "a83ce191d08b110433dfe77b5943b165e318b69a1ef24d11dd114a6d0f288c4b",
           "note": "active native provider 8090 and 4-small-model Cloud9-Engine combo"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0215_OMNIROUTE_ROUTER_READONLY_AUDIT.json",
+          "sha256": "f2fb15f84058b8c32a13c6b49f1f3282d3de0dee5baae4c33f2d4395084527d2",
+          "note": "Verified active OmniRoute llama-cpp connection, unchanged 4-model Cloud9-Engine priority combo and separate 9-model CT410 catalog; no live Dify/n8n/Paperclip task certified"
         }
       ],
-      "remaining": "Test Dify/n8n/Paperclip agents in read-only realistic tasks, 2 separate identities/profile constraints; ensure no repeated model switch",
-      "acceptance": "real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges"
+      "remaining": "OmniRoute llama-cpp provider active, Cloud9-Engine has exactly four stable model entries and CT410 catalog has nine; chimera is deliberately NOT in default combo. Require authorized real end-to-end tool workflows through OmniRoute+Dify+n8n+Paperclip, with identity/profile boundaries and fallback tests, before production promotion.",
+      "acceptance": "real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges",
+      "observed_2026_10_25": {
+        "omniroute_llama_cpp_provider_active": true,
+        "default_combo_model_count": 4,
+        "ct410_catalog_model_count": 9,
+        "chimera_not_in_default_combo": true,
+        "end_to_end_agent_calls_certified": 0
+      }
     },
     {
       "id": "C15",
@@ -398,7 +410,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "25 Oct02:10 NextN source candidate built GitHub CI SUCCESS, 12 ELF native RPATH repaired, inactive CT410 lab staged and native ABI/unit pass; GPU withheld ZRAM 98.28%; 226 Python static tests planned.",
+  "latest_attempt_note": "25Oct02:15 native candidate CI success and ELF stage, swap>98 GPU test blocked. OmniRoute sqlite read-only confirms llama-cpp connection active, 4 stable Cloud9-Engine combo models, CT410 9 catalog models; chimera LAB excluded from default, actual E2E agent workflow still untested.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -444,6 +456,11 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
       "project_path": "Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
       "sha256": "faa396b03cc6f62ec35bc0b2e18dd0344d076e631fc342296a3f7782b14f55df"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/omniroute-native-model-route-readonly-audit.json",
+      "project_path": "Sources/Worklogs/2026-10-25_0215_OMNIROUTE_ROUTER_READONLY_AUDIT.json",
+      "sha256": "f2fb15f84058b8c32a13c6b49f1f3282d3de0dee5baae4c33f2d4395084527d2"
     }
   ],
   "nextn_lab_candidate": {
