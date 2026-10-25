@@ -1,0 +1,26 @@
+{
+  "kind": "Cloud9 NextN scheduler source-only experimental ABI safe LAB binary",
+  "github_repository": "GodsQuantum/Cloud9-engine",
+  "github_branch": "lab/20261022-one-engine-qualification",
+  "github_workflow_run": 40144538324,
+  "github_commit": "f8611a3a50dd7afd224792f9bd71a46c0a212a61",
+  "upstream_base": "9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2",
+  "combined_source_tree": "d122b09e38c4e5397601c1ade0c3c6cc3aea39cc",
+  "experimental_revert_sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee",
+  "source_artifact_archive_sha256": "7c52d34ddfdd735139d60fc4db577ad7fa028129232f79d4465b779fa28fc6c0",
+  "original_elf_count": 12,
+  "elf_runtime_relocation": "all 12 real ELF files RUNPATH set to $ORIGIN via standard patchelf in LXC700, no wrappers and no production globals",
+  "relocated_elves_sha256_manifest": "SHA256SUMS_RELOCATED",
+  "certification": {
+    "source_tree": true,
+    "github_vulkan_compiler": true,
+    "native_loader_version": true,
+    "cpu_policy_20_of_20": true,
+    "speculative_adaptive_unit": true,
+    "GPU_inference": false,
+    "8k_16k": false,
+    "production_safe": false
+  },
+  "risk": "Reverting upstream scheduler-reserve flag may reintroduce GGML graph allocation mismatch; DO NOT PROMOTE or use in default agents without real hardware QA",
+  "production_symlink_changed": false
+}

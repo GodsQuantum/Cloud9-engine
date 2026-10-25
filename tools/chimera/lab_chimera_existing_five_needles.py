@@ -11,21 +11,38 @@ parser=argparse.ArgumentParser()
 parser.add_argument("--target",type=int,choices=[8192,16384],required=True)
 parser.add_argument("--rep-start",type=int,choices=[1,2,3],default=1)
 parser.add_argument("--rep-end",type=int,choices=[1,2,3],default=3)
+parser.add_argument("--kv-k",choices=["f16","q8_0"],default="f16")
+parser.add_argument("--kv-v",choices=["f16","turbo3"],default="f16")
+parser.add_argument("--batch",type=int,choices=[256,512],default=256)
+parser.add_argument("--engine-build",choices=["baseline","nextn-revert"],default="baseline")
 args_parsed=parser.parse_args()
 assert args_parsed.rep_start<=args_parsed.rep_end
 TARGET=args_parsed.target
 RUN_SUFFIX="" if (args_parsed.rep_start==1 and args_parsed.rep_end==3) else f"_rep{args_parsed.rep_start}to{args_parsed.rep_end}"
+if args_parsed.engine_build!="baseline":
+    RUN_SUFFIX+=f"_build_{args_parsed.engine_build.replace('-','_')}"
+if args_parsed.kv_k!="f16" or args_parsed.kv_v!="f16" or args_parsed.batch!=256:
+    RUN_SUFFIX+=f"_k{args_parsed.kv_k}_v{args_parsed.kv_v}_b{args_parsed.batch}"
 # The historic 8K fixture contains ~8,015 tokenizer tokens. Allocate
 # target + 512 for chat formatting and answer, not an unnecessary 12K/22K KV.
 CONTEXT = TARGET + 512
 RESERVE = 5.4 if TARGET==8192 else 6.2
 WATCH_STOP=threading.Event()
 WATCH_EVENTS=[]
-OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulkan-guardian","backend":"Vulkan","model":"Qwen3.8-4B-Heretic MTP Q4_K_M","lab_only":True,"production_promoted":False,"status":"not_started","target_tokens":TARGET}
+OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulkan-guardian","backend":"Vulkan","model":"Qwen3.8-4B-Heretic MTP Q4_K_M","lab_only":True,"production_promoted":False,"status":"not_started","target_tokens":TARGET,
+     "kv_k":args_parsed.kv_k,"kv_v":args_parsed.kv_v,"batch":args_parsed.batch,
+     "experimental_cache_quality_test":args_parsed.kv_v!="f16",
+     "binary_variant":args_parsed.engine_build}
 
 LOG=LAB/f"chimera_five_needles_{TARGET}_efficient_ctx_cooldown{RUN_SUFFIX}.log"
 REPORT=LAB/f"chimera_five_needles_{TARGET}_efficient_ctx_cooldown{RUN_SUFFIX}.json"
-BINARY=LAB/"bin/llama-server"
+BINARY=(LAB/"bin/llama-server" if args_parsed.engine_build=="baseline" else
+        LAB.parent/"chimera-master9ae-nextn-revert-vulkan-20261025/bin/llama-server")
+EXPECTED_SERVER_SHA256={
+    "baseline":"2e00292ca25dd5f7e7483f232d2b0c7fe30ba73deea503dcdb4792ac36e47cc3",
+    "nextn-revert":"25e2d4560ecceeda57a9c6fa88bfd8b440c46f5bac5dfc71204002a1f798ed63",
+}
+
 WEIGHTS=pathlib.Path("/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38distill-qwen35-4b-mtp/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf")
 BASE="http://127.0.0.1:18127"
 def check(req=None):
@@ -69,6 +86,9 @@ def guarded_safe():
     if u:raise RuntimeError(f"Unknown GPU render device consumers: {u}")
 def run():
     assert BINARY.is_file() and WEIGHTS.is_file()
+    actual_sha=hashlib.sha256(BINARY.read_bytes()).hexdigest()
+    assert actual_sha==EXPECTED_SERVER_SHA256[args_parsed.engine_build], "LAB_BINARY_SHA256_CHANGED"
+    OUT["binary_sha256"]=actual_sha
     OUT["gguf_bytes"]=WEIGHTS.stat().st_size
     guarded_safe()
     state=check(RESERVE)
@@ -85,6 +105,10 @@ def run():
         state=check(RESERVE)
         if not state.get("allow"):
             OUT["status"]="blocked_guardian_after_lock";OUT["guard_after_lock"]=state;return
+        if args_parsed.kv_v!="f16" and state.get("swap_used_percent",100)>95:
+            OUT["status"]="blocked_experimental_kv_swap_safety"
+            OUT["guard_after_lock"]=state
+            return
         # ELF loader uses native $ORIGIN RUNPATH in the LAB binary, not a wrapper
         # or a global LD_LIBRARY_PATH override that could affect other engines.
         env=os.environ.copy()
@@ -94,8 +118,8 @@ def run():
         env["RADV_PERFTEST"]=",".join(perf)
         OUT["driver_flag"]=env["RADV_PERFTEST"]
         args=[str(BINARY),"-m",str(WEIGHTS),"-ngl","99","-c",str(CONTEXT),"-np","1",
-              "-b","256","-ub","256","-t","6","-tb","6","-fa","on",
-              "-ctk","f16","-ctv","f16","--fit","off","--host","127.0.0.1","--port","18127",
+              "-b",str(args_parsed.batch),"-ub",str(args_parsed.batch),"-t","6","-tb","6","-fa","on",
+              "-ctk",args_parsed.kv_k,"-ctv",args_parsed.kv_v,"--fit","off","--host","127.0.0.1","--port","18127",
               "--no-context-shift","-lm","mmap","--poll","100","--poll-batch","0","--lazy-mode","off",
               "--no-warmup","--no-webui","--alias","Cloud9-Chimera-Qwen4-LAB",
               "--jinja","--reasoning","off","--reasoning-budget","0",
