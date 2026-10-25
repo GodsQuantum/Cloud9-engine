@@ -271,9 +271,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
           "sha256": "a36a1b2bf31ae1546f6bf8d4e2312ee3d7d04e5d3920560a7563041739ba4368",
           "note": "Actual local GGUF header native context262144 and estimated static 32/64/128/256K KV envelope; NONE above 8K GPU certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_CONTEXT_32K_64K_128K_PREFLIGHT.json",
+          "sha256": "dba520829f059f56049d577185b1b8b83515004f01b40865ef0bca178e4d519f",
+          "note": "Native 32K/64K/128K guards blocked without GPU inference"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_128K_NEEDLE_FIXTURE_DISTRIBUTION_CPU.json",
+          "sha256": "d0bc885bb1a3bc0ba6723fd1574635c0cf87550f1eca23e6f9144d34162911ce",
+          "note": "CPU-only 5-marker distributed fixture test, not tokenized"
         }
       ],
-      "remaining": "GGUF qwen35.context_length=262144 verified locally; current Chimera 8K five-marker 3/3 PASS; 16K f16 failed memory PSI2.11 and 16K q8 no safe preflight. PRODUCT TARGET 128K with progressive 32K/64K/128K full five-marker 3-rep trials, full prompt and latency/memory metrics under official guard. 256K stretch. Estimated attention-only q8 KV:32K0.598GiB,64K1.195,128K2.391,256K4.781. No production capability claims without live tests.",
+      "remaining": "Native GGUF advertises 262144 max; target agentic product 128K. Current 8K five-marker 3/3 PASS. 16K f16 strict PSI watchdog FAIL, 16K q8 no quality. Native LAB 32K 64K 128K q8_0 both caches gated and 3 preflights BLOCKED before GPU. Need genuine full-prompt 3x5-marker passes plus long-context agent tool performance and fallback before full production.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -427,9 +437,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
           "sha256": "8f9cee897f3022f5f9204a8570b4928dbe36e8f46d64ae96533172c865deccbe",
           "note": "Native persistent zram2 4GiB lz4 resident limit2GiB priority60; legacy zram0/1 unchanged"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
+          "sha256": "c3337b392028aea9e53763305eb2dbe2c829f22469ac63ceb4abc57b3bf606ac",
+          "note": "PBS verification IO contention, six task-stop requests not fully quiesced"
         }
       ],
-      "remaining": "Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability.",
+      "remaining": "PBS VM900 heavy IO and six verification workers visible even after native stop CLI returned success. Weekly Saturday verification configuration unchanged; no duplicate job launched. Do not force restart VM900 or datastore. Unblock PBS I/O safely before local GPU 32K+ quality testing; guest swap cgroup 4GiB max also requires independent review.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -562,7 +577,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 23:20 Paris: C09 36/36 and C10 42/42 native queued clients one slot PASS; Qwen4 native f16 8K 3/3 PASS; f16 16K fails strict watchdog memory PSI2.11 during 6400-token prefill, q8 16K variant NEVER admitted safely in 115.7s. LAB watchdog child cleanup bounded. Authenticated OmniRoute model ID Chimera absent in 3 allowed clients; C14/C15 unfinished. Defaults unchanged. | 2026-10-25 23:40: ACTUAL GGUF context 262144, agentic target128K not 16K. Offline KV estimates and six unit tests pass. Full 16K+ runtime not certified, default routes untouched.",
+  "latest_attempt_note": "25 Oct 2026: 128K native GGUF metadata confirmed, 5-marker multi-position fixture CPU test PASS. 32/64/128K real CT410 guarded preflight each denied before GPU, no runtime quality. PBS six verifications failed to quiesce after native stop CLI; scheduler preserved. Previous 8K3/3, C09 36/36, C10 queue42/42 remain; full production not certified.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -768,6 +783,21 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
       "project_path": "Sources/Worklogs/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
       "sha256": "a36a1b2bf31ae1546f6bf8d4e2312ee3d7d04e5d3920560a7563041739ba4368"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_AGENTIC_CONTEXT_32K_64K_128K_PREFLIGHT.json",
+      "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_CONTEXT_32K_64K_128K_PREFLIGHT.json",
+      "sha256": "dba520829f059f56049d577185b1b8b83515004f01b40865ef0bca178e4d519f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_AGENTIC_128K_NEEDLE_FIXTURE_DISTRIBUTION_CPU.json",
+      "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_128K_NEEDLE_FIXTURE_DISTRIBUTION_CPU.json",
+      "sha256": "d0bc885bb1a3bc0ba6723fd1574635c0cf87550f1eca23e6f9144d34162911ce"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
+      "sha256": "c3337b392028aea9e53763305eb2dbe2c829f22469ac63ceb4abc57b3bf606ac"
     }
   ],
   "nextn_lab_candidate": {
