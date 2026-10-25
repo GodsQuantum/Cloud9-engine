@@ -306,8 +306,14 @@
       "title": "Multi-agent concurrency and performance envelope",
       "status": "NOT_RUN",
       "scope": "current native router and experimental Qwen4 chimera, 1 active model-worker",
-      "evidence": [],
-      "remaining": "Existing server cannot simply be called multiworker; benchmark slots 1/2/4 and use real router queue/reloads; native llama server supports parallel decoding",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
+          "sha256": "99b6e4751822aa59280422b8d81de309cb77c445b6f0a62c144665cc48d97f16",
+          "note": "Read-only safe C10 runner staged and dry-run on CT410; ten CPU tests PASS; NO real GPU benchmark; C10 NOT_RUN"
+        }
+      ],
+      "remaining": "C10 remains NOT_RUN on real GPU. New LAB-only C10 harness has 10 passing static unit tests + CT410 dry-run, hashes synced. After C09 36/36, run only under guardian with exact existing idle worker, verify native slots then 1/2/4 client concurrency, streamed TTFT and inter-chunk timings. No service changes and never mistake client queuing for native decoding parallelism.",
       "acceptance": "p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls"
     },
     {
@@ -450,7 +456,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications.",
+  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications. | 21:25 C10 non-invasive, already-loaded-worker LAB harness staged on CT410 and ten CPU tests pass; no real GPU benchmark, gate NOT_RUN.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -546,6 +552,11 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2115_C09_CHECKPOINT_28_OF_36_REAL_GPU.md",
       "project_path": "Sources/Worklogs/2026-10-25_2115_C09_CHECKPOINT_28_OF_36_REAL_GPU.md",
       "sha256": "2ee1b56b27f4f4e3b78fd3a860a6faae0e05382102c649ffc1f1a5d8f5ab161f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
+      "sha256": "99b6e4751822aa59280422b8d81de309cb77c445b6f0a62c144665cc48d97f16"
     }
   ],
   "nextn_lab_candidate": {
