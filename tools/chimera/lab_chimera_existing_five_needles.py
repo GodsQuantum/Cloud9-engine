@@ -12,7 +12,7 @@ parser.add_argument("--target",type=int,choices=[8192,16384],required=True)
 parser.add_argument("--rep-start",type=int,choices=[1,2,3],default=1)
 parser.add_argument("--rep-end",type=int,choices=[1,2,3],default=3)
 parser.add_argument("--kv-k",choices=["f16","q8_0"],default="f16")
-parser.add_argument("--kv-v",choices=["f16","turbo3"],default="f16")
+parser.add_argument("--kv-v",choices=["f16","q8_0","turbo3"],default="f16")
 parser.add_argument("--batch",type=int,choices=[256,512],default=256)
 parser.add_argument("--engine-build",choices=["baseline","nextn-revert"],default="baseline")
 args_parsed=parser.parse_args()
@@ -23,6 +23,8 @@ if args_parsed.engine_build!="baseline":
     RUN_SUFFIX+=f"_build_{args_parsed.engine_build.replace('-','_')}"
 if args_parsed.kv_k!="f16" or args_parsed.kv_v!="f16" or args_parsed.batch!=256:
     RUN_SUFFIX+=f"_k{args_parsed.kv_k}_v{args_parsed.kv_v}_b{args_parsed.batch}"
+if args_parsed.kv_v=="turbo3":
+    RUN_SUFFIX+="_blocked_policy"  # Keep original failed quality evidence immutable
 # The historic 8K fixture contains ~8,015 tokenizer tokens. Allocate
 # target + 512 for chat formatting and answer, not an unnecessary 12K/22K KV.
 CONTEXT = TARGET + 512
@@ -36,6 +38,8 @@ OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulka
 
 LOG=LAB/f"chimera_five_needles_{TARGET}_efficient_ctx_cooldown{RUN_SUFFIX}.log"
 REPORT=LAB/f"chimera_five_needles_{TARGET}_efficient_ctx_cooldown{RUN_SUFFIX}.json"
+if LOG.exists() or REPORT.exists():
+    parser.error("REFUSE_TO_OVERWRITE_EVIDENCE: existing run path; use noncolliding run identity")
 BINARY=(LAB/"bin/llama-server" if args_parsed.engine_build=="baseline" else
         LAB.parent/"chimera-master9ae-nextn-revert-vulkan-20261025/bin/llama-server")
 EXPECTED_SERVER_SHA256={
@@ -89,6 +93,13 @@ def run():
     actual_sha=hashlib.sha256(BINARY.read_bytes()).hexdigest()
     assert actual_sha==EXPECTED_SERVER_SHA256[args_parsed.engine_build], "LAB_BINARY_SHA256_CHANGED"
     OUT["binary_sha256"]=actual_sha
+    if args_parsed.kv_v=="turbo3":
+        # Negative real Vulkan quality result 25 Oct 2026 (8K: 5/5
+        # exact-retrieval FAILED, per-marker count unknown; 3.51 tok/s).
+        # Do not replay a known failed kernel/quant build.
+        OUT["status"]="blocked_known_bad_turbo3_quality"
+        OUT["reason"]="PROVEN_BAD_VULKAN_TURBO3_8K_20261025"
+        return
     OUT["gguf_bytes"]=WEIGHTS.stat().st_size
     guarded_safe()
     state=check(RESERVE)
