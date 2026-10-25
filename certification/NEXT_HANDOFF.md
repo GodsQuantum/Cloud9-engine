@@ -6,7 +6,7 @@ Moteur disponible: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 
 SHA routeur: 2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262
 SHA catalogue: 82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288
-GitHub evidence snapshot count: 27; SHA validated without a running Cloud9 host.
+GitHub evidence snapshot count: 29; SHA validated without a running Cloud9 host.
 Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avant les gates restants.
 
 ## Certifié dans sa portée et A NE PAS REFAIRE
@@ -22,7 +22,7 @@ Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avan
 
 ## Restant et ordonné
 
-- C08 (PARTIAL) Qwen4 8K current chimera still 2/3 proven. The LAB-only 8K seed3 guard conditionally permits min24.6GiB MemAvailable when verified live native zram2>=4GiB, host swap total>=23GiB, <83% usage, full memory PSI<0.10 and GTT>=7.2GiB, AND official guardian permits. Otherwise strict 27GiB, 16K remains 30GiB. Execute seed3 only as immutable trial with full five-marker extraction and watchdog, then 16K, no C02/C03 replay.. Réussite: same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed
+- C08 (PARTIAL) Native current chimera Qwen4 8K EXACT 3/3 five-marker retrieval PASSED f16 KV at 8026 prompt tokens, latest seed3 8.4806 tok/s and zero watchdog. C08 still PARTIAL for current chimera 16K (three seeded runs) and larger useful context; do not replay historic Atomic proofs or promote NextN/Turbo3.. Réussite: same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed
 - C09 (CURRENT_PASS_LIMITED) 36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion.. Réussite: no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption
 - C10 (NOT_RUN) C10 remains NOT_RUN on real GPU. New LAB-only C10 harness has 10 passing static unit tests + CT410 dry-run, hashes synced. After C09 36/36, run only under guardian with exact existing idle worker, verify native slots then 1/2/4 client concurrency, streamed TTFT and inter-chunk timings. No service changes and never mistake client queuing for native decoding parallelism.. Réussite: p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls
 - C11 (BLOCKED_RESOURCE) Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability.. Réussite: stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions

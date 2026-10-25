@@ -3,7 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
-Hall of Fame: 192 records; 27 raw proofs mirrored with SHA on GitHub.
+Hall of Fame: 192 records; 29 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -16,7 +16,7 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C05 | CT410 router safe nonpreemptive, stable services | CURRENT_PASS_LIMITED | Prove stress and crash recovery and no interruptions under concurrent agent traffic |
 | C06 | Chimera native Qwen4 real GPU 2K + strict read-only tool | CURRENT_PASS_LIMITED | Tool quality is only 1 case; incorrect technical suggestions in chat observed |
 | C07 | OpenBMB MiniCPM5+DSpark live speed and tool | CURRENT_PASS_LIMITED | Not 3/3 scenario suite nor untouched OpenBMB weights |
-| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | Qwen4 8K current chimera still 2/3 proven. The LAB-only 8K seed3 guard conditionally permits min24.6GiB MemAvailable when verified live native zram2>=4GiB, host swap total>=23GiB, <83% usage, full memory PSI<0.10 and GTT>=7.2GiB, AND official guardian permits. Otherwise strict 27GiB, 16K remains 30GiB. Execute seed3 only as immutable trial with full five-marker extraction and watchdog, then 16K, no C02/C03 replay. |
+| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | Native current chimera Qwen4 8K EXACT 3/3 five-marker retrieval PASSED f16 KV at 8026 prompt tokens, latest seed3 8.4806 tok/s and zero watchdog. C08 still PARTIAL for current chimera 16K (three seeded runs) and larger useful context; do not replay historic Atomic proofs or promote NextN/Turbo3. |
 | C09 | Functional agentic JSON tools coding and French regression | CURRENT_PASS_LIMITED | 36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion. |
 | C10 | Multi-agent concurrency and performance envelope | NOT_RUN | C10 remains NOT_RUN on real GPU. New LAB-only C10 harness has 10 passing static unit tests + CT410 dry-run, hashes synced. After C09 36/36, run only under guardian with exact existing idle worker, verify native slots then 1/2/4 client concurrency, streamed TTFT and inter-chunk timings. No service changes and never mistake client queuing for native decoding parallelism. |
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability. |
