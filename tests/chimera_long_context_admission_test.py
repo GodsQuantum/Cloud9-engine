@@ -45,6 +45,9 @@ class LongContextSafety(unittest.TestCase):
         self.assertIn('PROVEN_BAD_VULKAN_TURBO3_8K_20261025',src)
         self.assertIn('RUN_SUFFIX+="_blocked_policy"',src)
         self.assertIn('REFUSE_TO_OVERWRITE_EVIDENCE',src)
+        self.assertIn('parser.add_argument("--trial-id"',src)
+        self.assertIn('re.fullmatch(r"[A-Za-z0-9_-]{1,48}"',src)
+        self.assertIn('RUN_SUFFIX+=f"_trial_{args_parsed.trial_id}"',src)
         self.assertIn('state.get("swap_used_percent",100)>95',src)
         self.assertNotIn('systemctl restart',src)
     def test_build_ab_only_exact_verified_existing_lab_elfs(self):
