@@ -34,6 +34,15 @@ if args_parsed.trial_id:
 # target + 512 for chat formatting and answer, not an unnecessary 12K/22K KV.
 CONTEXT = TARGET + 512
 RESERVE = 5.4 if TARGET==8192 else 6.2
+# LAB headroom stricter than the authoritative GPU guard; prior 8K launch
+# lost memory/PSI headroom after loading. Never reduce official thresholds.
+LAB_START_MEM_GIB = 27.0 if TARGET==8192 else 30.0
+LAB_START_MAX_SWAP_PCT = 95.0
+LAB_START_MAX_PSI_FULL = 0.35
+def lab_start_preflight(state):
+    return (state.get("mem_available_gib",0)>=LAB_START_MEM_GIB and
+            state.get("swap_used_percent",100)<LAB_START_MAX_SWAP_PCT and
+            state.get("psi_memory_full_avg10",99)<LAB_START_MAX_PSI_FULL)
 WATCH_STOP=threading.Event()
 WATCH_EVENTS=[]
 OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulkan-guardian","backend":"Vulkan","model":"Qwen3.8-4B-Heretic MTP Q4_K_M","lab_only":True,"production_promoted":False,"status":"not_started","target_tokens":TARGET,
@@ -111,6 +120,10 @@ def run():
     OUT["admission"]={k:state.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","safe_total_gtt_gib","swap_used_percent","reasons")}
     if not state.get("allow"):
         OUT["status"]="blocked_guardian";return
+    if not lab_start_preflight(state):
+        OUT["status"]="blocked_lab_memory_headroom"
+        OUT["lab_headroom_limits"]={"min_mem_gib":LAB_START_MEM_GIB,"max_swap_pct":LAB_START_MAX_SWAP_PCT,"max_psi_full_avg10":LAB_START_MAX_PSI_FULL}
+        return
     fd=os.open("/run/cloud9-gpu.lock",os.O_RDWR|os.O_CREAT,0o660)
     proc=None
     try:
@@ -121,6 +134,10 @@ def run():
         state=check(RESERVE)
         if not state.get("allow"):
             OUT["status"]="blocked_guardian_after_lock";OUT["guard_after_lock"]=state;return
+        if not lab_start_preflight(state):
+            OUT["status"]="blocked_lab_headroom_after_lock"
+            OUT["guard_after_lock"]=state
+            return
         if args_parsed.kv_v!="f16" and state.get("swap_used_percent",100)>95:
             OUT["status"]="blocked_experimental_kv_swap_safety"
             OUT["guard_after_lock"]=state
