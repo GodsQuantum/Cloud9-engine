@@ -3,7 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
-Hall of Fame: 192 records; 31 raw proofs mirrored with SHA on GitHub.
+Hall of Fame: 192 records; 33 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -18,11 +18,11 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C07 | OpenBMB MiniCPM5+DSpark live speed and tool | CURRENT_PASS_LIMITED | Not 3/3 scenario suite nor untouched OpenBMB weights |
 | C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | Native current chimera Qwen4 8K EXACT 3/3 five-marker retrieval PASSED f16 KV at 8026 prompt tokens, latest seed3 8.4806 tok/s and zero watchdog. C08 still PARTIAL for current chimera 16K (three seeded runs) and larger useful context; do not replay historic Atomic proofs or promote NextN/Turbo3. |
 | C09 | Functional agentic JSON tools coding and French regression | CURRENT_PASS_LIMITED | 36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion. |
-| C10 | Multi-agent concurrency and performance envelope | PARTIAL | C10 real native slot count ONE, first of 42 HTTP client-concurrency requests correct in 2.8433s; subsequent group stopped by official guardian at memory PSI1.70. Resume original CT410 checkpoint with --execute --resume under guardian; new harness skips completed whole groups and bounds guardian PSI cooldown to 24s. Test 1/2/4 client queues x3 and streaming; do NOT claim 4 native decoding slots. |
+| C10 | Multi-agent concurrency and performance envelope | PARTIAL | C10 native server has one generation slot; only 1/42 guarded client requests correct (2.8433s). Resume same checkpoint (no repeats) after precise model pre-admission; LAB C10 now distinguishes post-load survival (MemAvailable>=21GiB, memory PSI full<0.5, swap<=96) from new-worker 24GiB admission, and aborts all non-start-floor guardian reasons. 1/2/4 client queue quality, p95 stream latency and true native 4 slots unproven. |
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability. |
 | C12 | Feature speed parity and Turbo KV real backend GPU | PARTIAL | NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, 5/5 extraction criterion failed (per-marker wrong count not recorded)). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance. |
 | C13 | Four role-selected models and FlashNext >20 t/s | PARTIAL | Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4 |
-| C14 | OmniRoute Dify n8n Paperclip end-to-end | PARTIAL | OmniRoute llama-cpp provider active, Cloud9-Engine has exactly four stable model entries and CT410 catalog has nine; chimera is deliberately NOT in default combo. Require authorized real end-to-end tool workflows through OmniRoute+Dify+n8n+Paperclip, with identity/profile boundaries and fallback tests, before production promotion. |
+| C14 | OmniRoute Dify n8n Paperclip end-to-end | PARTIAL | Read-only 25-Oct healthy native OmniRoute llama-cpp provider and four stable Cloud9 combo models in SQLite/catalog; Omniroute,Dify,n8n,MCPProxy,OpenWebUI,Papercip systemd,router,embeddings processes healthy. STILL require real end-to-end 2/3-step agent/tool workflows with profile isolation/permissions/fallback and no unauthorized tools. Static health is NOT workflow certification. |
 | C15 | Controlled v1 release default / rollback and live monitoring | NOT_RUN | Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning |
 
 ## Voie production minimale, modèle local Qwen4

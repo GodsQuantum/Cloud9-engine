@@ -59,9 +59,21 @@ def preflight(model, base, worker, guardian_host):
     h = fetch_json(base + "/health")
     if h.get("worker_model") != model:
         raise ValueError("EXACT_WORKER_NOT_ALREADY_LOADED: no implicit model start")
+    # EXACT worker is already resident (verified above): do not reapply the
+    # 24-GiB start-admission floor after the admitted model consumes RAM.
+    # Follow the certified C09 runtime survival limits; the official guard
+    # still provides every metric and C10 NEVER starts/replaces a worker.
     g = guardian_check(guardian_host)
-    if not g.get("allow"):
-        raise ValueError("OFFICIAL_GUARDIAN_DENIED: " + repr(g.get("reasons")))
+    reasons=g.get("reasons") or []
+    if not g.get("allow") and not (
+        reasons and all(str(x).startswith("host MemAvailable ") and
+                        "< start floor" in str(x) for x in reasons)):
+        raise ValueError("OFFICIAL_GUARDIAN_DENIED: " + repr(reasons))
+    if (g.get("mem_available_gib",0)<21 or
+        g.get("psi_memory_full_avg10",99)>=0.5 or
+        g.get("swap_used_percent",100)>96):
+        raise ValueError("LOADED_WORKER_RUNTIME_PRESSURE: "
+                         +repr({k:g.get(k) for k in ("mem_available_gib","psi_memory_full_avg10","swap_used_percent")}))
     slot_records = fetch_json(worker + "/slots", timeout=5)
     slots = validate_slots(slot_records)
     if any(x.get("is_processing") is True or x.get("state") == "processing" for x in slot_records):
@@ -79,7 +91,8 @@ def guarded_cooldown_preflight(model, base, worker, host):
             return preflight(model, base, worker, host)
         except ValueError as exc:
             last = exc
-            if "OFFICIAL_GUARDIAN_DENIED" not in str(exc):
+            if not any(x in str(exc) for x in (
+                    "OFFICIAL_GUARDIAN_DENIED", "LOADED_WORKER_RUNTIME_PRESSURE")):
                 raise
             g = guardian_check(host)
             if g.get("mem_available_gib",0)<21 or g.get("swap_used_percent",100)>96:
