@@ -25,7 +25,10 @@ class ProofRegistryTest(unittest.TestCase):
   self.assertEqual((R/"certification/NEXT_HANDOFF.md").read_text(),M.render_handoff(self.d))
  def test_repo_raw_benchmarks_shas_pinned_even_without_cloud9_host(self):
   self.assertEqual(self.d["hall_record_count_at_audit"],192)
-  self.assertEqual(len(self.d["repo_proof_snapshots"]),7)
+  self.assertGreaterEqual(len(self.d["repo_proof_snapshots"]),9)
+  names={Path(x["repo_path"]).name for x in self.d["repo_proof_snapshots"]}
+  self.assertIn("nextn-revert-lab-ct410-provenance.json",names)
+  self.assertIn("2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",names)
   M.validate(self.d)
   altered=json.loads(json.dumps(self.d))
   altered["repo_proof_snapshots"][0]["sha256"]="0"*64

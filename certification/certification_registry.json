@@ -313,7 +313,7 @@
     {
       "id": "C12",
       "title": "Feature speed parity and Turbo KV real backend GPU",
-      "status": "NOT_RUN",
+      "status": "PARTIAL",
       "scope": "MMB MTP TurboQuant mixed; current f16 KV only",
       "evidence": [
         {
@@ -325,9 +325,19 @@
           "project_path": "Sources/Builds/cloud9-chimera-nextn-revert-20261025/nextn-reserve-regression-revert-only.patch",
           "sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee",
           "note": "Single-file LAB-only revert of upstream #30020; this evidence is source only, not a performance or correctness certification"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0200_NEXTN_VULKAN_TURBO3_AB_PLAN.md",
+          "sha256": "209c44cde49b02c417e6cd6f5b89880131dca24ff4e7d8e6b1b068a6b1439ebe",
+          "note": "Exact plan and native runner changed; experimental source only and no GPU cache performance claim"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
+          "sha256": "faa396b03cc6f62ec35bc0b2e18dd0344d076e631fc342296a3f7782b14f55df",
+          "note": "Vulkan CI success, verified archive 12 members, native CT410 loader and unit tests; NO GPU inference claim"
         }
       ],
-      "remaining": "Source-only experimental LAB candidate prepared for upstream llama.cpp Vulkan MTP reservation regression #30688: revert five lines from commit 1a3011cc0 in isolated master9ae chimera, resulting Git tree d122b09e38c4e5397601c1ade0c3c6cc3aea39cc. Still requires compiler CI, numerical validity and matched guarded GPU A/B: NOT production and no speed gain claimed.",
+      "remaining": "Reproduced exact master9ae source with 5-line NextN reserve revert; GitHub CI run40144538324 SUCCESS and host ABI/unit test PASS after standard $ORIGIN patchelf relocation. Binary staged INACTIVE on CT410. Runtime GPU correctness and performance NOT tested; need matched K/V quant+batch source candidate A/B and scheduler graph stability before promotion.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -388,7 +398,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "25 Oct ~01:10–01:17: Current master9ae Qwen4 8K 2/3 five-needle successes at ctx8704 (8026 tokens each), third stopped PSI 2.31. C09 checkpoint1/36 strict tool success at 34.58 tokens/s, remaining paused PSI0.65. New checkpoint+resume native bench tested 9 guard/duplicate cases. PBS daily backup remains enabled.",
+  "latest_attempt_note": "25 Oct02:10 NextN source candidate built GitHub CI SUCCESS, 12 ELF native RPATH repaired, inactive CT410 lab staged and native ABI/unit pass; GPU withheld ZRAM 98.28%; 226 Python static tests planned.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -424,6 +434,16 @@
       "repo_path": "tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch",
       "project_path": "Sources/Builds/cloud9-chimera-nextn-revert-20261025/nextn-reserve-regression-revert-only.patch",
       "sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/nextn-revert-lab-ct410-provenance.json",
+      "project_path": "Sources/Builds/cloud9-chimera-nextn-revert-20261025/ci-run-40144538324/native-nextn-revert-vulkan-lab/PROVENANCE_LAB.json",
+      "sha256": "fe4378e522684b48308f4e71678e284e6165e927252b0066eae463f55a663307"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
+      "project_path": "Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
+      "sha256": "faa396b03cc6f62ec35bc0b2e18dd0344d076e631fc342296a3f7782b14f55df"
     }
   ],
   "nextn_lab_candidate": {
@@ -431,6 +451,17 @@
     "upstream_issue": "https://github.com/ggml-org/llama.cpp/issues/30688",
     "tree": "d122b09e38c4e5397601c1ade0c3c6cc3aea39cc",
     "patch_sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee",
-    "safety": "research-only; reverting scheduler reserve can reintroduce allocation hazards; no production promotion"
+    "safety": "research-only; reverting scheduler reserve can reintroduce allocation hazards; no production promotion",
+    "github_ci_run_id": 40144538324,
+    "ci_stage_last_verified": "Source tree reproducible, Vulkan builder in progress, no binary promoted",
+    "github_ci_conclusion": "success",
+    "source_archive_sha256": "7c52d34ddfdd735139d60fc4db577ad7fa028129232f79d4465b779fa28fc6c0",
+    "relocated_elf_count": 12,
+    "sha256sum_relocated_manifest": "97ab4aff7f6edcad84ebf592b3db65a7ba55eef81ea7d3921d2ce8a92b802b03",
+    "ct410_inactive_binary_sha256": "25e2d4560ecceeda57a9c6fa88bfd8b440c46f5bac5dfc71204002a1f798ed63",
+    "ct410_inactive_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/chimera-master9ae-nextn-revert-vulkan-20261025",
+    "host_loader_units": "llama-server version OK, MTP-adaptive OK, 20/20 Turbo fail-closed, quant functions exit0",
+    "GPU_inference_tested": false,
+    "production_promoted": false
   }
 }

@@ -33,6 +33,22 @@ class LongContextSafety(unittest.TestCase):
         self.assertIn("WATCH_EVENTS",src)
         for forbidden in ("systemctl stop","docker stop","pct stop","qm stop","vzdump --stop","swapoff","drop_caches"):
             self.assertNotIn(forbidden,src)
+    def test_native_turbo3_uses_existing_runner_and_unique_evidence(self):
+        self.assertIn('parser.add_argument("--kv-k"',src)
+        self.assertIn('parser.add_argument("--kv-v"',src)
+        self.assertIn('parser.add_argument("--batch"',src)
+        self.assertIn('"-ctk",args_parsed.kv_k,"-ctv",args_parsed.kv_v',src)
+        self.assertIn('RUN_SUFFIX+=f"_k{args_parsed.kv_k}_v{args_parsed.kv_v}_b{args_parsed.batch}"',src)
+        self.assertIn('blocked_experimental_kv_swap_safety',src)
+        self.assertIn('state.get("swap_used_percent",100)>95',src)
+        self.assertNotIn('systemctl restart',src)
+    def test_build_ab_only_exact_verified_existing_lab_elfs(self):
+        self.assertIn('parser.add_argument("--engine-build"',src)
+        self.assertIn('"nextn-revert":"25e2d4560ecceeda57a9c6fa88bfd8b440c46f5bac5dfc71204002a1f798ed63"',src)
+        self.assertIn('"baseline":"2e00292ca25dd5f7e7483f232d2b0c7fe30ba73deea503dcdb4792ac36e47cc3"',src)
+        self.assertIn('actual_sha==EXPECTED_SERVER_SHA256[args_parsed.engine_build]',src)
+        self.assertIn('chimera-master9ae-nextn-revert-vulkan-20261025/bin/llama-server',src)
+        self.assertIn('RUN_SUFFIX+=f"_build_{args_parsed.engine_build.replace',src)
     def test_historical_fixtures_not_recreated(self):
         self.assertIn("atomic_turboquant_context_20261022.py",src)
         self.assertIn("fixture.build_target(TARGET)",src)

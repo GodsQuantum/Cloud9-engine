@@ -1,3 +1,8 @@
+## Actualisation 02:10 - candidature NextN Vulkan compilee, en LAB
+CI GitHub run 40144538324 SUCCESS: source SHA/patched tree verifies, 12 fichiers ELF reparables par $ORIGIN, loader natif CT410 et unites MTP/Turbo 20/20/quant PASS. Candidat uniquement en lab-releases, AUCUNE inference GPU du correctif, AUCUNE modification du routeur. 8K actuel 2/3, C09 1/36; hote ZRAM a 98,28 % => tests GPU suspendus. A/B de caches et de binaires a hash pins prete. 226 tests Python et HOF 192. Source: Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md.
+
+---
+
 ## Actualisation 25 octobre, 01:25 : preuves actuelles
 
 - Le Hall of Fame canonique passe de 190 à **192 enregistrements**, via l'outil d'ajout natif; 1344 références de preuve. Les deux nouveaux enregistrements sont explicitement **PARTIAL**, pas des certifications finales.
