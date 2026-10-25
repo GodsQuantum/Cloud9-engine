@@ -44,7 +44,7 @@ OUT={"engine":"Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulka
 LOG=LAB/f"chimera_five_needles_{TARGET}_efficient_ctx_cooldown{RUN_SUFFIX}.log"
 REPORT=LAB/f"chimera_five_needles_{TARGET}_efficient_ctx_cooldown{RUN_SUFFIX}.json"
 if LOG.exists() or REPORT.exists():
-    parser.error("REFUSE_TO_OVERWRITE_EVIDENCE: existing run path; use noncolliding run identity")
+    parser.error("REFUSE_TO_OVERWRITE_EVIDENCE: existing run path; supply a unique --trial-id (no replay)")
 BINARY=(LAB/"bin/llama-server" if args_parsed.engine_build=="baseline" else
         LAB.parent/"chimera-master9ae-nextn-revert-vulkan-20261025/bin/llama-server")
 EXPECTED_SERVER_SHA256={

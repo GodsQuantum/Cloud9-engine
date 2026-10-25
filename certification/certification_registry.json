@@ -350,6 +350,16 @@
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
           "sha256": "f4c371bf851ed8a04a50964950cc270d8e5b7a3aa7ab1d81c905bac1bd9b164e",
           "note": "Negative quality proof: experimental Vulkan K q8_0 / V turbo3 8K full prompt but failed 5/5 criterion (per-marker wrong count not recorded), decode3.51 tok/s; not a speed-certificate"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_1745_IMMUTABLE_TRIAL_HARNESS_GUARD.md",
+          "sha256": "8b4190dbc3ba10fa8f22f4c1feaac5f7e564ca304bc920d0aea61f2349862de2",
+          "note": "Immutable LAB benchmark guard and no-inference policy denial; not a new performance or correctness pass"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
+          "sha256": "e84618c2a84ca8d91cdc9d31d84a269251ec0c9dadf91decbfd08203125235c4",
+          "note": "Immutable LAB benchmark guard and no-inference policy denial; not a new performance or correctness pass"
         }
       ],
       "remaining": "NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, 5/5 extraction criterion failed (per-marker wrong count not recorded)). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance.",
@@ -430,7 +440,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 17:33 Europe/Paris: C09 resumed from checkpoint1/36, second safe tool pbs-task-integrity passed, total2/36. Guardian memory PSI paused continuation. C12 Turbo3 8K proved negative five-marker correctness, 3.51 tok/s; not a candidate for production. New Nemotron 74B/E4B research candidate only, no hardware bench. Historical 192 HOF retained.",
+  "latest_attempt_note": "2026-10-25 17:33 Europe/Paris: C09 resumed from checkpoint1/36, second safe tool pbs-task-integrity passed, total2/36. Guardian memory PSI paused continuation. C12 Turbo3 8K proved negative five-marker correctness, 3.51 tok/s; not a candidate for production. New Nemotron 74B/E4B research candidate only, no hardware bench. Historical 192 HOF retained. | 25 Oct 17:45: LAB runner immutable --trial-id and no-overwrite protection; real CT410 turbo3 known-bad replay blocked pre-inference and historical negative SHA preserved. No new runtime speed claim.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -506,6 +516,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
       "project_path": "Sources/Worklogs/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
       "sha256": "f3b3c0fc70029cb0ed712efb6d68cb4c66cb7be9b8b9dab417353504c22e57cc"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_1745_IMMUTABLE_TRIAL_HARNESS_GUARD.md",
+      "project_path": "Sources/Worklogs/2026-10-25_1745_IMMUTABLE_TRIAL_HARNESS_GUARD.md",
+      "sha256": "8b4190dbc3ba10fa8f22f4c1feaac5f7e564ca304bc920d0aea61f2349862de2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
+      "sha256": "e84618c2a84ca8d91cdc9d31d84a269251ec0c9dadf91decbfd08203125235c4"
     }
   ],
   "nextn_lab_candidate": {

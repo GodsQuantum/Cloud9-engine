@@ -1,0 +1,16 @@
+{
+  "engine": "Cloud9-native-chimera-master9ae-r120-mmb-mtp-turbo-adaptive-vulkan-guardian",
+  "backend": "Vulkan",
+  "model": "Qwen3.8-4B-Heretic MTP Q4_K_M",
+  "lab_only": true,
+  "production_promoted": false,
+  "status": "blocked_known_bad_turbo3_quality",
+  "target_tokens": 8192,
+  "kv_k": "q8_0",
+  "kv_v": "turbo3",
+  "batch": 512,
+  "experimental_cache_quality_test": true,
+  "binary_variant": "baseline",
+  "binary_sha256": "2e00292ca25dd5f7e7483f232d2b0c7fe30ba73deea503dcdb4792ac36e47cc3",
+  "reason": "PROVEN_BAD_VULKAN_TURBO3_8K_20261025"
+}
