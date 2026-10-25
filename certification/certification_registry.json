@@ -231,9 +231,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
           "sha256": "dd9851f373f8a22bd9ef6b417889b1af01da222a300dc1beb1d2b3e96da4e74b",
           "note": "Stricter C08 LAB-only GPU admission prevents unsafe new 8K/16K launches; no new inference"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2205_C08_ZRAM2_CONDITIONAL_GPU_ADMISSION.md",
+          "sha256": "6445ce92205c8937b3c5d69274917d12577aab7bde833f0c445d839151a32dd2",
+          "note": "Native ZRAM2-conditional 8K seed3 admission; no official guard changes, GPU validation still pending"
         }
       ],
-      "remaining": "8K Qwen4 chimera 2/3 valid; run seed3 only when LAB preflight 27GiB available, swap<95%, PSI<0.35 and official guardian allows. 16K current chimera requires 30GiB prelaunch. Use unique trial ID, never redo historical C02/C03.",
+      "remaining": "Qwen4 8K current chimera still 2/3 proven. The LAB-only 8K seed3 guard conditionally permits min24.6GiB MemAvailable when verified live native zram2>=4GiB, host swap total>=23GiB, <83% usage, full memory PSI<0.10 and GTT>=7.2GiB, AND official guardian permits. Otherwise strict 27GiB, 16K remains 30GiB. Execute seed3 only as immutable trial with full five-marker extraction and watchdog, then 16K, no C02/C03 replay.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -487,7 +492,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 22:00 Europe/Paris: native C09 36/36 exact tool JSON, 0 unsafe across 3*12; no replay; guardian-approved after adding native persistent LOW-priority 4GiB ZRAM2 to protect host. Source/proof Git SHA locked. C08 8K2/3, C10 GPU, C14 real live integrations and C15 24h canary remain unqualified.",
+  "latest_attempt_note": "2026-10-25 22:00 Europe/Paris: native C09 36/36 exact tool JSON, 0 unsafe across 3*12; no replay; guardian-approved after adding native persistent LOW-priority 4GiB ZRAM2 to protect host. Source/proof Git SHA locked. C08 8K2/3, C10 GPU, C14 real live integrations and C15 24h canary remain unqualified. | 22:05 isolated 8K LAB-only conditional prelaunch policy when zram2 native active and host PSI/GTT/swaps stable; NOT a test pass.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -618,6 +623,11 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
       "project_path": "Sources/Worklogs/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
       "sha256": "8f9cee897f3022f5f9204a8570b4928dbe36e8f46d64ae96533172c865deccbe"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2205_C08_ZRAM2_CONDITIONAL_GPU_ADMISSION.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2205_C08_ZRAM2_CONDITIONAL_GPU_ADMISSION.md",
+      "sha256": "6445ce92205c8937b3c5d69274917d12577aab7bde833f0c445d839151a32dd2"
     }
   ],
   "nextn_lab_candidate": {
