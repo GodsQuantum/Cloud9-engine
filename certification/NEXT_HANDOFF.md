@@ -6,7 +6,7 @@ Moteur disponible: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 
 SHA routeur: 2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262
 SHA catalogue: 82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288
-GitHub evidence snapshot count: 17; SHA validated without a running Cloud9 host.
+GitHub evidence snapshot count: 19; SHA validated without a running Cloud9 host.
 Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avant les gates restants.
 
 ## Certifié dans sa portée et A NE PAS REFAIRE
@@ -22,7 +22,7 @@ Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avan
 ## Restant et ordonné
 
 - C08 (PARTIAL) 8K Qwen4 master9ae seeded repeats 1 and 2 each 5/5 correct (8026 prompt tokens), no third success; a new rep3-only attempt 25 Oct 02:13 loaded successfully but failed guard BEFORE inference, MemAvailable 22.681 GiB and full PSI 2.32. Run only seeded rep3 after stable resource margin; then 16K current chimera. Do not repeat historical Atomic 8K/16K.. Réussite: same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed
-- C09 (PARTIAL) Read-only native Qwen4 C09 now 2/36 strict correct; second case pbs-task-integrity 11.433 seconds. Remaining 34 distinct case/repetitions untested. Resume original immutable fixture+mutable CT410 checkpoint, skipping first two, only when GPU/memory guard permits; add FR/code regression.. Réussite: no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption
+- C09 (PARTIAL) C09 native opt-in Qwen4 28/36 correct strict tool JSON; zero unsafe. Reps [12,12,4] complete. Resource guard paused after 28, only final eight cases in THIRD repetition remain. Resume same native CT410 checkpoint/fixture SHA with --execute --resume --allow-lab-load under official GPU guard; never redo completed 28. Then add FR+coding integrity regression and report exact final pass rate.. Réussite: no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption
 - C10 (NOT_RUN) Existing server cannot simply be called multiworker; benchmark slots 1/2/4 and use real router queue/reloads; native llama server supports parallel decoding. Réussite: p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls
 - C11 (BLOCKED_RESOURCE) PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold.. Réussite: stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions
 - C12 (PARTIAL) NextN LAB artifact CI native loaded and CPU/backend passes, but no GPU A/B. Turbo3 Kq8_0/Vturbo3 Vulkan proved quality FAIL at 8K (3.51 t/s, 5/5 extraction criterion failed (per-marker wrong count not recorded)). Never promote or replay known failure. Use only safety-guarded f16 matched baseline/NextN, then separately certify quality before performance.. Réussite: hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain
