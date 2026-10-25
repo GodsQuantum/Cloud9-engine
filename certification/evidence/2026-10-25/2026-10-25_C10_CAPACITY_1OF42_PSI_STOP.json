@@ -1,0 +1,49 @@
+{
+  "status": "paused_or_failed",
+  "model": "Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB",
+  "lab_only": true,
+  "safe_simulated_tools": true,
+  "no_worker_load_or_preemption": true,
+  "fixture_sha256": "8a2aeb41a0eca424d7b8f683f0bddee3c6abd2d1ed5ec8e2759d2606d3cd5da1",
+  "baseline": {
+    "worker_model": "Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB",
+    "native_slots": 1,
+    "guardian": {
+      "allow": true,
+      "mem_available_gib": 24.471,
+      "psi_memory_full_avg10": 0.18,
+      "swap_used_percent": 81.18,
+      "reasons": []
+    }
+  },
+  "native_slots": 1,
+  "rows": [
+    {
+      "phase": "tool",
+      "rep": 1,
+      "client": 0,
+      "fixture": "omniroute-admin-mcp",
+      "wall_seconds": 2.8433,
+      "passed": true,
+      "selected": "mcpproxy.get_server_tool_inventory",
+      "expected": "mcpproxy.get_server_tool_inventory",
+      "unsafe": false,
+      "strict_json": true,
+      "client_concurrency": 1
+    }
+  ],
+  "stop_reason": "ValueError: OFFICIAL_GUARDIAN_DENIED: ['host memory PSI full avg10=1.70']",
+  "scorecard": {
+    "requests": 1,
+    "passed": 1,
+    "tool_requests": 1,
+    "tool_correct": 1,
+    "unsafe_tool_calls": 0,
+    "native_decoding_slots": 1,
+    "server_true_parallelism_proven": false,
+    "p95_total_seconds": 2.8433,
+    "p95_stream_ttft_seconds": null,
+    "p95_inter_chunk_seconds": null,
+    "inter_chunk_is_not_exact_itl": true
+  }
+}
