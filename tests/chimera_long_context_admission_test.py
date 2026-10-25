@@ -40,6 +40,11 @@ class LongContextSafety(unittest.TestCase):
         self.assertIn('"-ctk",args_parsed.kv_k,"-ctv",args_parsed.kv_v',src)
         self.assertIn('RUN_SUFFIX+=f"_k{args_parsed.kv_k}_v{args_parsed.kv_v}_b{args_parsed.batch}"',src)
         self.assertIn('blocked_experimental_kv_swap_safety',src)
+        self.assertIn('choices=["f16","q8_0","turbo3"]',src)
+        self.assertIn('blocked_known_bad_turbo3_quality',src)
+        self.assertIn('PROVEN_BAD_VULKAN_TURBO3_8K_20261025',src)
+        self.assertIn('RUN_SUFFIX+="_blocked_policy"',src)
+        self.assertIn('REFUSE_TO_OVERWRITE_EVIDENCE',src)
         self.assertIn('state.get("swap_used_percent",100)>95',src)
         self.assertNotIn('systemctl restart',src)
     def test_build_ab_only_exact_verified_existing_lab_elfs(self):
