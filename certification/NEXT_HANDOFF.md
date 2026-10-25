@@ -6,7 +6,7 @@ Moteur disponible: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 
 SHA routeur: 2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262
 SHA catalogue: 82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288
-GitHub evidence snapshot count: 9; SHA validated without a running Cloud9 host.
+GitHub evidence snapshot count: 10; SHA validated without a running Cloud9 host.
 Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avant les gates restants.
 
 ## Certifié dans sa portée et A NE PAS REFAIRE
@@ -27,7 +27,7 @@ Maintenir les combos OmniRoute actuels. Ne pas promouvoir ce LAB en défaut avan
 - C11 (BLOCKED_RESOURCE) PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold.. Réussite: stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions
 - C12 (PARTIAL) Reproduced exact master9ae source with 5-line NextN reserve revert; GitHub CI run40144538324 SUCCESS and host ABI/unit test PASS after standard $ORIGIN patchelf relocation. Binary staged INACTIVE on CT410. Runtime GPU correctness and performance NOT tested; need matched K/V quant+batch source candidate A/B and scheduler graph stability before promotion.. Réussite: hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain
 - C13 (PARTIAL) Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4. Réussite: per role latency, quality and useful context proven on the target device
-- C14 (PARTIAL) Test Dify/n8n/Paperclip agents in read-only realistic tasks, 2 separate identities/profile constraints; ensure no repeated model switch. Réussite: real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges
+- C14 (PARTIAL) OmniRoute llama-cpp provider active, Cloud9-Engine has exactly four stable model entries and CT410 catalog has nine; chimera is deliberately NOT in default combo. Require authorized real end-to-end tool workflows through OmniRoute+Dify+n8n+Paperclip, with identity/profile boundaries and fallback tests, before production promotion.. Réussite: real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges
 - C15 (NOT_RUN) Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning. Réussite: published tag/release, observable health/p95, canary auto rollback, user can select it natively
 
 ## Règle de reprise future

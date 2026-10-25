@@ -3,7 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
-Hall of Fame: 192 records; 9 raw proofs mirrored with SHA on GitHub.
+Hall of Fame: 192 records; 10 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -22,7 +22,7 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold. |
 | C12 | Feature speed parity and Turbo KV real backend GPU | PARTIAL | Reproduced exact master9ae source with 5-line NextN reserve revert; GitHub CI run40144538324 SUCCESS and host ABI/unit test PASS after standard $ORIGIN patchelf relocation. Binary staged INACTIVE on CT410. Runtime GPU correctness and performance NOT tested; need matched K/V quant+batch source candidate A/B and scheduler graph stability before promotion. |
 | C13 | Four role-selected models and FlashNext >20 t/s | PARTIAL | Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4 |
-| C14 | OmniRoute Dify n8n Paperclip end-to-end | PARTIAL | Test Dify/n8n/Paperclip agents in read-only realistic tasks, 2 separate identities/profile constraints; ensure no repeated model switch |
+| C14 | OmniRoute Dify n8n Paperclip end-to-end | PARTIAL | OmniRoute llama-cpp provider active, Cloud9-Engine has exactly four stable model entries and CT410 catalog has nine; chimera is deliberately NOT in default combo. Require authorized real end-to-end tool workflows through OmniRoute+Dify+n8n+Paperclip, with identity/profile boundaries and fallback tests, before production promotion. |
 | C15 | Controlled v1 release default / rollback and live monitoring | NOT_RUN | Only after C08-14 relevant gates, shadow/canary, versioned rollback and measured 24h safe operation; no service restart without warning |
 
 ## Voie production minimale, modèle local Qwen4
