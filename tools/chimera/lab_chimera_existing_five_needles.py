@@ -217,6 +217,15 @@ def run():
             OUT["repetitions_planned"]=args_parsed.rep_end-args_parsed.rep_start+1
             OUT["expected"]=fixture.CODES
             OUT["rows"]=[]
+            def stop_own_lab_child():
+                # Only this Popen handle can be stopped; do not touch the
+                # production route, native embeddings, voice, or PVE guests.
+                if proc.poll() is not None: return
+                proc.terminate()
+                try: proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait(timeout=7)
             def watch():
                 while not WATCH_STOP.wait(2):
                     try:
@@ -229,11 +238,11 @@ def run():
                                 v=int((temp.parent/"temp1_input").read_text())/1000
                                 if v>=79.0:WATCH_EVENTS.append({"reason":"CPU_TCTL","value":v})
                         if WATCH_EVENTS:
-                            if proc.poll() is None:proc.terminate()
+                            stop_own_lab_child()
                             break
                     except Exception as e:
                         WATCH_EVENTS.append({"reason":"WATCHDOG_UNAVAILABLE","error":str(e)[:100]})
-                        if proc.poll() is None:proc.terminate()
+                        stop_own_lab_child()
                         break
             thread=threading.Thread(target=watch,daemon=True)
             thread.start()
