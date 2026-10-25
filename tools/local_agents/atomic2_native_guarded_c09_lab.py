@@ -47,6 +47,22 @@ def survive(g):
     # honor strict postload watchdog used by existing certified C09.
     return g.get("mem_available_gib",0)>=21 and g.get("psi_memory_full_avg10",99)<0.5 and g.get("swap_used_percent",100)<96
 
+def wait_for_bounded_runtime_admission():
+    # Exact 20-second recovery window used by the certified Chimera C09;
+    # neither the official GPU guardian nor its survival floors are relaxed.
+    state=guard(0)
+    for i in range(11):
+        if survive(state):return state
+        if (state.get("mem_available_gib",0)<21 or
+            state.get("psi_memory_full_avg10",99)>=2.0 or
+            state.get("swap_used_percent",100)>96):
+            return state
+        if i<10:
+            time.sleep(2)
+            state=guard(0)
+    return state
+
+
 def stop_own(child):
     if child is None or child.poll() is not None:return
     child.terminate()
@@ -169,7 +185,7 @@ def main():
             for rep in (1,2,3):
                 for fixture in fixtures:
                     if (rep,fixture["id"]) in seen:continue
-                    g=guard(0)
+                    g=wait_for_bounded_runtime_admission()
                     if not survive(g):
                         report["status"]="paused_resource_pressure"
                         report["last_guard"]=g;save();return
