@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-25T21:27:10.196959+00:00",
+  "read_only_authenticated_model_enumeration": true,
+  "tokens_or_secrets_recorded": false,
+  "inference_requests": 0,
+  "results": [
+    {
+      "api_key_label": "Omniroute Master",
+      "http": 200,
+      "total_models": 2541,
+      "chimera_direct_id_visible": false,
+      "cloud9_models_count": 21
+    },
+    {
+      "api_key_label": "N8N Cloud9",
+      "http": 200,
+      "total_models": 2541,
+      "chimera_direct_id_visible": false,
+      "cloud9_models_count": 21
+    },
+    {
+      "api_key_label": "IA CLI Cloud9",
+      "http": 200,
+      "total_models": 2541,
+      "chimera_direct_id_visible": false,
+      "cloud9_models_count": 21
+    }
+  ],
+  "certification_scope": "model visibility only, not Dify/n8n actual tool workflow"
+}

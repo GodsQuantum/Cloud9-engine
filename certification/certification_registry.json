@@ -256,9 +256,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
           "sha256": "00b1e4a6fc26d5d88b899cfb06cd46ab8187de55b0fadd9036406b9c0b47f6d3",
           "note": "Actual current chimera 16K f16 KV first attempt failed watchdog PSI2.11 before full prompt; no successful row"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
+          "sha256": "1e2878a1b3fbfa623ef3fd474d6cb17cc58503461ff0f3ceefd7335b5541a1f1",
+          "note": "16K Q8 no safe preflight; own LAB child watchdog cleanup bounded; no new inference"
         }
       ],
-      "remaining": "Current native 8K 3/3 five-marker correct; current native 16K f16 KV attempt FAILED safely during prefill at ~6400 tokens (full host memory PSI2.11, MemAvailable23.395GiB), 0 full 16K answers and 0 scored reps; watchdog and own-LAB hung cleanup. Do not certify 16K, NextN or Turbo3. Require resource/memory optimization and distinct immutable trial with 3x5-marker pass, plus official guard.",
+      "remaining": "8K current chimera native f16 3/3 correct. 16K f16 failed at 6400 tokens because memory PSI full2.11; 16K q8_0 alternate had no safe preflight window and NO inference; still 0 scored 16K. Watchdog cleanup now targets own stuck LAB child with bounded TERM/KILL. Await demonstrably stable host resources, same full 16K five-marker suite all three reps. Do not lower official guardian or promote experimental Turbo3/NextN.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -507,9 +512,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_C14_STATIC_NATIVE_AGENT_SERVICES_AUDIT.json",
           "sha256": "1fcb679147f67a5f3c563ea0c7fa141ade5f75d328716b4b3067eaab6526c899",
           "note": "Native real health/provider mapping read-only; C14 E2E still unverified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
+          "sha256": "3c5127998a12d54231a489554a8c5440a4acb3f0e403f3e864fd6801002a4b8c",
+          "note": "Actual OmniRoute authenticated model enumeration HTTP200, model absent from all 3 clients; no secrets captured"
         }
       ],
-      "remaining": "Read-only 25-Oct healthy native OmniRoute llama-cpp provider and four stable Cloud9 combo models in SQLite/catalog; Omniroute,Dify,n8n,MCPProxy,OpenWebUI,Papercip systemd,router,embeddings processes healthy. STILL require real end-to-end 2/3-step agent/tool workflows with profile isolation/permissions/fallback and no unauthorized tools. Static health is NOT workflow certification.",
+      "remaining": "Static native provider/agent services healthy, but live authenticated OmniRoute model enumeration: Chimera Qwen4 LAB NOT visible to Omniroute Master, N8N, IA CLI (HTTP200, 2541 IDs, 21 existing Cloud9 IDs). Must publish opt-in model via supported native provider-model management API (not SQLite), then validate OpenAI-compatible direct call via OmniRoute and real Dify/n8n/Paperclip multi-step workflows, permissions, fallback, rollback. Preserve existing 4-model Cloud9-Engine stable combo.",
       "acceptance": "real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges",
       "observed_2026_10_25": {
         "omniroute_llama_cpp_provider_active": true,
@@ -542,7 +552,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 23:10 Paris: CURRENT Qwen4 native 8K 3/3 correct; C09 36/36; C10 42/42 client queue ONE native slot. First 16K current f16 KV trial failed at ~6400 tokens due strict host PSI full2.11, with no score and LAB-only child forcibly cleaned after stuck shutdown. Production default unchanged, no C15 canary. Evidence frozen.",
+  "latest_attempt_note": "2026-10-25 23:20 Paris: C09 36/36 and C10 42/42 native queued clients one slot PASS; Qwen4 native f16 8K 3/3 PASS; f16 16K fails strict watchdog memory PSI2.11 during 6400-token prefill, q8 16K variant NEVER admitted safely in 115.7s. LAB watchdog child cleanup bounded. Authenticated OmniRoute model ID Chimera absent in 3 allowed clients; C14/C15 unfinished. Defaults unchanged.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -728,6 +738,16 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
       "project_path": "Sources/Worklogs/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
       "sha256": "00b1e4a6fc26d5d88b899cfb06cd46ab8187de55b0fadd9036406b9c0b47f6d3"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
+      "sha256": "1e2878a1b3fbfa623ef3fd474d6cb17cc58503461ff0f3ceefd7335b5541a1f1"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
+      "sha256": "3c5127998a12d54231a489554a8c5440a4acb3f0e403f3e864fd6801002a4b8c"
     }
   ],
   "nextn_lab_candidate": {
