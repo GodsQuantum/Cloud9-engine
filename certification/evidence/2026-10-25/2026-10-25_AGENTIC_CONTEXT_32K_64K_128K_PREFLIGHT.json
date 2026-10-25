@@ -1,0 +1,30 @@
+{
+  "model_native_gguf_max_context": 262144,
+  "product_128K_context_target": 131072,
+  "current_runtime_8K_certified": true,
+  "runtime_32K_64K_128K_certified": false,
+  "native_preflight_results": [
+    {
+      "context": 32768,
+      "status": "blocked_lab_memory_headroom",
+      "gpu_inference_executed": false,
+      "sha256": "29a00be8bf155be95c755b4b10b9a056c283c9fbc682c946541573f7bd91bf15"
+    },
+    {
+      "context": 65536,
+      "status": "blocked_lab_memory_headroom",
+      "gpu_inference_executed": false,
+      "sha256": "e6080dd119f333652a6ae87c29e2800c04c40afc5606a02b058d329f8315d2df"
+    },
+    {
+      "context": 131072,
+      "status": "blocked_guardian",
+      "gpu_inference_executed": false,
+      "sha256": "ea5f8835485ab2ca9fbad34a375c90a98ffc8ffcd8652d511b05e57e7f7f994e"
+    }
+  ],
+  "five_marker_distribution_CPU_approx_positions_verified": true,
+  "128K_prompt_tokenization_verified": false,
+  "pbs_verify_tasks_still_listed": 6,
+  "pbs_weekly_verification_schedule_unchanged": true
+}

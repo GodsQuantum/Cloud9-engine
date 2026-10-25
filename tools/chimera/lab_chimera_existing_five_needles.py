@@ -8,7 +8,7 @@ import argparse, importlib.util, hashlib, threading, re
 LAB=pathlib.Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/chimera-master9ae-turbo-policy-vulkan-20261024/native-adaptive-vulkan-lab")
 GUARD=("192.168.1.200",19755)
 parser=argparse.ArgumentParser()
-parser.add_argument("--target",type=int,choices=[8192,16384],required=True)
+parser.add_argument("--target",type=int,choices=[8192,16384,32768,65536,131072],required=True)
 parser.add_argument("--rep-start",type=int,choices=[1,2,3],default=1)
 parser.add_argument("--rep-end",type=int,choices=[1,2,3],default=3)
 parser.add_argument("--kv-k",choices=["f16","q8_0"],default="f16")
@@ -21,6 +21,8 @@ assert args_parsed.rep_start<=args_parsed.rep_end
 if args_parsed.trial_id and not re.fullmatch(r"[A-Za-z0-9_-]{1,48}",args_parsed.trial_id):
     parser.error("trial-id must be 1..48 ASCII alphanumeric, underscore or hyphen")
 TARGET=args_parsed.target
+if TARGET>=32768 and (args_parsed.kv_k!="q8_0" or args_parsed.kv_v!="q8_0"):
+    parser.error("LONG_CTX_32K_PLUS_REQUIRES_Q8_BOTH_KV: CPU/GPU quality requires separate validation")
 RUN_SUFFIX="" if (args_parsed.rep_start==1 and args_parsed.rep_end==3) else f"_rep{args_parsed.rep_start}to{args_parsed.rep_end}"
 if args_parsed.engine_build!="baseline":
     RUN_SUFFIX+=f"_build_{args_parsed.engine_build.replace('-','_')}"
@@ -33,10 +35,10 @@ if args_parsed.trial_id:
 # The historic 8K fixture contains ~8,015 tokenizer tokens. Allocate
 # target + 512 for chat formatting and answer, not an unnecessary 12K/22K KV.
 CONTEXT = TARGET + 512
-RESERVE = 5.4 if TARGET==8192 else 6.2
+RESERVE = {8192:5.4,16384:6.2,32768:7.0,65536:7.8,131072:9.0}[TARGET]
 # LAB headroom stricter than the authoritative GPU guard; prior 8K launch
 # lost memory/PSI headroom after loading. Never reduce official thresholds.
-LAB_START_MEM_GIB = 27.0 if TARGET==8192 else 30.0
+LAB_START_MEM_GIB = {8192:27.0,16384:30.0,32768:26.2,65536:27.5,131072:29.0}[TARGET]
 LAB_START_MAX_SWAP_PCT = 95.0
 LAB_START_MAX_PSI_FULL = 0.35
 def lab_start_preflight(state):
@@ -68,6 +70,8 @@ def lab_start_preflight(state):
                 state.get("mem_available_gib",0)>=25.3 and
                 state.get("psi_memory_full_avg10",99)<0.05 and
                 state.get("safe_total_gtt_gib",0)>=7.8)
+    # For 32K/64K/128K there is deliberately NO zram2 reduced-floor
+    # fallback: this unqualified long-context path requires full headroom.
     return False
 WATCH_STOP=threading.Event()
 WATCH_EVENTS=[]
@@ -299,7 +303,7 @@ def run():
                           "enable_thinking":False,"cache_prompt":False}
                     started=time.monotonic()
                     try:
-                        answer=json_url(BASE+"/v1/chat/completions",body,timeout=230)
+                        answer=json_url(BASE+"/v1/chat/completions",body,timeout=max(230,round(TARGET/250*1.7)))
                     except Exception as ex:
                         OUT["status"]="inference_failed_or_watchdog"
                         OUT["request_error"]=type(ex).__name__+": "+str(ex)[:250]

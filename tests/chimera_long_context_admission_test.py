@@ -12,7 +12,7 @@ fns={n.name:n for n in tree.body if isinstance(n,ast.FunctionDef)}
 class LongContextSafety(unittest.TestCase):
     def test_8k_only_reserves_required_kv_plus_answer_room(self):
         self.assertIn("CONTEXT = TARGET + 512",src)
-        self.assertIn("choices=[8192,16384]",src)
+        self.assertIn("choices=[8192,16384,32768,65536,131072]",src)
     def test_official_guardian_checked_before_any_gpu_lock_or_start(self):
         method=ast.get_source_segment(src,fns["run"])
         first=method.index("state=check(RESERVE)")
@@ -45,10 +45,15 @@ class LongContextSafety(unittest.TestCase):
         self.assertIn('PROVEN_BAD_VULKAN_TURBO3_8K_20261025',src)
         self.assertIn('RUN_SUFFIX+="_blocked_policy"',src)
         self.assertIn('REFUSE_TO_OVERWRITE_EVIDENCE',src)
-        self.assertIn("LAB_START_MEM_GIB = 27.0 if TARGET==8192 else 30.0",src)
+        self.assertIn("32768:26.2,65536:27.5,131072:29.0",src)
         self.assertIn("LAB_START_MAX_SWAP_PCT = 95.0",src)
         self.assertIn("blocked_lab_memory_headroom",src)
         self.assertIn("lab_start_preflight(state)",src)
+        self.assertIn("choices=[8192,16384,32768,65536,131072]",src)
+        self.assertIn("LONG_CTX_32K_PLUS_REQUIRES_Q8_BOTH_KV",src)
+        self.assertIn("32768:7.0,65536:7.8,131072:9.0",src)
+        self.assertIn("32768:26.2,65536:27.5,131072:29.0",src)
+        self.assertIn("timeout=max(230,round(TARGET/250*1.7))",src)
         self.assertIn("def stop_own_lab_child():",src)
         self.assertIn("proc.wait(timeout=5)",src)
         self.assertIn("proc.kill()",src)
