@@ -267,7 +267,7 @@
     {
       "id": "C09",
       "title": "Functional agentic JSON tools coding and French regression",
-      "status": "PARTIAL",
+      "status": "CURRENT_PASS_LIMITED",
       "scope": "new chimera has 1/1 correct read-only tool, older engine has distinct 36-case trials",
       "evidence": [
         {
@@ -294,9 +294,19 @@
           "project_path": "Sources/Worklogs/2026-10-25_2115_C09_CHECKPOINT_28_OF_36_REAL_GPU.md",
           "sha256": "2ee1b56b27f4f4e3b78fd3a860a6faae0e05382102c649ffc1f1a5d8f5ab161f",
           "note": "Exact native guarded Qwen4 C09 checkpoint 28/36 passing; 0 unsafe; 12+12+4 repetitions, resource-pressure pause before remaining eight"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_36OF36_VERIFIED.json",
+          "sha256": "bfbc0a2eccf4da8d029b5cbb60c73b47b2f67c6d5951437878ef90f02882ab7f",
+          "note": "FULL native C09 12x3 simulated tool selection 36/36 correct 0 unsafe, fixture pinned"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
+          "sha256": "67bac6a8cbb161fa412e42c901d2d03b222356178803209ffdd21797c8cd29a2",
+          "note": "C09 complete and native non-intrusive zram2 activation audit"
         }
       ],
-      "remaining": "C09 native opt-in Qwen4 28/36 correct strict tool JSON; zero unsafe. Reps [12,12,4] complete. Resource guard paused after 28, only final eight cases in THIRD repetition remain. Resume same native CT410 checkpoint/fixture SHA with --execute --resume --allow-lab-load under official GPU guard; never redo completed 28. Then add FR+coding integrity regression and report exact final pass rate.",
+      "remaining": "36/36 native simulated diagnostic tools Qwen4 completed, no unsafe; full C09 native tool-call selection gate PASS. Separately qualify real coding/FR regression and C14 Dify/n8n/Paperclip live task workflows/permissions before full production promotion.",
       "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption",
       "measured_c09_checkpoint": {
         "cases_passed": 1,
@@ -304,7 +314,8 @@
         "cases_planned": 36,
         "decode_tps": 34.578918014500836,
         "status": "paused_resource_pressure"
-      }
+      },
+      "result": "Native strict simulated 12 scenarios x 3 = 36/36 correct JSON tools, zero unsafe; no real infrastructure actions"
     },
     {
       "id": "C10",
@@ -346,9 +357,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
           "sha256": "f87c5a86f3343d881cbc20e713c648733af1c0631bf0511c7c82125876a0fd6e",
           "note": "Read-only 3-second host diskstats+PSI/ZRAM snapshot, confirmed storage pressure; no modifications"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
+          "sha256": "8f9cee897f3022f5f9204a8570b4928dbe36e8f46d64ae96533172c865deccbe",
+          "note": "Native persistent zram2 4GiB lz4 resident limit2GiB priority60; legacy zram0/1 unchanged"
         }
       ],
-      "remaining": "C11 remains BLOCKED_RESOURCE: ZRAM >95% full during GPU qualification, sdc ZFS and sdg USB PBS backup datastore simultaneously showed >2.8s busy time per 3s observation, IO PSI full elevated; one D-state find process persists. Busy disks do NOT prove failure. Preserve services; qualify under sustainable RAM/IO load and after only user-authorized reboot.",
+      "remaining": "Host native systemd-zram-generator additive zram2 active 4GiB lz4 low priority60 resident cap2GiB, preserving zram0/1; reduced swap utilization ratio 97->80% at addition. Sustained 8K+16K under PBS disk I/O + VM services and safe latency/recovery still required. No reboot validation. Never confuse swap capacity addition with physical RAM availability.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -471,7 +487,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications. | 21:25 C10 non-invasive, already-loaded-worker LAB harness staged on CT410 and ten CPU tests pass; no real GPU benchmark, gate NOT_RUN. | 21:35 C08 LAB-only strict RAM/ZRAM/PSI admission mirrored to CT410; no inference/production change. | 21:40 C11 diskstat sdc ZFS 2896ms / sdg USB PBS 2933ms busy over 3s, high IO PSI and near-full ZRAM; no interventions.",
+  "latest_attempt_note": "2026-10-25 22:00 Europe/Paris: native C09 36/36 exact tool JSON, 0 unsafe across 3*12; no replay; guardian-approved after adding native persistent LOW-priority 4GiB ZRAM2 to protect host. Source/proof Git SHA locked. C08 8K2/3, C10 GPU, C14 real live integrations and C15 24h canary remain unqualified.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -587,6 +603,21 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
       "project_path": "Sources/Worklogs/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
       "sha256": "f87c5a86f3343d881cbc20e713c648733af1c0631bf0511c7c82125876a0fd6e"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_36OF36_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_36OF36_VERIFIED.json",
+      "sha256": "bfbc0a2eccf4da8d029b5cbb60c73b47b2f67c6d5951437878ef90f02882ab7f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
+      "sha256": "67bac6a8cbb161fa412e42c901d2d03b222356178803209ffdd21797c8cd29a2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
+      "project_path": "Sources/Worklogs/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
+      "sha256": "8f9cee897f3022f5f9204a8570b4928dbe36e8f46d64ae96533172c865deccbe"
     }
   ],
   "nextn_lab_candidate": {
