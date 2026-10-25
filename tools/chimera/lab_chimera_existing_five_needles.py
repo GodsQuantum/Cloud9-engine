@@ -4,7 +4,7 @@ Acquires the same /run GPU lock as the production router. Never stops services.
 Always terminates only its own inference process and writes a report.
 """
 import fcntl, json, os, pathlib, socket, subprocess, time, urllib.request, urllib.error
-import argparse, importlib.util, hashlib, threading
+import argparse, importlib.util, hashlib, threading, re
 LAB=pathlib.Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/chimera-master9ae-turbo-policy-vulkan-20261024/native-adaptive-vulkan-lab")
 GUARD=("192.168.1.200",19755)
 parser=argparse.ArgumentParser()
@@ -15,8 +15,11 @@ parser.add_argument("--kv-k",choices=["f16","q8_0"],default="f16")
 parser.add_argument("--kv-v",choices=["f16","q8_0","turbo3"],default="f16")
 parser.add_argument("--batch",type=int,choices=[256,512],default=256)
 parser.add_argument("--engine-build",choices=["baseline","nextn-revert"],default="baseline")
+parser.add_argument("--trial-id",default="",help="New immutable trial suffix; [A-Za-z0-9_-], max 48 chars")
 args_parsed=parser.parse_args()
 assert args_parsed.rep_start<=args_parsed.rep_end
+if args_parsed.trial_id and not re.fullmatch(r"[A-Za-z0-9_-]{1,48}",args_parsed.trial_id):
+    parser.error("trial-id must be 1..48 ASCII alphanumeric, underscore or hyphen")
 TARGET=args_parsed.target
 RUN_SUFFIX="" if (args_parsed.rep_start==1 and args_parsed.rep_end==3) else f"_rep{args_parsed.rep_start}to{args_parsed.rep_end}"
 if args_parsed.engine_build!="baseline":
@@ -25,6 +28,8 @@ if args_parsed.kv_k!="f16" or args_parsed.kv_v!="f16" or args_parsed.batch!=256:
     RUN_SUFFIX+=f"_k{args_parsed.kv_k}_v{args_parsed.kv_v}_b{args_parsed.batch}"
 if args_parsed.kv_v=="turbo3":
     RUN_SUFFIX+="_blocked_policy"  # Keep original failed quality evidence immutable
+if args_parsed.trial_id:
+    RUN_SUFFIX+=f"_trial_{args_parsed.trial_id}"
 # The historic 8K fixture contains ~8,015 tokenizer tokens. Allocate
 # target + 512 for chat formatting and answer, not an unnecessary 12K/22K KV.
 CONTEXT = TARGET + 512
