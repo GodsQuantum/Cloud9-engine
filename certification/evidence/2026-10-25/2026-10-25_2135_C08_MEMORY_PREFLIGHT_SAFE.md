@@ -1,0 +1,2 @@
+# C08 LAB conservative admission, 25 Oct 2026
+8K seed3 remains untested: 2/3 valid only. After a 02:13 failed model load (22.681GiB RAM available and PSI full2.32), new LAB-only admission requires >=27GiB available RAM at 8K, >=30GiB at 16K; swap <95% and memory full avg10 <0.35. Check before and under GPU lock. Official guardian unchanged. No model execution, service restart, swapoff, PBS/ZFS changes or rerun of historical results.

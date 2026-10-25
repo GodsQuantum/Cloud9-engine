@@ -3,7 +3,7 @@
 Date du registre: 2026-10-25
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
-Hall of Fame: 192 records; 20 raw proofs mirrored with SHA on GitHub.
+Hall of Fame: 192 records; 21 raw proofs mirrored with SHA on GitHub.
 
 Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être rejoués sur leurs anciens exécutables.
 
@@ -16,7 +16,7 @@ Historique valide != validation du nouveau binaire. C01-C03 ne doivent pas être
 | C05 | CT410 router safe nonpreemptive, stable services | CURRENT_PASS_LIMITED | Prove stress and crash recovery and no interruptions under concurrent agent traffic |
 | C06 | Chimera native Qwen4 real GPU 2K + strict read-only tool | CURRENT_PASS_LIMITED | Tool quality is only 1 case; incorrect technical suggestions in chat observed |
 | C07 | OpenBMB MiniCPM5+DSpark live speed and tool | CURRENT_PASS_LIMITED | Not 3/3 scenario suite nor untouched OpenBMB weights |
-| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | 8K Qwen4 master9ae seeded repeats 1 and 2 each 5/5 correct (8026 prompt tokens), no third success; a new rep3-only attempt 25 Oct 02:13 loaded successfully but failed guard BEFORE inference, MemAvailable 22.681 GiB and full PSI 2.32. Run only seeded rep3 after stable resource margin; then 16K current chimera. Do not repeat historical Atomic 8K/16K. |
+| C08 | Current chimera long effective context 8K 16K and maximum useful | PARTIAL | 8K Qwen4 chimera 2/3 valid; run seed3 only when LAB preflight 27GiB available, swap<95%, PSI<0.35 and official guardian allows. 16K current chimera requires 30GiB prelaunch. Use unique trial ID, never redo historical C02/C03. |
 | C09 | Functional agentic JSON tools coding and French regression | PARTIAL | C09 native opt-in Qwen4 28/36 correct strict tool JSON; zero unsafe. Reps [12,12,4] complete. Resource guard paused after 28, only final eight cases in THIRD repetition remain. Resume same native CT410 checkpoint/fixture SHA with --execute --resume --allow-lab-load under official GPU guard; never redo completed 28. Then add FR+coding integrity regression and report exact final pass rate. |
 | C10 | Multi-agent concurrency and performance envelope | NOT_RUN | C10 remains NOT_RUN on real GPU. New LAB-only C10 harness has 10 passing static unit tests + CT410 dry-run, hashes synced. After C09 36/36, run only under guardian with exact existing idle worker, verify native slots then 1/2/4 client concurrency, streamed TTFT and inter-chunk timings. No service changes and never mistake client queuing for native decoding parallelism. |
 | C11 | Host memory/GPU sharing/PBS stability reboot proof | BLOCKED_RESOURCE | PBS backup 25-Oct interrupted by user authorization and full PVE schedule restored; GPU 8K still drops host available memory below 24GiB, even without a vzdump process. Need stable >=27GiB prelaunch for 8K, cure PBS I/O pressure safely and verify no regression across sustained agent workloads; do not change guardian threshold. |

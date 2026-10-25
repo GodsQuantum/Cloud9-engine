@@ -226,9 +226,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
           "sha256": "d928ff4a16ee430a530d52ec0d25730e729eb1175946bb01d910917d597b1d4c",
           "note": "Missing seeded rep3 attempted once more 2026-10-25 02:13: model loaded, guardian stop before inference PSI 2.32 / MemAvailable22.681 GiB; C08 stays 2/3"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
+          "sha256": "dd9851f373f8a22bd9ef6b417889b1af01da222a300dc1beb1d2b3e96da4e74b",
+          "note": "Stricter C08 LAB-only GPU admission prevents unsafe new 8K/16K launches; no new inference"
         }
       ],
-      "remaining": "8K Qwen4 master9ae seeded repeats 1 and 2 each 5/5 correct (8026 prompt tokens), no third success; a new rep3-only attempt 25 Oct 02:13 loaded successfully but failed guard BEFORE inference, MemAvailable 22.681 GiB and full PSI 2.32. Run only seeded rep3 after stable resource margin; then 16K current chimera. Do not repeat historical Atomic 8K/16K.",
+      "remaining": "8K Qwen4 chimera 2/3 valid; run seed3 only when LAB preflight 27GiB available, swap<95%, PSI<0.35 and official guardian allows. 16K current chimera requires 30GiB prelaunch. Use unique trial ID, never redo historical C02/C03.",
       "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
       "measured_attempt_2026_10_25": {
         "ctx_allocated": 12288,
@@ -456,7 +461,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications. | 21:25 C10 non-invasive, already-loaded-worker LAB harness staged on CT410 and ten CPU tests pass; no real GPU benchmark, gate NOT_RUN.",
+  "latest_attempt_note": "2026-10-25 21:15 Europe/Paris: GPU C09 checkpoint advanced 2/36 to 28/36 all correct, 0 unsafe, valid 12/12+12/12+4/12. Guardian resource pressure stopped after 28th at 20.926 GiB MemAvailable; last 8 not run. Frozen Git proof SHA. C08 2/3, C12 NextN unqualified unchanged. No production modifications. | 21:25 C10 non-invasive, already-loaded-worker LAB harness staged on CT410 and ten CPU tests pass; no real GPU benchmark, gate NOT_RUN. | 21:35 C08 LAB-only strict RAM/ZRAM/PSI admission mirrored to CT410; no inference/production change.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -557,6 +562,11 @@
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
       "project_path": "Sources/Worklogs/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
       "sha256": "99b6e4751822aa59280422b8d81de309cb77c445b6f0a62c144665cc48d97f16"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
+      "sha256": "dd9851f373f8a22bd9ef6b417889b1af01da222a300dc1beb1d2b3e96da4e74b"
     }
   ],
   "nextn_lab_candidate": {
