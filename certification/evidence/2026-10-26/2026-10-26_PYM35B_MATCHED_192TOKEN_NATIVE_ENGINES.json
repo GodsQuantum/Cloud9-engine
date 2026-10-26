@@ -1,0 +1,53 @@
+{
+  "created_utc": "2026-10-26T08:55:21.549791+00:00",
+  "goal": "Strict same GGUF Pym Q2 35B native Vulkan Radeon780M cross-engine A/B, one profile variable at a time, 192 tokens three prompts",
+  "model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "profile": "partial_min (ngl4, cpu-moe41, 2048 ctx, KV f16)",
+  "max_output_tokens": 192,
+  "safety": "no LXC/service shutdown; official GPU guardian+flock+watchdog inside runner, fail-closed active embeddings",
+  "cases": [
+    {
+      "engine": "upstream_b11844",
+      "mode": "mtp2",
+      "id": "pym35_up_b11844_mtp2_192_20261026",
+      "exit_code": 0,
+      "duration_s": 5.66,
+      "log_tail": "",
+      "status": "failed_watchdog",
+      "load_s": 4.268,
+      "reasons": [],
+      "rows": [],
+      "watchdog_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793004925.9442255,
+            "mem_available_gib": 22.266,
+            "swap_used_gib": 14.215,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 60.44,
+            "psi_memory_some_avg10": 3.07,
+            "psi_memory_full_avg10": 3.07,
+            "gtt_used_gib": 9.952,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 0.701,
+            "safe_total_gtt_gib": 14.218,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host MemAvailable 22.3 GiB < start floor 24.0 GiB",
+              "host memory PSI full avg10=3.07"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 60.25
+        }
+      ],
+      "sha256": "259e3a97a08fb11ceea24f3b7be7cca1cd00d3fd1be068bd92ecbcd064c477dc"
+    }
+  ],
+  "production_modified": false
+}

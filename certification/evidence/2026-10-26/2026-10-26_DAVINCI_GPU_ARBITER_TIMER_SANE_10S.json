@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-26T09:06:55.781396+00:00",
+  "before": "# /etc/systemd/system/davinci-gpu-arbiter.timer\n[Unit]\nDescription=DaVinci render performance and GPU arbitration\n\n[Timer]\nOnBootSec=20s\nOnUnitActiveSec=5s\nAccuracySec=1s\nUnit=davinci-gpu-arbiter.service\n\n[Install]\nWantedBy=timers.target",
+  "after": 8640,
+  "path": "/etc/systemd/system/davinci-gpu-arbiter.timer.d/90-cloud9-low-overhead.conf",
+  "old_every_seconds": 5,
+  "new_every_seconds": 10,
+  "invocations_per_day_before_estimate": 17280,
+  "reason": "Same GPU arbiter logic every10sec retains short render priority/recovery but halves idle systemd process starts; no GPU service freeze or LXC shutdown",
+  "service_script_unchanged": true,
+  "timer_active": true,
+  "service_status": "ExecMainStatus=0\nActiveState=inactive",
+  "rollback": "rm /etc/systemd/system/davinci-gpu-arbiter.timer.d/90-cloud9-low-overhead.conf; systemctl daemon-reload; systemctl restart davinci-gpu-arbiter.timer"
+}

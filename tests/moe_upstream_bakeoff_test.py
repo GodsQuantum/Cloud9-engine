@@ -96,7 +96,7 @@ class GuardTests(unittest.TestCase):
   self.assertIn('msg.get("reasoning_content")',text)
   self.assertIn('"math_answer_contains_925"',text)
   self.assertIn('result["rows"][0]["math_answer_contains_925"]',text)
-  self.assertIn('"max_tokens":768',text)
+  self.assertIn('"max_tokens":a.max_output_tokens',text)
  def test_postload_cooldown_with_emergency_guard_intact(self):
   text=P.read_text()
   self.assertIn("for cooldown in range(8)",text)
@@ -129,5 +129,11 @@ class GuardTests(unittest.TestCase):
   self.assertFalse(o["admitted"])
   self.assertIn("ADAPTIVE_MTP_NOT_SUPPORTED_UPSTREAM",o["reasons"])
   guard.assert_not_called()
+ def test_cross_engine_short_output_and_watchdog_embedding_guard(self):
+  source=P.read_text()
+  self.assertIn('choices=[128,192,256,384,768]',source)
+  self.assertIn('"max_tokens":a.max_output_tokens',source)
+  self.assertIn('"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"',source)
+  self.assertIn('guard_events.append({"reason":"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"})',source)
  def test_three_distinct_quality_tasks(self):self.assertEqual([x[0] for x in b.PROMPTS],["math","code","fr"])
 if __name__=="__main__":unittest.main()

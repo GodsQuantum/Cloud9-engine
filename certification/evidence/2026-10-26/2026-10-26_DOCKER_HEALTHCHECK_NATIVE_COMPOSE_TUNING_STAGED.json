@@ -1,0 +1,73 @@
+{
+  "utc": "2026-10-26T09:09:20.650816+00:00",
+  "level": "native Docker Compose only, config changes validated WITHOUT container restart",
+  "changes": [
+    {
+      "ctid": "110",
+      "file": "/srv/lxc/connexion/compose/netbox/docker-compose.yml",
+      "sha256": "c28ffac67cf3ee4fb5a8f7c8419818cc666851f479e1891f7ebf05e26a2ba010",
+      "entries": [
+        {
+          "service": "redis",
+          "container": "netbox-redis-1",
+          "current_runtime_interval_s": 1.0,
+          "effective_compose_next_recreate_s": 15.0,
+          "expected_current_s": 1,
+          "expected_future_s": 15,
+          "health": "healthy"
+        },
+        {
+          "service": "redis-cache",
+          "container": "netbox-redis-cache-1",
+          "current_runtime_interval_s": 1.0,
+          "effective_compose_next_recreate_s": 15.0,
+          "expected_current_s": 1,
+          "expected_future_s": 15,
+          "health": "healthy"
+        }
+      ]
+    },
+    {
+      "ctid": "400",
+      "file": "/srv/lxc/ia-studio/compose/dify/docker-compose.yaml",
+      "sha256": "9956b67568dfc38f77e724d1d7226fe7b6d6393d1a6b815ea9b06e71c341c07f",
+      "entries": [
+        {
+          "service": "db_postgres",
+          "container": "dify-db_postgres-1",
+          "current_runtime_interval_s": 1.0,
+          "effective_compose_next_recreate_s": 15.0,
+          "expected_current_s": 1,
+          "expected_future_s": 15,
+          "health": "healthy"
+        }
+      ]
+    },
+    {
+      "ctid": "300",
+      "file": "/srv/lxc/travail/compose/davinci-studio-server/compose.yaml",
+      "sha256": "6a9590c1460c58083cd4252d8cb085b45ffff73c51689d20507fdcb0b11711b1",
+      "entries": [
+        {
+          "service": "postgres",
+          "container": "davinci-studio-postgres",
+          "current_runtime_interval_s": 5.0,
+          "effective_compose_next_recreate_s": 15.0,
+          "expected_current_s": 5,
+          "expected_future_s": 15,
+          "health": "healthy"
+        }
+      ]
+    }
+  ],
+  "containers_recreated": false,
+  "live_interval_change_applied": false,
+  "services_and_LXC_stopped": false,
+  "backup_files_CT110_CT400_CT300": [
+    "/var/backups/cloud9-compose-20261026/netbox-compose-before-healthchecks.yml",
+    "/var/backups/cloud9-compose-20261026/dify-compose-before-healthchecks.yaml",
+    "/var/backups/cloud9-compose-20261026/davinci-compose-before-healthchecks.yaml"
+  ],
+  "future_rollout": "To apply at next safe service-specific maintenance: docker compose up -d --no-deps <service> from corresponding project directory with full -f file list, wait health; NEVER restart all of CT110 CT300 CT400 and avoid user-visible DB downtime during unrelated benchmark",
+  "savings_if_rolled_out": "CT110 Netbox Redis x2 1s→15s = -161280 healthchecks/day; Dify Postgres1s→15s = -80640/day; DaVinci Postgres5s→15s = -11520/day; sum 253440 fewer/day. Host service process cost not measured; no RAM savings claimed."
+}

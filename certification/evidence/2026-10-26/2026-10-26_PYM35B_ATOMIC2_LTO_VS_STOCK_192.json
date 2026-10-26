@@ -1,0 +1,33 @@
+{
+  "created_utc": "2026-10-26T09:03:46.214726+00:00",
+  "model": "Pym35B Q2 MTP same GGUF and context2048",
+  "profile": "partial_min base (no MTP), same batch128 microbatch64, 192 tokens, three tasks, 8threads, ngl4 cpu-moe41",
+  "no_LXC_service_stopped": true,
+  "guardian_enforced": true,
+  "trials": [
+    {
+      "engine": "atomic2_zen4_lto",
+      "run_id": "pym35_a2lto_matched_base_192_1026",
+      "exit_code": 0,
+      "duration_s": 23.01,
+      "log_tail": "",
+      "status": "paused_runtime_pressure",
+      "load_s": 7.496,
+      "rows": [],
+      "watchdog_events": [],
+      "source_sha256": "65e1b433cab67a7b8eeb2186bb2671f347a38ad4946de823ce667514b0da4939"
+    },
+    {
+      "engine": "atomic2",
+      "run_id": "pym35_a2stock_matched_base_192_1026",
+      "exit_code": 0,
+      "duration_s": 0.76,
+      "log_tail": "{\"status\": \"blocked_preflight\", \"reasons\": [\"OFFICIAL_GPU_GUARD_DENIED\", \"HOST_MEMORY_PSI\"], \"path\": \"/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2stock_matched_base_192_1026.json\"}\n",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "rows": [],
+      "watchdog_events": null,
+      "source_sha256": "c8430bd7eb437b2847def7f524c1d8ec129973510eddc5c6ce89efb72e0e17ee"
+    }
+  ]
+}

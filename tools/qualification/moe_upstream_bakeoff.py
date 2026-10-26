@@ -136,6 +136,8 @@ def main():
  ap.add_argument("--mode",choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"],required=True)
  ap.add_argument("--profile",choices=["full","partial","partial_min","compact"],default="full")
  ap.add_argument("--run-id",required=True)
+ ap.add_argument("--max-output-tokens",type=int,choices=[128,192,256,384,768],default=768,
+                 help="Fix equal output cap for a cross-engine Pym matched protocol")
  ap.add_argument("--thinking-budget",type=int,choices=[0,128,256],default=256,
                  help="Native LFM reasoning budget (same for both engines); 0 tests short-response agent tool suitability")
  ap.add_argument("--execute",action="store_true")
@@ -145,7 +147,8 @@ def main():
  logfile=LAB/("moe_upstream_"+a.run_id+".log")
  if report.exists() or logfile.exists():ap.error("REFUSE_OVERWRITE_IMMUTABLE_TRIAL")
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
-         "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,"rows":[]}
+         "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,
+         "max_output_tokens":a.max_output_tokens,"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
   start=preflight(a.model,a.engine,a.mode,a.profile)
@@ -193,6 +196,8 @@ def main():
     def watch():
      while not flag.wait(2):
       try:
+       if embeddings_busy():
+        guard_events.append({"reason":"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"});stop_own(child);return
        g=guardian(0);t=host_temp()
        if g.get("psi_memory_full_avg10",99)>=1.8 or g.get("mem_available_gib",0)<20.5 or g.get("swap_used_percent",100)>95 or t is None or t>=80:
         guard_events.append({"reason":"RUNTIME_PRESSURE","guardian":g,"temp_c":t});stop_own(child);return
@@ -231,7 +236,7 @@ def main():
      ts=time.monotonic()
      payload={"model":"Cloud9-MoE-Upstream-LAB","temperature":0.2,"top_k":80,
               "repeat_penalty":1.05,"seed":42,
-              "stream":False,"max_tokens":768,"messages":[{"role":"user","content":prompt}]}
+              "stream":False,"max_tokens":a.max_output_tokens,"messages":[{"role":"user","content":prompt}]}
      try:reply=fetch(URL+"/v1/chat/completions",payload,timeout=180)
      except Exception as e:
       result["status"]="failed_request";result["error_type"]=type(e).__name__;save();return
