@@ -22,7 +22,7 @@ class GuardTests(unittest.TestCase):
   self.assertNotIn("pct stop",source)
  def test_preflight_denies_without_waiting_for_model_load(self):
   g={"allow":False,"mem_available_gib":25,"psi_memory_full_avg10":0,"safe_total_gtt_gib":8,"swap_used_percent":72}
-  with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=0),mock.patch.object(b,"host_temp",return_value=60),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},{"status":"ok","loaded_models":[]}]):
+  with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=0),mock.patch.object(b,"host_temp",return_value=60),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    d=b.preflight("pym","upstream_b11844","mtp2")
   self.assertFalse(d["admitted"])
   self.assertIn("OFFICIAL_GPU_GUARD_DENIED",d["reasons"])
@@ -41,18 +41,18 @@ class GuardTests(unittest.TestCase):
   guard.assert_not_called()
  def test_partial_policy_uses_official_minimum_and_gpu_floor(self):
   g={"allow":True,"mem_available_gib":26,"psi_memory_full_avg10":0,"safe_total_gtt_gib":6,"swap_used_percent":71}
-  with mock.patch.object(b,"guardian",return_value=g) as gg, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},{"status":"ok","loaded_models":[]}]):
+  with mock.patch.object(b,"guardian",return_value=g) as gg, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    x=b.preflight("pym","upstream_b11844","base","partial")
   self.assertTrue(x["admitted"]);gg.assert_called_once_with(6.0)
   self.assertEqual(x["min_available_gib"],24.4)
  def test_minimal_gpu_pym_profile(self):
   g={"allow":True,"mem_available_gib":26,"psi_memory_full_avg10":0,"safe_total_gtt_gib":6,"swap_used_percent":71}
-  with mock.patch.object(b,"guardian",return_value=g) as gg, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},{"status":"ok","loaded_models":[]}]):
+  with mock.patch.object(b,"guardian",return_value=g) as gg, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    result=b.preflight("pym","upstream_b11844","base","partial_min")
   self.assertTrue(result["admitted"]);gg.assert_called_once_with(2.75)
  def test_partial_also_never_bypasses_official_guard(self):
   g={"allow":False,"mem_available_gib":26,"psi_memory_full_avg10":0,"safe_total_gtt_gib":6,"swap_used_percent":71}
-  with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},{"status":"ok","loaded_models":[]}]):
+  with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    x=b.preflight("pym","upstream_b11844","base","partial")
   self.assertFalse(x["admitted"])
  def test_lfm_official_guard_preflight_after_download(self):
@@ -81,7 +81,7 @@ class GuardTests(unittest.TestCase):
   self.assertIn('g.get("mem_available_gib",0)<20.5 or',source)
  def test_lfm_compact_uses_native_guard(self):
   guard={"allow":True,"mem_available_gib":25.8,"psi_memory_full_avg10":0.02,"safe_total_gtt_gib":7.2,"swap_used_percent":74}
-  with mock.patch.object(b,"guardian",return_value=guard) as gg, mock.patch.object(b,"psi_io_full",return_value=3),mock.patch.object(b,"host_temp",return_value=62),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},{"status":"ok","loaded_models":[]}]):
+  with mock.patch.object(b,"guardian",return_value=guard) as gg, mock.patch.object(b,"psi_io_full",return_value=3),mock.patch.object(b,"host_temp",return_value=62),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    model=b.MODELS["lfm_official_q4"]
    x=b.preflight("lfm_official_q4","upstream_b11844","base","compact")
   self.assertTrue(x["admitted"]);gg.assert_called_once_with(5.5);self.assertEqual(x["min_available_gib"],25)
@@ -110,5 +110,24 @@ class GuardTests(unittest.TestCase):
   self.assertIn('("on" if a.model=="lfm_official_q4" else "off")',source)
   self.assertNotIn('["--reasoning","on","--reasoning-budget"',source)
   self.assertIn('result["rows"][0]["math_answer_contains_925"]',source)
+ def test_busy_embeddings_no_gpu_admission_even_if_guard_accepts(self):
+  g={"allow":True,"mem_available_gib":44,"psi_memory_full_avg10":0,"safe_total_gtt_gib":20,"swap_used_percent":35}
+  with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":True}],{"status":"ok","loaded_models":[]}]):
+   x=b.preflight("pym","upstream_b11844","mtp2")
+  self.assertFalse(x["admitted"])
+  self.assertIn("EMBEDDINGS_ACTIVE_OR_UNKNOWN",x["reasons"])
+ def test_unreachable_embedding_slots_fail_closed(self):
+  with mock.patch.object(b,"fetch",side_effect=OSError("embedding server down")):
+   self.assertTrue(b.embeddings_busy())
+ def test_pym_original_and_heretic_supported_on_three_engines(self):
+  self.assertTrue(b.MODELS["pym_heretic"].exists())
+  self.assertTrue(b.BINARIES["atomic2_zen4_lto"].exists())
+  self.assertIn('choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"]',P.read_text())
+ def test_mtp_adaptive_upstream_denied_before_model_loading(self):
+  with mock.patch.object(b,"guardian") as guard:
+   o=b.preflight("pym","upstream_b11844","mtp_adaptive")
+  self.assertFalse(o["admitted"])
+  self.assertIn("ADAPTIVE_MTP_NOT_SUPPORTED_UPSTREAM",o["reasons"])
+  guard.assert_not_called()
  def test_three_distinct_quality_tasks(self):self.assertEqual([x[0] for x in b.PROMPTS],["math","code","fr"])
 if __name__=="__main__":unittest.main()
