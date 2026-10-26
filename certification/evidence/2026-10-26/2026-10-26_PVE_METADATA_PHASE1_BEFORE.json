@@ -1,0 +1,42 @@
+{
+  "captured_utc": "2026-10-26T03:45:02.901440+00:00",
+  "original": {
+    "enabled": 1,
+    "exclude-path": [
+      ".ruff_cache"
+    ],
+    "id": "cloud9-daily-pbs",
+    "mode": "snapshot",
+    "node": "cloud9",
+    "notes-template": "{{guestname}} | Cloud9 daily PBS",
+    "notification-mode": "notification-system",
+    "prune-backups": {
+      "keep-all": 1
+    },
+    "repeat-missed": 1,
+    "schedule": "00:30",
+    "storage": "pbs-cloud9",
+    "type": "vzdump",
+    "vmid": "100,110,120,130,200,210,220,230,300,400,410,500,700,9500,9600"
+  },
+  "motivation": "Native PVE9 PBS metadata data/metadata split demonstrated CT110: first69sec vs second10sec 99.7pct reuse; staged due datastore 80pct full, avoid 15-CT first-baseline surge",
+  "phase1_ids": [
+    "110",
+    "120",
+    "200",
+    "9500",
+    "9600"
+  ],
+  "remain_legacy_ids": [
+    "100",
+    "130",
+    "210",
+    "220",
+    "230",
+    "300",
+    "400",
+    "410",
+    "500",
+    "700"
+  ]
+}

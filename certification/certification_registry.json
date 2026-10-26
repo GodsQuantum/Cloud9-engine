@@ -482,9 +482,39 @@
           "project_path": "Sources/Worklogs/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
           "sha256": "0293e6c6d26bf3e960d42d5ea26f4fa38e5851403fbb4f65c7fa99065ce39897",
           "note": "PBS verification temporarily paused, native verify tasks drained 13+weekly, 04:17 exact job schedule+verify-new restored. 26 Oct backup 214.87m; 74-100pct incremental reuse; high PBS I/O SMR datastore. Pym same GGUF partial LAB guarded before response even with verification off."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+          "sha256": "6909d891151be89ed613e31dd5daaea30da8c50f8b2dd961ec46c7a5067eca04",
+          "note": "PBS original prune disabled and verify-new true, exact backup of native config before mutation"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED.json",
+          "sha256": "0c19af249f8b066fda52ead34dfd6155ee2d43a9b4c434646f5f08e9733a44bb",
+          "note": "PBS LIVE retention daily20:30 keep3/14/8/12/3; verify-new OFF; weekly Sat12 1reader1verifier ttl30; restore evidence"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+          "sha256": "4263dc7c335b41cc005f7b81a714d07c831275851b333dd92720478e166240dd",
+          "note": "CT110 PVE9 native metadata 69sec first baseline then10sec second and 99.7pct reused on same files"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_BEFORE.json",
+          "sha256": "c1df9ad578e42d9293ebe3ccc9768b87f1fd673a9baf24510a075a7b790f4c78",
+          "note": "PVE backup daily original 15 VMIDs captured before phase1 split"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+          "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4",
+          "note": "PVE metadata phase1 enabled 09:00 CT110/120/200/9500/9600 and legacy existing 00:30 10 remaining; union exact"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+          "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580",
+          "note": "Cloud9 stale ZFS rehab workflow corrected and high-frequency ZFS/telemetry/PBS verification timers reduced natively"
         }
       ],
-      "remaining": "26 Oct 2026 PBS maintenance proved: weekly verify schedule Sat03:00 and verify-new=true were temporarily paused; parent+13 verify UPIDs canceled via native PBS CLI; task list verified EMPTY and host IO full avg10 fell ~12.6pct to~2.9pct. After Pym trial, EXACT original PBS verification settings restored (verified at 04:17); daily job 00:30 stays enabled. Nightly 26 Oct backup took 214.87m, but LXC/VM logs prove INCREMENTAL 74%-100% reuse. CT410 31m49 ~95.7pct reused, CT700 48m06 ~89.2pct, VM100 50m53 ~74pct. Source 4TB ST4000LM024 SMR HDD with extreme I/O queue under concurrent verification; recommended separate native LXC metadata-mode migration validation to avoid reading unchanged files, but do NOT change daily backup now due expensive new mpxar/ppxar baseline, and user requested normal restoration. Pym partially GPU-loaded while verifications paused, but memory fell 25.0->18.57GiB and official watchdog stopped worker before inference. No product engine promotion; need safe RAM window beyond stopping PBS verification.",
+      "remaining": "26 Oct new LIVE PBS policies: prune daily20:30 3last14daily8weekly12monthly3yearly active; verify-new false, one weekly verified Sat12 with1read1verify and30day overdue recheck; GC Sun04 preserved. Real CT110 metadata dual backup 69s first then10s second with99.7pct data reuse; phase1 native PVE daily09:00 CT110/120/200/9500/9600, prior daily00:30 keeps ten remaining with no overlap. Phase2 must migrate heavy LXC cautiously, 80pct datastore used, ~745GB free. Cloud host backups already native metadata (no duplicate). Host timers zfsrehab5sec=>120s, ops8=>30s, PBS check15min=>3h, finished one-time scrub transition disabled; verified no production service restart. PBS GC last18h warnings2 removed-bad12 unresolved; xfs_scrub and GC on Sunday may overlap, investigate; no disabling backups or native monthly verification. Cloud9 still ~25GiB MemAvailable, CT400 CloakBrowser3.1GiB/Hindsight1.8GiB, need safe session TTL/cgroup optimization to release enough memory for full Pym bench without violating guardian. Full details certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -592,9 +622,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
           "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a",
           "note": "Three same-model native Pym35B MTP2 candidate preflights: upstream b11844, Atomic2 and new Atomic2 Zen4/LTO all denied host coexistence safely; no speed or quality claims"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+          "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580",
+          "note": "Low-risk reduced CPU/IO polling overhead but 10 GiB true RAM still required to run Pym full GPU"
         }
       ],
-      "remaining": "Prioritize exact Pym35B Q2-MTP GGUF13,222,476,000 bytes then Pym Heretic17,016,624,544, not 4B/8B substitute. Same SHA and sampling on upstream b11844 vs Atomic2 b10298, then Atomic2 Zen4/LTO LAB after build. Feature matrix in certification/moe_tournament_20261026.json and plan in MOE_ENGINE_TOURNAMENT_20261026.md. Current official guardian on full Pym request13G declined, safe_total_gtt8.626GiB with host PSI0.81. No honest matched new Pym benchmark possible until resource admission. Existing historical Atomic1.6 Pym MTP2 f16 36.28 vs Turbo3 34.40: do not assume Turbo3 automatically helps. Test MTP2 baseline first, then adaptive MTP+KV+poll+microbatch single-variable ablation and port winning features with quality checks. 2026-10-26 Atomic2 Zen4/LTO candidate now actually native-built and staged CT410, all ELF linked and same Atomic2 source cda0f925. Distinct compiler optimization only (GGML_NATIVE was already ON stock), no speed gain measured; do not promote or assume GPU shader acceleration. 2026-10-26 preflight three requested exact Pym35B 8K MTP2 engines upstream b11844/Atomic2 b10298/Atomic2 Zen4-LTO all fail closed before load due <13GiB safe GTT, unavailable memory projection, IO PSI >=9 and guardian; zero new decoded speeds. Runner code now supports Pym Heretic MTP1/2/3 and Atomic adaptive, and fail-closed embedding slots.",
+      "remaining": "Same exact Pym35B Q2 MTP remains primary, FlashNext original distinct second. LAB Pym partial loaded 2.405s but stopped by official watchdog at MemAvailable18.57 GiB after PBS verify pause; no decoded result. Active old production LLM worker null, embedding service separately active ~0.8GiB. Need ~10GiB real freed RAM to permit full GPU 8K; do NOT turn off VM HAOS/PBS, interrupt agents CT400 or weaken guard. Atomic2 Zen4/LTO compiled and staged but gain unproven. Reproduce features of Hall of Fame winners across engines at same GGUF; 8->128K context and quality gates still pending.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -724,9 +759,19 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
           "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a",
           "note": "New benchmark runner patched for exact Pym Heretic + 3 engines, MTP1/2/3/adaptive, fail-closed embedding slots; 24 unit tests pass; current host GTT/memory/IO denies actual Pym"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+          "sha256": "4263dc7c335b41cc005f7b81a714d07c831275851b333dd92720478e166240dd",
+          "note": "Native metadata no-reread proven production LXC; unrelated to MoE winner still pending"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+          "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4",
+          "note": "Core protected backups preserved while staged metadata lowers disk contention for fair MoE benchmarks"
         }
       ],
-      "remaining": "New hardware-specific MoE tournament plan and machine-readable matrix/tests validated; no final engine selection yet. Test Pym same GGUF across upstream and Atomic, cross-port/compare native features, qualify response visible, strict JSON/tool/code, 8→128K real context, cold/hot, stability and rollback before production. Official guardian denied full Pym GPU when live RAM~26GiB and safe GTT8.6GiB; no force preemption or unsafe model. Atomic2 Zen4/LTO hardware build is experimental, NO benchmark measured or prod promotion. Latest LAB harness deployed CT410, targeted 24 unit tests pass. Three exact Pym candidate preflights blocked by host co-residency. No promotion or production changes. Retry only when official guardian and disk IO allow; cannot infer a Pym winner from LFM proxy.",
+      "remaining": "No LLM production promotion; native backup/policy/timer fixes are in production and verified, stage1 migration backup union exact. Cloud9 persistent five-priority handoff updated, Git evidence hashes mirrored. Complete stage2 native PVE LXC metadata rollout, run first automatic phase1 09:00, inspect prune20:30, GC warnings and PBS verification completion; verify restore samples; then resource audit and true Pym/Flash A/B only with eligible guard, full tool/code/concurrency/long-context/canary/rollback.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -737,7 +782,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~04:19 Europe/Paris: User explicitly approved pause PBS verifications for MoE tests, requested restore. Restored exact verify-job cloud9-weekly schedule Sat03:00, PBS datastore verify-new true, gc Sun04:00 and daily backup00:30 after native stop of verify parent+13 snapshots; active verify task list 0. Backups already incremental 74-100pct reusable data but 26 Oct job 3h34m52s due SMR disk I/O contention, 24 Oct 8h16, etc. Same Pym35B upstream b11844 MTP2 partial GPU LOAD2.405s during pause; official watchdog interrupted before first answer at MemAvailable18.57GiB and PSI full0.72, no scored throughput. Need memory mitigation separate; LLM production not stopped since no model loaded. Native PXAR metadata change detection could speed subsequent runs but not applied due first new-format baseline and exact restore request.",
+  "latest_attempt_note": "26 Oct 2026 Paris ~04:52: user insisted five permanent projects. Applied PBS native one-authority retention: prior prune disabled, now daily20:30 keep3last/14daily/8weekly/12monthly/3yearly; verify-new disabled, weekly Sat12 read1 verify1 ignore-verified ttl30. Datastore XFS SMR 3.7TB80pct used, GC18h warnings2; snapshot sim approx46 of277 might prune, no manual deletion. Proven native CT110 metadata backup baseline69s second10s, 202524 files unchanged and 99.7pct data reuse, jobs production split exactly 5 CT phase1 at09:00 metadata vs 10 guest legacy00:30 (VM100 block unchanged). Cloud host backups already metadata. Completed ZFS workflow starting-stale corrected pending verification, three systemd timer native dropins reduced work and completed one-shot transition disabled; other recovery units and agents preserved. CT400 CloakBrowser3.1GB/Hindsight1.8GB notable RAM, not stopped. Full Pym35B MTP2 still requires safe memory; only partially GPU-loaded and watchdog at18.57GiB without response; Atomic2 gain unknown. Persistent plan certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md, evidence mirrored and SHAs.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1098,6 +1143,36 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
       "project_path": "Sources/Worklogs/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
       "sha256": "0293e6c6d26bf3e960d42d5ea26f4fa38e5851403fbb4f65c7fa99065ce39897"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+      "sha256": "6909d891151be89ed613e31dd5daaea30da8c50f8b2dd961ec46c7a5067eca04"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED.json",
+      "sha256": "0c19af249f8b066fda52ead34dfd6155ee2d43a9b4c434646f5f08e9733a44bb"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+      "sha256": "4263dc7c335b41cc005f7b81a714d07c831275851b333dd92720478e166240dd"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PVE_METADATA_PHASE1_BEFORE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_BEFORE.json",
+      "sha256": "c1df9ad578e42d9293ebe3ccc9768b87f1fd673a9baf24510a075a7b790f4c78"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+      "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+      "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580"
     }
   ],
   "nextn_lab_candidate": {

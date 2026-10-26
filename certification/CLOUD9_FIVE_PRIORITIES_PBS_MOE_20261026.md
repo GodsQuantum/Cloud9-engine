@@ -1,0 +1,38 @@
+# Cloud9 — Priorités permanentes IA, PBS, RAM et I/O
+État vérifié le 26 octobre 2026. Ce fichier est le handoff canonique du chantier. Ne rien perdre ni répéter sans relire preuves et Hall of Fame.
+
+## 1. Moteurs IA : VRAIS modèles, une seule production
+Comparer dans cet ordre Pym 35B-A3B Q2 MTP EXACT, Pym Heretic APEX, puis Flash-Next AD-4.27 avec draft FR-Spec EXACT. Le vrai FlashNext historique manque localement ; GSQ IQ1_M n'est pas substituable dans le même classement. Ancien Hall of Fame Pym MTP2 : médiane 34,56 tok/s, maths 37,20. Flash-Next historique : 17,878 tok/s, Vulkan personnalisé MTP3 et optimisations. Tournoi strict même SHA GGUF, prompt, seed, context, sampling, MTP; upstream b11844 vs Atomic2 stock vs Atomic2 Zen4/LTO. Vérifier aussi les features exclusives par portage/équivalent natif, pas seulement comparer leurs baselines. Qualité agentique JSON/tools/code/FR, réponse visible, 5 marqueurs à 8K→128K, mémoire, cold/hot, stabilité et canary/rollback obligatoires. Un seul moteur LLM en prod. Le routeur actuel est idle sans modèle chargé; embeddings indépendants à préserver. Dernier Pym Q2 MTP2 ngl partiel a chargé en 2,405 s mais watchdog avant une réponse à MemAvailable 18,57 Gio. Le disque PBS suspendu ne résout pas le manque RAM. Ne pas affaiblir guardian officiel; prioriser libération sûre de ~10 Gio et modèles 35B quantifiés QUALITÉ validée.
+
+## 2. PBS — rétention effective
+Le job prune précédemment DÉSACTIVÉ est maintenant ACTIF chaque jour 20h30 : keep-last=3, keep-daily=14, keep-weekly=8, keep-monthly=12, keep-yearly=3, ID default-cloud9-9e5b896e-2238-4e5. Les deux jobs vzdump gardent keep-all=1 pour éviter deux systèmes de pruning concurrents; PBS seul gère la rétention. Simulation indicative sur 277 snapshots/21 groupes : ~46 potentiellement sélectionnés pour purge, non exécutée à la main. Premier prune à vérifier dans les tâches PBS avec marge datastore : XFS 3,7 To, 3,0 To utilisés, 745 Go libres (~80%). Pas de suppression manuelle forcée ni de GC supplémentaire pendant les benchmarks.
+
+## 3. Metadata mode natif — éviter la relecture
+PVE9/PBS4.2 dispose de change-detection-mode=metadata, archives mpxar/ppxar. Preuve réelle CT110 du 26/10 : première référence en 69 secondes, second run en 10 secondes, 202 524 fichiers inchangés, 7,818 Gio de fichiers réutilisés (99,7%), seulement 24,399 Mio à sauvegarder sur ~7,842 Gio, 2,229 Mio compressés. Le premier changement de format ne réutilise pas automatiquement le fichier legacy, nécessite un cycle complet par LXC.
+PRODUCTION PHASE1 ACTIVE : job cloud9-metadata-phase1 à 09h00, CT 110,120,200,9500,9600, stockage pbs-cloud9, format metadata. Job original cloud9-daily-pbs à 00h30 continue pour 100,130,210,220,230,300,400,410,500,700. Union de quinze invités d'origine EXACTE sans omission ou doublon ; VM100 image block ne bénéficie pas de metadata. PHASE2 À FINIR : convertir un à un les gros LXC (130,210,220,230,300,400,410,500,700), mesurer première baseline et second run, surveiller les 745 Go libres, puis retirer de legacy et ajouter à job metadata. Ne pas mettre simultanément CT400/410/700 en baseline pour ne pas saturer le disque SMR. Les quatre sauvegardes cloud host via cloud9-pbs-clouds-sequential utilisent DÉJÀ metadata ; ne pas les dupliquer.
+
+## 4. PBS — vérification utile, pas intempestive
+Proxmox officiel recommande de revérifier au moins mensuellement, donc ne PAS tout supprimer. Désormais verify-new=false; le job cloud9-weekly tourne samedi 12h00, ignore-verified=true, outdated-after=30 jours, read-threads=1, verify-threads=1. Le GC reste dimanche 04h00. Surveiller collisions avec xfs_scrub_all du dimanche et GC historiquement ~18h, WARNINGS:2, removed-bad 12, encore à expliquer; ne jamais masquer une corruption. Config avant et après, commandes rollback dans Worklogs. Les sauvegardes 26oct étaient déjà incrémentales (74–100% réutilisé) mais 3h35, 24oct 8h17 sous contention sur HDD SMR Seagate ST4000LM024. Débits CT410 2,776 MiB/s, CT700 3,443 MiB/s sur données changées. Tester la restauration d'invités neufs; vérification cryptographique seule ne prouve pas une restauration totale. PBS officiel recommande stockage à IOPS élevés/SSD ou cache metadata pour HDD.
+
+## 5. Audit Cloud9 des tâches redondantes, RAM et I/O
+Terminé : réhabilitation ZFS cloud_arezki achevée et quatre backups cloud natifs success, ancien workflow erroné resté starting depuis 23oct corrigé en transfer_complete_verify_pending, SANS faux statut vérifié. Timers natifs via drop-ins : collecteur ZFS 5s→120s (17280→720 appels/jour), opérations 8s→30s (10800→2880), contrôle de vérification PBS 15min→3h (96→8), timer de transition post-scrub terminée désactivé (1440 appels/jour supprimés). Tous scripts et services gardés; rollback via suppression des fichiers systemd 90-cloud9-minimize-io.conf, daemon-reload et restart timer ; réactiver post-scrub timer seulement pour une NOUVELLE réhabilitation.
+Audit mémoire CT400 IA-Studio (approximations contemporaines) : CloakBrowser manager ~3,1 Gio, Hindsight ~1,8 Gio, Dify API ~0,8 Gio, OmniRoute ~0,7 Gio, Open-WebUI ~0,6 Gio, MCPProxy ~0,5 Gio ; VM HAOS ~7,4 Gio RSS, PBS ~4,2 Gio RSS plus virtiofs, CT410 embedding ~0,8 Gio. NE PAS interrompre CT400/HAOS/PBS/n8n/Paperclip ni profils browser actifs juste pour gagner un benchmark. Vérifier sessions browser orphelines et TTL NATIVE, Hindsight et caches, cgroups, tâches périodiques et IO idle avant d'arrêter. DaVinci GPU arbiter à 5s laissé inchangé pour réactivité de rendu ; les autres minuteurs (PBS cloud host, config host, fstrim, xfs scrub) sont conservés et restent à profiler.
+Datastore SMR ~80% plein et GC last-run 64918 secondes (18h02) avec warnings : maintenance essentielle, possible meilleure performance seulement via SSD metadata/cache ou remplacement disque, pas par déréglementation sécurité.
+
+## Commandes/projet & preuves
+Projet Cloud9 hôte : /srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA
+Repo : Sources/Scratch/cloud9-engine-qualification-20261022-host ; branch lab/20261022-one-engine-qualification, GodsQuantum/Cloud9-engine.
+Handoff certification/NEXT_HANDOFF.md et CURRENT_STATUS.md générés par tools/qualification/check_proof_registry.py.
+Preuves Worklogs datées 2026-10-26 : PBS_NATIVE_POLICY_BEFORE_EDIT, PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED, CT110_PVE_METADATA_TWO_RUN_REAL_PROOF, PVE_METADATA_PHASE1_BEFORE/APPLIED, CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION, et PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS. Miroirs SHA sous certification/evidence/2026-10-26. Jamais effacer une preuve ni refaire un test déjà terminé à l'identique.
+Documentation officielle récente :
+https://pbs.proxmox.com/docs/technical-overview.html
+https://pbs.proxmox.com/docs/maintenance.html
+https://pbs.proxmox.com/docs/storage.html
+https://pbs.proxmox.com/docs/system-requirements.html
+
+## Tâches encore ouvertes — priorité exécution
+A. Superviser vrai prune prévu à 20h30 et première phase metadata demain09h ; vérifier backups/protected/prune/GC et retours de restauration.
+B. Migrer un à un LXC volumineux vers metadata en gardant une marge de capacité.
+C. Auditer WARNINGS:2 du GC et détecter collisions longues verification/GC/scrub.
+D. Audit CPU/RAM/I/O des services CT400 et tâches orphelines par mesures, corrections natives uniquement, réduction mémoire sûre pour ouvrir la fenêtre benchmark.
+E. Vrais A/B Pym et FlashNext sur mêmes GGUF, Atomic2/stock/upstream, fonctionnalités portées, certification et promotion d'UN moteur.
