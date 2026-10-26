@@ -102,6 +102,31 @@ class GuardTests(unittest.TestCase):
    x=b.preflight("pym","upstream_b11844","base","partial")
   self.assertTrue(x["admitted"]);gg.assert_called_once_with(6.0)
   self.assertEqual(x["min_available_gib"],24.4)
+ def test_owner_fullgpu_guard_has_veto(self):
+  g={"allow":False,"mem_available_gib":32,"psi_memory_full_avg10":0,"safe_total_gtt_gib":14,"swap_used_percent":61}
+  with mock.patch.object(b,"guardian",return_value=g) as gg,mock.patch.object(b,"psi_io_full",return_value=0),mock.patch.object(b,"host_temp",return_value=62),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
+   x=b.preflight("pym","atomic2","mtp2","full","explore","mmap",True,"q8_0")
+  self.assertFalse(x["admitted"])
+  self.assertIn("OFFICIAL_GPU_GUARD_DENIED",x["reasons"])
+  gg.assert_called_once_with(13.0)
+ def test_owner_fullgpu_memory_watcher_never_waives_swap_oom_protection(self):
+  src=P.read_text()
+  self.assertIn('mem_floor=(20.0 if a.owner_fullgpu else 20.5)',src)
+  self.assertIn('g.get("swap_used_percent",100)>95',src)
+  self.assertIn('g.get("psi_memory_full_avg10",99)>=(12.0 if a.owner_fullgpu else 1.8)',src)
+ def test_owner_gpu_kernel_flags_are_native_and_isolated(self):
+  src=P.read_text()
+  self.assertIn('"force_mmvq":"GGML_VK_FORCE_MMVQ"',src)
+  self.assertIn('"disable_mmvq":"GGML_VK_DISABLE_MMVQ"',src)
+  self.assertIn('"no_coopmat":"GGML_VK_DISABLE_COOPMAT"',src)
+  self.assertIn('"no_async":"GGML_VK_DISABLE_ASYNC"',src)
+  self.assertIn('if a.owner_vulkan_kernel!="auto":vulkan_env',src)
+  self.assertIn('env=vulkan_env',src)
+ def test_native_mtp_depth_and_probability_gpu_only(self):
+  src=P.read_text()
+  self.assertIn('"mtp4","mtp6","mtp_adaptive"',src)
+  self.assertIn('"--spec-draft-p-min",str(a.owner_draft_p_min)',src)
+  self.assertIn('if a.tune_hof_native_flags and a.owner_draft_p_min!=0.0:',src)
  def test_minimal_gpu_pym_profile(self):
   g={"allow":True,"mem_available_gib":26,"psi_memory_full_avg10":0,"safe_total_gtt_gib":6,"swap_used_percent":71}
   with mock.patch.object(b,"guardian",return_value=g) as gg, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
@@ -132,10 +157,10 @@ class GuardTests(unittest.TestCase):
    guard.assert_not_called()
  def test_post_load_runtime_never_understeps_emergency_floor(self):
   source=P.read_text()
-  self.assertIn('g.get("mem_available_gib",0)<20.5',source)
-  self.assertIn('g.get("psi_memory_full_avg10",99)>=.5',source)
+  self.assertIn('g.get("mem_available_gib",0)<mem_floor',source)
+  self.assertIn('g.get("psi_memory_full_avg10",99)>=psi_soft',source)
   self.assertIn('result["latest_runtime_guard"]',source)
-  self.assertIn('g.get("mem_available_gib",0)<20.5 or',source)
+  self.assertIn('g.get("mem_available_gib",0)<mem_floor or',source)
  def test_lfm_compact_uses_native_guard(self):
   guard={"allow":True,"mem_available_gib":25.8,"psi_memory_full_avg10":0.02,"safe_total_gtt_gib":7.2,"swap_used_percent":74}
   with mock.patch.object(b,"guardian",return_value=guard) as gg, mock.patch.object(b,"psi_io_full",return_value=3),mock.patch.object(b,"host_temp",return_value=62),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
@@ -157,8 +182,8 @@ class GuardTests(unittest.TestCase):
  def test_postload_cooldown_with_emergency_guard_intact(self):
   text=P.read_text()
   self.assertIn("for cooldown in range(8)",text)
-  self.assertIn('g.get("mem_available_gib",0)<20.5',text)
-  self.assertIn('g.get("psi_memory_full_avg10",99)>=1.8',text)
+  self.assertIn('g.get("mem_available_gib",0)<mem_floor',text)
+  self.assertIn('g.get("psi_memory_full_avg10",99)>=(12.0 if a.owner_fullgpu else 1.8)',text)
   self.assertIn("stop_own(child)",text)
  def test_native_zero_thinking_budget_toggle_for_agentic_latency(self):
   source=P.read_text()
@@ -179,7 +204,7 @@ class GuardTests(unittest.TestCase):
  def test_pym_original_and_heretic_supported_on_three_engines(self):
   self.assertTrue(b.MODELS["pym_heretic"].exists())
   self.assertTrue(b.BINARIES["atomic2_zen4_lto"].exists())
-  self.assertIn('choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"]',P.read_text())
+  self.assertIn('choices=["base","mtp1","mtp2","mtp3","mtp4","mtp6","mtp_adaptive"]',P.read_text())
  def test_mtp_adaptive_upstream_denied_before_model_loading(self):
   with mock.patch.object(b,"guardian") as guard:
    o=b.preflight("pym","upstream_b11844","mtp_adaptive")
