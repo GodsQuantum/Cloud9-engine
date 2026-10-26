@@ -27,25 +27,15 @@ class NativeChimeraAB(unittest.TestCase):
   self.assertEqual([x['env']['GGML_CUDA_MMB'] for x in specs],['0','1','1'])
   self.assertEqual([x['env']['GGML_CUDA_MMF32'] for x in specs],['0','0','1'])
   self.assertEqual({x['env']['GGML_CUDA_MMB_RDNA3'] for x in specs},{'1'})
- def test_two_independent_current_attestations(self):
+ def test_old_chimera_variants_are_not_eligible_for_gpu(self):
   for name in ('chimera-062-mmb-off','chimera-062-mmb-on','chimera-062-mmb-mmf32'):
    with self.subTest(name=name):
-    d=b.validate_latest_only(name,live_api=mock,_test_skip_binary_sha=True)
-    a=d['_freshness_attestation']
-    self.assertEqual(a['commit'],m['github_repositories']['upstream']['commit'])
-    self.assertEqual(a['rdna_donor']['commit'],m['github_repositories']['rdna']['release_commit'])
- def test_donor_release_changed_denied(self):
-  def newer(path):
-   if 'stew675' in path and path.endswith('/releases/latest'):return {'tag_name':'v14-097cf33d9-r119'}
-   return mock(path)
-  with self.assertRaisesRegex(Exception,'STALE rdna'):
-   b.validate_latest_only('chimera-062-mmb-on',live_api=newer,_test_skip_binary_sha=True)
- def test_trunk_head_changed_denied(self):
-  def newer(path):
-   if 'ggml-org' in path:return {'object':{'type':'commit','sha':'a'*40}}
-   return mock(path)
-  with self.assertRaisesRegex(Exception,'STALE upstream'):
-   b.validate_latest_only('chimera-062-mmb-on',live_api=newer,_test_skip_binary_sha=True)
+    with self.assertRaisesRegex(AssertionError,'RETIRED_ENGINE_GPU_TEST_DENIED'):
+     b.validate_latest_only(name,live_api=mock,_test_skip_binary_sha=True)
+ def test_newer_rdna_and_upstream_make_old_hybrid_ineligible(self):
+  old=json.loads((R/'tools/chimera/native-mmb-r120-on-latest062.json').read_text())
+  self.assertNotEqual(old['base']['commit'],m['github_repositories']['upstream']['commit'])
+  self.assertNotEqual(old['donor']['commit'],m['github_repositories']['rdna']['release_commit'])
  def test_same_compiled_binary_identity_and_hip_baseline_not_ready(self):
   modes=('chimera-062-mmb-off','chimera-062-mmb-on','chimera-062-mmb-mmf32')
   self.assertEqual({m['lab_candidate_binary_sha256'][name] for name in modes},{'532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5'})  # newest r120 same native ELF for MMB modes

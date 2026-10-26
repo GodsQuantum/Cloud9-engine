@@ -12,7 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class LatestRDNAMTPTailContract(unittest.TestCase):
     def test_current_donor_pinned_and_optimizations_checked(self):
         data=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
-        rdna=data['github_repositories']['rdna']
+        rdna=data['github_repositories']['rdna']['archived_r120_provenance']
         self.assertEqual(rdna['release_tag'],'v14-097cf33d9-r120')
         self.assertEqual(rdna['release_commit'],'ece2d7531b8630413770f61db46ff0700e6a8999')
         self.assertEqual(len(rdna['patch_sha256']),14)

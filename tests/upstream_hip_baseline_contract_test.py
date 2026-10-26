@@ -14,8 +14,8 @@ class HIPBaselineParity(unittest.TestCase):
   for s in (self.a,self.b):
    for flag in ('rocm[libraries,devel,device-gfx1103]==10.1.0','-DGGML_HIP=ON','-DGPU_TARGETS=gfx1103','-DCMAKE_BUILD_TYPE=Release','--parallel 2'):
     self.assertIn(flag,s)
- def test_same_actual_latest_source(self):
-  self.assertEqual(self.m['base']['commit'],self.p['github_repositories']['upstream']['commit'])
+ def test_old_native_port_is_stale_and_ineligible(self):
+  self.assertNotEqual(self.m['base']['commit'],self.p['github_repositories']['upstream']['commit'])
   self.assertIn('verify_latest_sources.py --candidate upstream-master-4b',self.a)
   self.assertIn('verify_latest_sources.py --all',self.b)
  def test_not_promoted(self):
