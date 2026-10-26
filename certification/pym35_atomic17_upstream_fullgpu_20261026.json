@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-26",
+  "model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "same_settings": "full GPU ngl99 n_cpu_moe0 MTP2 KVq8_0 8K 192 output per prompt math/code/fr",
+  "baseline_atomic2_2run_mean_tps": 27.852,
+  "runs": [
+    {
+      "engine": "atomic17",
+      "run_id": "pym35f_final_atomic17_q8_1_1026",
+      "status": "complete",
+      "tasks": [
+        {
+          "name": "math",
+          "tps": 27.978
+        },
+        {
+          "name": "code",
+          "tps": 27.525
+        },
+        {
+          "name": "fr",
+          "tps": 24.882
+        }
+      ],
+      "mean_tps": 26.795,
+      "quality_valid": true,
+      "raw_ct410_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_final_atomic17_q8_1_1026.json"
+    },
+    {
+      "engine": "upstream_b11844",
+      "run_id": "pym35f_final_upstream_b11844_q8_1_1026",
+      "status": "complete",
+      "tasks": [
+        {
+          "name": "math",
+          "tps": 28.815
+        },
+        {
+          "name": "code",
+          "tps": 24.596
+        },
+        {
+          "name": "fr",
+          "tps": 23.936
+        }
+      ],
+      "mean_tps": 25.782,
+      "quality_valid": true,
+      "raw_ct410_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_final_upstream_b11844_q8_1_1026.json"
+    }
+  ],
+  "promoted": false,
+  "OOM_kills": 0
+}

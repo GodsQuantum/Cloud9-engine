@@ -284,13 +284,13 @@ def main():
   ap.error("GPUVM device lost in DirectIO Pym35 native Vulkan, blocked")
  if a.owner_load_mode!="mmap" and not a.owner_fullgpu:
   ap.error("DirectIO only in owner-authorized full GPU")
- if a.owner_fullgpu and not (a.engine in ("atomic2","atomic2_zen4_lto","atomic16") and a.model=="pym" and a.mode in ("mtp1","mtp2","mtp3","mtp4","mtp6","mtp_adaptive","base") and a.profile=="full"):
+ if a.owner_fullgpu and not (a.engine in ("atomic2","atomic2_zen4_lto","atomic16","atomic17","upstream_b11844") and a.model=="pym" and a.mode in ("mtp1","mtp2","mtp3","mtp4","mtp6","mtp_adaptive","base") and a.profile=="full"):
   ap.error("Owner fullGPU approval is specific to Pym35 Atomic2 MTP2")
  if a.tune_gdn_replay:
   ap.error("GDN replay only supports CPU/CUDA, not the CT410 Vulkan runtime")
  if a.tune_spec_chain and (a.engine not in ("atomic2","atomic2_zen4_lto") or a.model not in ("pym","pym_heretic") or a.mode not in ("mtp2","mtp3") or a.preset==PARITY_PRESET):
   ap.error("Spec-chain only tested on exploratory Atomic2 Pym MTP2/3")
- if a.engine not in ("atomic2", "atomic2_zen4_lto", "atomic16") and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
+ if a.engine not in ("atomic2", "atomic2_zen4_lto", "atomic16") and ((a.tune_kv not in ("f16","q8_0") or a.tune_kv=="q8_0" and a.engine not in ("atomic17","upstream_b11844")) or a.tune_moe_cache!="default" or a.tune_gdn_replay):
   ap.error("Atomic2 native feature ablations are not certified on another engine")
  if a.preset==PARITY_PRESET and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
   ap.error("Historical parity features must remain untouched; use separate exploratory runs")

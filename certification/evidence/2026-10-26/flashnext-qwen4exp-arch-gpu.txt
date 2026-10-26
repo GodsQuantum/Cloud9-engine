@@ -1,0 +1,6 @@
+main: using seed 3894302564
+|     Model arch.|                                        Device|Config|   NMSE vs. CPU|Roundtrip|
+|----------------|----------------------------------------------|------|---------------|---------|
+|        qwen4exp|       AMD Radeon 780M Graphics (RADV PHOENIX)|   MoE|  [1;32mOK[0m (8.59e-08)|       [1;32mOK[0m|
+|        qwen4exp|AMD Ryzen 7 PRO 8845HS w/ Radeon 780M Graphics|   MoE|  [1;32mOK[0m (0.00e+00)|       [1;32mOK[0m|
+|        qwen4exp|                                          Meta|   MoE|[1;33mSKIP[0m           |     [1;33mSKIP[0m|

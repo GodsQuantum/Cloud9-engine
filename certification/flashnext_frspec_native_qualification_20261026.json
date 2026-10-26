@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-26",
+  "feature": "Qwen3.8 Flash-Next FR-Spec 65K reduced vocabulary draft-only native support",
+  "base_upstream_commit": "cda0f925",
+  "isolated_native_branch": "lab/qwen4exp-frspec65k-20261026",
+  "isolated_native_commit": "3df182b0",
+  "production_mutated": false,
+  "sources": "CT700 only, immutable isolated git worktree",
+  "patch": "certification/patches/atomic2-qwen4exp-frspec65k-20261026.patch",
+  "patch_sha256": "e794631a64e3fd2707cbcb1e3a30e4fb41eac75e114f1ffedd0ea35966ea4f80",
+  "binary_sha256": "0a504ffc591ceeebcaa2312eb0e4e19cfbae63cc666f5eb93a60bd768f1f94c3",
+  "libllama_sha256": "7fe2dc860de305094371e6b219df0235b54ffc128d48cc70a5b3008c3e0785f1",
+  "sidecar_filename": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+  "sidecar_length_bytes": 3639245152,
+  "sidecar_sha256_previously_verified": "c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f",
+  "sidecar_tensor_count": 36,
+  "target_vocabulary_size": 248320,
+  "draft_output_vocabulary_size": 65536,
+  "d2t_type": "I64",
+  "d2t_entries": 65536,
+  "d2t_min": 0,
+  "d2t_max": 248069,
+  "d2t_unique_entries": 65536,
+  "d2t_within_target_vocab": true,
+  "sidecar_projection_shapes": {
+    "blk.48.nextn.fc_embd.weight": [
+      2560,
+      2560
+    ],
+    "blk.48.nextn.fc_hidden.weight": [
+      2560,
+      2560
+    ],
+    "token_embd.weight": [
+      2560,
+      248320
+    ],
+    "output.weight": [
+      2560,
+      65536
+    ]
+  },
+  "native_changes": [
+    "split fc_embd and fc_hidden quantized matmul and add",
+    "hc_norm/hc_down/hc_up draft aliases",
+    "load reduced 65K output head and d2t I64 metadata",
+    "restore target 248320 logit coordinates using native ggml_fill + ggml_set_rows",
+    "reject standalone MTP-only graph with user-facing error rather than crashing"
+  ],
+  "native_build": "PASS CMake Vulkan llama-server and test-llama-archs in LXC700",
+  "native_synthetic_qwen4exp_MoE_device_test": "PASS Radeon780M Vulkan NMSE=8.66e-08 CPU=0.0",
+  "actual_sidecar_metadata_and_tensor_load": "PASS (reached context graph creation using real 3.64GB FR-Spec checkpoint)",
+  "standalone_draft_as_main_rejected_cleanly": true,
+  "standalone_expected_exit": 1,
+  "segfault_after_guard": false,
+  "actual_matched_target_plus_frspec_inference": "NOT_EXECUTED",
+  "actual_flashnext_tps": null,
+  "reason_full_validation_missing": "Target GGUF is 94.525 GB, 33 complete shards, not yet admitted together with 3.639 GB FR-Spec under host RAM/GTT/IO guard; do not confuse standalone with proper -md draft use",
+  "target_gguf_shards": 33,
+  "target_gguf_length_bytes": 94525394976,
+  "test_logs": [
+    "certification/evidence/2026-10-26/flashnext-qwen4exp-arch-gpu.txt",
+    "certification/evidence/2026-10-26/flashnext-frspec-sidecar-clean-guard.txt",
+    "certification/evidence/2026-10-26/flashnext-frspec-gdb-stack.txt"
+  ],
+  "no_live_service_restart": true,
+  "remaining": [
+    "run native matched full target + -md FR-Spec on admitted memory profile",
+    "validate draft logits/generation acceptance and math/code/FR quality",
+    "benchmark true t/s against historical 17.878 and target >20",
+    "re-run guard and quality tests, promote only if faster and correct"
+  ]
+}

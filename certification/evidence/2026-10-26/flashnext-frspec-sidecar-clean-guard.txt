@@ -1,0 +1,15 @@
+0.00.044.260 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.045.003 I srv          init: The UI is disabled
+0.00.045.014 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.045.253 W srv  llama_server: -----------------
+0.00.045.255 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.045.255 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.045.255 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.045.255 W srv  llama_server: -----------------
+0.00.046.748 I srv    load_model: loading model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.01.104.595 E llama_init_from_model: failed to initialize the context: QWEN4EXP MTP-only sidecar cannot run as target model: pass it via -md with the matching full trunk GGUF
+0.01.104.610 E cmn  common_init_: failed to create context with model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.01.104.616 E cmn  common_init_: failed to create context with model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.01.104.621 E srv    load_model: failed to create_context with model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.01.104.623 I srv    operator(): operator(): cleaning up before exit...
+0.01.106.090 E srv  llama_server: exiting due to model loading error
