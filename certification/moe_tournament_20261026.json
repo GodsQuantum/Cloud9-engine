@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "created": "2026-10-26",
+  "hardware": {
+    "cpu": "Ryzen 7 PRO 8845HS",
+    "gpu": "Radeon 780M gfx1103",
+    "mesa": "26.0.8",
+    "gpu_backend": "RADV Vulkan",
+    "ram_gib": 96
+  },
+  "targets": [
+    {
+      "id": "pym-q2",
+      "priority": 1,
+      "path": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "size_bytes": 13222476000,
+      "historical_sha256": "cac59f495abd12710d723b6957a52e78b4f3ef382c808327ead27cc685c03788",
+      "status": "present_rehash_pending",
+      "engine_compare": true,
+      "record_mtp2_median_tps": 34.56,
+      "record_math_peak_tps": 37.2
+    },
+    {
+      "id": "pym-heretic",
+      "priority": 2,
+      "path": "/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf",
+      "size_bytes": 17016624544,
+      "status": "present_distinct_quality_variant",
+      "engine_compare": true
+    },
+    {
+      "id": "flashnext-ad427-frspec",
+      "priority": 3,
+      "path": null,
+      "status": "historical_exact_ggufs_missing",
+      "engine_compare": false,
+      "record_tps": 17.878,
+      "config": "MTP3 TurboQuant SET_ROWS FlashAttention CPU-WHT GDN OFF"
+    },
+    {
+      "id": "flashnext-gsq-coder",
+      "priority": 4,
+      "path": "/srv/lxc/ia-compute/data/models/strata/coder-iq1m/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf",
+      "sharded_total_bytes": 58408584928,
+      "status": "separate_quant_not_historical",
+      "engine_compare": false
+    }
+  ],
+  "engines": [
+    {
+      "id": "upstream-b11844",
+      "path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master062-vulkan-gfx1103-20261023/llama-server",
+      "commit": "06230cb87",
+      "state": "available"
+    },
+    {
+      "id": "atomic2-b10298",
+      "path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin/llama-server",
+      "commit": "cda0f925",
+      "state": "available"
+    },
+    {
+      "id": "atomic2-zen4-lto-lab",
+      "path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-zen4-lto-lab-20261026/bin/llama-server",
+      "commit": "cda0f925",
+      "state": "building_unverified"
+    }
+  ],
+  "features": [
+    {
+      "id": "mtp2",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "mtp3",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "mtp_adaptive",
+      "upstream": "absent_possible_port",
+      "atomic2": "native"
+    },
+    {
+      "id": "kv_f16",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "kv_q8",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "kv_turbo3",
+      "upstream": "absent_possible_port",
+      "atomic2": "native"
+    },
+    {
+      "id": "kv_turbo4",
+      "upstream": "absent_possible_port",
+      "atomic2": "native"
+    },
+    {
+      "id": "expert_cache",
+      "upstream": "native",
+      "atomic2": "not_in_help_possible_port"
+    },
+    {
+      "id": "full_gpu_experts",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "flash_attention",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "microbatch",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "poll",
+      "upstream": "native",
+      "atomic2": "native"
+    },
+    {
+      "id": "gdn_fusion",
+      "upstream": "source_audit_risky",
+      "atomic2": "source_audit_risky"
+    },
+    {
+      "id": "cpu_wht_set_rows",
+      "upstream": "source_audit",
+      "atomic2": "source_audit"
+    }
+  ],
+  "stages": [
+    "provenance",
+    "pym_fixed_baseline",
+    "mtp2_shared",
+    "feature_ablation",
+    "port_winners",
+    "quality_36x_and_code",
+    "context_8_16_32_64_128k",
+    "flash_original_gguf",
+    "candidate_canary_24h",
+    "production_rollback"
+  ],
+  "protocol": {
+    "same_gguf_sha256": true,
+    "contexts": [
+      8192,
+      16384,
+      32768,
+      65536,
+      131072
+    ],
+    "initial_context": 8192,
+    "repetitions": 3,
+    "temp": 0,
+    "seed": 42,
+    "full_gpu_layers": 99,
+    "parallel": 1,
+    "threads": 8,
+    "microbatch_options": [
+      128,
+      256,
+      512,
+      1024
+    ],
+    "final_answer_required": true,
+    "compare_cold_and_hot": true
+  },
+  "safety": {
+    "official_guard": true,
+    "exclusive_gpu_lock": true,
+    "no_stop_pbs_haos_embeddings": true,
+    "no_default_prod_change": true,
+    "no_replay_existing_evidence": true
+  }
+}
