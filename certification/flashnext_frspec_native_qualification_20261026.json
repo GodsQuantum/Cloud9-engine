@@ -80,5 +80,57 @@
     "passed": 21,
     "total": 21,
     "failed": 0
+  },
+  "actual_target_vs_draft_metadata_comparison": {
+    "target_first_shard": "Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf",
+    "draft": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+    "both_gguf_arch": "qwen4exp",
+    "target_block_count": 48,
+    "draft_block_count_including_MTP": 49,
+    "draft_nextn_predict_layers": 1,
+    "draft_last_MTP_block_index": 48,
+    "both_embedding_length": 2560,
+    "both_tokenizer_vocab": 248320,
+    "both_context_length": 262144,
+    "both_expert_count": 512,
+    "both_active_experts": 10,
+    "both_hyperconnection_count": 4,
+    "both_hyperconnection_lowrank": 320,
+    "both_rope_dimensions": [
+      11,
+      11,
+      10,
+      0
+    ],
+    "target_output_matrix": [
+      2560,
+      248320
+    ],
+    "draft_output_matrix": [
+      2560,
+      65536
+    ],
+    "target_general_name": "Src",
+    "draft_general_name": "Qwen/Qwen3.8-Flash-Next",
+    "name_mismatch_is_not_architecture_mismatch": true,
+    "structural_relation_correct": true,
+    "real_execution_qualification": "NOT_RUN"
+  },
+  "legacy_safe_engine_recovery_audit": {
+    "historical_hof_commit": "53f34cfaa",
+    "historical_hof_build": "b10738",
+    "historical_engine": "Cloud9 RDNA Vulkan 2026-09-15",
+    "historical_safe_MTP_depth": 3,
+    "historical_target_quant": "AD-4.27bpw-Q4_K_M-M64",
+    "historical_draft": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+    "historical_safe_decode_tps": 17.878,
+    "historical_GDN_fusion_enabled": false,
+    "original_Q8_injection_fix_commit": "b1ea2c634",
+    "candidate_gitrepos_checked": 48,
+    "source_commit_resolved": false,
+    "runtime_executables_and_libs_scanned": 104,
+    "historical_commit_embedded_found": false,
+    "original_build_exact_cli_available": false,
+    "note": "Official HALL_OF_FAME and BENCHMARK_LEDGER establish provenance, but source object and live historic ELF were not found on present Cloud9 checkout. No false claim that an Atomic2 patch reproduces all historical optimizations."
   }
 }

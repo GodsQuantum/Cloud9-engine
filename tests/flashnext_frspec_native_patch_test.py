@@ -29,6 +29,24 @@ class FRSPECNativePatchProofTest(unittest.TestCase):
         self.assertIsNone(e["actual_flashnext_tps"])
         self.assertFalse(e["production_mutated"])
 
+    def test_real_target_and_fr_draft_are_same_architecture(self):
+        topo = self.evidence["actual_target_vs_draft_metadata_comparison"]
+        self.assertEqual(topo["both_gguf_arch"], "qwen4exp")
+        self.assertEqual(topo["target_block_count"] + topo["draft_nextn_predict_layers"], topo["draft_block_count_including_MTP"])
+        self.assertEqual(topo["draft_last_MTP_block_index"], topo["target_block_count"])
+        self.assertEqual(topo["both_tokenizer_vocab"], self.evidence["target_vocabulary_size"])
+        self.assertTrue(topo["structural_relation_correct"])
+        self.assertEqual(topo["real_execution_qualification"], "NOT_RUN")
+
+    def test_historical_flashnext_numbers_are_not_new_gpu_measurements(self):
+        h = self.evidence["legacy_safe_engine_recovery_audit"]
+        self.assertEqual(h["historical_safe_decode_tps"], 17.878)
+        self.assertEqual(h["historical_safe_MTP_depth"], 3)
+        self.assertFalse(h["historical_GDN_fusion_enabled"])
+        self.assertFalse(h["source_commit_resolved"])
+        self.assertFalse(h["historical_commit_embedded_found"])
+        self.assertIsNone(self.evidence["actual_flashnext_tps"])
+
     def test_qa_evidence_files_exist(self):
         for rel in self.evidence["test_logs"]:
             self.assertTrue((R / rel).is_file(), rel)
