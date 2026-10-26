@@ -9,7 +9,7 @@ class GuardTests(unittest.TestCase):
   self.assertEqual(b.HOF_PYM_KV_ORDER,("f16","turbo4","q8_0","turbo3"))
   self.assertEqual(b.HOF_PYM_TPS,{"f16":36.28,"turbo4":35.20,"q8_0":35.07,"turbo3":34.40})
   src=P.read_text()
-  self.assertIn('"-ctk",(a.parity_kv if a.preset==PARITY_PRESET else "f16")',src)
+  self.assertIn('"-ctk",(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv)',src)
   self.assertIn('"parity_kv":a.parity_kv',src)
   self.assertIn('PARITY_KV_UNSUPPORTED_BY_BINARY',src)
  def test_recent_real_pym_memory_psis_not_replayed(self):

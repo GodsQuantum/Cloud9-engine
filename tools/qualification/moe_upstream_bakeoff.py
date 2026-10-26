@@ -151,7 +151,11 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
    floor=max(round(gguf_gib+18.0,2),round(gguf_gib+25.0,2))
   else:
    floor=round(gguf_gib+23.0,2) if profile=="full" else 24.4
-  required_gtt={"full":14.0,"partial":6.0,"partial_min":2.75}[profile]
+  if profile=="partial_mid":
+   floor=max(floor,29.0)
+  if profile=="partial_high":
+   floor=max(floor,30.5)
+  required_gtt={"full":14.0,"partial":6.0,"partial_mid":10.0,"partial_high":12.0,"partial_min":2.75}[profile]
  g=guardian(required_gtt)
  io=psi_io_full()
  t=host_temp()
@@ -228,7 +232,7 @@ def main():
  ap.add_argument("--engine",choices=sorted(BINARIES),required=True)
  ap.add_argument("--model",choices=sorted(MODELS),required=True)
  ap.add_argument("--mode",choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"],required=True)
- ap.add_argument("--profile",choices=["full","partial","partial_min","compact"],default="full")
+ ap.add_argument("--profile",choices=["full","partial","partial_mid","partial_high","partial_min","compact"],default="full")
  ap.add_argument("--preset",choices=["explore",PARITY_PRESET],default="explore",
                  help="Baseline copied to ALL engines before feature ablation; requires fullGPU Pym MTP2")
  ap.add_argument("--parity-context",type=int,choices=[8192,16384],default=16384,
@@ -243,10 +247,27 @@ def main():
                  help="Fix equal output cap for a cross-engine Pym matched protocol")
  ap.add_argument("--thinking-budget",type=int,choices=[0,128,256],default=256,
                  help="Native LFM reasoning budget (same for both engines); 0 tests short-response agent tool suitability")
+ ap.add_argument("--tune-kv",choices=["f16","q8_0","turbo3","turbo4"],default="f16",
+                 help="A/B both KV buffers on Atomic2 for Pym; strict single-variable trials")
+ ap.add_argument("--tune-moe-cache",choices=["default","off","auto","soft","on"],default="default",
+                 help="Native Atomic2 CPU MoE expert cache optimization")
+ ap.add_argument("--tune-gdn-replay",action="store_true",
+                 help="Atomic2 native GDN replay opt-in with quality verification")
+ ap.add_argument("--tune-spec-chain",type=int,choices=[0,2,3],default=0)
  ap.add_argument("--execute",action="store_true")
  ap.add_argument("--tasks",default="math,code,fr",
                  help="Comma-separated subset of original immutable prompts; e.g. code,fr resumes an interrupted parity baseline")
  a=ap.parse_args()
+ if a.tune_gdn_replay:
+  ap.error("GDN replay only supports CPU/CUDA, not the CT410 Vulkan runtime")
+ if a.tune_spec_chain and (a.engine not in ("atomic2","atomic2_zen4_lto") or a.model not in ("pym","pym_heretic") or a.mode not in ("mtp2","mtp3") or a.preset==PARITY_PRESET):
+  ap.error("Spec-chain only tested on exploratory Atomic2 Pym MTP2/3")
+ if a.engine not in ("atomic2", "atomic2_zen4_lto") and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
+  ap.error("Atomic2 native feature ablations are not certified on another engine")
+ if a.preset==PARITY_PRESET and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
+  ap.error("Historical parity features must remain untouched; use separate exploratory runs")
+ if a.model not in ("pym","pym_heretic") and (a.profile in ("partial_mid","partial_high") or a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
+  ap.error("Feature matrix restricted to actual Pym MoE models")
  if not a.tasks or any(x not in {"math","code","fr"} for x in a.tasks.split(",")) or len(set(a.tasks.split(",")))!=len(a.tasks.split(",")):
   ap.error("tasks must be a unique subset of math,code,fr")
  selected_prompts=[x for x in PROMPTS if x[0] in a.tasks.split(",")]
@@ -265,6 +286,8 @@ def main():
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
          "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,
          "max_output_tokens":a.max_output_tokens,"preset":a.preset,
+         "spec_chain":a.tune_spec_chain,
+         "native_feature_ablation":{"kv_type":a.tune_kv,"moe_cache":a.tune_moe_cache,"gdn_replay":a.tune_gdn_replay},
          "parity_context":a.parity_context if a.preset==PARITY_PRESET else None,
          "parity_load_mode":a.parity_load_mode if a.preset==PARITY_PRESET else None,
          "parity_kv":a.parity_kv if a.preset==PARITY_PRESET else None,
@@ -289,8 +312,8 @@ def main():
    bin=BINARIES[a.engine];model=MODELS[a.model]
    if a.profile=="compact" and a.model!="lfm_official_q4":
     raise ValueError("compact LFM profile cannot be applied to Pym without new admission")
-   layers={"full":"99","partial":"8","partial_min":"4","compact":"99"}[a.profile]
-   experts={"full":"0","partial":"40","partial_min":"41","compact":"0"}[a.profile]
+   layers={"full":"99","partial":"8","partial_mid":"16","partial_high":"24","partial_min":"4","compact":"99"}[a.profile]
+   experts={"full":"0","partial":"40","partial_mid":"36","partial_high":"32","partial_min":"41","compact":"0"}[a.profile]
    context=str(a.parity_context) if a.preset==PARITY_PRESET else ("8192" if a.profile=="full" else "2048")
    if a.model=="lfm_official_q4":
     context="1536" if a.profile=="compact" else "4096"
@@ -298,9 +321,13 @@ def main():
    ubsize="1024" if a.preset==PARITY_PRESET else ("32" if a.profile=="compact" else ("64" if a.profile=="partial_min" else "128"))
    cmd=[str(bin),"-m",str(model),"-ngl",layers,"--n-cpu-moe",experts,"--fit","off","-c",context,
         "-np","1","-fa","on","-b",bsize,"-ub",ubsize,"-t","8","-tb","8",
-        "-ctk",(a.parity_kv if a.preset==PARITY_PRESET else "f16"),"-ctv",(a.parity_kv if a.preset==PARITY_PRESET else "f16"),
+        "-ctk",(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv),"-ctv",(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv),
         "--host","127.0.0.1","--port","18139","--no-webui",
         "--no-warmup","--reasoning",("on" if a.model=="lfm_official_q4" else "off"),"--alias","Cloud9-MoE-Upstream-LAB"]
+   if a.tune_moe_cache!="default":
+    cmd+=["--moe-cache",a.tune_moe_cache]
+   if a.tune_gdn_replay:
+    cmd+=["--gdn-replay"]
    if a.model=="lfm_official_q4":
     # Native llama.cpp reasoning controls: prevent a 256-token thinking-only
     # completion from incorrectly appearing to be a successful agent response.
@@ -322,6 +349,8 @@ def main():
       "not_exact_atomic16_cli":True,
       "features_ported_first":True,
       "addon_tuning_already_tested":False}
+   if a.tune_spec_chain:
+    cmd+=["--spec-chain",str(a.tune_spec_chain)]
    if a.mode in ("mtp1","mtp2","mtp3"):
     cmd+=["--spec-type","draft-mtp","--spec-draft-n-max",a.mode[-1]]
    elif a.mode=="mtp_adaptive":
