@@ -507,9 +507,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
           "sha256": "4a2324729c6dade899d335c47628f97948d11df18ff101e50c7d89490100d3d6",
           "note": "Exact Atomic2 original native Vulkan backend 13 ELF staged inactive CT410 with original SHA pinned"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+          "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa",
+          "note": "Native upstream b11840/b11844 Pym MTP2/base full GPU attempted and blocked before load; exact config, guardian and unique fingerprints"
         }
       ],
-      "remaining": "Best historical 16K native same-GGUF speed/recall champion Atomic TurboQuant2 Vulkan (16K five needle 3/3, median30.6577t/s) staged into CT410 LAB as exact original binary SHA, 13 ELF relocated RPATH $ORIGIN; version/ldd PASS. Only 2/36 fresh current same tool-suite calls; qualify remaining C09, current matched 16K+ and 128K under guard. Chimera 16K strict watchdog failed; do not promote Turbo3 cache result from Atomic onto different chimera fork (past Turbo3 chimera real quality failure).",
+      "remaining": "MoE priority clarified. Sep14 Pym Q2 MTP2 recorded 34.56t/s median, 37.20t/s math peak under Cloud9 Vulkan, exact source commit not logged; cannot claim pure upstream. Stock upstream Oct18 9d1878a same model vs S1 exists with corrected strict JSON0/3 each, semantic code3/3 each. New Vulkan upstream b11840 and b11844 binaries MTP/native MoE controls OK, but 3 guarded Pym full-offload attempts stopped BEFORE GPU load due host RAM, GTT and PSI; current new tg speed unmeasured. Model exact file available. Requires safe ~14GiB GTT + host MemAvailable >=model 12.31GiB+23GiB for fair Pym 8192 context, then same-prompt base/MTP2/Atomic2 comparison and 128K quality.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -532,9 +537,14 @@
           "project_path": "Sources/Worklogs/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
           "sha256": "f3b3c0fc70029cb0ed712efb6d68cb4c66cb7be9b8b9dab417353504c22e57cc",
           "note": "Official Nemotron 3.5 Bolt 74B-A9B/E4B source research; candidates only, no weights downloaded nor GPU benchmark"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
+          "sha256": "5f9ba041a7f654ad7d7f82dd9f15c9d9c42e318adf4891ccb903ad9d30db536e",
+          "note": "Flash-Next historic 17.878 tweaked b10738 MTP3 TurboQuant SET_ROWS CPU-WHT; local different GSQ IQ1M model is NOT matched"
         }
       ],
-      "remaining": "Qualify four representative model roles exact quant / hashes and actual FlashNext >20 if GPU fitting works; do not confuse 35B/Pym with Qwen4",
+      "remaining": "Flash-Next historic 17.878t/s on RDNA Vulkan b10738 commit53f34cfaa was deliberately tuned MTP3 TurboQuant SET_ROWS FlashAttention CPU-WHT GDN fusion OFF (NOT plain stock). The local available two-shard GSQ-RCO IQ1_M model is 58.4GB and NOT historical AD-4.27+FR-Spec, so cannot A/B against 17.878; current source GGUF missing, no actual new Flash inference. Need exact matched model and memory/admission or external faithful bench, not quietly substitute quantization.",
       "acceptance": "per role latency, quality and useful context proven on the target device"
     },
     {
@@ -599,9 +609,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_0032_HALL_OF_FAME_ENGINE_CERTIFICATION_AUDIT.json",
           "sha256": "3b690e9860b0334956bbed75c40f72299fd3202f1c3b0a004f7389c99dc55976",
           "note": "HOF canonical 195 records, two immutable current GPU agentic sources, validated"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+          "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa",
+          "note": "No new MoE winner; upstream Pym preflight blocked, Flash-Next historical GGUF missing, stable production unchanged"
         }
       ],
-      "remaining": "Fail closed: no all-purpose engine certified for PROD on 8845HS/780M. Atomic2 is strongest HISTORICAL 16K exact 5-marker speed profile (3/3 30.6577tok/s) but current same-suite C09 3/36 then watchdog and unrelated strict JSON3/9/code0/9. Chimera C09 36/36 simulated tools but native 16K fails PSI watchdog. GGUF max262144 not real qualified; 32K/64K/128K not scored, real agent integrations, parallel slots and24h canary missing. HOF canonical 195 records validates. Do not promote or alter OmniRoute 4-model combo; restore PBS IO stability and benchmark identical quality+speed first.",
+      "remaining": "No all-purpose hardware winner from 26-Oct new tests: upstream Pym exact models 3 fail-closed preflights before GPU inference and Flash original AD+FRspec not installed. Historical Pym 34.56 median MTP2, math peak37.20, Atomic1.6 Pym f16 MTP2 36.28 (unmatched historical) and Flash-Next 17.878 tuned. Do not switch production from 4 stable OmniRoute models before matched real Qwen3.6 Pym upstream b11844/Atomic2, >=128K multi-marker QA, agentic strict JSON/tool/code, rollback and soak.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -612,7 +627,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "26 Oct 2026 ~00:33 Europe/Paris: restored original Atomic2 native isolated CT410 ($ORIGIN; 13 ELF), original launcher SHA pinned, version/ldd PASS. Current exact C09 same fixture Atomic2 3/36 safe then strict PSI watchdog at2.20, no leaks or production preemption. Chimera 36/36 C09; Atomic2 historic16K 3/3 ~30.66t/s but separate strict36 JSON3/9 tools6/9 code0/9. HOF native append 193->195 records and validation OK. Six PBS verify tasks remain active and logs timeout, high IO PSI: hardware agentic128K certification blocked. Do not claim production release.",
+  "latest_attempt_note": "2026-10-26 ~01:10 Europe/Paris: canonical 37.20 Pym record Cloud9 Vulkan MTP2 math peak (median34.56), unknown exact stock fork commit; Flash-Next17.878 on tuned b10738 with MTP3 TurboQuant Vulkan SET_ROWS CPU-WHT GDN fusion off. Verified Pym exact GGUF13.22GB and upstream b11840,b11844 Vulkan MTP2 and flags; new 3 unique --execute preflights blocked before GPU by official guard+host RAM/GTT/PSI. Flash local GSQ IQ1M 58.4GB is different original GGUF, explicitly refused unfair A/B. No new tok/s, no production changes; nine offline runner unit tests PASS.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -868,6 +883,21 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_0032_ATOMIC2_READINESS_AND_PBS_WATCHDOG.md",
       "project_path": "Sources/Worklogs/2026-10-26_0032_ATOMIC2_READINESS_AND_PBS_WATCHDOG.md",
       "sha256": "2040ce3541d28a0aa8c628fbb1d5a3e8ec64e92401bffcea3f59c9c2ced890ff"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
+      "sha256": "5f9ba041a7f654ad7d7f82dd9f15c9d9c42e318adf4891ccb903ad9d30db536e"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa"
     }
   ],
   "nextn_lab_candidate": {
