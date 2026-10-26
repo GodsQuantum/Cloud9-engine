@@ -1,0 +1,149 @@
+{
+  "date_utc": "2026-10-26T04:01:05.287984+00:00",
+  "lxc": [
+    {
+      "id": 9500,
+      "name": "cachyos-znver4-golden",
+      "status": "stopped",
+      "rss_gib": 0.0,
+      "maxmem_gib": 8.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 0.0
+    },
+    {
+      "id": 700,
+      "name": "dev-build",
+      "status": "running",
+      "rss_gib": 0.22,
+      "maxmem_gib": 72.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 55.31
+    },
+    {
+      "id": 300,
+      "name": "travail",
+      "status": "running",
+      "rss_gib": 1.32,
+      "maxmem_gib": 32.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 32.14
+    },
+    {
+      "id": 220,
+      "name": "medias-photos",
+      "status": "running",
+      "rss_gib": 2.22,
+      "maxmem_gib": 12.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 15.56
+    },
+    {
+      "id": 500,
+      "name": "colonial-one",
+      "status": "running",
+      "rss_gib": 0.91,
+      "maxmem_gib": 32.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 10.67
+    },
+    {
+      "id": 110,
+      "name": "connexion",
+      "status": "running",
+      "rss_gib": 2.56,
+      "maxmem_gib": 6.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 5.59
+    },
+    {
+      "id": 130,
+      "name": "administration",
+      "status": "running",
+      "rss_gib": 0.7,
+      "maxmem_gib": 3.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 8.35
+    },
+    {
+      "id": 410,
+      "name": "ia-compute",
+      "status": "running",
+      "rss_gib": 2.24,
+      "maxmem_gib": 64.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 79.28
+    },
+    {
+      "id": 210,
+      "name": "famille-docs",
+      "status": "running",
+      "rss_gib": 5.41,
+      "maxmem_gib": 16.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 52.01
+    },
+    {
+      "id": 230,
+      "name": "telechargements",
+      "status": "running",
+      "rss_gib": 1.56,
+      "maxmem_gib": 6.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 12.41
+    },
+    {
+      "id": 200,
+      "name": "stockage",
+      "status": "running",
+      "rss_gib": 0.63,
+      "maxmem_gib": 3.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 1.7
+    },
+    {
+      "id": 400,
+      "name": "ia-studio",
+      "status": "running",
+      "rss_gib": 13.5,
+      "maxmem_gib": 32.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 54.58
+    },
+    {
+      "id": 9600,
+      "name": "tpl-ubuntu2604-docker29",
+      "status": "stopped",
+      "rss_gib": 0.0,
+      "maxmem_gib": 4.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 0.0
+    },
+    {
+      "id": 120,
+      "name": "securite",
+      "status": "running",
+      "rss_gib": 1.06,
+      "maxmem_gib": 4.0,
+      "cpu_pct": 0,
+      "disk_usage_gib": 4.42
+    }
+  ],
+  "vms": [
+    {
+      "id": 100,
+      "name": "haos",
+      "status": "running",
+      "rss_gib": 7.16,
+      "maxmem_gib": 8.0,
+      "cpu_pct": 0
+    },
+    {
+      "id": 900,
+      "name": "pbs",
+      "status": "running",
+      "rss_gib": 1.93,
+      "maxmem_gib": 8.0,
+      "cpu_pct": 0
+    }
+  ]
+}
