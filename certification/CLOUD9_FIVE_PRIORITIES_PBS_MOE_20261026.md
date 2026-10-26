@@ -31,7 +31,7 @@ https://pbs.proxmox.com/docs/storage.html
 https://pbs.proxmox.com/docs/system-requirements.html
 
 ## Tâches encore ouvertes — priorité exécution
-A. Superviser vrai prune prévu à 20h30 et première phase metadata demain09h ; vérifier backups/protected/prune/GC et retours de restauration.
+A. Superviser vrai prune prévu à 20h30 et première exécution du job metadata le 26 octobre à 09h00 ; vérifier backups/protected/prune/GC et retours de restauration.
 B. Migrer un à un LXC volumineux vers metadata en gardant une marge de capacité.
 C. Auditer WARNINGS:2 du GC et détecter collisions longues verification/GC/scrub.
 D. Audit CPU/RAM/I/O des services CT400 et tâches orphelines par mesures, corrections natives uniquement, réduction mémoire sûre pour ouvrir la fenêtre benchmark.
