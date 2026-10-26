@@ -1,0 +1,117 @@
+{
+  "utc": "2026-10-26T02:10:40.187205+00:00",
+  "scope": "READ_ONLY_NO_MODEL_INFERENCE_NO_PRODUCTION_MUTATION",
+  "priority_model": "Pym exact 35B-A3B then Pym Heretic, then Flash exact if restored",
+  "engines": [
+    {
+      "id": "upstream-b11844",
+      "binary_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master062-vulkan-gfx1103-20261023/llama-server",
+      "available": true,
+      "help_exit": 0,
+      "version_exit": 0,
+      "version": [
+        "version: 0.7.0-dev (build 11844, commit 06230cb87)",
+        "built with GNU 13.3.0 for Linux x86_64"
+      ],
+      "native_support": {
+        "mtp": true,
+        "mtp_adaptive": false,
+        "spec_draft_p_min": true,
+        "spec_backend_sampling_toggle": true,
+        "kv_turbo3": false,
+        "kv_turbo4": false,
+        "moe_cache": true,
+        "cpu_moe": true,
+        "flash_attention": true,
+        "microbatch": true,
+        "poll": true,
+        "reasoning_budget": true
+      },
+      "launcher_sha256": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da"
+    },
+    {
+      "id": "atomic2-b10298",
+      "binary_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin/llama-server",
+      "available": true,
+      "help_exit": 0,
+      "version_exit": 0,
+      "version": [
+        "version: b10298-2.0.0 (build 1, commit cda0f92)",
+        "built with GNU 15.2.0 for Linux x86_64"
+      ],
+      "native_support": {
+        "mtp": true,
+        "mtp_adaptive": true,
+        "spec_draft_p_min": true,
+        "spec_backend_sampling_toggle": true,
+        "kv_turbo3": true,
+        "kv_turbo4": true,
+        "moe_cache": false,
+        "cpu_moe": true,
+        "flash_attention": true,
+        "microbatch": true,
+        "poll": true,
+        "reasoning_budget": true
+      },
+      "launcher_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a"
+    },
+    {
+      "id": "atomic2-zen4-lto-lab",
+      "binary_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-zen4-lto-lab-20261026/bin/llama-server",
+      "available": false
+    }
+  ],
+  "models": [
+    {
+      "id": "pym-q2",
+      "available": true,
+      "actual_size_bytes": 13222476000,
+      "expected_size_bytes": 13222476000,
+      "historical_sha256": "cac59f495abd12710d723b6957a52e78b4f3ef382c808327ead27cc685c03788",
+      "full_sha_rehashed_under_current_IO_pressure": false,
+      "same_model_cross_engine_comparable": true
+    },
+    {
+      "id": "pym-heretic",
+      "available": true,
+      "actual_size_bytes": 17016624544,
+      "expected_size_bytes": 17016624544,
+      "historical_sha256": null,
+      "full_sha_rehashed_under_current_IO_pressure": false,
+      "same_model_cross_engine_comparable": true
+    },
+    {
+      "id": "flashnext-ad427-frspec",
+      "available": false,
+      "actual_size_bytes": null,
+      "expected_size_bytes": null,
+      "historical_sha256": null,
+      "full_sha_rehashed_under_current_IO_pressure": false,
+      "same_model_cross_engine_comparable": false
+    },
+    {
+      "id": "flashnext-gsq-coder",
+      "available": true,
+      "actual_size_bytes": 29608446496,
+      "expected_size_bytes": null,
+      "historical_sha256": null,
+      "full_sha_rehashed_under_current_IO_pressure": false,
+      "same_model_cross_engine_comparable": false
+    }
+  ],
+  "guardian_for_full_pym": {
+    "allow": false,
+    "mem_available_gib": 26.269,
+    "safe_total_gtt_gib": 8.626,
+    "psi_memory_full_avg10": 0.81,
+    "swap_used_percent": 72.12,
+    "reasons": [
+      "host memory PSI full avg10=0.81",
+      "requested 13.0 GiB GTT > current safe total 8.6 GiB"
+    ]
+  },
+  "embeddings_busy_slots": 0,
+  "embeddings_total_slots": 4,
+  "actual_full_Pym_GPU_benchmark_admitted": false,
+  "production_modified": false
+}
