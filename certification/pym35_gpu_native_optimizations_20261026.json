@@ -1,0 +1,587 @@
+{
+  "date": "2026-10-26",
+  "title": "Native GPU optimizations controlled 8K and sustained tests — Pym35 Q2 MTP",
+  "model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "model_bytes": 13222476000,
+  "gpu": "AMD Radeon 780M gfx1103 Vulkan full offload (-ngl 99 --n-cpu-moe 0)",
+  "safety": "Official GTT guardian, CT410 GPU lock, 20GiB minimum MemAvailable, swap95percent, thermal>=80 Celsius and PSI>=12 percent abort; no production changes",
+  "source": "Immutable lab CT410 JSON per test",
+  "trials_total": 19,
+  "trials_valid": 15,
+  "initial_matched_q8_192_ref_mean": 27.852,
+  "clock_auto_1": 26.908,
+  "clock_high_3": 27.928,
+  "clock_auto_paired_1": 28.022,
+  "clock_high_paired_1": 27.674,
+  "clock_auto_paired_2": 27.967,
+  "full_768_atomic16_q8": 28.239,
+  "full_768_atomic2_q8": 27.865,
+  "MTP4_q8": 23.755,
+  "MTP6_q8": 18.574,
+  "MTP4_pmin75_q8": 25.358,
+  "MTP2_pmin75_q8": 25.736,
+  "vk_force_mmvq": 27.234,
+  "vk_disable_mmvq": 24.772,
+  "vk_disable_coopmat": 26.082,
+  "vk_disable_async": 23.96,
+  "gpu_utilization_direct_read_percent_in_fullgpu_run": 87,
+  "gpu_utilization_sustained_observed_percent": "90-95",
+  "mode_profile_peak": "Failed loading after reaching 78 C; driver profile restored auto. TimeoutExpired; not proven temperature-causal. Do not promote.",
+  "high_gpu_clock": "paired A1=28.02/H1=27.67/A2=27.97 tps; no stable improvement; restored auto",
+  "historic_36_28_not_reproduced": true,
+  "production_engine_promoted": false,
+  "no_oom_kills": true,
+  "native_GPU_environment_experiments_per_child_only": true,
+  "all_trials": [
+    {
+      "run_id": "pym35f_gpuclock_auto_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          28.309
+        ],
+        [
+          "code",
+          192,
+          26.274
+        ],
+        [
+          "fr",
+          192,
+          26.142
+        ]
+      ],
+      "mean_tps": 26.908,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_gpuclock_auto_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_gpuclock_high_1_1026",
+      "status": "blocked_preflight",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0,
+      "max_output_tokens": 192,
+      "tasks": [],
+      "mean_tps": null,
+      "quality_pass": false,
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_gpuclock_high_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_gpuclock_high_2_1026",
+      "status": "blocked_preflight",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0,
+      "max_output_tokens": 192,
+      "tasks": [],
+      "mean_tps": null,
+      "quality_pass": false,
+      "preflight_reasons": [
+        "HOST_IO_PSI"
+      ],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_gpuclock_high_2_1026.json"
+    },
+    {
+      "run_id": "pym35f_gpuclock_high_3_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          30.098
+        ],
+        [
+          "code",
+          192,
+          26.769
+        ],
+        [
+          "fr",
+          192,
+          26.917
+        ]
+      ],
+      "mean_tps": 27.928,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_gpuclock_high_3_1026.json"
+    },
+    {
+      "run_id": "pym35f_gpuclock_profile_peak_1_1026",
+      "status": "failed_exception",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0,
+      "max_output_tokens": 192,
+      "tasks": [],
+      "mean_tps": null,
+      "quality_pass": false,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_gpuclock_profile_peak_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_mtp_mtp2_p075_gpu_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.75,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          27.184
+        ],
+        [
+          "code",
+          192,
+          25.795
+        ],
+        [
+          "fr",
+          192,
+          24.23
+        ]
+      ],
+      "mean_tps": 25.736,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_mtp_mtp2_p075_gpu_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_mtp_mtp4_p075_gpu_1_1026",
+      "status": "blocked_preflight",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp4",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.75,
+      "max_output_tokens": 192,
+      "tasks": [],
+      "mean_tps": null,
+      "quality_pass": false,
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_mtp_mtp4_p075_gpu_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_mtp_mtp4_p075_gpu_2_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp4",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.75,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          27.318
+        ],
+        [
+          "code",
+          192,
+          25.843
+        ],
+        [
+          "fr",
+          192,
+          22.913
+        ]
+      ],
+      "mean_tps": 25.358,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_mtp_mtp4_p075_gpu_2_1026.json"
+    },
+    {
+      "run_id": "pym35f_mtp_mtp4_p0_gpu_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp4",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          25.832
+        ],
+        [
+          "code",
+          192,
+          24.323
+        ],
+        [
+          "fr",
+          192,
+          21.109
+        ]
+      ],
+      "mean_tps": 23.755,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_mtp_mtp4_p0_gpu_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_mtp_mtp6_p0_gpu_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp6",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          22.744
+        ],
+        [
+          "code",
+          192,
+          17.435
+        ],
+        [
+          "fr",
+          78,
+          15.542
+        ]
+      ],
+      "mean_tps": 18.574,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_mtp_mtp6_p0_gpu_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_sustained768_atomic16_q8_1_1026",
+      "status": "complete",
+      "engine": "atomic16",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 768,
+      "tasks": [
+        [
+          "math",
+          768,
+          30.292
+        ],
+        [
+          "code",
+          768,
+          29.275
+        ],
+        [
+          "fr",
+          768,
+          25.149
+        ]
+      ],
+      "mean_tps": 28.239,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_sustained768_atomic16_q8_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_sustained768_atomic2_q8_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 768,
+      "tasks": [
+        [
+          "math",
+          768,
+          29.431
+        ],
+        [
+          "code",
+          768,
+          28.785
+        ],
+        [
+          "fr",
+          768,
+          25.378
+        ]
+      ],
+      "mean_tps": 27.865,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_sustained768_atomic2_q8_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_vk_disable_mmvq_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "disable_mmvq",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          25.408
+        ],
+        [
+          "code",
+          192,
+          25.447
+        ],
+        [
+          "fr",
+          192,
+          23.459
+        ]
+      ],
+      "mean_tps": 24.772,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_vk_disable_mmvq_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_vk_force_mmvq_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "force_mmvq",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          28.501
+        ],
+        [
+          "code",
+          192,
+          27.438
+        ],
+        [
+          "fr",
+          192,
+          25.763
+        ]
+      ],
+      "mean_tps": 27.234,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_vk_force_mmvq_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_vk_no_async_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "no_async",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          25.262
+        ],
+        [
+          "code",
+          192,
+          23.238
+        ],
+        [
+          "fr",
+          192,
+          23.382
+        ]
+      ],
+      "mean_tps": 23.96,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_vk_no_async_1_1026.json"
+    },
+    {
+      "run_id": "pym35f_vk_no_coopmat_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "no_coopmat",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          27.979
+        ],
+        [
+          "code",
+          192,
+          25.652
+        ],
+        [
+          "fr",
+          192,
+          24.616
+        ]
+      ],
+      "mean_tps": 26.082,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_vk_no_coopmat_1_1026.json"
+    },
+    {
+      "run_id": "pym35gpuclk_a1_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          29.364
+        ],
+        [
+          "code",
+          192,
+          28.252
+        ],
+        [
+          "fr",
+          192,
+          26.451
+        ]
+      ],
+      "mean_tps": 28.022,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35gpuclk_a1_1_1026.json"
+    },
+    {
+      "run_id": "pym35gpuclk_a2_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          29.717
+        ],
+        [
+          "code",
+          192,
+          27.27
+        ],
+        [
+          "fr",
+          192,
+          26.915
+        ]
+      ],
+      "mean_tps": 27.967,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35gpuclk_a2_1_1026.json"
+    },
+    {
+      "run_id": "pym35gpuclk_h1_1_1026",
+      "status": "complete",
+      "engine": "atomic2",
+      "kv": "q8_0",
+      "mode": "mtp2",
+      "owner_vulkan_kernel": "auto",
+      "draft_p_min": 0.0,
+      "max_output_tokens": 192,
+      "tasks": [
+        [
+          "math",
+          192,
+          29.185
+        ],
+        [
+          "code",
+          192,
+          27.493
+        ],
+        [
+          "fr",
+          192,
+          26.344
+        ]
+      ],
+      "mean_tps": 27.674,
+      "quality_pass": true,
+      "preflight_reasons": [],
+      "guard_events": [],
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35gpuclk_h1_1_1026.json"
+    }
+  ]
+}

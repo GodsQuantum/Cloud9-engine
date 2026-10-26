@@ -72,7 +72,7 @@ def psi_io_full():
  found=__import__("re").search(r"full avg10=([\d.]+)",Path("/proc/pressure/io").read_text())
  return float(found.group(1)) if found else None
 
-def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_mode="mmap"):
+def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_mode="mmap",owner_fullgpu=False,kv_type="f16"):
  # Hardware fail-closed: Native -lm none led to RADV vk::Queue::submit
  # ErrorDeviceLost while loading Pym 35B fullGPU on Oct26; not retry.
  # This is not a performance score and is no basis for ranking Atomic2.
@@ -83,7 +83,7 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
           "native_mmap_preserved":False}
  p=MODELS[model_key];b=BINARIES[engine]
  assert p.is_file() and b.is_file()
- if mode in ("mtp1","mtp2","mtp3","mtp_adaptive") and model_key not in ("pym","pym_heretic"):
+ if mode in ("mtp1","mtp2","mtp3","mtp4","mtp6","mtp_adaptive") and model_key not in ("pym","pym_heretic"):
   return {"admitted":False,"reasons":["NON_PYM_INLINE_MTP_UNVERIFIED"]}
  if mode=="mtp_adaptive" and not engine.startswith("atomic2"):
   return {"admitted":False,"reasons":["ADAPTIVE_MTP_NOT_SUPPORTED_UPSTREAM"]}
@@ -156,6 +156,12 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
   if profile=="partial_high":
    floor=max(floor,30.5)
   required_gtt={"full":14.0,"partial":6.0,"partial_mid":10.0,"partial_high":12.0,"partial_min":2.75}[profile]
+  if owner_fullgpu and profile=="full" and model_key=="pym":
+   # Opt-in from user, native GPU guardian retains independent veto.
+   # Do not double-reserve model GGUF and GPU host-reserve; safety comes
+   # from native 18-GiB host reserve, 20.5GiB runtime floor, 95% swap.
+   floor=max(29.0,round(gguf_gib+16.0,2))
+   required_gtt={"f16":13.5,"q8_0":13.0,"turbo2":12.5,"turbo3":12.7,"turbo4":12.5}.get(kv_type,14.0)
  g=guardian(required_gtt)
  io=psi_io_full()
  t=host_temp()
@@ -164,7 +170,7 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
  if g.get("mem_available_gib",0)<floor:
   why.append("PYM_PRIOR_PSI_LOAD_HEADROOM" if preset==PARITY_PRESET and model_key=="pym" and profile=="full" else "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE")
  if g.get("safe_total_gtt_gib",0)<required_gtt:why.append("INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD")
- if g.get("psi_memory_full_avg10",99)>=0.30:why.append("HOST_MEMORY_PSI")
+ if g.get("psi_memory_full_avg10",99)>=(1.5 if owner_fullgpu else 0.30):why.append("HOST_MEMORY_PSI")
  if io is None or io>=9:why.append("HOST_IO_PSI")
  if t is None or t>=76:why.append("TEMPERATURE_PREFLIGHT")
  try:
@@ -231,7 +237,7 @@ def main():
  ap=argparse.ArgumentParser()
  ap.add_argument("--engine",choices=sorted(BINARIES),required=True)
  ap.add_argument("--model",choices=sorted(MODELS),required=True)
- ap.add_argument("--mode",choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"],required=True)
+ ap.add_argument("--mode",choices=["base","mtp1","mtp2","mtp3","mtp4","mtp6","mtp_adaptive"],required=True)
  ap.add_argument("--profile",choices=["full","partial","partial_mid","partial_high","partial_min","compact"],default="full")
  ap.add_argument("--preset",choices=["explore",PARITY_PRESET],default="explore",
                  help="Baseline copied to ALL engines before feature ablation; requires fullGPU Pym MTP2")
@@ -247,22 +253,44 @@ def main():
                  help="Fix equal output cap for a cross-engine Pym matched protocol")
  ap.add_argument("--thinking-budget",type=int,choices=[0,128,256],default=256,
                  help="Native LFM reasoning budget (same for both engines); 0 tests short-response agent tool suitability")
- ap.add_argument("--tune-kv",choices=["f16","q8_0","turbo3","turbo4"],default="f16",
+ ap.add_argument("--tune-kv",choices=["f16","q8_0","turbo2","turbo3","turbo4"],default="f16",
                  help="A/B both KV buffers on Atomic2 for Pym; strict single-variable trials")
  ap.add_argument("--tune-moe-cache",choices=["default","off","auto","soft","on"],default="default",
                  help="Native Atomic2 CPU MoE expert cache optimization")
  ap.add_argument("--tune-gdn-replay",action="store_true",
                  help="Atomic2 native GDN replay opt-in with quality verification")
  ap.add_argument("--tune-spec-chain",type=int,choices=[0,2,3],default=0)
+ ap.add_argument("--owner-fullgpu",action="store_true",help="User authorized Pym35 full-GPU benchmark, with native GPU guardian and OOM watchdog intact")
+ ap.add_argument("--owner-load-mode",choices=["mmap","dio"],default="mmap")
+ ap.add_argument("--tune-hof-native-flags",action="store_true",help="Native polling + speculative backend sampling off from HOF")
+ ap.add_argument("--owner-kv-unified",action="store_true")
+ ap.add_argument("--owner-no-repack",action="store_true")
+ ap.add_argument("--owner-ubatch",type=int,choices=[128,512,1024],default=128)
+ ap.add_argument("--owner-affinity",choices=["none","0-7","8-15"],default="none")
+ ap.add_argument("--owner-priority",type=int,choices=[0,1],default=0)
+ ap.add_argument("--owner-draft-p-min",type=float,choices=[0.0,0.5,0.75,0.9],default=0.0,help="Native GPU inline MTP minimum draft confidence threshold")
+ ap.add_argument("--owner-vulkan-kernel",choices=["auto","force_mmvq","disable_mmvq","no_coopmat","no_async"],default="auto",help="Native ggml Vulkan env kernel A/B in isolated owner fullGPU trial")
  ap.add_argument("--execute",action="store_true")
  ap.add_argument("--tasks",default="math,code,fr",
                  help="Comma-separated subset of original immutable prompts; e.g. code,fr resumes an interrupted parity baseline")
  a=ap.parse_args()
+ if a.tune_hof_native_flags and a.owner_draft_p_min!=0.0:
+  ap.error("HOF p-min=0 cannot be combined with confidence ablation")
+ if a.tune_hof_native_flags and not a.owner_fullgpu:
+  ap.error("HOF native ablation only with owner approved fullGPU")
+ if not a.owner_fullgpu and (a.owner_kv_unified or a.owner_no_repack or a.owner_ubatch!=128 or a.owner_affinity!="none" or a.owner_priority!=0 or a.owner_draft_p_min!=0.0 or a.owner_vulkan_kernel!="auto"):
+  ap.error("GPU ablation requires owner fullGPU")
+ if a.owner_load_mode=="dio":
+  ap.error("GPUVM device lost in DirectIO Pym35 native Vulkan, blocked")
+ if a.owner_load_mode!="mmap" and not a.owner_fullgpu:
+  ap.error("DirectIO only in owner-authorized full GPU")
+ if a.owner_fullgpu and not (a.engine in ("atomic2","atomic2_zen4_lto","atomic16") and a.model=="pym" and a.mode in ("mtp1","mtp2","mtp3","mtp4","mtp6","mtp_adaptive","base") and a.profile=="full"):
+  ap.error("Owner fullGPU approval is specific to Pym35 Atomic2 MTP2")
  if a.tune_gdn_replay:
   ap.error("GDN replay only supports CPU/CUDA, not the CT410 Vulkan runtime")
  if a.tune_spec_chain and (a.engine not in ("atomic2","atomic2_zen4_lto") or a.model not in ("pym","pym_heretic") or a.mode not in ("mtp2","mtp3") or a.preset==PARITY_PRESET):
   ap.error("Spec-chain only tested on exploratory Atomic2 Pym MTP2/3")
- if a.engine not in ("atomic2", "atomic2_zen4_lto") and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
+ if a.engine not in ("atomic2", "atomic2_zen4_lto", "atomic16") and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
   ap.error("Atomic2 native feature ablations are not certified on another engine")
  if a.preset==PARITY_PRESET and (a.tune_kv!="f16" or a.tune_moe_cache!="default" or a.tune_gdn_replay):
   ap.error("Historical parity features must remain untouched; use separate exploratory runs")
@@ -285,7 +313,7 @@ def main():
  if report.exists() or logfile.exists():ap.error("REFUSE_OVERWRITE_IMMUTABLE_TRIAL")
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
          "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,
-         "max_output_tokens":a.max_output_tokens,"preset":a.preset,
+         "max_output_tokens":a.max_output_tokens,"preset":a.preset,"owner_fullgpu":a.owner_fullgpu,"owner_load_mode":a.owner_load_mode,"tune_hof_native_flags":a.tune_hof_native_flags,"owner_kv_unified":a.owner_kv_unified,"owner_no_repack":a.owner_no_repack,"owner_ubatch":a.owner_ubatch,"owner_affinity":a.owner_affinity,"owner_priority":a.owner_priority,"owner_draft_p_min":a.owner_draft_p_min,"owner_vulkan_kernel":a.owner_vulkan_kernel,
          "spec_chain":a.tune_spec_chain,
          "native_feature_ablation":{"kv_type":a.tune_kv,"moe_cache":a.tune_moe_cache,"gdn_replay":a.tune_gdn_replay},
          "parity_context":a.parity_context if a.preset==PARITY_PRESET else None,
@@ -295,7 +323,7 @@ def main():
          "selected_tasks":[x[0] for x in selected_prompts],"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
-  start=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode)
+  start=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode,a.owner_fullgpu,(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv))
   result["preflight"]=start
   result["status"]="blocked_preflight" if not start["admitted"] else "eligible_not_executed"
   if not a.execute or not start["admitted"]:
@@ -305,7 +333,7 @@ def main():
    try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
    except BlockingIOError:
     result["status"]="gpu_lock_busy";save();return
-   second=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode)
+   second=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode,a.owner_fullgpu,(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv))
    result["second_preflight"]=second
    if not second["admitted"]:
     result["status"]="blocked_after_lock";save();return
@@ -319,6 +347,7 @@ def main():
     context="1536" if a.profile=="compact" else "4096"
    bsize="1024" if a.preset==PARITY_PRESET else ("128" if a.profile in ("partial_min","compact") else "512")
    ubsize="1024" if a.preset==PARITY_PRESET else ("32" if a.profile=="compact" else ("64" if a.profile=="partial_min" else "128"))
+   if a.owner_fullgpu and a.owner_ubatch!=128:ubsize=str(a.owner_ubatch)
    cmd=[str(bin),"-m",str(model),"-ngl",layers,"--n-cpu-moe",experts,"--fit","off","-c",context,
         "-np","1","-fa","on","-b",bsize,"-ub",ubsize,"-t","8","-tb","8",
         "-ctk",(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv),"-ctv",(a.parity_kv if a.preset==PARITY_PRESET else a.tune_kv),
@@ -349,24 +378,38 @@ def main():
       "not_exact_atomic16_cli":True,
       "features_ported_first":True,
       "addon_tuning_already_tested":False}
+   if a.owner_affinity!="none":cmd+=["--cpu-range",a.owner_affinity,"--cpu-range-batch",a.owner_affinity,"--cpu-strict","1","--cpu-strict-batch","1"]
+   if a.owner_priority:cmd+=["--prio",str(a.owner_priority)]
+   if a.owner_draft_p_min:cmd+=["--spec-draft-p-min",str(a.owner_draft_p_min)]
+   if a.owner_kv_unified:cmd+=["--kv-unified"]
+   if a.owner_no_repack:cmd+=["--no-repack"]
+   if a.tune_hof_native_flags:
+    cmd += ["--poll","100","--poll-batch","0","--spec-draft-p-min","0",
+            "--no-spec-draft-backend-sampling","--no-cache-prompt"]
+   if a.owner_load_mode=="dio":
+    cmd+=["--load-mode","dio"]
    if a.tune_spec_chain:
     cmd+=["--spec-chain",str(a.tune_spec_chain)]
-   if a.mode in ("mtp1","mtp2","mtp3"):
+   if a.mode in ("mtp1","mtp2","mtp3","mtp4","mtp6"):
     cmd+=["--spec-type","draft-mtp","--spec-draft-n-max",a.mode[-1]]
    elif a.mode=="mtp_adaptive":
     cmd+=["--spec-type","draft-mtp-adaptive","--spec-draft-n-max","3"]
    result["cli_flags"]=cmd[1:][::] # distinct partial vs full profile, no secrets
    with logfile.open("x") as log:
-    child=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT,env=os.environ.copy())
+    vulkan_env=os.environ.copy()
+    vulkan_overrides={"force_mmvq":"GGML_VK_FORCE_MMVQ","disable_mmvq":"GGML_VK_DISABLE_MMVQ","no_coopmat":"GGML_VK_DISABLE_COOPMAT","no_async":"GGML_VK_DISABLE_ASYNC"}
+    if a.owner_vulkan_kernel!="auto":vulkan_env[vulkan_overrides[a.owner_vulkan_kernel]]="1"
+    child=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT,env=vulkan_env)
     result["status"]="loading";save()
     guard_events=[]
+    mem_floor=(20.0 if a.owner_fullgpu else 20.5)
     def watch():
      while not flag.wait(2):
       try:
        if embeddings_busy():
         guard_events.append({"reason":"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"});stop_own(child);return
        g=guardian(0);t=host_temp()
-       if g.get("psi_memory_full_avg10",99)>=1.8 or g.get("mem_available_gib",0)<20.5 or g.get("swap_used_percent",100)>95 or t is None or t>=80:
+       if g.get("psi_memory_full_avg10",99)>=(12.0 if a.owner_fullgpu else 1.8) or g.get("mem_available_gib",0)<mem_floor or g.get("swap_used_percent",100)>95 or t is None or t>=80:
         guard_events.append({"reason":"RUNTIME_PRESSURE","guardian":g,"temp_c":t});stop_own(child);return
       except Exception as e:
        guard_events.append({"reason":"GUARD_UNAVAILABLE","error_type":type(e).__name__});stop_own(child);return
@@ -386,6 +429,7 @@ def main():
      # A brief PSI cooldown allows the GPU to settle after weight paging.
      # Neither the official pre-load guard nor emergency limits are bypassed:
      # the 2-second watchdog still terminates this OWN worker on hard pressure.
+     psi_soft=(6.0 if a.owner_fullgpu else .5)
      for cooldown in range(8):
       if guard_events or child.poll() is not None:break
       if embeddings_busy():
@@ -393,12 +437,12 @@ def main():
       g=guardian(0);temp=host_temp()
       result["latest_runtime_guard"]={k:g.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","swap_used_percent","safe_total_gtt_gib","reasons")}
       result["latest_runtime_temp_c"]=temp
-      if g.get("psi_memory_full_avg10",99)<.5 and g.get("mem_available_gib",0)>=20.5 and temp is not None and temp<78:
+      if g.get("psi_memory_full_avg10",99)<psi_soft and g.get("mem_available_gib",0)>=mem_floor and temp is not None and temp<78:
        break
-      if g.get("psi_memory_full_avg10",99)>=1.8 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=80:
+      if g.get("psi_memory_full_avg10",99)>=(12.0 if a.owner_fullgpu else 1.8) or g.get("mem_available_gib",0)<mem_floor or temp is None or temp>=80:
        break
       if cooldown<7:time.sleep(2)
-     if guard_events or child.poll() is not None or embeddings_busy() or g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=78:
+     if guard_events or child.poll() is not None or embeddings_busy() or g.get("psi_memory_full_avg10",99)>=psi_soft or g.get("mem_available_gib",0)<mem_floor or temp is None or temp>=78:
       result["status"]="paused_runtime_pressure";result["guard_events"]=guard_events;save();return
      ts=time.monotonic()
      payload={"model":"Cloud9-MoE-Upstream-LAB","temperature":0.2,"top_k":80,

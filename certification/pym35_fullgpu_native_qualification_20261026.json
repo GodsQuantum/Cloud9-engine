@@ -1,0 +1,2194 @@
+{
+  "date": "2026-10-26",
+  "system": "Cloud9 Ryzen 7 8845HS Radeon 780M Proxmox CT410",
+  "model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "model_bytes": 13222476000,
+  "scope": "REAL sequential full-GPU native Vulkan inference, 192 tokens, deterministic same 3 prompts, n-gpu-layers99 n-cpu-moe0, context 8192 except HOF parity at 16384, no production changes",
+  "historical_hof_f16_tps": 36.28,
+  "historical_hof_exact_cli_prompts_missing": true,
+  "historical_36_28_not_reproduced": true,
+  "native_guard_used_for_all_runs": true,
+  "owner_authorized_fullgpu": true,
+  "zram3_native_config": "/etc/systemd/zram-generator.conf.d/70-cloud9-fullgpu-zram3.conf",
+  "zram3_low_priority_swap_gib": 16,
+  "zram3_resident_limit_gib": 8,
+  "cold_file_cache_reclaim_per_run": "CT410 memory.reclaim 8G swappiness=0",
+  "quality_proof": "192 output tokens per math/code/fr, math must contain 925 and every response nonempty",
+  "unprioritized_atomic2_q8_repeat_ids": [
+    "pym35f_atomic2_q8_0_no_1",
+    "pym35f_q8rep2_1"
+  ],
+  "unprioritized_atomic2_q8_mean_of_means": 27.852,
+  "priority1_atomic2_q8_repeat_ids": [
+    "pym35f_cpuprio_1026",
+    "pym35f_cpuprio_rep2",
+    "pym35f_cpuprio_rep3"
+  ],
+  "priority1_atomic2_q8_mean_of_means": 27.945,
+  "atomic16_f16_8k_same_protocol_mean_tps": 27.925,
+  "atomic2_f16_8k_same_protocol_mean_tps": 26.345,
+  "atomic16_f16_16k_reconstructed_mean_tps": 27.44,
+  "atomic2_f16_16k_reconstructed_mean_tps": 27.212,
+  "valid_8k_mtp2_runs_sorted": [
+    {
+      "run_id": "pym35f_cpuprio_rep2",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 28.176,
+      "task_tps": {
+        "math": 30.224,
+        "code": 27.24,
+        "fr": 27.063
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "none",
+        "owner_priority": 1,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.252,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuprio_rep2.json"
+    },
+    {
+      "run_id": "pym35f_cpuprio_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 28.13,
+      "task_tps": {
+        "math": 29.804,
+        "code": 28.146,
+        "fr": 26.44
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "none",
+        "owner_priority": 1,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.246,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuprio_1026.json"
+    },
+    {
+      "run_id": "pym35f_atomic16_f16_no_1",
+      "engine": "atomic16",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "f16",
+      "quality_valid": true,
+      "mean_tps": 27.925,
+      "task_tps": {
+        "math": 29.029,
+        "code": 27.438,
+        "fr": 27.308
+      },
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 24.642,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic16_f16_no_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_q8_0_no_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.866,
+      "task_tps": {
+        "math": 29.848,
+        "code": 27.212,
+        "fr": 26.537
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.87,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_q8_0_no_1.json"
+    },
+    {
+      "run_id": "pym35f_q8rep2_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.839,
+      "task_tps": {
+        "math": 29.065,
+        "code": 28.074,
+        "fr": 26.377
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.665,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8rep2_1.json"
+    },
+    {
+      "run_id": "pym35f_cpusmt_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.837,
+      "task_tps": {
+        "math": 29.621,
+        "code": 26.976,
+        "fr": 26.915
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "8-15",
+        "owner_priority": 0,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 29.464,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpusmt_1026.json"
+    },
+    {
+      "run_id": "pym35t_q8nr_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.823,
+      "task_tps": {
+        "math": 29.925,
+        "code": 27.052,
+        "fr": 26.493
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": true,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.382,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_q8nr_1026.json"
+    },
+    {
+      "run_id": "pym35f_cpuphys_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.797,
+      "task_tps": {
+        "math": 29.352,
+        "code": 27.551,
+        "fr": 26.488
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "0-7",
+        "owner_priority": 0,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.855,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuphys_1026.json"
+    },
+    {
+      "run_id": "pym35f_t3hof2_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 27.614,
+      "task_tps": {
+        "math": 28.589,
+        "code": 28.291,
+        "fr": 25.96
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 24.043,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_t3hof2_1.json"
+    },
+    {
+      "run_id": "pym35f_cpuprio_rep3",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.53,
+      "task_tps": {
+        "math": 27.981,
+        "code": 27.895,
+        "fr": 26.712
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "none",
+        "owner_priority": 1,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.248,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuprio_rep3.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_turbo3_yes_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 27.41,
+      "task_tps": {
+        "math": 29.428,
+        "code": 27.322,
+        "fr": 25.479
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 28.257,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_turbo3_yes_1.json"
+    },
+    {
+      "run_id": "pym35f_q8hof_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.137,
+      "task_tps": {
+        "math": 27.882,
+        "code": 27.989,
+        "fr": 25.541
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 26.448,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8hof_1.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp2_turbo3_no_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 27.111,
+      "task_tps": {
+        "math": 28.024,
+        "code": 28.847,
+        "fr": 24.462
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 31.885,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp2_turbo3_no_1026.json"
+    },
+    {
+      "run_id": "pym35t_q8ub512_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.068,
+      "task_tps": {
+        "math": 27.906,
+        "code": 27.966,
+        "fr": 25.331
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 512,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.645,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_q8ub512_1026.json"
+    },
+    {
+      "run_id": "pym35t_q8kvu_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 26.911,
+      "task_tps": {
+        "math": 26.826,
+        "code": 27.982,
+        "fr": 25.924
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": true,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.084,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_q8kvu_1026.json"
+    },
+    {
+      "run_id": "pym35f_q8_chain2_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 26.85,
+      "task_tps": {
+        "math": 27.954,
+        "code": 27.881,
+        "fr": 24.713
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 2
+      },
+      "load_s": 28.252,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8_chain2_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_turbo4_1717_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 26.435,
+      "task_tps": {
+        "math": 28.757,
+        "code": 26.312,
+        "fr": 24.235
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 25.85,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_turbo4_1717_1026.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_f16_no_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "f16",
+      "quality_valid": true,
+      "mean_tps": 26.345,
+      "task_tps": {
+        "math": 27.613,
+        "code": 27.426,
+        "fr": 23.996
+      },
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 24.647,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_f16_no_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_zen4_lto_turbo3_no_1",
+      "engine": "atomic2_zen4_lto",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 26.039,
+      "task_tps": {
+        "math": 29.134,
+        "code": 25.448,
+        "fr": 23.535
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 32.461,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_zen4_lto_turbo3_no_1.json"
+    },
+    {
+      "run_id": "pym35_full_atomic16_turbo3_no_1026",
+      "engine": "atomic16",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 25.898,
+      "task_tps": {
+        "math": 27.016,
+        "code": 25.358,
+        "fr": 25.32
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.893,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_full_atomic16_turbo3_no_1026.json"
+    },
+    {
+      "run_id": "pym35f_q8_perf_cpu_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 25.77,
+      "task_tps": {
+        "math": 25.935,
+        "code": 26.545,
+        "fr": 24.83
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.281,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8_perf_cpu_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_zen4_lto_turbo4_no_1",
+      "engine": "atomic2_zen4_lto",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 24.488,
+      "task_tps": {
+        "math": 26.363,
+        "code": 25.06,
+        "fr": 22.041
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.251,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_zen4_lto_turbo4_no_1.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp2_turbo4_yes_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 23.949,
+      "task_tps": {
+        "math": 26.108,
+        "code": 23.785,
+        "fr": 21.953
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 27.054,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp2_turbo4_yes_1026.json"
+    },
+    {
+      "run_id": "pym35t_t2_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo2",
+      "quality_valid": true,
+      "mean_tps": 23.825,
+      "task_tps": {
+        "math": 25.347,
+        "code": 23.709,
+        "fr": 22.42
+      },
+      "native_features": {
+        "kv_type": "turbo2",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 31.884,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_t2_1026.json"
+    }
+  ],
+  "all_trials": [
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp1_turbo4_no_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp1",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 23.895,
+      "task_tps": {
+        "math": 24.776,
+        "code": 23.08,
+        "fr": 23.828
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 33.079,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp1_turbo4_no_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp2_f16_no_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "f16",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp2_f16_no_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp2_q8_0_no_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "q8_0",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp2_q8_0_no_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp2_turbo3_no_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 27.111,
+      "task_tps": {
+        "math": 28.024,
+        "code": 28.847,
+        "fr": 24.462
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 31.885,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp2_turbo3_no_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp2_turbo4_yes_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 23.949,
+      "task_tps": {
+        "math": 26.108,
+        "code": 23.785,
+        "fr": 21.953
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 27.054,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp2_turbo4_yes_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_fullgpu_sweep_mtp3_turbo4_no_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp3",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 23.504,
+      "task_tps": {
+        "math": 27.577,
+        "code": 22.295,
+        "fr": 20.64
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 24.646,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_fullgpu_sweep_mtp3_turbo4_no_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_owner_full_turbo4_1637_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "failed_watchdog",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 20.253,
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793029216.3274198,
+            "mem_available_gib": 29.192,
+            "swap_used_gib": 19.148,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 81.42,
+            "psi_memory_some_avg10": 7.07,
+            "psi_memory_full_avg10": 6.92,
+            "gtt_used_gib": 4.214,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 1.989,
+            "safe_total_gtt_gib": 15.406,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host memory PSI full avg10=6.92"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 66.625
+        }
+      ],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_owner_full_turbo4_1637_1026.json"
+    },
+    {
+      "run_id": "pym35_a2_owner_full_turbo4_gtt125_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "failed_watchdog",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 8.415,
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793029084.6232672,
+            "mem_available_gib": 30.204,
+            "swap_used_gib": 18.612,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 79.14,
+            "psi_memory_some_avg10": 2.1,
+            "psi_memory_full_avg10": 1.95,
+            "gtt_used_gib": 0.357,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 0.071,
+            "safe_total_gtt_gib": 12.561,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host memory PSI full avg10=1.95"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 62.125
+        }
+      ],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_owner_full_turbo4_gtt125_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_lightbatch_1640_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "HOST_MEMORY_PSI"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_lightbatch_1640_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_lightbatch_1642_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_lightbatch_1642_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_owner_1629_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "f16",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_owner_1629_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_reclaimed8g_1713_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "paused_runtime_pressure",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 31.887,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_reclaimed8g_1713_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_turbo4_1631_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_turbo4_1631_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_turbo4_1717_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 26.435,
+      "task_tps": {
+        "math": 28.757,
+        "code": 26.312,
+        "fr": 24.235
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 25.85,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_turbo4_1717_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_zram3_1704_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "failed_watchdog",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 12.207,
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793030791.2786345,
+            "mem_available_gib": 22.363,
+            "swap_used_gib": 23.717,
+            "swap_total_gib": 39.519,
+            "swap_used_percent": 60.01,
+            "psi_memory_some_avg10": 12.85,
+            "psi_memory_full_avg10": 12.01,
+            "gtt_used_gib": 9.021,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 1.998,
+            "safe_total_gtt_gib": 13.384,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host MemAvailable 22.4 GiB < start floor 24.0 GiB",
+              "host memory PSI full avg10=12.01"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 67.375
+        }
+      ],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_zram3_1704_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_zram3_dio_1709_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "blocked_preflight",
+      "context": null,
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": null,
+      "guard_events": [],
+      "block_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "HOST_MEMORY_PSI"
+      ],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_zram3_dio_1709_1026.json"
+    },
+    {
+      "run_id": "pym35_atomic2_fullgpu_zram3_dio_1710_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "failed_load_or_guard",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "spec_chain": 0
+      },
+      "load_s": 7.227,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_zram3_dio_1710_1026.json"
+    },
+    {
+      "run_id": "pym35_full_atomic16_turbo3_no_1026",
+      "engine": "atomic16",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 25.898,
+      "task_tps": {
+        "math": 27.016,
+        "code": 25.358,
+        "fr": 25.32
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.893,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_full_atomic16_turbo3_no_1026.json"
+    },
+    {
+      "run_id": "pym35_full_atomic2_zen4_lto_turbo3_no_1026",
+      "engine": "atomic2_zen4_lto",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "failed_watchdog",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {},
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 18.072,
+      "guard_events": [
+        {
+          "reason": "EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"
+        }
+      ],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_full_atomic2_zen4_lto_turbo3_no_1026.json"
+    },
+    {
+      "run_id": "pym35_hof16k_atomic16_f16_1026",
+      "engine": "atomic16",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "16384",
+      "kv": "f16",
+      "quality_valid": true,
+      "mean_tps": 27.44,
+      "task_tps": {
+        "math": 29.315,
+        "code": 26.74,
+        "fr": 26.265
+      },
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.655,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_hof16k_atomic16_f16_1026.json"
+    },
+    {
+      "run_id": "pym35_hof16k_atomic2_f16_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "16384",
+      "kv": "f16",
+      "quality_valid": true,
+      "mean_tps": 27.212,
+      "task_tps": {
+        "math": 27.324,
+        "code": 29.272,
+        "fr": 25.039
+      },
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.253,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_hof16k_atomic2_f16_1026.json"
+    },
+    {
+      "run_id": "pym35f_adaptq8_r2_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp_adaptive",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 25.383,
+      "task_tps": {
+        "math": 30.679,
+        "code": 23.93,
+        "fr": 21.54
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.648,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_adaptq8_r2_1026.json"
+    },
+    {
+      "run_id": "pym35f_atomic16_f16_no_1",
+      "engine": "atomic16",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "f16",
+      "quality_valid": true,
+      "mean_tps": 27.925,
+      "task_tps": {
+        "math": 29.029,
+        "code": 27.438,
+        "fr": 27.308
+      },
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 24.642,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic16_f16_no_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_f16_no_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "f16",
+      "quality_valid": true,
+      "mean_tps": 26.345,
+      "task_tps": {
+        "math": 27.613,
+        "code": 27.426,
+        "fr": 23.996
+      },
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 24.647,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_f16_no_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_q8_0_no_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.866,
+      "task_tps": {
+        "math": 29.848,
+        "code": 27.212,
+        "fr": 26.537
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.87,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_q8_0_no_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_turbo3_yes_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 27.41,
+      "task_tps": {
+        "math": 29.428,
+        "code": 27.322,
+        "fr": 25.479
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 28.257,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_turbo3_yes_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_zen4_lto_turbo3_no_1",
+      "engine": "atomic2_zen4_lto",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 26.039,
+      "task_tps": {
+        "math": 29.134,
+        "code": 25.448,
+        "fr": 23.535
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 32.461,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_zen4_lto_turbo3_no_1.json"
+    },
+    {
+      "run_id": "pym35f_atomic2_zen4_lto_turbo4_no_1",
+      "engine": "atomic2_zen4_lto",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo4",
+      "quality_valid": true,
+      "mean_tps": 24.488,
+      "task_tps": {
+        "math": 26.363,
+        "code": 25.06,
+        "fr": 22.041
+      },
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.251,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_atomic2_zen4_lto_turbo4_no_1.json"
+    },
+    {
+      "run_id": "pym35f_cpuphys_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.797,
+      "task_tps": {
+        "math": 29.352,
+        "code": 27.551,
+        "fr": 26.488
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "0-7",
+        "owner_priority": 0,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.855,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuphys_1026.json"
+    },
+    {
+      "run_id": "pym35f_cpuprio_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 28.13,
+      "task_tps": {
+        "math": 29.804,
+        "code": 28.146,
+        "fr": 26.44
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "none",
+        "owner_priority": 1,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.246,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuprio_1026.json"
+    },
+    {
+      "run_id": "pym35f_cpuprio_rep2",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 28.176,
+      "task_tps": {
+        "math": 30.224,
+        "code": 27.24,
+        "fr": 27.063
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "none",
+        "owner_priority": 1,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.252,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuprio_rep2.json"
+    },
+    {
+      "run_id": "pym35f_cpuprio_rep3",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.53,
+      "task_tps": {
+        "math": 27.981,
+        "code": 27.895,
+        "fr": 26.712
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "none",
+        "owner_priority": 1,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.248,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpuprio_rep3.json"
+    },
+    {
+      "run_id": "pym35f_cpusmt_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.837,
+      "task_tps": {
+        "math": 29.621,
+        "code": 26.976,
+        "fr": 26.915
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "owner_affinity": "8-15",
+        "owner_priority": 0,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 29.464,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_cpusmt_1026.json"
+    },
+    {
+      "run_id": "pym35f_q8_chain2_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 26.85,
+      "task_tps": {
+        "math": 27.954,
+        "code": 27.881,
+        "fr": 24.713
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 2
+      },
+      "load_s": 28.252,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8_chain2_1026.json"
+    },
+    {
+      "run_id": "pym35f_q8_perf_cpu_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 25.77,
+      "task_tps": {
+        "math": 25.935,
+        "code": 26.545,
+        "fr": 24.83
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 28.281,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8_perf_cpu_1.json"
+    },
+    {
+      "run_id": "pym35f_q8adapt_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp_adaptive",
+      "profile": "full",
+      "status": "failed_watchdog",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": false,
+      "mean_tps": null,
+      "task_tps": {
+        "math": 30.489
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 24.672,
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793032501.2404218,
+            "mem_available_gib": 20.332,
+            "swap_used_gib": 24.016,
+            "swap_total_gib": 39.519,
+            "swap_used_percent": 60.77,
+            "psi_memory_some_avg10": 0.15,
+            "psi_memory_full_avg10": 0.15,
+            "gtt_used_gib": 10.985,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 1.734,
+            "safe_total_gtt_gib": 13.317,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host MemAvailable 20.3 GiB < start floor 24.0 GiB"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 73.375
+        }
+      ],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8adapt_1.json"
+    },
+    {
+      "run_id": "pym35f_q8hof_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.137,
+      "task_tps": {
+        "math": 27.882,
+        "code": 27.989,
+        "fr": 25.541
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 26.448,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8hof_1.json"
+    },
+    {
+      "run_id": "pym35f_q8rep2_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.839,
+      "task_tps": {
+        "math": 29.065,
+        "code": 28.074,
+        "fr": 26.377
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.665,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_q8rep2_1.json"
+    },
+    {
+      "run_id": "pym35f_t3hof2_1",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo3",
+      "quality_valid": true,
+      "mean_tps": 27.614,
+      "task_tps": {
+        "math": 28.589,
+        "code": 28.291,
+        "fr": 25.96
+      },
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "tune_hof_native_flags": true,
+        "spec_chain": 0
+      },
+      "load_s": 24.043,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35f_t3hof2_1.json"
+    },
+    {
+      "run_id": "pym35t_q8kvu_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 26.911,
+      "task_tps": {
+        "math": 26.826,
+        "code": 27.982,
+        "fr": 25.924
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": true,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.084,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_q8kvu_1026.json"
+    },
+    {
+      "run_id": "pym35t_q8nr_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.823,
+      "task_tps": {
+        "math": 29.925,
+        "code": 27.052,
+        "fr": 26.493
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": true,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 25.382,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_q8nr_1026.json"
+    },
+    {
+      "run_id": "pym35t_q8ub512_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "q8_0",
+      "quality_valid": true,
+      "mean_tps": 27.068,
+      "task_tps": {
+        "math": 27.906,
+        "code": 27.966,
+        "fr": 25.331
+      },
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 512,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 27.645,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_q8ub512_1026.json"
+    },
+    {
+      "run_id": "pym35t_t2_1026",
+      "engine": "atomic2",
+      "model": "pym",
+      "mode": "mtp2",
+      "profile": "full",
+      "status": "complete",
+      "context": "8192",
+      "kv": "turbo2",
+      "quality_valid": true,
+      "mean_tps": 23.825,
+      "task_tps": {
+        "math": 25.347,
+        "code": 23.709,
+        "fr": 22.42
+      },
+      "native_features": {
+        "kv_type": "turbo2",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "experimental_flags": {
+        "owner_kv_unified": false,
+        "owner_no_repack": false,
+        "owner_ubatch": 128,
+        "tune_hof_native_flags": false,
+        "spec_chain": 0
+      },
+      "load_s": 31.884,
+      "guard_events": [],
+      "block_reasons": [],
+      "ct410_report_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35t_t2_1026.json"
+    }
+  ],
+  "no_new_global_hof_winner": true,
+  "do_not_auto_promote_production": true
+}
