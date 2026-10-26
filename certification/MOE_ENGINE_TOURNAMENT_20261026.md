@@ -53,3 +53,6 @@ Objectif : choisir le moteur optimal pour Pym 35B-A3B et Flash-Next, puis optimi
 ## État réel constaté le 26 octobre
 
 CPU Ryzen 7 PRO 8845HS Zen4, iGPU Radeon 780M gfx1103, Mesa RADV 26.0.8, RAM installée 96 Go, souvent 24–27 GiB disponibles et swap ~17 Gio ; quatre slots embeddings occupés simultanément, PBS I/O concurrente. Pym 13,22 Go chargé en GPU partiel mais arrêté au watchdog avant génération ; full GPU 8K non-admis. LFM2.5 8B-A1B ne fait pas partie du verdict. Le correctif routeur des embeddings est en production et vérifié. Aucune promotion de moteur sans vrais essais cibles.
+
+## Implémentation Atomic2 LAB validée après rédaction du plan
+La variante Zen4/LTO du code source identique cda0f925 est maintenant compilée, copiée en CT410 LAB et ses 11 ELF sont corrigés nativement avec RUNPATH $ORIGIN. Version, aide MTP adaptatif et toutes les bibliothèques dynamiques validées. Aucun modèle Pym/Flash n’a été chargé avec ce binaire et aucun gain de débit/qualité n’est démontré. Voir la preuve SHAs 2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json. La production utilise toujours ses binaires inchangés.
