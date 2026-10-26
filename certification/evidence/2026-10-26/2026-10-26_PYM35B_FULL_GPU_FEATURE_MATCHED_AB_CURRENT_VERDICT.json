@@ -1,0 +1,34 @@
+{
+  "created": "2026-10-26T10:30:21.145627+00:00",
+  "model": "Qwen3.6-35B-A3B Pym Q2 MTP same on disk GGUF 13,222,476,000 bytes",
+  "feature_protocol": "Atomic1.6 original and Atomic2 current MTP2 f16 GPU99 CPU-MoE0 context8192 batch1024 ubatch1024 poll100/0",
+  "status": "SAME_FEATURES_PARTIAL_MATCHED_A_B_NEEDS_COMPLETE_NEW_ENGINE",
+  "atomic16_result": {
+    "status": "complete",
+    "math_tps": 27.81044458906519,
+    "code_tps": 28.092156318803834,
+    "french_tps": 23.943269416027398,
+    "math_correct": true,
+    "3_of_3_visible": true
+  },
+  "atomic2_result": {
+    "status": "failed_watchdog",
+    "math_tps": 27.24612360033683,
+    "math_correct": true,
+    "code_tps": null,
+    "french_tps": null,
+    "reason": "memory PSI triggered official guardian during remaining prompts"
+  },
+  "atomic2_vs_atomic16_math_relative_percent": -2.03,
+  "full_gpu_success_both": false,
+  "winner_declared": false,
+  "current_prod_unchanged": true,
+  "arc_control": {
+    "arc_original_max_bytes": 4831838208,
+    "target_bytes": 3221225472,
+    "restored_after_first_window": true,
+    "restored_after_atomic2_window": true
+  },
+  "safety": "No LXC/VM restarted or stopped in these trials, official guardian not bypassed, no embeddings interrupted",
+  "next": "Get stable several-GiB headroom at service level; three tasks per engine, repeats and correctness, then ablate selected features on verified winner"
+}

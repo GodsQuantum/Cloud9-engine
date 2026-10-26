@@ -11,6 +11,8 @@ MODELS={
  "pym_heretic":Path("/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf"),
 }
 BINARIES={
+ "atomic16":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/atomic-044dff242d78/bin/llama-server"),
+ "atomic17":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/atomic-99279d982f77/bin/llama-server"),
  "upstream_b11840":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master36e-vulkan-gfx1103-20261023/bin/llama-server"),
  "upstream_b11844":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master062-vulkan-gfx1103-20261023/llama-server"),
  "atomic2":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin/llama-server"),
@@ -65,7 +67,7 @@ def psi_io_full():
  found=__import__("re").search(r"full avg10=([\d.]+)",Path("/proc/pressure/io").read_text())
  return float(found.group(1)) if found else None
 
-def preflight(model_key,engine,mode,profile="full"):
+def preflight(model_key,engine,mode,profile="full",preset="explore"):
  p=MODELS[model_key];b=BINARIES[engine]
  assert p.is_file() and b.is_file()
  if mode in ("mtp1","mtp2","mtp3","mtp_adaptive") and model_key not in ("pym","pym_heretic"):
@@ -95,7 +97,14 @@ def preflight(model_key,engine,mode,profile="full"):
   floor=25.0 if profile=="compact" else max(25.6,round(gguf_gib+20.5,2))
   required_gtt=5.5 if profile=="compact" else 6.5
  else:
-  floor=round(gguf_gib+23.0,2) if profile=="full" else 24.4
+  # Historical FULL GPU strict parity: don't DOUBLE reserve the weight size
+  # and 23 extra GiB: the official GPU guardian already accounts for its
+  # host_reserve_gib=18.0 and independently admits/rejects GTT allocation.
+  # Keep the older ultra-conservative rule for exploratory profiles.
+  if profile=="full" and preset==PARITY_PRESET:
+   floor=round(gguf_gib+18.0,2)
+  else:
+   floor=round(gguf_gib+23.0,2) if profile=="full" else 24.4
   required_gtt={"full":14.0,"partial":6.0,"partial_min":2.75}[profile]
  g=guardian(required_gtt)
  io=psi_io_full()
@@ -122,6 +131,41 @@ def preflight(model_key,engine,mode,profile="full"):
          "host_io_full_avg10":io,"max_host_gpu_temp_c":t,
          "note":"Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"}
 
+# PHASE ZERO: historic winning feature cocktail MUST be kept before tuning engines.
+# Atomic1.6 binary is available: build10709 c044dff24. Its historical
+# 2026-09-11 benchmark command is not fully archived; 2026-10-02 upstream
+# fast fullGPU precise flags are used for a SHARED reconstructed protocol.
+# Atomic1.6 2026-09-11 HOF only specifies Pym Q2 + MTP2 + f16 KV, not its full CLI.
+# Exact October-02 fully documented upstream full-GPU command supplies launcher
+# optimization flags: ngl99/c16384/b1024/ub1024/t8/poll100/poll-batch0.
+# This is a RECONSTRUCTED parity preset, NOT a claim of exact Atomic1.6 CLI.
+PARITY_PRESET="atomic16-mtp2-f16-fullgpu"
+PARITY_FEATURES=("GPU_full_99","CPU_MoE_off_0","inline_MTP2",
+                 "KV_f16_both","FlashAttention_on","mmap",
+                 "batch1024","ubatch1024","threads8",
+                 "poll100_batch0","spec_pmin_zero","no_backend_sampling",
+                 "prompt_cache_off","no_warmup","reasoning_off")
+PARITY_REQUIRED_HELP=("--poll", "--poll-batch", "--spec-draft-p-min",
+                      "--no-spec-draft-backend-sampling", "--n-cpu-moe",
+                      "--spec-type", "--spec-draft-n-max", "--no-cache-prompt")
+def parity_extra_flags(engine,help_text=None):
+ if engine not in BINARIES:raise ValueError("Unknown engine")
+ if help_text is not None:
+  unavailable=[flag for flag in PARITY_REQUIRED_HELP if flag not in help_text]
+  if unavailable:raise ValueError("PARITY_FEATURE_MISSING:"+",".join(unavailable))
+ # All 3 binaries support native same-function flags; upstream additionally
+ # requires explicit lazy-mode off; Atomic2 has no lazy-mode flag, so no
+ # unsupported synthetic knob is passed.
+ extra=["-lm","mmap","--poll","100","--poll-batch","0",
+        "--no-cache-prompt","--spec-draft-p-min","0",
+        "--no-spec-draft-backend-sampling","--reasoning-budget","0",
+        "--jinja"]
+ if engine.startswith("upstream"):
+  if help_text is not None and "--lazy-mode" not in help_text:
+   raise ValueError("PARITY_UPSTREAM_LAZY_MODE_FLAG_MISSING")
+  extra.extend(["--lazy-mode","off"])
+ return extra
+
 def stop_own(proc):
  if proc is None or proc.poll() is not None:return
  proc.terminate()
@@ -135,6 +179,11 @@ def main():
  ap.add_argument("--model",choices=sorted(MODELS),required=True)
  ap.add_argument("--mode",choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"],required=True)
  ap.add_argument("--profile",choices=["full","partial","partial_min","compact"],default="full")
+ ap.add_argument("--preset",choices=["explore",PARITY_PRESET],default="explore",
+                 help="Baseline copied to ALL engines before feature ablation; requires fullGPU Pym MTP2")
+ ap.add_argument("--parity-context",type=int,choices=[8192,16384],default=16384,
+                 help="16K documented Oct02 baseline; 8K secondary fallback CHANGING ONLY context on every engine")
+
  ap.add_argument("--run-id",required=True)
  ap.add_argument("--max-output-tokens",type=int,choices=[128,192,256,384,768],default=768,
                  help="Fix equal output cap for a cross-engine Pym matched protocol")
@@ -142,16 +191,21 @@ def main():
                  help="Native LFM reasoning budget (same for both engines); 0 tests short-response agent tool suitability")
  ap.add_argument("--execute",action="store_true")
  a=ap.parse_args()
+ if a.preset==PARITY_PRESET and not (a.model=="pym" and a.mode=="mtp2" and a.profile=="full"):
+  ap.error("Historic feature-parity preset requires --model pym --mode mtp2 --profile full")
+ if a.preset!="atomic16-mtp2-f16-fullgpu" and a.parity_context!=16384:
+  ap.error("--parity-context only applies to the identical-features historical parity preset")
  if not(1<=len(a.run_id)<=45 and all(c.isalnum() or c in "-_" for c in a.run_id)):ap.error("invalid immutable run-id")
  report=LAB/("moe_upstream_"+a.run_id+".json")
  logfile=LAB/("moe_upstream_"+a.run_id+".log")
  if report.exists() or logfile.exists():ap.error("REFUSE_OVERWRITE_IMMUTABLE_TRIAL")
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
          "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,
-         "max_output_tokens":a.max_output_tokens,"rows":[]}
+         "max_output_tokens":a.max_output_tokens,"preset":a.preset,
+         "parity_context":a.parity_context if a.preset==PARITY_PRESET else None,"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
-  start=preflight(a.model,a.engine,a.mode,a.profile)
+  start=preflight(a.model,a.engine,a.mode,a.profile,a.preset)
   result["preflight"]=start
   result["status"]="blocked_preflight" if not start["admitted"] else "eligible_not_executed"
   if not a.execute or not start["admitted"]:
@@ -161,7 +215,7 @@ def main():
    try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
    except BlockingIOError:
     result["status"]="gpu_lock_busy";save();return
-   second=preflight(a.model,a.engine,a.mode,a.profile)
+   second=preflight(a.model,a.engine,a.mode,a.profile,a.preset)
    result["second_preflight"]=second
    if not second["admitted"]:
     result["status"]="blocked_after_lock";save();return
@@ -170,11 +224,11 @@ def main():
     raise ValueError("compact LFM profile cannot be applied to Pym without new admission")
    layers={"full":"99","partial":"8","partial_min":"4","compact":"99"}[a.profile]
    experts={"full":"0","partial":"40","partial_min":"41","compact":"0"}[a.profile]
-   context="8192" if a.profile=="full" else "2048"
+   context=str(a.parity_context) if a.preset==PARITY_PRESET else ("8192" if a.profile=="full" else "2048")
    if a.model=="lfm_official_q4":
     context="1536" if a.profile=="compact" else "4096"
-   bsize="128" if a.profile in ("partial_min","compact") else "512"
-   ubsize="32" if a.profile=="compact" else ("64" if a.profile=="partial_min" else "128")
+   bsize="1024" if a.preset==PARITY_PRESET else ("128" if a.profile in ("partial_min","compact") else "512")
+   ubsize="1024" if a.preset==PARITY_PRESET else ("32" if a.profile=="compact" else ("64" if a.profile=="partial_min" else "128"))
    cmd=[str(bin),"-m",str(model),"-ngl",layers,"--n-cpu-moe",experts,"--fit","off","-c",context,
         "-np","1","-fa","on","-b",bsize,"-ub",ubsize,"-t","8","-tb","8",
         "-ctk","f16","-ctv","f16","--host","127.0.0.1","--port","18139","--no-webui",
@@ -184,6 +238,17 @@ def main():
     # completion from incorrectly appearing to be a successful agent response.
     # Both upstream and Atomic use identical settings for this A/B profile.
     cmd += ["--reasoning-budget",str(a.thinking_budget),"--reasoning-format","deepseek"]
+   if a.preset==PARITY_PRESET:
+    support=subprocess.run([str(bin),"--help"],capture_output=True,text=True,timeout=18)
+    if support.returncode!=0:raise RuntimeError("Unable to validate candidate native feature support")
+    cmd+=parity_extra_flags(a.engine,support.stdout+support.stderr)
+    result["parity_features"]=list(PARITY_FEATURES)
+    result["parity_source"]={
+      "atomic16_20260911":"model Qwen3.6-35B-A3B Pym Q2-MTP; inline MTP2; KV f16; median 36.28t/s (other flags not recorded)",
+      "upstream_20261002":"Pym same GGUF ngl99 c16384 np1 b1024 ub1024 t8 tb8 FAon mmap poll100 pollbatch0 f16 KV, inline MTP2",
+      "not_exact_atomic16_cli":True,
+      "features_ported_first":True,
+      "addon_tuning_already_tested":False}
    if a.mode in ("mtp1","mtp2","mtp3"):
     cmd+=["--spec-type","draft-mtp","--spec-draft-n-max",a.mode[-1]]
    elif a.mode=="mtp_adaptive":

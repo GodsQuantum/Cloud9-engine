@@ -89,7 +89,7 @@ class GuardTests(unittest.TestCase):
   text=P.read_text()
   self.assertIn('a.profile=="compact" and a.model!="lfm_official_q4"',text)
   self.assertIn('context="1536" if a.profile=="compact"',text)
-  self.assertIn('ubsize="32" if a.profile=="compact"',text)
+  self.assertIn('"32" if a.profile=="compact"',text)
  def test_quality_requires_visible_final_and_correct_math(self):
   text=P.read_text()
   self.assertIn('"--reasoning-budget",str(a.thinking_budget)',text)
@@ -135,5 +135,52 @@ class GuardTests(unittest.TestCase):
   self.assertIn('"max_tokens":a.max_output_tokens',source)
   self.assertIn('"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"',source)
   self.assertIn('guard_events.append({"reason":"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"})',source)
+ def test_guardian_is_authoritative_without_double_gtt_reservation(self):
+  gguf=b.MODELS["pym"].stat().st_size/(1024**3)
+  guard={"allow":True,"mem_available_gib":33.0,"psi_memory_full_avg10":0,
+         "safe_total_gtt_gib":15.1,"swap_used_percent":70}
+  with mock.patch.object(b,"guardian",return_value=guard) as g, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=58),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
+   x=b.preflight("pym","atomic2","mtp2","full",b.PARITY_PRESET)
+  self.assertTrue(x["admitted"])
+  self.assertEqual(x["min_available_gib"],round(gguf+18,2))
+  g.assert_called_once_with(14.0)
+  with mock.patch.object(b,"guardian",return_value={**guard,"allow":False}),mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=58),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
+   self.assertFalse(b.preflight("pym","atomic2","mtp2","full",b.PARITY_PRESET)["admitted"])
+ def test_8k_fallback_only_changes_context_not_mtp_kv_fullgpu(self):
+  s=P.read_text()
+  self.assertIn('choices=[8192,16384],default=16384',s)
+  self.assertIn('context=str(a.parity_context) if a.preset==PARITY_PRESET',s)
+  self.assertIn('PARITY_PRESET',s)
+  self.assertIn('layers={"full":"99"',s)
+  self.assertIn('experts={"full":"0"',s)
+ def test_atomic16_reference_executable_is_in_same_engine_matrix(self):
+  self.assertIn("atomic16",b.BINARIES)
+  self.assertIn("atomic17",b.BINARIES)
+  self.assertTrue(b.BINARIES["atomic16"].exists())
+  self.assertTrue(b.BINARIES["atomic17"].exists())
+  self.assertIn("044dff242d78",str(b.BINARIES["atomic16"]))
+ def test_atomic16_historical_parity_preset_explicit_and_full_gpu_only(self):
+  source=P.read_text()
+  self.assertEqual(b.PARITY_PRESET,"atomic16-mtp2-f16-fullgpu")
+  self.assertIn('a.model=="pym" and a.mode=="mtp2" and a.profile=="full"',source)
+  self.assertIn('context=str(a.parity_context) if a.preset==PARITY_PRESET',source)
+  self.assertIn('bsize="1024" if a.preset==PARITY_PRESET',source)
+  self.assertIn('ubsize="1024" if a.preset==PARITY_PRESET',source)
+  self.assertIn('not_exact_atomic16_cli',source)
+  self.assertIn('if a.preset==PARITY_PRESET:',source)
+ def test_parity_is_native_and_identical_except_upstream_lazy_flag(self):
+  for key in ("atomic2","atomic2_zen4_lto","upstream_b11844"):
+   flags=b.parity_extra_flags(key," ".join(b.PARITY_REQUIRED_HELP)+" --lazy-mode")
+   self.assertEqual(flags[:],b.parity_extra_flags(key))
+   self.assertEqual(flags[:13],b.parity_extra_flags("atomic2")[:13])
+   self.assertIn("--spec-draft-p-min",flags)
+   self.assertIn("--no-spec-draft-backend-sampling",flags)
+   self.assertIn("--no-cache-prompt",flags)
+   self.assertEqual("--lazy-mode" in flags,key.startswith("upstream"))
+ def test_parity_refuses_unsupported_flags_fail_closed(self):
+  with self.assertRaisesRegex(ValueError,"PARITY_FEATURE_MISSING"):
+   b.parity_extra_flags("atomic2","--poll --spec-type")
+  with self.assertRaisesRegex(ValueError,"PARITY_UPSTREAM_LAZY_MODE_FLAG_MISSING"):
+   b.parity_extra_flags("upstream_b11844"," ".join(b.PARITY_REQUIRED_HELP))
  def test_three_distinct_quality_tasks(self):self.assertEqual([x[0] for x in b.PROMPTS],["math","code","fr"])
 if __name__=="__main__":unittest.main()

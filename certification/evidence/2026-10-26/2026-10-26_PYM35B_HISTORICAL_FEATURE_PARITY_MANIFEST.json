@@ -1,0 +1,176 @@
+{
+  "created_utc": "2026-10-26T10:15:37.567070+00:00",
+  "phase": "BASELINE_MATCHED_FEATURE_PARITY_BEFORE_ANY_ABLATION",
+  "model_path": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "model_bytes": 13222476000,
+  "historical_sources": {
+    "Atomic1.6_20260911": "36.28 tok/s, Pym Q2-MTP, MTP2, KV f16; exact full CLI not logged",
+    "Cloud9_Vulkan_20260914": "34.56 MTP2 median, 37.20 MTP2 math peak, launch CLI incomplete",
+    "Upstream_20261002": "same GGUF full GPU ngl99 ctx16384 t8 b/ub1024 FA on mmap poll100 batch0 KVf16 MTP2; 5-run median 30.49 tok/s"
+  },
+  "not_exact_Atomic16_original_CLI": true,
+  "fixed": {
+    "gpu_layers": 99,
+    "n_cpu_moe": 0,
+    "context_tokens": 16384,
+    "n_parallel": 1,
+    "batch": 1024,
+    "ubatch": 1024,
+    "threads": 8,
+    "batch_threads": 8,
+    "kv_k": "f16",
+    "kv_v": "f16",
+    "FA": "on",
+    "mmap": true,
+    "poll": 100,
+    "poll_batch": 0,
+    "MTP": 2,
+    "spec_draft_p_min": 0,
+    "draft_backend_sampling": false,
+    "prompt_cache": false,
+    "warmup": false,
+    "temperature": 0.2,
+    "top_k": 80,
+    "repeat_penalty": 1.05,
+    "seed": 42,
+    "max_output_tokens": 192
+  },
+  "engine_cli_difference": "upstream supports explicit --lazy-mode off, Atomic has no lazy-mode flag",
+  "preflight": "Official guardian14.0 GTT, MemAvailable>=GGUF+18, IO full PSI<9, memory full PSI<0.30, T<76, router idle/embeddings idle/Autosubs unloaded, exclusive GPU flock",
+  "runtime": "Own worker watchdog PSI1.8, memory20.5GiB, temp80, no production service edits",
+  "candidates": [
+    {
+      "engine": "atomic16",
+      "binary": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/atomic-044dff242d78/bin/llama-server",
+      "binary_sha256": "04cc222b75bc0eb7b9e2d2e8c719723bf36c8179a23e2aaa9170847e9fd81b14",
+      "version": [
+        "version: b10269-1.6.0 (build 10709, commit 044dff24)",
+        "built with GNU 15.2.0 for Linux x86_64"
+      ],
+      "native_features_verified": true,
+      "extra_flags": [
+        "-lm",
+        "mmap",
+        "--poll",
+        "100",
+        "--poll-batch",
+        "0",
+        "--no-cache-prompt",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling",
+        "--reasoning-budget",
+        "0",
+        "--jinja"
+      ],
+      "actual_gpu_outcome": "PENDING"
+    },
+    {
+      "engine": "atomic17",
+      "binary": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/releases/atomic-99279d982f77/bin/llama-server",
+      "binary_sha256": "cf095f5e79fcb32e31b0684fb1bb30b6280d56013a8dfaca314c567d87a637b6",
+      "version": [
+        "version: b10269-1.7.0 (build 10733, commit 99279d98)",
+        "built with GNU 15.2.0 for Linux x86_64"
+      ],
+      "native_features_verified": true,
+      "extra_flags": [
+        "-lm",
+        "mmap",
+        "--poll",
+        "100",
+        "--poll-batch",
+        "0",
+        "--no-cache-prompt",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling",
+        "--reasoning-budget",
+        "0",
+        "--jinja"
+      ],
+      "actual_gpu_outcome": "PENDING"
+    },
+    {
+      "engine": "atomic2",
+      "binary": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin/llama-server",
+      "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+      "version": [
+        "version: b10298-2.0.0 (build 1, commit cda0f92)",
+        "built with GNU 15.2.0 for Linux x86_64"
+      ],
+      "native_features_verified": true,
+      "extra_flags": [
+        "-lm",
+        "mmap",
+        "--poll",
+        "100",
+        "--poll-batch",
+        "0",
+        "--no-cache-prompt",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling",
+        "--reasoning-budget",
+        "0",
+        "--jinja"
+      ],
+      "actual_gpu_outcome": "PENDING"
+    },
+    {
+      "engine": "atomic2_zen4_lto",
+      "binary": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-zen4-lto-lab-20261026/bin/llama-server",
+      "binary_sha256": "e4e24225deb1dfd2209d8a2bd3b0bf89b076f7032e7e82c7c22201e5fdb2ac3e",
+      "version": [
+        "version: b10298-2.0.0 (build 1, commit cda0f925)",
+        "built with GNU 15.2.0 for Linux x86_64"
+      ],
+      "native_features_verified": true,
+      "extra_flags": [
+        "-lm",
+        "mmap",
+        "--poll",
+        "100",
+        "--poll-batch",
+        "0",
+        "--no-cache-prompt",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling",
+        "--reasoning-budget",
+        "0",
+        "--jinja"
+      ],
+      "actual_gpu_outcome": "PENDING"
+    },
+    {
+      "engine": "upstream_b11844",
+      "binary": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master062-vulkan-gfx1103-20261023/llama-server",
+      "binary_sha256": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da",
+      "version": [
+        "version: 0.7.0-dev (build 11844, commit 06230cb87)",
+        "built with GNU 13.3.0 for Linux x86_64"
+      ],
+      "native_features_verified": true,
+      "extra_flags": [
+        "-lm",
+        "mmap",
+        "--poll",
+        "100",
+        "--poll-batch",
+        "0",
+        "--no-cache-prompt",
+        "--spec-draft-p-min",
+        "0",
+        "--no-spec-draft-backend-sampling",
+        "--reasoning-budget",
+        "0",
+        "--jinja",
+        "--lazy-mode",
+        "off"
+      ],
+      "actual_gpu_outcome": "PENDING"
+    }
+  ],
+  "status": "STAGED_UNTIL_REAL_SAME_GPU_BENCHMARK"
+}
