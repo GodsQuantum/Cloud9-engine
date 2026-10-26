@@ -562,9 +562,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
           "sha256": "05e35855075a06d49769fbbef79012739e95664e1cb2edbf54e32b7f760d0e24",
           "note": "Upstream think0 zero-response safety watchdog PSI2.35 before LFM answer"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_OUTPUT_VISIBILITY_AND_COLD_START_CORRECTION.json",
+          "sha256": "6073d969ca879109afd1c42257df646d39f6c18451aba607a8390e5995149ed2",
+          "note": "Raw proof audit: content empty after 256 generation tokens; exact thinking reason or finish reason NOT captured. Cold startup Atomic21.502s vs upstream12.484s for one math 256 token request, only one sample."
         }
       ],
-      "remaining": "Real native SAME LFM2.5-8B-A1B Q4 model SHA pinned, same prompt 256tokens c1536 b128 ub32 FA f16KV: upstream b11844 math38.975t/s; Atomic2 math47.601t/s (+22.13%), code44.512, FR39.973 t/s. All completion visible outputs EMPTY because 256 tokens spent on reasoning, thus not agentic-quality qualified and not an engine WIN. Native reasoning-budget0 and expanded 768 output prepared, but real subsequent QA attempts both stopped by official host PSI watchdog during load. Pym 35B historical MTP2 median34.56 math peak37.20, Flash-Next tuned 17.878 remain distinct models; do not infer MoE model quality from LFM.",
+      "remaining": "Real native SAME LFM2.5-8B-A1B Q4 model SHA pinned, same prompt 256tokens c1536 b128 ub32 FA f16KV: upstream b11844 math38.975t/s; Atomic2 math47.601t/s (+22.13%), code44.512, FR39.973 t/s. All completion visible outputs EMPTY because 256 tokens spent on reasoning, thus not agentic-quality qualified and not an engine WIN. Native reasoning-budget0 and expanded 768 output prepared, but real subsequent QA attempts both stopped by official host PSI watchdog during load. Pym 35B historical MTP2 median34.56 math peak37.20, Flash-Next tuned 17.878 remain distinct models; do not infer MoE model quality from LFM. IMPORTANT EVIDENCE CORRECTION: 256-token trials have empty content, but raw reasoning_content and finish_reason NOT recorded. Thinking truncation is plausible, NOT proved. In one cold start math case Atomic load+request21.502s vs upstream12.484s despite hot decode advantage; cannot certify start latency/quality based on single trial.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -692,7 +697,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 02:41 Paris: LFM2.5-8B-A1B same model Atomic2 vs llama.cpp b11844 live on 780M: math47.6006 vs38.9751t/s (+22.13%), Atomic code44.512/fr39.973; all max256 outputs thinking only -> visible final EMPTY. New native LFM reasoning-budget0/768 QA tests blocked by real host PSI watchdog2.05-2.35, own children unloaded, no product release. Live embeddings slot UI exposed FOUR real processing tasks; router embedding_busy() used localhost while server binds192.168.1.219 and failed-open. Fixed and deployed native router SHA87c959b, fail-closed, 25 tests PASS, router restarted when idle and embeddings not interrupted. HOF appended two failed-quality speed records, HOF validation pass. Follow-up preserve safety and rebench in idle window before choosing engine.",
+  "latest_attempt_note": "2026-10-26 02:48 Europe/Paris CORRECTION: LFM Atomic2 47.60t/s vs upstream38.98t/s raw decode on same GGUF, but 256 tokens produced EMPTY visible response; exact cause not observed (likely thinking truncation or template parser). Raw finish reason/reasoning content were NOT saved, do not claim thinking tokens as proven. One cold load plus 256token math: Atomic21.502s, upstream12.484s; single trial under variable host load. New HOF correction record 198 total validated. Router embedding busy bug deployed & proved; 25 tests PASS; four embedding GPU slots in use, no preemption. No winner for production yet.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1028,6 +1033,11 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
       "project_path": "Sources/Worklogs/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
       "sha256": "f98745a7cd2ffb42012ea70675263d4c1ee273d793ab8b87a42ab31a56144180"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_OUTPUT_VISIBILITY_AND_COLD_START_CORRECTION.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_OUTPUT_VISIBILITY_AND_COLD_START_CORRECTION.json",
+      "sha256": "6073d969ca879109afd1c42257df646d39f6c18451aba607a8390e5995149ed2"
     }
   ],
   "nextn_lab_candidate": {
