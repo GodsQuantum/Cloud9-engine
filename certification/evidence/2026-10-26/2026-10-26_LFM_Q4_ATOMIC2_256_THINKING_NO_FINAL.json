@@ -1,0 +1,162 @@
+{
+  "run_id": "lfm_q4_atomic2_compact_20261026",
+  "engine": "atomic2",
+  "model": "lfm_official_q4",
+  "mode": "base",
+  "executed": true,
+  "default_production_unchanged": true,
+  "profile": "compact",
+  "rows": [
+    {
+      "task": "math",
+      "wall_s": 5.823,
+      "prompt_tokens": 35,
+      "completion_tokens": 256,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 35,
+        "prompt_ms": 419.846,
+        "prompt_per_token_ms": 11.9956,
+        "prompt_per_second": 83.36390009670212,
+        "predicted_n": 256,
+        "predicted_ms": 5378.08,
+        "predicted_per_token_ms": 21.008125,
+        "predicted_per_second": 47.60063070835689
+      },
+      "text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonempty": false
+    },
+    {
+      "task": "code",
+      "wall_s": 6.149,
+      "prompt_tokens": 48,
+      "completion_tokens": 256,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 48,
+        "prompt_ms": 387.285,
+        "prompt_per_token_ms": 8.0684375,
+        "prompt_per_second": 123.93973430419459,
+        "predicted_n": 256,
+        "predicted_ms": 5751.243,
+        "predicted_per_token_ms": 22.46579296875,
+        "predicted_per_second": 44.512116771974334
+      },
+      "text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonempty": false
+    },
+    {
+      "task": "fr",
+      "wall_s": 6.73,
+      "prompt_tokens": 48,
+      "completion_tokens": 256,
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 48,
+        "prompt_ms": 317.47,
+        "prompt_per_token_ms": 6.613958333333334,
+        "prompt_per_second": 151.1953885406495,
+        "predicted_n": 256,
+        "predicted_ms": 6404.314,
+        "predicted_per_token_ms": 25.0168515625,
+        "predicted_per_second": 39.97305566216772
+      },
+      "text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "nonempty": false
+    }
+  ],
+  "preflight": {
+    "admitted": true,
+    "reasons": [],
+    "model_bytes": 5155564768,
+    "model_name": "LFM2.5-8B-A1B-Q4_K_M.gguf",
+    "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+    "min_available_gib": 25.0,
+    "required_gtt_gib": 5.5,
+    "profile": "compact",
+    "guardian": {
+      "allow": true,
+      "mem_available_gib": 26.046,
+      "psi_memory_full_avg10": 0.03,
+      "swap_used_percent": 72.17,
+      "safe_total_gtt_gib": 8.403,
+      "reasons": []
+    },
+    "host_io_full_avg10": 2.53,
+    "max_host_gpu_temp_c": 68.625,
+    "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+  },
+  "status": "failed_quality",
+  "second_preflight": {
+    "admitted": true,
+    "reasons": [],
+    "model_bytes": 5155564768,
+    "model_name": "LFM2.5-8B-A1B-Q4_K_M.gguf",
+    "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+    "min_available_gib": 25.0,
+    "required_gtt_gib": 5.5,
+    "profile": "compact",
+    "guardian": {
+      "allow": true,
+      "mem_available_gib": 26.046,
+      "psi_memory_full_avg10": 0.03,
+      "swap_used_percent": 72.17,
+      "safe_total_gtt_gib": 8.403,
+      "reasons": []
+    },
+    "host_io_full_avg10": 2.53,
+    "max_host_gpu_temp_c": 68.625,
+    "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+  },
+  "cli_flags": [
+    "-m",
+    "/srv/lxc/ia-compute/data/models/lab-candidates/lfm25-a1b-official-q4/LFM2.5-8B-A1B-Q4_K_M.gguf",
+    "-ngl",
+    "99",
+    "--n-cpu-moe",
+    "0",
+    "--fit",
+    "off",
+    "-c",
+    "1536",
+    "-np",
+    "1",
+    "-fa",
+    "on",
+    "-b",
+    "128",
+    "-ub",
+    "32",
+    "-t",
+    "8",
+    "-tb",
+    "8",
+    "-ctk",
+    "f16",
+    "-ctv",
+    "f16",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18139",
+    "--no-webui",
+    "--no-warmup",
+    "--reasoning",
+    "off",
+    "--alias",
+    "Cloud9-MoE-Upstream-LAB"
+  ],
+  "load_s": 15.679,
+  "latest_runtime_guard": {
+    "allow": false,
+    "mem_available_gib": 21.759,
+    "psi_memory_full_avg10": 0.12,
+    "swap_used_percent": 72.12,
+    "safe_total_gtt_gib": 7.04,
+    "reasons": [
+      "host MemAvailable 21.8 GiB < start floor 24.0 GiB"
+    ]
+  },
+  "latest_runtime_temp_c": 69.375,
+  "guard_events": []
+}

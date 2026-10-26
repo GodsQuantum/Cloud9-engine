@@ -79,5 +79,36 @@ class GuardTests(unittest.TestCase):
   self.assertIn('g.get("psi_memory_full_avg10",99)>=.5',source)
   self.assertIn('result["latest_runtime_guard"]',source)
   self.assertIn('g.get("mem_available_gib",0)<20.5 or',source)
+ def test_lfm_compact_uses_native_guard(self):
+  guard={"allow":True,"mem_available_gib":25.8,"psi_memory_full_avg10":0.02,"safe_total_gtt_gib":7.2,"swap_used_percent":74}
+  with mock.patch.object(b,"guardian",return_value=guard) as gg, mock.patch.object(b,"psi_io_full",return_value=3),mock.patch.object(b,"host_temp",return_value=62),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},{"status":"ok","loaded_models":[]}]):
+   model=b.MODELS["lfm_official_q4"]
+   x=b.preflight("lfm_official_q4","upstream_b11844","base","compact")
+  self.assertTrue(x["admitted"]);gg.assert_called_once_with(5.5);self.assertEqual(x["min_available_gib"],25)
+ def test_compact_gated_to_lfm_only(self):
+  text=P.read_text()
+  self.assertIn('a.profile=="compact" and a.model!="lfm_official_q4"',text)
+  self.assertIn('context="1536" if a.profile=="compact"',text)
+  self.assertIn('ubsize="32" if a.profile=="compact"',text)
+ def test_quality_requires_visible_final_and_correct_math(self):
+  text=P.read_text()
+  self.assertIn('"--reasoning-budget",str(a.thinking_budget)',text)
+  self.assertIn('msg.get("reasoning_content")',text)
+  self.assertIn('"math_answer_contains_925"',text)
+  self.assertIn('result["rows"][0]["math_answer_contains_925"]',text)
+  self.assertIn('"max_tokens":768',text)
+ def test_postload_cooldown_with_emergency_guard_intact(self):
+  text=P.read_text()
+  self.assertIn("for cooldown in range(8)",text)
+  self.assertIn('g.get("mem_available_gib",0)<20.5',text)
+  self.assertIn('g.get("psi_memory_full_avg10",99)>=1.8',text)
+  self.assertIn("stop_own(child)",text)
+ def test_native_zero_thinking_budget_toggle_for_agentic_latency(self):
+  source=P.read_text()
+  self.assertIn("choices=[0,128,256]",source)
+  self.assertIn("str(a.thinking_budget)",source)
+  self.assertIn('("on" if a.model=="lfm_official_q4" else "off")',source)
+  self.assertNotIn('["--reasoning","on","--reasoning-budget"',source)
+  self.assertIn('result["rows"][0]["math_answer_contains_925"]',source)
  def test_three_distinct_quality_tasks(self):self.assertEqual([x[0] for x in b.PROMPTS],["math","code","fr"])
 if __name__=="__main__":unittest.main()

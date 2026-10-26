@@ -1,0 +1,33 @@
+{
+  "utc": "2026-10-26T01:42:08.693313+00:00",
+  "hardware": "Cloud9 8845HS/96GB unified RAM/Radeon780M gfx1103",
+  "model": "LiquidAI LFM2.5-8B-A1B Q4_K_M",
+  "model_sha256": "4923ec14f06b968b74d663e5949867d2d9c3bf13a20b8be1a9f9af39989b2bb0",
+  "same_gguf_and_flags": true,
+  "same_context_tokens": 1536,
+  "same_max_tokens": 256,
+  "upstream_math_tok_s": 38.97508666607261,
+  "atomic_math_tok_s": 47.60063070835689,
+  "atomic_over_upstream_math_percent": 22.13,
+  "atomic_three_task_tok_s": {
+    "math": 47.60063070835689,
+    "code": 44.512116771974334,
+    "fr": 39.97305566216772
+  },
+  "upstream_visible_final": false,
+  "atomic_visible_final": false,
+  "raw_output_tokens_generated_but_no_final_text": true,
+  "speed_only_partial_not_agentic_qualification": true,
+  "later_native_reasoning_budget0_attempts": [
+    "failed_watchdog",
+    "failed_watchdog"
+  ],
+  "production_engine_promoted": false,
+  "official_guard_unmodified": true,
+  "source_proof_files": [
+    "2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+    "2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+    "2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+    "2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json"
+  ]
+}
