@@ -742,9 +742,59 @@
           "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
           "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625",
           "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+          "sha256": "0b12cf60f1083871436840ca7cff1f591fc7884391f6032fc0e6c84938cb3086",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+          "sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+          "sha256": "b32ae96c71f5a016077ca5ec29078de9fdfef96c7812d1981b46b7327e72c507",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+          "sha256": "24b1cb583367fbf351f8b3cd0afb98e8252ec5e32e3832ea208561b561de0cf0",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+          "sha256": "cb6fe1081532dedfd7ffab226fb1203ffbfc3432db9dfbb42c7ca2b8f49c5f29",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+          "sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+          "sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+          "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
         }
       ],
-      "remaining": "Real Pym35B-A3B Q2 MTP same physical model run SUCCESS: Atomic2 stock partial_min ngl4 cpu-moe41 no MTP 2K ctx f16 KV, 768 tokens x3: maths8.974t/s correct 925, code6.956t/s text only, French8.598t/s text only, load2.516sec, 0 watchdog, 3/3 visible. This is strictly NOT historical Pym fullGPU MTP2 34.56 median/37.20math comparable or proven code quality. New matched192 trials: upstream MTP2 and base crash guarded PSI, Atomic2 Zen4/LTO base loaded7.496sec then paused PSI, stock192 denied preflight; unable to rank engines under current shared workloads. No production LLM worker switched, router&embedding healthy. Guard must NOT be bypassed, do not shutdown CT400 or any LXC; need safe memory/IO service-level improvement and genuine matched A/B quality/code/JSON 128K. Exact Pym35B Q2 Vulkan Atomic2 partial_min 2K ctx, same seed/prompts/tokens192: MTP2 math11.082/code10.726/French11.168 tok/s, 3/3 visible and 925 math; MTP3 math12.382/code11.117/French9.681, also 3/3 visible. MTP3 mean+0.61pct but French performance regressed, MTP2 balanced default pending repeated quality. Upstream b11844 MTP2 latest retry failed guardian before inference; Atomic2 MTP1+adaptive preflight blocked by host IO PSI from other workloads. No exact fullGPU 128K or agent QA. HOF now 203.",
+      "remaining": "FULL GPU HISTORIC FEATURES, NOT OUT OF BOX! Found Atomic1.6 original native binary b10269 build10709 c044dff24, and atomic17 c99279d98, Atomic2 stock cda0f92, Atomic2 Zen4/LTO, upstream062; features parity preset in tools/qualification/moe_upstream_bakeoff.py. Atomic1.6 HOF Sep11 36.28t/s MTP2 f16 with incomplete flags; upstream Oct02 exact documented fullGPU99 c16384 b1024 ub1024 poll100/0 MTP2 f16 median30.49t/s. Reconstructed common 15-feature preset native supported across all5, tests31 PASS. 16K old+new failed watchdog PSI. 8K exact parity under ARC3GiB cap (restored original4.5GiB) Atomic1.6 completed3/3 math27.8104(code28.0922,FR23.9433)t/s correct math, Atomic2 math27.2461t/s correct but failed watchdog on code/FR (PSI1.83 and MemAvailable23.37GiB); Atomic2 -2.03pct single math only NOT total winner. Need complete Atomic2 and other engines at same settings with stable service-level available RAM, repeat3 times, QA math+compiled Python+strict JSON/tool calling and contexts16-128K. No production promotion. Follow certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md and manifest proof.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -934,9 +984,59 @@
           "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
           "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625",
           "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+          "sha256": "0b12cf60f1083871436840ca7cff1f591fc7884391f6032fc0e6c84938cb3086",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+          "sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+          "sha256": "b32ae96c71f5a016077ca5ec29078de9fdfef96c7812d1981b46b7327e72c507",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+          "sha256": "24b1cb583367fbf351f8b3cd0afb98e8252ec5e32e3832ea208561b561de0cf0",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+          "sha256": "cb6fe1081532dedfd7ffab226fb1203ffbfc3432db9dfbb42c7ca2b8f49c5f29",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+          "sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+          "sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+          "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
         }
       ],
-      "remaining": "FAIL-CLOSED: no production promotion of any LLM. Pym true3/3 768-token base partial measurement on Atomic2 stock, actual comparative upstream/Atomic2 LTO at192 blocked due guardian memory PSI, no matched quality context >2K. Existing OmniRoute choices unchanged. Native timer/Compose source fixes documented; CT400 healthy after involuntary stop; explicit no whole-LXC shutdown rule. Revisit only when 780M safe coexistence, then canary24h rollback exact tasks. See sanitized service audit. No LLM prod promotion; incumbent router and embeddings remained running. Actual Pym MTP2/MTP3 192token 3 prompts measured; upstream watchguard and MTP1/adaptive IO PSI block.",
+      "remaining": "GPU full 8K parity on original Atomic1.6 successful 3 output / correct math. Same Pym fullGPU8K Atomic2 only math completed (-2.03pct in one math sample), watchdog stopped rest. Cannot claim engine winner until complete matched runs and quality; no production promotion. Temporary ZFS ARC3GiB only while benchmarking, restored to original4.5GiB each time, no guest stopped. Durable protocol and evidence committed; three newer engines await equal-feature score; candidate tweaks after winning baseline only.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -947,7 +1047,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "26 Oct 2026 ~10:44 Paris: CT300 timer now daily06:15, existing DaVinci node ExecStartPre checks on node START not every render job. Actual Pym Q2 Atomic2 MTP2 partial_min 3/3 at [11.082,10.726,11.168] tok/s and MTP3 at [12.382,11.117,9.681]; MTP2 preferred until full agent QA. Upstream b11844 Pym MTP2 retry aborted official guardian before first token, MTP1/adaptive refused at IO PSI. Do not stop any LXC or VM; prod unchanged. Original benchmark proofs mirrored immutable, HOF203. Remaining full GPU and 128K certification.",
+  "latest_attempt_note": "2026-10-26 ~11:30 Paris: USER CORRECTED benchmarking method: never start out-of-box; retrieve original atomic1.6 binary c044dff24 and compare same historical winner features first across Atomic1.6,1.7,2.0,LTO,upstream with same Pym35B GGUF. Created preset atomic16-mtp2-f16-fullgpu with ngl99 CPU-MoE0 MTP2 f16 KV ctx16K (8K fallback), b/ub1024, t8, poll100/0, mmap, FA, no prompt-cache, spec pmin0/no backend sampling; flags verified for all candidates, no exact original Sep full CLI in ledger (Oct02 fully documented). 31 tests PASS. 16K original+Atomic2 failed live PSI guard. 8K ZFS ARC cap temporarily3GiB and ALWAYS restored4.5GiB: Atomic1.6 fullGPU returned three correct-visible responses math27.8104,code28.0922,FR23.9433t/s, math925 correct. Atomic2 fullGPU same features returned math27.2461t/s (-2.03pct), then memory PSI1.83 and host available23.37GiB tripped guard before code/FR. Result cannot rank engine overall; partial new Atomic2 math is slower. No LXC stopped or engine prod changed. NEXT: resource headroom from individual services not whole guests and complete full protocol, then ablate/port features.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1448,6 +1548,56 @@
       "repo_path": "certification/evidence/2026-10-26/pym35_atomic2_mtpadaptive_192_1026.json",
       "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
       "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+      "sha256": "0b12cf60f1083871436840ca7cff1f591fc7884391f6032fc0e6c84938cb3086"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+      "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+      "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+      "sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+      "sha256": "b32ae96c71f5a016077ca5ec29078de9fdfef96c7812d1981b46b7327e72c507"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+      "sha256": "24b1cb583367fbf351f8b3cd0afb98e8252ec5e32e3832ea208561b561de0cf0"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+      "sha256": "cb6fe1081532dedfd7ffab226fb1203ffbfc3432db9dfbb42c7ca2b8f49c5f29"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+      "sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+      "sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+      "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741"
     }
   ],
   "nextn_lab_candidate": {

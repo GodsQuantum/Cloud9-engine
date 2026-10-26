@@ -1,0 +1,62 @@
+{
+  "utc": "2026-10-26T10:25:10.027584+00:00",
+  "purpose": "Native temporary ZFS ARC cap, no service stopped, historical FULL GPU Pym MTP2 f16 feature parity at 8K",
+  "arc_max_before_bytes": 4831838208,
+  "arc_cap_temporary_bytes": 3221225472,
+  "service_shutdowns": [],
+  "guardian_bypassed": false,
+  "runs": [
+    {
+      "engine": "atomic16",
+      "id": "pym_arc3g_full8k_atomic16_20261026",
+      "elapsed_s": 47.51,
+      "exit_code": 0,
+      "output_tail": "",
+      "status": "complete",
+      "load_s": 6.794,
+      "guard_events": [],
+      "preflight_reasons": [],
+      "source_sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5",
+      "decode": [
+        {
+          "task": "math",
+          "tps": 27.81044458906519,
+          "nonempty": true,
+          "correct_math": true
+        },
+        {
+          "task": "code",
+          "tps": 28.092156318803834,
+          "nonempty": true,
+          "correct_math": null
+        },
+        {
+          "task": "fr",
+          "tps": 23.943269416027398,
+          "nonempty": true,
+          "correct_math": null
+        }
+      ]
+    },
+    {
+      "engine": "atomic2",
+      "id": "pym_arc3g_full8k_atomic2_20261026",
+      "elapsed_s": 0.99,
+      "exit_code": 0,
+      "output_tail": "{\"status\": \"blocked_preflight\", \"reasons\": [\"OFFICIAL_GPU_GUARD_DENIED\", \"HOST_MEMORY_PSI\"], \"path\": \"/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym_arc3g_full8k_atomic2_20261026.json\"}\n",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "guard_events": null,
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "HOST_MEMORY_PSI"
+      ],
+      "source_sha256": "9a8022fd234c5f77ad4df17294b19610f9fbc9f74460a4c7894b0ad6bbf1e9ec",
+      "decode": []
+    }
+  ],
+  "arc_restore_code": 0,
+  "arc_after_bytes": 4831838208,
+  "arc_original_restored": true,
+  "finished_utc": "2026-10-26T10:26:05.558465+00:00"
+}
