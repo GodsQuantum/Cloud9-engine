@@ -1,0 +1,201 @@
+{
+  "captured_paris": "2026-10-26T04:19:23.279074+01:00",
+  "restore_verified": true,
+  "original_verify_job": {
+    "id": "cloud9-weekly",
+    "schedule": "Sat 03:00",
+    "ignore-verified": true,
+    "outdated-after_days": 30,
+    "read_threads": 2,
+    "verify_threads": 4
+  },
+  "original_datastore": {
+    "name": "cloud9",
+    "verify-new": true,
+    "gc-schedule": "Sun 04:00"
+  },
+  "pause_details": {
+    "weekly_schedule_removed": true,
+    "verify_new_temporarily_false": true,
+    "weekly_task_stopped_native_api": true,
+    "verify_snapshot_tasks_stop_requests": 13,
+    "active_verify_jobs_after_pause": 0,
+    "observed_host_io_full_avg10_before_percent": 12.57,
+    "observed_host_io_full_avg10_after_percent": 2.93,
+    "observed_pbs_vm_io_full_avg10_before_percent": 89.9,
+    "observed_pbs_vm_io_full_avg10_after_percent": 21.73
+  },
+  "restored": {
+    "weekly_schedule": "Sat 03:00",
+    "datastore_verify_new": true,
+    "datastore_gc_schedule": "Sun 04:00",
+    "remaining_active_verify_tasks": 0,
+    "daily_backup_schedule": "00:30",
+    "daily_backup_enabled": 1
+  },
+  "nightly_backup_history": [
+    {
+      "local_date": "2026-10-26",
+      "duration_min": 214.87,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-25",
+      "duration_min": 25.18,
+      "status": "interrupted by signal"
+    },
+    {
+      "local_date": "2026-10-24",
+      "duration_min": 496.63,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-23",
+      "duration_min": 74.03,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-22",
+      "duration_min": 143.27,
+      "status": "job errors"
+    },
+    {
+      "local_date": "2026-10-21",
+      "duration_min": 277.02,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-20",
+      "duration_min": 41.55,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-19",
+      "duration_min": 159.13,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-18",
+      "duration_min": 49.42,
+      "status": "OK"
+    },
+    {
+      "local_date": "2026-10-17",
+      "duration_min": 39.83,
+      "status": "OK"
+    }
+  ],
+  "oct26_job_start_paris": "2026-10-26T00:30:04+01:00",
+  "oct26_job_finish_paris": "2026-10-26T04:04:56+01:00",
+  "oct26_job_total_minutes": 214.87,
+  "oct26_guest_times": [
+    {
+      "guest_id": "100",
+      "duration_sec": 3053
+    },
+    {
+      "guest_id": "110",
+      "duration_sec": 60
+    },
+    {
+      "guest_id": "120",
+      "duration_sec": 69
+    },
+    {
+      "guest_id": "130",
+      "duration_sec": 1054
+    },
+    {
+      "guest_id": "200",
+      "duration_sec": 39
+    },
+    {
+      "guest_id": "210",
+      "duration_sec": 641
+    },
+    {
+      "guest_id": "220",
+      "duration_sec": 749
+    },
+    {
+      "guest_id": "230",
+      "duration_sec": 709
+    },
+    {
+      "guest_id": "300",
+      "duration_sec": 262
+    },
+    {
+      "guest_id": "400",
+      "duration_sec": 1240
+    },
+    {
+      "guest_id": "410",
+      "duration_sec": 1909
+    },
+    {
+      "guest_id": "500",
+      "duration_sec": 147
+    },
+    {
+      "guest_id": "700",
+      "duration_sec": 2886
+    },
+    {
+      "guest_id": "9500",
+      "duration_sec": 30
+    },
+    {
+      "guest_id": "9600",
+      "duration_sec": 16
+    }
+  ],
+  "oct26_slowest_guests": [
+    {
+      "guest_id": "100",
+      "duration_sec": 3053
+    },
+    {
+      "guest_id": "700",
+      "duration_sec": 2886
+    },
+    {
+      "guest_id": "410",
+      "duration_sec": 1909
+    },
+    {
+      "guest_id": "400",
+      "duration_sec": 1240
+    },
+    {
+      "guest_id": "130",
+      "duration_sec": 1054
+    },
+    {
+      "guest_id": "220",
+      "duration_sec": 749
+    },
+    {
+      "guest_id": "230",
+      "duration_sec": 709
+    }
+  ],
+  "oct26_examples": {
+    "vm100_HAOS": "50m53; 26.61 GiB transferred / 47.69 GiB reused (74%); effective transfer ~9 MiB/s",
+    "ct410_IA_compute": "31m49; 5.126 GiB new / 118.171 GiB total, 95.7% reused; compressed ~3.109 GiB; 2.776 MiB/s",
+    "ct700_DEV": "48m06; 9.634 GiB new / 88.849 GiB total, 89.2% reused; compressed ~3.898 GiB; 3.443 MiB/s",
+    "ct110_connection": "1m00; 98.7% reused",
+    "ct120_security": "1m09; 98.7% reused"
+  },
+  "diagnosis": "Backups ARE incremental/deduplicated (74-100% reused according to guest) but the default LXC pxar legacy mode still scans/reads all files. Excessively slow backup has 4TB mechanical datastore I/O saturated by parallel verify-new and weekly verifier tasks. Host backups included 15 guests. Metadata mode PVE9.2 supports skipping content reading on subsequent CT backups but has first pxar2-format baseline cost; not enabled without separate controlled validation.",
+  "backup_job_change_detection_mode": "unset (legacy/default)",
+  "backup_schedule_modified": false,
+  "proof_sources": [
+    "Native pvesh /nodes/cloud9/tasks/.../log 763 structured entries",
+    "native proxmox-backup-manager verify-job/datastore/task show/list",
+    "host+PBS io.pressure"
+  ],
+  "production_engine_changed": false,
+  "pym_mtp2_test_after_pause": "same Pym35B b11844 MTP2 ngl8 partial loaded 2.405s, but own LAB watchdog at MemAvailable18.57GiB stopped before inference; no Pym tps scored; official guardian preserved",
+  "recommendation": "Evaluate native --pbs-change-detection-mode metadata in separate maintenance, measure first transition and second day, keep monthly/weekly verification; avoid concurrent verify-new under backup IO saturation."
+}
