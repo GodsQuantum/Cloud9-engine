@@ -512,9 +512,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
           "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580",
           "note": "Cloud9 stale ZFS rehab workflow corrected and high-frequency ZFS/telemetry/PBS verification timers reduced natively"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json",
+          "sha256": "077bc325e4d10a17b3e5e6191d6b00541a31cea60ab756659dee0048a8d2fa5f",
+          "note": "Critical PBS integrity: two missing data chunks referenced by cloud-arezki Oct21/22 snapshots; newer Oct23-25 ppxar indices do not reference them, but full integrity not yet verified. Never claim archive healthy or prune damaged forensic copies."
         }
       ],
-      "remaining": "26 Oct new LIVE PBS policies: prune daily20:30 3last14daily8weekly12monthly3yearly active; verify-new false, one weekly verified Sat12 with1read1verify and30day overdue recheck; GC Sun04 preserved. Real CT110 metadata dual backup 69s first then10s second with99.7pct data reuse; phase1 native PVE daily09:00 CT110/120/200/9500/9600, prior daily00:30 keeps ten remaining with no overlap. Phase2 must migrate heavy LXC cautiously, 80pct datastore used, ~745GB free. Cloud host backups already native metadata (no duplicate). Host timers zfsrehab5sec=>120s, ops8=>30s, PBS check15min=>3h, finished one-time scrub transition disabled; verified no production service restart. PBS GC last18h warnings2 removed-bad12 unresolved; xfs_scrub and GC on Sunday may overlap, investigate; no disabling backups or native monthly verification. Cloud9 still ~25GiB MemAvailable, CT400 CloakBrowser3.1GiB/Hindsight1.8GiB, need safe session TTL/cgroup optimization to release enough memory for full Pym bench without violating guardian. Full details certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md.",
+      "remaining": "26 Oct new LIVE PBS policies: prune daily20:30 3last14daily8weekly12monthly3yearly active; verify-new false, one weekly verified Sat12 with1read1verify and30day overdue recheck; GC Sun04 preserved. Real CT110 metadata dual backup 69s first then10s second with99.7pct data reuse; phase1 native PVE daily09:00 CT110/120/200/9500/9600, prior daily00:30 keeps ten remaining with no overlap. Phase2 must migrate heavy LXC cautiously, 80pct datastore used, ~745GB free. Cloud host backups already native metadata (no duplicate). Host timers zfsrehab5sec=>120s, ops8=>30s, PBS check15min=>3h, finished one-time scrub transition disabled; verified no production service restart. PBS GC last18h warnings2 removed-bad12 unresolved; xfs_scrub and GC on Sunday may overlap, investigate; no disabling backups or native monthly verification. Cloud9 still ~25GiB MemAvailable, CT400 CloakBrowser3.1GiB/Hindsight1.8GiB, need safe session TTL/cgroup optimization to release enough memory for full Pym bench without violating guardian. Full details certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md. CRITICAL 26OCT GC WARNINGS:2 resolved to two MISSING chunks physically absent: referenced by old host/cloud-arezki Oct21+Oct22 ppxar, NOT referenced by four newer Oct23-Oct25 ppxar indexes (binary digest search). New backups remain unverified; target latest Oct25 snapshot verify/restore on safe HDD window. Preserve corrupted older snapshots for forensic, avoid deleting and alert on next GC.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -782,7 +787,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "26 Oct 2026 Paris ~04:52: user insisted five permanent projects. Applied PBS native one-authority retention: prior prune disabled, now daily20:30 keep3last/14daily/8weekly/12monthly/3yearly; verify-new disabled, weekly Sat12 read1 verify1 ignore-verified ttl30. Datastore XFS SMR 3.7TB80pct used, GC18h warnings2; snapshot sim approx46 of277 might prune, no manual deletion. Proven native CT110 metadata backup baseline69s second10s, 202524 files unchanged and 99.7pct data reuse, jobs production split exactly 5 CT phase1 at09:00 metadata vs 10 guest legacy00:30 (VM100 block unchanged). Cloud host backups already metadata. Completed ZFS workflow starting-stale corrected pending verification, three systemd timer native dropins reduced work and completed one-shot transition disabled; other recovery units and agents preserved. CT400 CloakBrowser3.1GB/Hindsight1.8GB notable RAM, not stopped. Full Pym35B MTP2 still requires safe memory; only partially GPU-loaded and watchdog at18.57GiB without response; Atomic2 gain unknown. Persistent plan certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md, evidence mirrored and SHAs.",
+  "latest_attempt_note": "2026-10-26 ~04:57 Paris: PREVIOUS last Git commit 7d437df has 5 priorities, active retention PBS20:30, verify Sat12 one reader, metadata CT11069s->10s 99.7pct, staged native metadata job09:00 for5 guests, and timers reduced. NEW FORENSIC: PBS latest GC WARNINGS2 are two MISSING chunks fbf6ebcb... and 5c29d849... on host/cloud-arezki Oct22 snapshot. Both absent from chunk store and raw indexes Oct21+Oct22 reference them, but newer Oct23/24/25 indices do NOT. Full recent backup cryptographic integrity unverified, do not delete older archival snapshots until recovery and do not claim self-healed. See certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md and forensic evidence.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1173,6 +1178,11 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
       "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
       "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json",
+      "sha256": "077bc325e4d10a17b3e5e6191d6b00541a31cea60ab756659dee0048a8d2fa5f"
     }
   ],
   "nextn_lab_candidate": {

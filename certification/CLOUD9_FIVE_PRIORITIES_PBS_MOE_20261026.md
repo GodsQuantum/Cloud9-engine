@@ -36,3 +36,6 @@ B. Migrer un à un LXC volumineux vers metadata en gardant une marge de capacit�
 C. Auditer WARNINGS:2 du GC et détecter collisions longues verification/GC/scrub.
 D. Audit CPU/RAM/I/O des services CT400 et tâches orphelines par mesures, corrections natives uniquement, réduction mémoire sûre pour ouvrir la fenêtre benchmark.
 E. Vrais A/B Pym et FlashNext sur mêmes GGUF, Atomic2/stock/upstream, fonctionnalités portées, certification et promotion d'UN moteur.
+
+## Urgent : intégrité PBS détectée sur archive cloud-arezki du 21–22 octobre
+Le dernier GC a signalé deux chunks physiquement absents du datastore mais encore référencés. Inspection native des six fichiers index payload ppxar : les deux références existent dans les snapshots cloud-arezki du 21 ET du 22 octobre ; elles sont absentes des index du 23, des deux du 24 et du 25 octobre. **NE PAS considérer que les nouveaux snapshots sont intégralement vérifiés** ; on a seulement prouvé que ces deux digests ne s’y retrouvent pas. Ne pas effacer les snapshots anciens avant forensic, ne pas inventer réparation. Urgence : vérifier/essayer de restaurer un échantillon de la sauvegarde cloud-arezki du 25, monitorer les flags PBS et le prochain GC. Preuve SHA sous 2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json.
