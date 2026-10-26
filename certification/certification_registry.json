@@ -457,9 +457,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_0032_ATOMIC2_READINESS_AND_PBS_WATCHDOG.md",
           "sha256": "2040ce3541d28a0aa8c628fbb1d5a3e8ec64e92401bffcea3f59c9c2ced890ff",
           "note": "PBS six verifying task stop calls non-quiescing and task log reads time out, IO contention; no VM restart"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
+          "sha256": "df5547bed6526456f1ca63c0215f2d49bde16bcec015c364942a26774139d9ff",
+          "note": "PBS IO PSI17.07 prevents reliable new Q4 benchmark before GPU launch"
         }
       ],
-      "remaining": "Host backup PBS VM900 is saturated with six native verification tasks still reported running after task-stop accepted; attempts to read four individual task logs time out 11s each. Host IO PSI full often >10, PBS VM900 IO full around20%. No forced VM shutdown, backup schedule change or disk eject. Requires separate integrity-preserving maintenance to diagnose stuck verifier workers and IO, before heavy GPU 128K qualification.",
+      "remaining": "Current Cloud9 host memory resource ceiling due CT40016.3GiB anon14, guest PBS9007.5GiB HAOS1006.6GiB CT2106.2GiB CT4104.6GiB; 4TB ST4000LM024 PBS disk heavily loaded by verify and backup, host IO PSI frequently >9. Preserve backups/USB/VM/services. No forced process or cache eviction to benchmark.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -512,9 +517,24 @@
           "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
           "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa",
           "note": "Native upstream b11840/b11844 Pym MTP2/base full GPU attempted and blocked before load; exact config, guardian and unique fingerprints"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL8_LOAD_WATCHDOG.json",
+          "sha256": "54ade11608068f1b7d09260003db0d5fe0d509d38aa8599941dd21af7e0deab8",
+          "note": "Pym upstream b11844 Pym 13GB ngl8 genuine load4.366s then host memory PSI2.35 watchdog, no generation"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL4_LOAD_WATCHDOG.json",
+          "sha256": "6e3571c24b23190798d3e75c61683e8b5cdd5414469d4449296faedbd4595654",
+          "note": "Pym upstream b11844 ngl4 CPU experts41 load2.403s, memory available18.658GiB emergency watchdog, no generation"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
+          "sha256": "53db027ce3b173a1e59a830a1b23954c4841fad4fcaec5e6dcb4f511d41eae29",
+          "note": "Official LFM2.5 8B-A1B MoE Q4 model native upstream full GPU load6.017s; no response due runtime pressure"
         }
       ],
-      "remaining": "MoE priority clarified. Sep14 Pym Q2 MTP2 recorded 34.56t/s median, 37.20t/s math peak under Cloud9 Vulkan, exact source commit not logged; cannot claim pure upstream. Stock upstream Oct18 9d1878a same model vs S1 exists with corrected strict JSON0/3 each, semantic code3/3 each. New Vulkan upstream b11840 and b11844 binaries MTP/native MoE controls OK, but 3 guarded Pym full-offload attempts stopped BEFORE GPU load due host RAM, GTT and PSI; current new tg speed unmeasured. Model exact file available. Requires safe ~14GiB GTT + host MemAvailable >=model 12.31GiB+23GiB for fair Pym 8192 context, then same-prompt base/MTP2/Atomic2 comparison and 128K quality.",
+      "remaining": "Pym historical baseline MTP2 34.56t/s median, math37.20 peak. Now two genuine Pym13.22GB upstream b11844 partial GPU LAB loads succeeded4.366s/2.403s, ZERO decoded response because official-memory watchdog at PSI2.35 or MemAvailable18.658. Full-ngl99 not admitted, no matched current speed. Lowering GPU layers failed to solve 96GB co-resident RAM pressure. New official LFM2.5 MoE Q4 pinned SHA valid and upstream native GPU load6.017s successful, ZERO generated response so far; safe A/B with Atomic2 pending. Never promote on load-only test.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -542,9 +562,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
           "sha256": "5f9ba041a7f654ad7d7f82dd9f15c9d9c42e318adf4891ccb903ad9d30db536e",
           "note": "Flash-Next historic 17.878 tweaked b10738 MTP3 TurboQuant SET_ROWS CPU-WHT; local different GSQ IQ1M model is NOT matched"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_OFFICIAL_SHA256_PINNED.json",
+          "sha256": "c8d6752f3c8619545c8dbc0189266ff071339226cdb8da56e75f747d7f753ab3",
+          "note": "LiquidAI MoE Q4 exact model official SHA/size trusted download, LAB only not Pym replacement"
         }
       ],
-      "remaining": "Flash-Next historic 17.878t/s on RDNA Vulkan b10738 commit53f34cfaa was deliberately tuned MTP3 TurboQuant SET_ROWS FlashAttention CPU-WHT GDN fusion OFF (NOT plain stock). The local available two-shard GSQ-RCO IQ1_M model is 58.4GB and NOT historical AD-4.27+FR-Spec, so cannot A/B against 17.878; current source GGUF missing, no actual new Flash inference. Need exact matched model and memory/admission or external faithful bench, not quietly substitute quantization.",
+      "remaining": "Model provenance verified: Pym historic Q2-MTP / Flash-Next historic AD-FRspec different from local GSQ IQ1M, and LFM2.5-8B-A1B official Q4 5.16GB is a distinct compact MoE fallback for engine A/B. Must complete identical inference on upstream and Atomic2, quality JSON/tools/code, then high capability Pym/Flash matching GGUF whenever host RAM/PSI safely permits.",
       "acceptance": "per role latency, quality and useful context proven on the target device"
     },
     {
@@ -614,9 +639,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
           "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa",
           "note": "No new MoE winner; upstream Pym preflight blocked, Flash-Next historical GGUF missing, stable production unchanged"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
+          "sha256": "a2a4a2b79d96dad30dad365ac114a23ba7b8df443bb2d0f45f3b819590e8880b",
+          "note": "No winner under host PBS memory/IO pressure, real Pym loads but watchdog before inference; LFM A/B staged"
         }
       ],
-      "remaining": "No all-purpose hardware winner from 26-Oct new tests: upstream Pym exact models 3 fail-closed preflights before GPU inference and Flash original AD+FRspec not installed. Historical Pym 34.56 median MTP2, math peak37.20, Atomic1.6 Pym f16 MTP2 36.28 (unmatched historical) and Flash-Next 17.878 tuned. Do not switch production from 4 stable OmniRoute models before matched real Qwen3.6 Pym upstream b11844/Atomic2, >=128K multi-marker QA, agentic strict JSON/tool/code, rollback and soak.",
+      "remaining": "No quality/speed winner CERTIFIED under realistic coexistence. Pym upstream b11844 exact real load profiles ngl8/ngl4 emergency watchdog before response. LFM official 8B-A1B Q4 integrity verified and loaded GPU successfully, but first inference guarded paused. Reuse pinned native one-engine lab with LFM compact only for matched baseline on upstream b11844 and Atomic2, then tweak observed winner and strict agentic/128K, after resources stable. Stable OmniRoute combos unchanged.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -627,7 +657,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~01:10 Europe/Paris: canonical 37.20 Pym record Cloud9 Vulkan MTP2 math peak (median34.56), unknown exact stock fork commit; Flash-Next17.878 on tuned b10738 with MTP3 TurboQuant Vulkan SET_ROWS CPU-WHT GDN fusion off. Verified Pym exact GGUF13.22GB and upstream b11840,b11844 Vulkan MTP2 and flags; new 3 unique --execute preflights blocked before GPU by official guard+host RAM/GTT/PSI. Flash local GSQ IQ1M 58.4GB is different original GGUF, explicitly refused unfair A/B. No new tok/s, no production changes; nine offline runner unit tests PASS.",
+  "latest_attempt_note": "26 Oct 2026 ~02:00 Paris: user demanded one-by-one active tests. Pym upstream b11844 ngl8 and ngl4 actually loaded at 4.366/2.403s; native watchdog stops at PSI full2.35/MemAvailable18.658, 0 generated tps. Pinned official LFM2.5-8B-A1B Q4 SHA verified5.155GB, compact MoE GPU server loaded6.017s, paused pre-inference; another blocked host IO PSI17.07. Upstream vs Atomic identical compact MoE queued only for a stable actual window. No model/backup/service production changes.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -898,6 +928,36 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
       "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
       "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_PYM_PARTIAL_NGL8_LOAD_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL8_LOAD_WATCHDOG.json",
+      "sha256": "54ade11608068f1b7d09260003db0d5fe0d509d38aa8599941dd21af7e0deab8"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_PYM_PARTIAL_NGL4_LOAD_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL4_LOAD_WATCHDOG.json",
+      "sha256": "6e3571c24b23190798d3e75c61683e8b5cdd5414469d4449296faedbd4595654"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
+      "sha256": "53db027ce3b173a1e59a830a1b23954c4841fad4fcaec5e6dcb4f511d41eae29"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
+      "sha256": "df5547bed6526456f1ca63c0215f2d49bde16bcec015c364942a26774139d9ff"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM25_Q4_OFFICIAL_SHA256_PINNED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_OFFICIAL_SHA256_PINNED.json",
+      "sha256": "c8d6752f3c8619545c8dbc0189266ff071339226cdb8da56e75f747d7f753ab3"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
+      "sha256": "a2a4a2b79d96dad30dad365ac114a23ba7b8df443bb2d0f45f3b819590e8880b"
     }
   ],
   "nextn_lab_candidate": {

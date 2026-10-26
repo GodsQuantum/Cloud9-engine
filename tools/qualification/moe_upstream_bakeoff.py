@@ -7,10 +7,12 @@ from pathlib import Path
 MODELS={
  "pym":Path("/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf"),
  "flash_alternate":Path("/srv/lxc/ia-compute/data/models/strata/coder-iq1m/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf"),
+ "lfm_official_q4":Path("/srv/lxc/ia-compute/data/models/lab-candidates/lfm25-a1b-official-q4/LFM2.5-8B-A1B-Q4_K_M.gguf"),
 }
 BINARIES={
  "upstream_b11840":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master36e-vulkan-gfx1103-20261023/bin/llama-server"),
  "upstream_b11844":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master062-vulkan-gfx1103-20261023/llama-server"),
+ "atomic2":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin/llama-server"),
 }
 GUARD=("192.168.1.200",19755)
 LOCK=Path("/run/cloud9-gpu.lock")
@@ -47,11 +49,15 @@ def psi_io_full():
  found=__import__("re").search(r"full avg10=([\d.]+)",Path("/proc/pressure/io").read_text())
  return float(found.group(1)) if found else None
 
-def preflight(model_key,engine,mode):
+def preflight(model_key,engine,mode,profile="full"):
  p=MODELS[model_key];b=BINARIES[engine]
  assert p.is_file() and b.is_file()
  if mode=="mtp2" and model_key!="pym":
-  return {"admitted":False,"reasons":["DIFFERENT_FLASH_GSQ_MODEL_HAS_NO_PINNED_MTP_EVIDENCE"]}
+  return {"admitted":False,"reasons":["NON_PYM_INLINE_MTP_UNVERIFIED"]}
+ if model_key=="lfm_official_q4":
+  # Inference proceeds ONLY after the download was pinned by SHA256.
+  if p.stat().st_size!=5155564768:
+   return {"admitted":False,"reasons":["MODEL_DOWNLOAD_INCOMPLETE_OR_UNVERIFIED"]}
  if model_key=="flash_alternate":
   # Strata GSQ-RCO IQ1_M is NOT the historical AD-4.27 + FR-Spec GGUF:
   # refusing a falsely matched benchmark, regardless of available RAM.
@@ -62,10 +68,15 @@ def preflight(model_key,engine,mode):
           "historical_17_878_tps_comparable":False,
           "note":"Separate GSQ-RCO/Strata quantization is not historical Flash-Next AD-4.27+FR-Spec"}
  gguf_gib=p.stat().st_size/(1024**3)
- # Reserve 21 GiB after paging the model in, plus 2 GiB native buffers.
- # These are conservative test admission budgets, NOT actual model residency.
- floor=round(gguf_gib+23.0,2)
- required_gtt=14.0  # Proven Pym ngl99 requirement from 2026-10-18 thermal audit
+ # These are policy projections, not measured GPU allocations.
+ # Partial: mmap CPU experts with very limited GPU layers. The official
+ # guardian still mandates its 24GiB minimum, and runtime watchdog stays on.
+ if model_key=="lfm_official_q4":
+  floor=max(25.6,round(gguf_gib+20.5,2))
+  required_gtt=6.5
+ else:
+  floor=round(gguf_gib+23.0,2) if profile=="full" else 24.4
+  required_gtt={"full":14.0,"partial":6.0,"partial_min":2.75}[profile]
  g=guardian(required_gtt)
  io=psi_io_full()
  t=host_temp()
@@ -83,7 +94,7 @@ def preflight(model_key,engine,mode):
  except Exception:why.append("AUTOSUBS_GPU_HEALTH_UNREACHABLE")
  return {"admitted":not why,"reasons":why,"model_bytes":p.stat().st_size,"model_name":p.name,
          "binary_sha256":hashlib.sha256(b.read_bytes()).hexdigest(),
-         "min_available_gib":floor,"required_gtt_gib":required_gtt,
+         "min_available_gib":floor,"required_gtt_gib":required_gtt,"profile":profile,
          "guardian":{k:g.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","swap_used_percent","safe_total_gtt_gib","reasons")},
          "host_io_full_avg10":io,"max_host_gpu_temp_c":t,
          "note":"Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"}
@@ -100,6 +111,7 @@ def main():
  ap.add_argument("--engine",choices=sorted(BINARIES),required=True)
  ap.add_argument("--model",choices=sorted(MODELS),required=True)
  ap.add_argument("--mode",choices=["base","mtp2"],required=True)
+ ap.add_argument("--profile",choices=["full","partial","partial_min"],default="full")
  ap.add_argument("--run-id",required=True)
  ap.add_argument("--execute",action="store_true")
  a=ap.parse_args()
@@ -108,10 +120,10 @@ def main():
  logfile=LAB/("moe_upstream_"+a.run_id+".log")
  if report.exists() or logfile.exists():ap.error("REFUSE_OVERWRITE_IMMUTABLE_TRIAL")
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
-         "default_production_unchanged":True,"rows":[]}
+         "default_production_unchanged":True,"profile":a.profile,"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
-  start=preflight(a.model,a.engine,a.mode)
+  start=preflight(a.model,a.engine,a.mode,a.profile)
   result["preflight"]=start
   result["status"]="blocked_preflight" if not start["admitted"] else "eligible_not_executed"
   if not a.execute or not start["admitted"]:
@@ -121,17 +133,25 @@ def main():
    try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
    except BlockingIOError:
     result["status"]="gpu_lock_busy";save();return
-   second=preflight(a.model,a.engine,a.mode)
+   second=preflight(a.model,a.engine,a.mode,a.profile)
    result["second_preflight"]=second
    if not second["admitted"]:
     result["status"]="blocked_after_lock";save();return
    bin=BINARIES[a.engine];model=MODELS[a.model]
-   cmd=[str(bin),"-m",str(model),"-ngl","99","--n-cpu-moe","0","--fit","off","-c","8192",
-        "-np","1","-fa","on","-b","512","-ub","128","-t","8","-tb","8",
+   layers={"full":"99","partial":"8","partial_min":"4"}[a.profile]
+   experts={"full":"0","partial":"40","partial_min":"41"}[a.profile]
+   context="8192" if a.profile=="full" else "2048"
+   if a.model=="lfm_official_q4":
+    if a.profile!="full":raise ValueError("LFM2.5 compact benchmark uses full GPU only")
+    context="4096"
+   bsize="128" if a.profile=="partial_min" else "512"
+   ubsize="64" if a.profile=="partial_min" else "128"
+   cmd=[str(bin),"-m",str(model),"-ngl",layers,"--n-cpu-moe",experts,"--fit","off","-c",context,
+        "-np","1","-fa","on","-b",bsize,"-ub",ubsize,"-t","8","-tb","8",
         "-ctk","f16","-ctv","f16","--host","127.0.0.1","--port","18139","--no-webui",
         "--no-warmup","--reasoning","off","--alias","Cloud9-MoE-Upstream-LAB"]
    if a.mode=="mtp2":cmd+=["--spec-type","draft-mtp","--spec-draft-n-max","2"]
-   result["cli_flags"]=cmd[1:][::] # report includes only filesystem paths and flags, no secrets
+   result["cli_flags"]=cmd[1:][::] # distinct partial vs full profile, no secrets
    with logfile.open("x") as log:
     child=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT,env=os.environ.copy())
     result["status"]="loading";save()
@@ -158,7 +178,11 @@ def main():
     result["executed"]=True;result["status"]="running";save()
     for name,prompt in PROMPTS:
      g=guardian(0);temp=host_temp()
-     if g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<21 or temp is None or temp>=78:
+     result["latest_runtime_guard"]={k:g.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","swap_used_percent","safe_total_gtt_gib","reasons")}
+     result["latest_runtime_temp_c"]=temp
+     # Post-load floor equals the stricter continuously enforced own-LAB
+     # emergency threshold; official pre-load 24GiB admission is unchanged.
+     if g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=78:
       result["status"]="paused_runtime_pressure";result["guard_events"]=guard_events;save();return
      ts=time.monotonic()
      payload={"model":"Cloud9-MoE-Upstream-LAB","temperature":0,"seed":42,

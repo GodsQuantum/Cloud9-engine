@@ -1,0 +1,34 @@
+{
+  "run_id": "lfm25_q4_b11844_postloadfloor_oct26c",
+  "engine": "upstream_b11844",
+  "model": "lfm_official_q4",
+  "mode": "base",
+  "executed": false,
+  "default_production_unchanged": true,
+  "profile": "full",
+  "rows": [],
+  "preflight": {
+    "admitted": false,
+    "reasons": [
+      "HOST_IO_PSI"
+    ],
+    "model_bytes": 5155564768,
+    "model_name": "LFM2.5-8B-A1B-Q4_K_M.gguf",
+    "binary_sha256": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da",
+    "min_available_gib": 25.6,
+    "required_gtt_gib": 6.5,
+    "profile": "full",
+    "guardian": {
+      "allow": true,
+      "mem_available_gib": 25.987,
+      "psi_memory_full_avg10": 0.0,
+      "swap_used_percent": 72.97,
+      "safe_total_gtt_gib": 8.344,
+      "reasons": []
+    },
+    "host_io_full_avg10": 17.07,
+    "max_host_gpu_temp_c": 61.625,
+    "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+  },
+  "status": "blocked_preflight"
+}
