@@ -1,0 +1,57 @@
+{
+  "captured_utc": "2026-10-26T03:45:07.566988+00:00",
+  "legacy_job": {
+    "enabled": 1,
+    "exclude-path": [
+      ".ruff_cache"
+    ],
+    "id": "cloud9-daily-pbs",
+    "mode": "snapshot",
+    "node": "cloud9",
+    "notes-template": "{{guestname}} | Cloud9 daily PBS",
+    "notification-mode": "notification-system",
+    "prune-backups": {
+      "keep-all": 1
+    },
+    "repeat-missed": 1,
+    "schedule": "00:30",
+    "storage": "pbs-cloud9",
+    "type": "vzdump",
+    "vmid": "100,130,210,220,230,300,400,410,500,700"
+  },
+  "metadata_job": {
+    "enabled": 1,
+    "exclude-path": [
+      ".ruff_cache"
+    ],
+    "id": "cloud9-metadata-phase1",
+    "mode": "snapshot",
+    "node": "cloud9",
+    "notes-template": "{{guestname}} | Cloud9 metadata-first pilot",
+    "notification-mode": "notification-system",
+    "pbs-change-detection-mode": "metadata",
+    "prune-backups": {
+      "keep-all": 1
+    },
+    "schedule": "09:00",
+    "storage": "pbs-cloud9",
+    "type": "vzdump",
+    "vmid": "110,120,200,9500,9600"
+  },
+  "all_original_vmids_preserved": true,
+  "no_vmids_duplicated": true,
+  "legacy_job_covers_vm100_and_large_guests": true,
+  "metadata_phase1_ids": [
+    "110",
+    "120",
+    "200",
+    "9500",
+    "9600"
+  ],
+  "original_backup_jobs_count": 1,
+  "metadata_proof_on_ct110": "first backup ~69s, second ~10s, 99.7pct content reused and 202524 unchanged files no reread",
+  "legacy_storage_backup_continues": true,
+  "PBS_verified_backup_settings_untouched": true,
+  "phase2_pending": "Move remaining big LXC one at a time after measuring first baseline per guest and datastore headroom; preserve VM100 image backend unaffected",
+  "rollback": "disable/delete cloud9-metadata-phase1 and restore original vmids from 2026-10-26_PVE_METADATA_PHASE1_BEFORE.json"
+}

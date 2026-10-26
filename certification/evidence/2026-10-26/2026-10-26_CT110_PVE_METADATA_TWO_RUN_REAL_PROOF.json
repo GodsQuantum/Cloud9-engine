@@ -1,0 +1,45 @@
+{
+  "utc": "2026-10-26T03:49:13.513307+00:00",
+  "control": "Same PVE CT110 same storage on same day, real native backup-client metadata mode, no synthetic benchmark",
+  "model": "LXC metadata detection (mpxar+ppxar) versus first baseline; first restores reference, second data reused",
+  "trials": [
+    {
+      "upid": "UPID:cloud9:000F8B0F:065819B1:6ADECAC2:vzdump:110:root@pam:",
+      "starttime": 1792985794,
+      "endtime": 1792985863,
+      "duration_s": 69,
+      "status": "OK",
+      "verbatim_proof_lines": [
+        "INFO: Not using previous metadata reference for 'root.mpxar.didx': archive not found in manifest; reading source data    ",
+        "INFO: root.ppxar: had to backup 7.105 GiB of 7.832 GiB (compressed 3.592 GiB) in 53.65 s (average 135.614 MiB/s)",
+        "INFO: root.ppxar: backup was done incrementally, reused 744.399 MiB (9.3%)",
+        "INFO: root.mpxar: had to backup 35.455 MiB of 35.455 MiB (compressed 5.588 MiB) in 53.72 s (average 675.855 KiB/s)",
+        "INFO: Duration: 68.67s    ",
+        "INFO: Finished Backup of VM 110 (00:01:09)"
+      ]
+    },
+    {
+      "upid": "UPID:cloud9:0010766E:0658855F:6ADECBD6:vzdump:110:root@pam:",
+      "starttime": 1792986070,
+      "endtime": 1792986080,
+      "duration_s": 10,
+      "status": "OK",
+      "verbatim_proof_lines": [
+        "INFO: Using previous index as metadata reference for 'root.mpxar.didx'    ",
+        "INFO: Change detection summary:",
+        "INFO:  - 202524 unchanged, reusable files with 7.797 GiB data",
+        "INFO:  - 78 changed or non-reusable files with 35.671 MiB data",
+        "INFO: root.mpxar: had to backup 35.455 MiB of 35.455 MiB (compressed 5.325 MiB) in 8.81 s (average 4.023 MiB/s)",
+        "INFO: root.ppxar: reused 7.807 GiB from previous snapshot for unchanged files (3672 chunks)",
+        "INFO: root.ppxar: had to backup 24.399 MiB of 7.842 GiB (compressed 2.229 MiB) in 8.83 s (average 2.764 MiB/s)",
+        "INFO: root.ppxar: backup was done incrementally, reused 7.818 GiB (99.7%)",
+        "INFO: Duration: 9.52s    ",
+        "INFO: Finished Backup of VM 110 (00:00:10)"
+      ]
+    }
+  ],
+  "first_baseline_sec": 69,
+  "second_reuse_sec": 10,
+  "expected_status": "PRODUCTION_PILOT_PASS",
+  "production_schedule": "cloud9-metadata-phase1 at 09:00 for 110,120,200,9500,9600"
+}

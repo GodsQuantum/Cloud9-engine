@@ -1,0 +1,34 @@
+{
+  "created": "2026-10-26T03:34:04.811992+00:00",
+  "before": {
+    "prune": {
+      "disable": true,
+      "id": "default-cloud9-9e5b896e-2238-4e5",
+      "keep-daily": 7,
+      "keep-last": 3,
+      "keep-monthly": 6,
+      "keep-weekly": 4,
+      "keep-yearly": 2,
+      "schedule": "daily",
+      "store": "cloud9"
+    },
+    "verify": {
+      "comment": "Weekly Cloud9 datastore verification",
+      "id": "cloud9-weekly",
+      "ignore-verified": true,
+      "outdated-after": 30,
+      "read-threads": 2,
+      "schedule": "Sat 03:00",
+      "store": "cloud9",
+      "verify-threads": 4
+    },
+    "datastore": {
+      "gc-schedule": "Sun 04:00",
+      "name": "cloud9",
+      "path": "/mnt/cloud9-pbs/datastore",
+      "verify-new": true
+    },
+    "tasks": []
+  },
+  "user_intent": "bounded retention, efficient metadata backup, prevent concurrent IO; native PBS scheduled verification preserved"
+}
