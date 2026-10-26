@@ -110,6 +110,43 @@ def parse_metadata(path: Path) -> dict:
     finally:
         c.close()
 
+def inspect_reduced_vocab_mtp(path: Path) -> dict:
+    """Inspect header ONLY: a reduced draft output needs native d2t scatter support.
+
+    GGUF tensor descriptors follow all metadata before large tensor payloads.
+    Fail closed on malformed descriptions; never deserialize model weights.
+    """
+    meta = parse_metadata(path)
+    cursor = Cursor(path)
+    try:
+        cursor.get(meta["metadata_end_offset"])
+        selected = {}
+        for _ in range(meta["tensor_count"]):
+            name = cursor.string()
+            nd = cursor.integer("I")
+            if nd < 1 or nd > 4:
+                raise GGUFError("invalid GGUF tensor dimensions")
+            dims = tuple(cursor.integer() for _ in range(nd))
+            typ, offset = cursor.integer("I"), cursor.integer()
+            if name in ("d2t", "output.weight", "token_embd.weight"):
+                if name in selected:
+                    raise GGUFError("duplicate MTP tensor descriptor")
+                selected[name] = {"shape": dims, "ggml_type": typ}
+        if set(selected) != {"d2t", "output.weight", "token_embd.weight"}:
+            raise GGUFError("missing reduced-vocab mapping or draft output/embedding")
+        n_draft = selected["output.weight"]["shape"][-1]
+        n_target = selected["token_embd.weight"]["shape"][-1]
+        mapping = selected["d2t"]
+        if (len(mapping["shape"]) != 1 or mapping["shape"][0] != n_draft or
+                mapping["ggml_type"] != 27 or not 0 < n_draft < n_target):
+            raise GGUFError("invalid d2t mapping for reduced-vocabulary MTP")
+        return {"format": "qwen4exp_reduced_vocab_mtp",
+                "draft_output_vocab": n_draft, "target_embedding_vocab": n_target,
+                "d2t_entries": mapping["shape"][0], "d2t_ggml_type": 27,
+                "metadata_only": True, "requires_native_d2t_scatter": True}
+    finally:
+        cursor.close()
+
 def validate_split_group(paths: list[Path]) -> dict:
     if not paths:
         raise GGUFError("no model files")

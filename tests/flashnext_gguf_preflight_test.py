@@ -31,6 +31,23 @@ def fixture(path, arch, n=3, split=None, mtp=0):
     path.write_bytes(b)
 
 class TestGGUFMetadata(unittest.TestCase):
+    def test_real_historical_qwen4exp_draft_requires_d2t_scatter(self):
+        p=Path("/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf")
+        if not p.exists():
+            self.skipTest("sidecar not present in CI; synthetic metadata tests still run")
+        d=meta.inspect_reduced_vocab_mtp(p)
+        self.assertEqual(d["draft_output_vocab"],65536)
+        self.assertEqual(d["target_embedding_vocab"],248320)
+        self.assertEqual(d["d2t_entries"],65536)
+        self.assertTrue(d["requires_native_d2t_scatter"])
+
+    def test_non_gguf_draft_fails_closed(self):
+        with tempfile.TemporaryDirectory() as root:
+            p=Path(root)/"bad-draft.gguf"
+            p.write_bytes(b"wrong!")
+            with self.assertRaises(meta.GGUFError):
+                meta.inspect_reduced_vocab_mtp(p)
+
     def test_single_mtp(self):
         with tempfile.TemporaryDirectory() as root:
             p = Path(root)/"qwen35moe.gguf"
