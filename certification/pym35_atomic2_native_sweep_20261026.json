@@ -1,0 +1,430 @@
+{
+  "date": "2026-10-26",
+  "kind": "live_ct410_gpu_benchmark",
+  "exact_model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "binary": "Atomic TurboQuant 2.0 b10298 Vulkan RADV",
+  "all_trials": [
+    {
+      "id": "pym35_a2_ngl8_mtp2_f16_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        12.236,
+        11.321,
+        11.996
+      ],
+      "mean_tps": 11.851,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_f16_off_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        13.257,
+        13.093,
+        10.94
+      ],
+      "mean_tps": 12.43,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "off",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_f16_soft_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        13.695,
+        13.015,
+        11.29
+      ],
+      "mean_tps": 12.667,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "soft",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_q8_0_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        11.618,
+        12.673,
+        11.88
+      ],
+      "mean_tps": 12.057,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_turbo3_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        11.943,
+        11.977,
+        11.955
+      ],
+      "mean_tps": 11.958,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_turbo4_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        9.665,
+        12.219,
+        12.174
+      ],
+      "mean_tps": 11.353,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp_adaptive_f16_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp_adaptive",
+      "tps": [
+        10.649,
+        12.847,
+        10.59
+      ],
+      "mean_tps": 11.362,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_mid16_mtp2_default_1026",
+      "status": "complete",
+      "profile": "partial_mid",
+      "mode": "mtp2",
+      "tps": [
+        12.24,
+        13.572,
+        11.713
+      ],
+      "mean_tps": 12.508,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_mid16_mtp2_soft_1026",
+      "status": "complete",
+      "profile": "partial_mid",
+      "mode": "mtp2",
+      "tps": [
+        10.87,
+        12.615,
+        10.467
+      ],
+      "mean_tps": 11.317,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "soft",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_high24_mtp2_f16_1026",
+      "status": "complete",
+      "profile": "partial_high",
+      "mode": "mtp2",
+      "tps": [
+        10.882,
+        11.633,
+        10.977
+      ],
+      "mean_tps": 11.164,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_chain_mtp2_2_soft_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        6.95,
+        10.596,
+        7.306
+      ],
+      "mean_tps": 8.284,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "soft",
+        "gdn_replay": false
+      },
+      "spec_chain": 2
+    },
+    {
+      "id": "pym35_a2_chain_mtp3_3_default_1026",
+      "status": "blocked_preflight",
+      "profile": "partial",
+      "mode": "mtp3",
+      "tps": [],
+      "mean_tps": null,
+      "math_correct": null,
+      "qualifies_for_ranking": false,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 3
+    }
+  ],
+  "ranking_same_profile_partial_8layers_cpu_moe40": [
+    {
+      "id": "pym35_a2_ngl8_mtp2_f16_soft_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        13.695,
+        13.015,
+        11.29
+      ],
+      "mean_tps": 12.667,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "soft",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_f16_off_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        13.257,
+        13.093,
+        10.94
+      ],
+      "mean_tps": 12.43,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "off",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_q8_0_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        11.618,
+        12.673,
+        11.88
+      ],
+      "mean_tps": 12.057,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "q8_0",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_turbo3_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        11.943,
+        11.977,
+        11.955
+      ],
+      "mean_tps": 11.958,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "turbo3",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_f16_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        12.236,
+        11.321,
+        11.996
+      ],
+      "mean_tps": 11.851,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp_adaptive_f16_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp_adaptive",
+      "tps": [
+        10.649,
+        12.847,
+        10.59
+      ],
+      "mean_tps": 11.362,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_ngl8_mtp2_turbo4_default_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        9.665,
+        12.219,
+        12.174
+      ],
+      "mean_tps": 11.353,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "turbo4",
+        "moe_cache": "default",
+        "gdn_replay": false
+      },
+      "spec_chain": 0
+    },
+    {
+      "id": "pym35_a2_chain_mtp2_2_soft_1026",
+      "status": "complete",
+      "profile": "partial",
+      "mode": "mtp2",
+      "tps": [
+        6.95,
+        10.596,
+        7.306
+      ],
+      "mean_tps": 8.284,
+      "math_correct": true,
+      "qualifies_for_ranking": true,
+      "guardian_events": 0,
+      "native_features": {
+        "kv_type": "f16",
+        "moe_cache": "soft",
+        "gdn_replay": false
+      },
+      "spec_chain": 2
+    }
+  ],
+  "winner": "pym35_a2_ngl8_mtp2_f16_soft_1026",
+  "historic_36_28_fullgpu_comparable": false,
+  "model_router_production_untouched": true,
+  "no_silent_profile_substitution": true
+}
