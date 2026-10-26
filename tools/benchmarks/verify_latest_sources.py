@@ -73,7 +73,10 @@ def github_api(path):
         with urlopen(req, timeout=18) as resp:
             if resp.status != 200:
                 raise UnverifiedSource("GITHUB_REST_NON_200")
-            data = json.load(resp)
+            raw = resp.read(1024 * 1024 + 1)
+            if len(raw) > 1024 * 1024:
+                raise UnverifiedSource('GITHUB_REST_RESPONSE_TOO_LARGE')
+            data = json.loads(raw)
     except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
         raise UnverifiedSource("GITHUB_REST_UNVERIFIED: " + type(exc).__name__) from exc
     if not isinstance(data, dict):

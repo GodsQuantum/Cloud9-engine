@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "GodsQuantum/Cloud9-engine on Cloud9 Radeon780M gfx1103",
-  "as_of": "2026-10-25",
+  "as_of": "2026-10-26",
   "principle": "NEVER invalidate or re-run a historic proof without a specific changed engine/weight/backend/quant/context risk; a source CI pass is not GPU model certification",
   "canonical_hall_of_fame": "HALL_OF_FAME.json",
   "hall_record_count_at_audit": 192,
@@ -1647,5 +1647,21 @@
     "host_loader_units": "llama-server version OK, MTP-adaptive OK, 20/20 Turbo fail-closed, quant functions exit0",
     "GPU_inference_tested": false,
     "production_promoted": false
+  },
+  "latest_source_qualification": {
+    "observed_at_utc": "2026-10-26T11:41:22.988473+00:00",
+    "status": "SOURCE_CURRENT_BINARY_UNQUALIFIED",
+    "github_branch": "lab/20261022-one-engine-qualification",
+    "previous_commit": "e27dd397a43a8b7bfb9c0b5680b3a232bb408ce0",
+    "upstream_head": "8b28c2394324465bf7727089e7eaf7aec9442d6a",
+    "prism_head": "c96baf4abe24d11a50f326e40b6223b687449d63",
+    "rdna_release": "v15-6050b467c-r142",
+    "strata_release": "v0.2.6",
+    "atomic_release": "b10298-2.0.0",
+    "evidence": "Github Actions 40316483379 build in_progress last observed; CI compilation not GPU benchmark",
+    "safety": "Retired RDNA r120, 062 master and chimera barred from fresh GPU runs; no backend promotion, no GPU tests this session",
+    "original_pym_matched_atomic16_math_tps": 27.81044458906519,
+    "original_pym_matched_atomic2_math_tps": 27.24612360033683,
+    "outcome": "NO_ENGINE_WINNER_YET"
   }
 }

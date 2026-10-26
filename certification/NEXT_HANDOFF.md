@@ -1,6 +1,6 @@
 # Handoff automatique Cloud9 Engine
 
-Registre mis à jour: 2026-10-25
+Registre mis à jour: 2026-10-26
 
 Moteur disponible: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 

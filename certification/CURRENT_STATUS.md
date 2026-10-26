@@ -1,6 +1,6 @@
 # Cloud9 Engine - matrice canonique de certification
 
-Date du registre: 2026-10-25
+Date du registre: 2026-10-26
 
 Moteur disponible sur demande: Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB
 Hall of Fame: 192 records; 112 raw proofs mirrored with SHA on GitHub.
