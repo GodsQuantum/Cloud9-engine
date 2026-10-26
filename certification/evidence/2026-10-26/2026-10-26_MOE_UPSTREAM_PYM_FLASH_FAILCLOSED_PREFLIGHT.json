@@ -1,0 +1,199 @@
+{
+  "source": "Cloud9 HALL_OF_FAME.json historical benchmark ledger plus 26-Oct-2026 CT410 native probes",
+  "utc": "2026-10-26T00:16:50.611962+00:00",
+  "historical_pym_math_peak_tps": 37.2,
+  "historical_pym_mtp2_median_tps": 34.56,
+  "historical_pym_engine": "Cloud9 Vulkan/RADV; source commit and local patches NOT logged for Sep14 sweep",
+  "historical_flashnext_tps": 17.878,
+  "historical_flashnext_engine": "Cloud9 RDNA Vulkan b10738 commit53f34cfaa + MTP3 + TurboQuant + Vulkan SET_ROWS + FlashAttention + CPU-WHT + GDN fusion disabled",
+  "direct_available_GGUF_pym": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "direct_available_GGUF_pym_bytes": 13222476000,
+  "historical_pym_gguf_sha256_in_oct18_evidence": "cac59f495abd12710d723b6957a52e78b4f3ef382c808327ead27cc685c03788",
+  "historical_pym_gguf_rehashed_now": false,
+  "flashnext_matching_historical_AD427_FRSpec_locally_available": false,
+  "flashnext_alternative_GSQ_RCO_IQ1M_shards_total_bytes": 58408584928,
+  "candidate_flags_supported": {
+    "upstream_b11840": {
+      "MTP": true,
+      "cpu_moe_offload_control": true,
+      "moe_cache": true,
+      "FlashAttention": true,
+      "turbo3": false
+    },
+    "upstream_b11844": {
+      "MTP": true,
+      "cpu_moe_offload_control": true,
+      "moe_cache": true,
+      "FlashAttention": true,
+      "turbo3": false
+    },
+    "atomic_2": {
+      "MTP": true,
+      "cpu_moe_offload_control": true,
+      "moe_cache": true,
+      "FlashAttention": true,
+      "turbo3": true
+    }
+  },
+  "profiles_attempted": [
+    {
+      "run_id": "pym_upstream_b11844_mtp2_20261026",
+      "engine": "upstream_b11844",
+      "mode": "mtp2",
+      "model": "pym",
+      "status": "blocked_preflight",
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+        "HOST_MEMORY_PSI"
+      ],
+      "source_sha256": "864d8195a0d2d35645eac0bc4de37e7cea2e036548bf2856afae2d1dc9d423fe",
+      "preflight": {
+        "admitted": false,
+        "reasons": [
+          "OFFICIAL_GPU_GUARD_DENIED",
+          "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+          "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+          "HOST_MEMORY_PSI"
+        ],
+        "model_bytes": 13222476000,
+        "model_name": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+        "binary_sha256": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da",
+        "min_available_gib": 35.31,
+        "required_gtt_gib": 14.0,
+        "guardian": {
+          "allow": false,
+          "mem_available_gib": 23.406,
+          "psi_memory_full_avg10": 4.6,
+          "swap_used_percent": 71.25,
+          "safe_total_gtt_gib": 5.763,
+          "reasons": [
+            "host MemAvailable 23.4 GiB < start floor 24.0 GiB",
+            "host memory PSI full avg10=4.60",
+            "requested 14.0 GiB GTT > current safe total 5.8 GiB"
+          ]
+        },
+        "host_io_full_avg10": 3.06,
+        "max_host_gpu_temp_c": 73.875,
+        "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+      }
+    },
+    {
+      "run_id": "pym_upstream_b11840_mtp2_20261026",
+      "engine": "upstream_b11840",
+      "mode": "mtp2",
+      "model": "pym",
+      "status": "blocked_preflight",
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+        "HOST_MEMORY_PSI",
+        "HOST_IO_PSI"
+      ],
+      "source_sha256": "26e87ed137d719592b9cca27090624b622130742b95798f3e165771126491135",
+      "preflight": {
+        "admitted": false,
+        "reasons": [
+          "OFFICIAL_GPU_GUARD_DENIED",
+          "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+          "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+          "HOST_MEMORY_PSI",
+          "HOST_IO_PSI"
+        ],
+        "model_bytes": 13222476000,
+        "model_name": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+        "binary_sha256": "eba465e881e97bf40e7d8649c8bf6e4eba43c4962ab9e25f7c9edd74b41faadd",
+        "min_available_gib": 35.31,
+        "required_gtt_gib": 14.0,
+        "guardian": {
+          "allow": false,
+          "mem_available_gib": 23.585,
+          "psi_memory_full_avg10": 6.5,
+          "swap_used_percent": 71.24,
+          "safe_total_gtt_gib": 5.943,
+          "reasons": [
+            "host MemAvailable 23.6 GiB < start floor 24.0 GiB",
+            "host memory PSI full avg10=6.50",
+            "requested 14.0 GiB GTT > current safe total 5.9 GiB"
+          ]
+        },
+        "host_io_full_avg10": 10.8,
+        "max_host_gpu_temp_c": 73.75,
+        "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+      }
+    },
+    {
+      "run_id": "pym_upstream_b11844_base_20261026",
+      "engine": "upstream_b11844",
+      "mode": "base",
+      "model": "pym",
+      "status": "blocked_preflight",
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+        "HOST_MEMORY_PSI",
+        "HOST_IO_PSI"
+      ],
+      "source_sha256": "ab45426d2b308599e91efe5859989326415c78fccb0605942c4041b833326481",
+      "preflight": {
+        "admitted": false,
+        "reasons": [
+          "OFFICIAL_GPU_GUARD_DENIED",
+          "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+          "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+          "HOST_MEMORY_PSI",
+          "HOST_IO_PSI"
+        ],
+        "model_bytes": 13222476000,
+        "model_name": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+        "binary_sha256": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da",
+        "min_available_gib": 35.31,
+        "required_gtt_gib": 14.0,
+        "guardian": {
+          "allow": false,
+          "mem_available_gib": 23.528,
+          "psi_memory_full_avg10": 5.8,
+          "swap_used_percent": 71.23,
+          "safe_total_gtt_gib": 5.885,
+          "reasons": [
+            "host MemAvailable 23.5 GiB < start floor 24.0 GiB",
+            "host memory PSI full avg10=5.80",
+            "requested 14.0 GiB GTT > current safe total 5.9 GiB"
+          ]
+        },
+        "host_io_full_avg10": 13.57,
+        "max_host_gpu_temp_c": 74.0,
+        "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+      }
+    },
+    {
+      "run_id": "flash_alternate_unmatched_20261026b",
+      "engine": "upstream_b11844",
+      "mode": "base",
+      "model": "flash_alternate",
+      "status": "blocked_preflight",
+      "reasons": [
+        "FLASH_UNMATCHED_HISTORICAL_MODEL"
+      ],
+      "source_sha256": "04f471e4b6e5d20413676ab8ee17f8d378278d8bedc95191e010b0353cbddbe1",
+      "preflight": {
+        "admitted": false,
+        "reasons": [
+          "FLASH_UNMATCHED_HISTORICAL_MODEL"
+        ],
+        "actual_sharded_bytes": 58408584928,
+        "historical_17_878_tps_comparable": false,
+        "note": "Separate GSQ-RCO/Strata quantization is not historical Flash-Next AD-4.27+FR-Spec"
+      }
+    }
+  ],
+  "new_tps_measured": null,
+  "gpu_inference_performed": false,
+  "canonical_historical_results_not_replayed": true,
+  "production_combos_unchanged": true,
+  "next_matched_profile": "Pym exact model SHA, -ngl99 -n-cpu-moe0 -c8192 -np1 -fa on -b512 -ub128, base vs MTP2, same prompts and 256-output-token ceiling, guardian>=14GiB safe GTT and >=modelGiB+23 available host RAM",
+  "next_quality_gate": "strict JSON (raw no fences), simulated read-only tools, code correctness; then actual 32K/64K/128K safety/quality before promotion"
+}
