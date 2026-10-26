@@ -844,7 +844,7 @@
           "note": "Original Flash-Next AD427+FR-Spec GGUF not on local model list, alternate GSQ coder present but different quant; targeted tournament priority is Pym then Flash, no LFM substitution."
         }
       ],
-      "remaining": "26 Oct 2026 CORRECTION FACTUELLE: modèle cible exact retrouvé sur NVMe RO /srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64, et accessible dans CT410 par mp2 RO. 33/33 GGUF = 94,525,394,976 bytes, manifest pinned AtomicChat SHA c4f844865189c05eeaa05406576a8d7d4931df5c, toutes tailles exactement conformes à tools/benchmarks/flashnext_ad427_hf_manifest_20261022.json. GGUF v3 metadata: architecture qwen4exp, 512 experts, contexte annoncé 262144; sha256 FULL SHARDS NON FAIT, GPU tokens ZERO. Ancien diagnostic 'poids AD427 absents' FAUX et SUPPLANTE. Autre GSQ-RCO IQ1M coder 58.4GB reste distinct et ne doit pas substituer le modèle AD. HOF17.878tok/s correspond Atomic-era RDNA b10738 AD427 avec Q8 FR-Spec 65k MTP3, TurboQuant+SET_ROWS+CPU-WHT et GDN OFF. Sidecar draft mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf NON TROUVÉ dans les modèles locaux inspectés. Profil natif exact non configuré; 94.5GB avec 38.4GB SSD-table pages demande environ 54-56GB résidents selon éditeur, > MemAvailable ~33.7GiB hôte, et production doit être préservée. Runner a désormais --model flash_ad427 avec fail-closed distinguant présence poids vs draft+admission RAM. Préflight local oct26_flash_ad427_exact_weights_gate: blocked_preflight [FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED, FLASH_AD427_MEMORY_NOT_ADMITTED], aucun chargement GPU. PRIORITÉ: Atomic2 Pym full-GPU HOF à 37.31GiB headroom, ensuite sidecar FRSpec + admission vraie RAM avant test Atomic2 Flash; puis comparaison séquentielle du prochain moteur. Ne pas retélécharger les 94.5GB déjà présents; ne pas promouvoir et ne pas inférer vitesse.",
+      "remaining": "26 Oct 2026 CORRECTION FACTUELLE: modèle cible exact retrouvé sur NVMe RO /srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64, et accessible dans CT410 par mp2 RO. 33/33 GGUF = 94,525,394,976 bytes, manifest pinned AtomicChat SHA c4f844865189c05eeaa05406576a8d7d4931df5c, toutes tailles exactement conformes à tools/benchmarks/flashnext_ad427_hf_manifest_20261022.json. GGUF v3 metadata: architecture qwen4exp, 512 experts, contexte annoncé 262144; sha256 FULL SHARDS NON FAIT, GPU tokens ZERO. Ancien diagnostic 'poids AD427 absents' FAUX et SUPPLANTE. Autre GSQ-RCO IQ1M coder 58.4GB reste distinct et ne doit pas substituer le modèle AD. HOF17.878tok/s correspond Atomic-era RDNA b10738 AD427 avec Q8 FR-Spec 65k MTP3, TurboQuant+SET_ROWS+CPU-WHT et GDN OFF. CORRECTION 14h: sidecar exact mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf maintenant STAGÉ sous FlashNext-AD427/MTP, 3,639,245,152 octets, SHA256 vérifié c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f, version drluoto revision ac875a98457a8effe8fb83de8f3701421f507a24. La recette native HOF MTP3 -md + TurboQuant/GDN/SET_ROWS reste NON CONFIGURÉE et NON QUALIFIÉE; 94.5GB avec 38.4GB SSD-table pages demande environ 54-56GB résidents selon éditeur, > MemAvailable ~33.7GiB hôte, et production doit être préservée. Runner a désormais --model flash_ad427 avec fail-closed distinguant présence poids vs draft+admission RAM. Préflight local oct26_flash_ad427_exact_weights_gate: blocked_preflight [FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED, FLASH_AD427_MEMORY_NOT_ADMITTED], aucun chargement GPU. PRIORITÉ: Atomic2 Pym full-GPU HOF à 37.31GiB headroom, ensuite sidecar FRSpec + admission vraie RAM avant test Atomic2 Flash; puis comparaison séquentielle du prochain moteur. Ne pas retélécharger les 94.5GB déjà présents; ne pas promouvoir et ne pas inférer vitesse. Deuxième préflight immutable oct26_flash_ad427_frspec_staged_gate enregistre sidecar présent/size-pinned mais bloque avant GPU; les poids AD restent SHA256 complet en attente. Répéter uniquement avec la mémoire sûre et les flags HOF validés.",
       "acceptance": "per role latency, quality and useful context proven on the target device"
     },
     {
@@ -1704,7 +1704,7 @@
       "context_metadata": 262144,
       "manifest_size_verified": true,
       "full_sha256_verified": false,
-      "sidecar_fr_spec_present": false,
+      "sidecar_fr_spec_present": true,
       "gpu_test_run": false,
       "preflight_status": "blocked_preflight",
       "preflight_reasons": [
@@ -1712,7 +1712,13 @@
         "FLASH_AD427_MEMORY_NOT_ADMITTED"
       ],
       "previous_absent_claim_superseded": true,
-      "gpu_routing_unchanged": true
+      "gpu_routing_unchanged": true,
+      "sidecar_size_bytes": 3639245152,
+      "sidecar_sha256_verified": true,
+      "sidecar_sha256": "c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f",
+      "sidecar_pinned_revision": "ac875a98457a8effe8fb83de8f3701421f507a24",
+      "flash_hof_native_runtime_configured": false,
+      "latest_admission_report": "oct26_flash_ad427_frspec_staged_gate"
     }
   }
 }

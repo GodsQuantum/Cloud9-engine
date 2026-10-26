@@ -97,6 +97,11 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
   # A historical 17.878 t/s recreation requires the separate Q8 FR-Spec
   # draft and a high-memory native launch policy; neither is configured yet.
   directory=p.parent
+  draft=directory.parent/"MTP"/"mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf"
+  draft_bytes=draft.stat().st_size if draft.is_file() else 0
+  # Provenance pinned to drluoto HF revision ac875a98; full SHA-256 was
+  # independently verified on 2026-10-26. No 3.64GB rehash per preflight.
+  draft_expected_sha256="c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f"
   shards=sorted(directory.glob("Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-*-of-00033.gguf"))
   indices={int(x.name.rsplit("-of-",1)[0][-5:]) for x in shards}
   complete=(len(shards)==33 and indices==set(range(1,34)) and
@@ -107,7 +112,12 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
           "actual_sharded_bytes":sum(x.stat().st_size for x in shards),
           "expected_sharded_bytes":94525394976,"expected_shards":33,
           "sha256_verified":False,
-          "note":"Exact target GGUF is on shared NVMe; separate Q8 FRSpec missing; full 94.5GB model load is unsafe at current RAM; check official guard before any future GPU work"}
+          "fr_spec_sidecar_present":draft.is_file(),
+          "fr_spec_sidecar_size_verified":draft_bytes==3639245152,
+          "fr_spec_sidecar_bytes":draft_bytes,
+          "fr_spec_sidecar_expected_sha256":draft_expected_sha256,
+          "fr_spec_sidecar_revision":"ac875a98457a8effe8fb83de8f3701421f507a24",
+          "note":"Exact target GGUF and pinned Q8 FRSpec sidecar are staged RO for CT410; launch -md/MTP3+GDN/TurboQuant HOF recipe not configured and 54-56GB resident RAM not admitted. No GPU run or throughput claim."}
  if model_key=="flash_alternate":
   # Strata GSQ-RCO IQ1_M is NOT the historical AD-4.27 + FR-Spec GGUF:
   # refusing a falsely matched benchmark, regardless of available RAM.
