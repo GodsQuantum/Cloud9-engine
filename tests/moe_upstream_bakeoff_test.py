@@ -5,6 +5,30 @@ s=importlib.util.spec_from_file_location("moe_upstream_bakeoff",P)
 b=importlib.util.module_from_spec(s);s.loader.exec_module(b)
 class GuardTests(unittest.TestCase):
  def test_import_and_syntax(self):ast.parse(P.read_text())
+ def test_hof_atomic16_kv_rank_kept_on_atomic2_without_rewriting_results(self):
+  self.assertEqual(b.HOF_PYM_KV_ORDER,("f16","turbo4","q8_0","turbo3"))
+  self.assertEqual(b.HOF_PYM_TPS,{"f16":36.28,"turbo4":35.20,"q8_0":35.07,"turbo3":34.40})
+  src=P.read_text()
+  self.assertIn('"-ctk",(a.parity_kv if a.preset==PARITY_PRESET else "f16")',src)
+  self.assertIn('"parity_kv":a.parity_kv',src)
+  self.assertIn('PARITY_KV_UNSUPPORTED_BY_BINARY',src)
+ def test_recent_real_pym_memory_psis_not_replayed(self):
+  g={"allow":True,"mem_available_gib":33,"psi_memory_full_avg10":0,
+     "safe_total_gtt_gib":14.5,"swap_used_percent":80}
+  with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=0),mock.patch.object(b,"host_temp",return_value=60):
+   with mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
+    d=b.preflight("pym","atomic2","mtp2","full",b.PARITY_PRESET,"mmap")
+  self.assertFalse(d["admitted"])
+  self.assertIn("PYM_PRIOR_PSI_LOAD_HEADROOM",d["reasons"])
+  self.assertGreater(d["min_available_gib"],37)
+ def test_guard_source_address_restricted(self):
+  with mock.patch.dict(b.os.environ,{"CLOUD9_GUARD_SOURCE_IP":"8.8.8.8"}):
+   with self.assertRaisesRegex(ValueError,"UNAUTHORIZED_GUARD_SOURCE"):b.guardian(14)
+ def test_resumable_task_subset_explicit(self):
+  src=P.read_text()
+  self.assertIn('selected_prompts=[x for x in PROMPTS if x[0] in a.tasks.split(",")]',src)
+  self.assertIn('for name,prompt in selected_prompts:',src)
+  self.assertIn('len(result["rows"])==len(selected_prompts)',src)
  def test_models_are_exact_and_noninterchangeable(self):
   self.assertIn("Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",str(b.MODELS["pym"]))
   self.assertIn("GSQ-RCO-IQ1_M",str(b.MODELS["flash_alternate"]))
@@ -95,7 +119,7 @@ class GuardTests(unittest.TestCase):
   self.assertIn('"--reasoning-budget",str(a.thinking_budget)',text)
   self.assertIn('msg.get("reasoning_content")',text)
   self.assertIn('"math_answer_contains_925"',text)
-  self.assertIn('result["rows"][0]["math_answer_contains_925"]',text)
+  self.assertIn('all(x["math_answer_contains_925"] for x in math_rows)',text)
   self.assertIn('"max_tokens":a.max_output_tokens',text)
  def test_postload_cooldown_with_emergency_guard_intact(self):
   text=P.read_text()
@@ -109,7 +133,7 @@ class GuardTests(unittest.TestCase):
   self.assertIn("str(a.thinking_budget)",source)
   self.assertIn('("on" if a.model=="lfm_official_q4" else "off")',source)
   self.assertNotIn('["--reasoning","on","--reasoning-budget"',source)
-  self.assertIn('result["rows"][0]["math_answer_contains_925"]',source)
+  self.assertIn('all(x["math_answer_contains_925"] for x in math_rows)',source)
  def test_busy_embeddings_no_gpu_admission_even_if_guard_accepts(self):
   g={"allow":True,"mem_available_gib":44,"psi_memory_full_avg10":0,"safe_total_gtt_gib":20,"swap_used_percent":35}
   with mock.patch.object(b,"guardian",return_value=g),mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=63),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":True}],{"status":"ok","loaded_models":[]}]):
@@ -137,12 +161,12 @@ class GuardTests(unittest.TestCase):
   self.assertIn('guard_events.append({"reason":"EMBEDDINGS_BECAME_BUSY_OR_UNKNOWN"})',source)
  def test_guardian_is_authoritative_without_double_gtt_reservation(self):
   gguf=b.MODELS["pym"].stat().st_size/(1024**3)
-  guard={"allow":True,"mem_available_gib":33.0,"psi_memory_full_avg10":0,
+  guard={"allow":True,"mem_available_gib":39.0,"psi_memory_full_avg10":0,
          "safe_total_gtt_gib":15.1,"swap_used_percent":70}
   with mock.patch.object(b,"guardian",return_value=guard) as g, mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=58),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    x=b.preflight("pym","atomic2","mtp2","full",b.PARITY_PRESET)
   self.assertTrue(x["admitted"])
-  self.assertEqual(x["min_available_gib"],round(gguf+18,2))
+  self.assertEqual(x["min_available_gib"],round(gguf+25,2))
   g.assert_called_once_with(14.0)
   with mock.patch.object(b,"guardian",return_value={**guard,"allow":False}),mock.patch.object(b,"psi_io_full",return_value=1),mock.patch.object(b,"host_temp",return_value=58),mock.patch.object(b,"fetch",side_effect=[{"worker_model":None},[{"id":0,"is_processing":False}],{"status":"ok","loaded_models":[]}]):
    self.assertFalse(b.preflight("pym","atomic2","mtp2","full",b.PARITY_PRESET)["admitted"])

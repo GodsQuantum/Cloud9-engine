@@ -804,7 +804,7 @@
           "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
         }
       ],
-      "remaining": "FULL GPU HISTORIC FEATURES, NOT OUT OF BOX! Found Atomic1.6 original native binary b10269 build10709 c044dff24, and atomic17 c99279d98, Atomic2 stock cda0f92, Atomic2 Zen4/LTO, upstream062; features parity preset in tools/qualification/moe_upstream_bakeoff.py. Atomic1.6 HOF Sep11 36.28t/s MTP2 f16 with incomplete flags; upstream Oct02 exact documented fullGPU99 c16384 b1024 ub1024 poll100/0 MTP2 f16 median30.49t/s. Reconstructed common 15-feature preset native supported across all5, tests31 PASS. 16K old+new failed watchdog PSI. 8K exact parity under ARC3GiB cap (restored original4.5GiB) Atomic1.6 completed3/3 math27.8104(code28.0922,FR23.9433)t/s correct math, Atomic2 math27.2461t/s correct but failed watchdog on code/FR (PSI1.83 and MemAvailable23.37GiB); Atomic2 -2.03pct single math only NOT total winner. Need complete Atomic2 and other engines at same settings with stable service-level available RAM, repeat3 times, QA math+compiled Python+strict JSON/tool calling and contexts16-128K. No production promotion. Follow certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md and manifest proof. Native fullGPU8K Pym mmap->none single-parameter alternative directly caused RADV ErrorDeviceLost and memory-not-enough on original Atomic1.6; Atomic2 denied preflight in same mode. Rejected, banned in preflight with unit test. No LXC stopped, no host GPU reboot, original ARC cap restored. Continue only mmap native fullGPU with enough memory headroom and guard; no speed winner yet.",
+      "remaining": "FULL GPU HISTORIC FEATURES, NOT OUT OF BOX! Found Atomic1.6 original native binary b10269 build10709 c044dff24, and atomic17 c99279d98, Atomic2 stock cda0f92, Atomic2 Zen4/LTO, upstream062; features parity preset in tools/qualification/moe_upstream_bakeoff.py. Atomic1.6 HOF Sep11 36.28t/s MTP2 f16 with incomplete flags; upstream Oct02 exact documented fullGPU99 c16384 b1024 ub1024 poll100/0 MTP2 f16 median30.49t/s. Reconstructed common 15-feature preset native supported across all5, tests31 PASS. 16K old+new failed watchdog PSI. 8K exact parity under ARC3GiB cap (restored original4.5GiB) Atomic1.6 completed3/3 math27.8104(code28.0922,FR23.9433)t/s correct math, Atomic2 math27.2461t/s correct but failed watchdog on code/FR (PSI1.83 and MemAvailable23.37GiB); Atomic2 -2.03pct single math only NOT total winner. Need complete Atomic2 and other engines at same settings with stable service-level available RAM, repeat3 times, QA math+compiled Python+strict JSON/tool calling and contexts16-128K. No production promotion. Follow certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md and manifest proof. Native fullGPU8K Pym mmap->none single-parameter alternative directly caused RADV ErrorDeviceLost and memory-not-enough on original Atomic1.6; Atomic2 denied preflight in same mode. Rejected, banned in preflight with unit test. No LXC stopped, no host GPU reboot, original ARC cap restored. Continue only mmap native fullGPU with enough memory headroom and guard; no speed winner yet. 26 Oct HOF-FIRST: Atomic2 2.0 fullGPU Pym MTP2 Turbo4 8K candidate configured from Atomic1.6 HOF 35.20t/s; OFFICIAL preflight blocked 33.095GiB MemAvailable < empirically safe37.31GiB after previous PSI4.61. Zero new GPU tokens; 37/37 harness tests PASS. Do not repeat until memory admission; no backend switching.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -844,7 +844,7 @@
           "note": "Original Flash-Next AD427+FR-Spec GGUF not on local model list, alternate GSQ coder present but different quant; targeted tournament priority is Pym then Flash, no LFM substitution."
         }
       ],
-      "remaining": "User priority Flash-Next original AD-4.27bpw-Q4_K_M-M64 + Q8 FR-Spec, historic safe17.878t/s with Cloud9 RDNA b10738 MTP3 TurboQuant SET_ROWS CPU-WHT GDN OFF. Exact original weights absent locally; existing GSQ-RCO IQ1M coder 58.4GB distinct model/format and cannot be substituted. Public quant publisher mk2878d has 92.9GB overall with ~54.5GB resident and draft publisher drluoto has Q8 FR-Spec sidecar. Reacquire only when RAM/disk/guardian permits, never in shared loaded production with 25GiB MemAvailable. Pym baseline first.",
+      "remaining": "User priority Flash-Next original AD-4.27bpw-Q4_K_M-M64 + Q8 FR-Spec, historic safe17.878t/s with Cloud9 RDNA b10738 MTP3 TurboQuant SET_ROWS CPU-WHT GDN OFF. Exact original weights absent locally; existing GSQ-RCO IQ1M coder 58.4GB distinct model/format and cannot be substituted. Public quant publisher mk2878d has 92.9GB overall with ~54.5GB resident and draft publisher drluoto has Q8 FR-Spec sidecar. Reacquire only when RAM/disk/guardian permits, never in shared loaded production with 25GiB MemAvailable. Pym baseline first. 26 Oct HOF-FIRST: FlashNext AD-4.27 + FRSpec exact GGUF absent; GSQ-RCO IQ1M 58,408,584,928 bytes not same model. Publisher's 92.9GB AD model needs ~54.5GB resident, current safe MemAvailable33.1GiB. No FlashNext GPU run, no falsely copied 17.878t/s. Recheck resource/models only after Pym gated.",
       "acceptance": "per role latency, quality and useful context proven on the target device"
     },
     {
@@ -1056,7 +1056,7 @@
           "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
         }
       ],
-      "remaining": "GPU full 8K parity on original Atomic1.6 successful 3 output / correct math. Same Pym fullGPU8K Atomic2 only math completed (-2.03pct in one math sample), watchdog stopped rest. Cannot claim engine winner until complete matched runs and quality; no production promotion. Temporary ZFS ARC3GiB only while benchmarking, restored to original4.5GiB each time, no guest stopped. Durable protocol and evidence committed; three newer engines await equal-feature score; candidate tweaks after winning baseline only. Hardware fail closed: native Pym fullGPU load mode none caused ErrorDeviceLost original Atomic1.6 (no scored prompts); automatically reject this precise variant until manually investigated; production router and embedding confirmed healthy. No production LLM promotion.",
+      "remaining": "GPU full 8K parity on original Atomic1.6 successful 3 output / correct math. Same Pym fullGPU8K Atomic2 only math completed (-2.03pct in one math sample), watchdog stopped rest. Cannot claim engine winner until complete matched runs and quality; no production promotion. Temporary ZFS ARC3GiB only while benchmarking, restored to original4.5GiB each time, no guest stopped. Durable protocol and evidence committed; three newer engines await equal-feature score; candidate tweaks after winning baseline only. Hardware fail closed: native Pym fullGPU load mode none caused ErrorDeviceLost original Atomic1.6 (no scored prompts); automatically reject this precise variant until manually investigated; production router and embedding confirmed healthy. No production LLM promotion. HOF-first order changed: ONE engine Atomic2 2.0 -> Pym, Flash-Next with same model, then next promising current upstream. No parallel source builds or promotion until both actual GGUFs safely tested; stable production unchanged.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -1663,5 +1663,38 @@
     "original_pym_matched_atomic16_math_tps": 27.81044458906519,
     "original_pym_matched_atomic2_math_tps": 27.24612360033683,
     "outcome": "NO_ENGINE_WINNER_YET"
+  },
+  "hof_first_atomic2_20261026": {
+    "utc": "2026-10-26T12:31:12.532564+00:00",
+    "target_release": "Atomic2 b10298-2.0.0 cda0f925",
+    "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+    "same_pym_model_bytes": 13222476000,
+    "historical_atomic16_pym_hof_tps": {
+      "f16": 36.28,
+      "turbo4": 35.2,
+      "q8_0": 35.07,
+      "turbo3": 34.4
+    },
+    "pym_turbo4_preflight": {
+      "status": "blocked_preflight",
+      "reasons": [
+        "PYM_PRIOR_PSI_LOAD_HEADROOM"
+      ],
+      "required_mem_gib": 37.31,
+      "available_mem_gib": 33.095,
+      "new_tps": null
+    },
+    "flashnext_preflight": {
+      "status": "blocked_preflight",
+      "reasons": [
+        "FLASH_UNMATCHED_HISTORICAL_MODEL"
+      ],
+      "alternate_gsq_rco_sharded_bytes": 58408584928,
+      "historic_AD427_FRSpec_available": false,
+      "new_tps": null
+    },
+    "winner_declared": false,
+    "production_untouched": true,
+    "benchmark_parallelism": "one engine then Pym + Flash, next engine only after both"
   }
 }
