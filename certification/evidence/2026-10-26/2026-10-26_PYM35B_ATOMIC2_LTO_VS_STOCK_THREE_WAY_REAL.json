@@ -1,0 +1,136 @@
+{
+  "date_utc": "2026-10-26T08:40:03.326868+00:00",
+  "model": "Pym35B-A3B Q2 Native MTP GGUF 13,222,476,000 bytes, same local path",
+  "hardware": "Ryzen7 8845HS, Radeon780M RADV/Vulkan, shared host 96GB",
+  "profile": "Pym-Q2 partial_min, -ngl4, --n-cpu-moe 41, c2048, f16 KV, inline MTP2, 768 max generation, seed42, temperature0.2, three real tasks",
+  "not_same_as_historical_full_gpu_record": true,
+  "results": {
+    "atomic2_stock": {
+      "source": "moe_upstream_pym35_a2_mtp2_partialmin_warm2_1026.json",
+      "sha256": "b7bf97e0fa26a16c3e64e61c862f8fc7062a389e303828847f5b0c89bf82d101",
+      "status": "complete",
+      "load_seconds": 14.017,
+      "reason": [],
+      "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+      "tasks": [
+        {
+          "name": "math",
+          "decode_tok_s": 11.50688089002847,
+          "wall_s": 70.087,
+          "generated_tokens": 768,
+          "visible_final": true,
+          "math_correct": true
+        },
+        {
+          "name": "code",
+          "decode_tok_s": 12.046726617327163,
+          "wall_s": 68.162,
+          "generated_tokens": 768,
+          "visible_final": true,
+          "math_correct": null
+        },
+        {
+          "name": "fr",
+          "decode_tok_s": 11.075612587012602,
+          "wall_s": 72.913,
+          "generated_tokens": 768,
+          "visible_final": true,
+          "math_correct": null
+        }
+      ]
+    },
+    "upstream_b11844": {
+      "source": "moe_upstream_pym35_up_mtp2_partialmin_warm2_1026.json",
+      "sha256": "c6280527c5799248b7b61294074abb7e8c632c674d87ef07d8b69250e78011a7",
+      "status": "failed_watchdog",
+      "load_seconds": 4.212,
+      "reason": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793003588.7138376,
+            "mem_available_gib": 23.758,
+            "swap_used_gib": 11.926,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 50.71,
+            "psi_memory_some_avg10": 5.9,
+            "psi_memory_full_avg10": 5.9,
+            "gtt_used_gib": 7.07,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 0.695,
+            "safe_total_gtt_gib": 12.828,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host MemAvailable 23.8 GiB < start floor 24.0 GiB",
+              "host memory PSI full avg10=5.90"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 60.5
+        }
+      ],
+      "binary_sha256": "acd2f8c69eb384c7643d3963e3946f28932138193a4c6b8b59ca9510272c20da",
+      "tasks": []
+    },
+    "atomic2_zen4_lto": {
+      "source": "moe_upstream_pym35_a2lto_mtp2_partialmin_1026.json",
+      "sha256": "a667b98880d1ade7ef3e56914f803e369deac67539e9f6238b05cc5d8d590963",
+      "status": "complete",
+      "load_seconds": 10.82,
+      "reason": [],
+      "binary_sha256": "e4e24225deb1dfd2209d8a2bd3b0bf89b076f7032e7e82c7c22201e5fdb2ac3e",
+      "tasks": [
+        {
+          "name": "math",
+          "decode_tok_s": 12.24832229482525,
+          "wall_s": 66.053,
+          "generated_tokens": 768,
+          "visible_final": true,
+          "math_correct": true
+        },
+        {
+          "name": "code",
+          "decode_tok_s": 12.720375958661695,
+          "wall_s": 64.05,
+          "generated_tokens": 768,
+          "visible_final": true,
+          "math_correct": null
+        },
+        {
+          "name": "fr",
+          "decode_tok_s": 10.58014751040037,
+          "wall_s": 76.802,
+          "generated_tokens": 768,
+          "visible_final": true,
+          "math_correct": null
+        }
+      ]
+    }
+  },
+  "per_task_atomic_zen4_lto_change_percent": {
+    "math": 6.44,
+    "code": 5.59,
+    "fr": -4.47
+  },
+  "aggregate_one_run_elapsed_including_loading": {
+    "atomic2_stock_s": 225.179,
+    "atomic2_zen4_lto_s": 217.725,
+    "zen4_lto_total_time_reduction_percent": 3.31
+  },
+  "qualifications": {
+    "3_visible_responses_each_atomic_profile": true,
+    "math_contains_correct_925": true,
+    "code_executable_validation": false,
+    "long_context_128k": false,
+    "tool_selection_36cases": false,
+    "upstream_quality_comparable": false
+  },
+  "production_changed": false,
+  "guest_shutdown_during_these_trials": false,
+  "guardian_enabled_for_every_trial": true,
+  "interpretation": "Atomic2 Zen4/LTO faster on math and code, slower on FR; overall lower end-to-end duration in one run. Upstream had load watchdog, no decoder score. Neither new profile replaces historical full-GPU Hall of Fame."
+}
