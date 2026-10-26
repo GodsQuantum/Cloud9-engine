@@ -13,12 +13,12 @@ class NativeMMBCurrentSource(unittest.TestCase):
         cls.lock=json.loads((ROOT/'tools/benchmarks/latest_engine_sources_20261023.json').read_text())
         cls.ci=(ROOT/'.github/workflows/lab-native-chimera-mmb-r120-on-latest.yml').read_text()
 
-    def test_port_is_from_actual_latest_donor_and_trunk(self):
-        self.assertEqual(self.m['base']['commit'],self.lock['github_repositories']['upstream']['commit'])
+    def test_archived_port_is_not_the_actual_latest(self):
+        self.assertNotEqual(self.m['base']['commit'],self.lock['github_repositories']['upstream']['commit'])
         self.assertIn(self.m['base']['commit'],self.ci)
         self.assertNotIn('f50249819ccbf67a710f9a1927080e25775651ef',self.ci)
-        self.assertEqual(self.m['donor']['commit'],self.lock['github_repositories']['rdna']['release_commit'])
-        self.assertEqual(self.m['donor']['release_tag'],self.lock['github_repositories']['rdna']['release_tag'])
+        self.assertNotEqual(self.m['donor']['commit'],self.lock['github_repositories']['rdna']['release_commit'])
+        self.assertNotEqual(self.m['donor']['release_tag'],self.lock['github_repositories']['rdna']['release_tag'])
         self.assertEqual(self.m['donor']['release_tag'],'v14-097cf33d9-r120')
 
     def test_exact_manifest_hashes(self):

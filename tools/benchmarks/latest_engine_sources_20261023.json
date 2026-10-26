@@ -1,45 +1,54 @@
 {
   "schema_version": 2,
-  "verified_at_utc": "2026-10-22T22:59:15.016652+00:00",
-  "policy": "only latest pinned upstream tags/heads, no legacy binary promoted",
+  "verified_at_utc": "2026-10-26T11:27:40.911937+00:00",
+  "policy": "Only current releases/HEAD for new qualification. All stored candidate ELF SHA hashes are HISTORICAL until built against corresponding current SHA; no automatic GPU promotion.",
   "github_repositories": {
     "rdna": {
       "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
-      "release_tag": "v14-097cf33d9-r120",
-      "release_commit": "ece2d7531b8630413770f61db46ff0700e6a8999",
-      "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
-      "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
-      "expected_tree": "0fd9827d791c4e63e26dd658a0e9c5216ca95933",
-      "patch_sha256": {
-        "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "fd5af5baa8c2c5caee6929942cec21c7515db37aec51704c95bbb8b85071a922",
-        "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "4e54f5d425fc2b775162751be44f3efe52e7711416820dab973bc3d6b34f2c2b",
-        "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "95354d073d80bc1d571d05e2a4e350fdcaf8f072dc12173575cc7851d7dbb6cc",
-        "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "a3450599f2731a2aac241d3647ca7f6d705ba99e6421fe450e06b288e19cccf2",
-        "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "d02c5d7fd0b8ccfb000419f86e118cba9a3c47aee1dcadfa8d1515a008eef9f5",
-        "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "8d1a57b4c4110d1f6af1e8c9b0bfbf0e128666502094cd76b8841b39606e5544",
-        "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "3d98feb0cd211ee5e8cb5919023c04f9a298e7f9f2be422541552fa93be039c2",
-        "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "e787926ff80cbe03e927c3dd0e7f8ef0db9c24d60889a0508f5dd1ed8591c32f",
-        "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "ee7dabd64e5be08ad414cc9cb59a8e3c98412165b35ca6ca4183a68837d609c6",
-        "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "5efa0dd6c90d3ef62ae95b728f30415432902c125d9f3627698bc84a1ab51d27",
-        "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "9c89440b3c52726df2d4f2ec1c15b845e33fc8395aea85157ee556ace8429772",
-        "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "9a19e70b5afaa3c21864c3469241d419ff9ddf5dd1e5bcec8c861824d16e43e8",
-        "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "1f52675d48a59a89d87347a23a4e8e173ad4396b155fe9fef866a6c22559789e",
-        "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "fff56d69dbb512c9e6ec4df2593c72e5af0c599c5be49dc46bf23ddfb2ca3327"
+      "release_tag": "v15-6050b467c-r142",
+      "release_commit": "2749e496b5196b66c91cab2b58f9062e6e611b2c",
+      "release_published_utc": "2026-10-26T03:50:55Z",
+      "release_patch_count": 15,
+      "patchset_qualification": "R142_NOT_PORTED_UNVERIFIED_NO_GPU_BUILD",
+      "archived_r120_provenance": {
+        "repository": "https://github.com/stew675/llama-cpp-rdna-boosts.git",
+        "release_tag": "v14-097cf33d9-r120",
+        "release_commit": "ece2d7531b8630413770f61db46ff0700e6a8999",
+        "base_full_sha": "097cf33d9499b1eade67d51e16d7c75427e7b267",
+        "base_tree": "30c400ccea2e2fb47b663036a6cee08a4dc542d8",
+        "expected_tree": "0fd9827d791c4e63e26dd658a0e9c5216ca95933",
+        "patch_sha256": {
+          "0000-rdna-boosts-block-00-foundation-band-uniformity-Meta.patch": "fd5af5baa8c2c5caee6929942cec21c7515db37aec51704c95bbb8b85071a922",
+          "0001-rdna-boosts-block-01-hybrid-HIP-all-reduce-RDNA4-gat.patch": "4e54f5d425fc2b775162751be44f3efe52e7711416820dab973bc3d6b34f2c2b",
+          "0002-rdna-boosts-block-02-adaptive-MTP-draft-depth.patch": "95354d073d80bc1d571d05e2a4e350fdcaf8f072dc12173575cc7851d7dbb6cc",
+          "0003-rdna-boosts-block-03-chunked-gated-delta-net-prefill.patch": "a3450599f2731a2aac241d3647ca7f6d705ba99e6421fe450e06b288e19cccf2",
+          "0004-rdna-boosts-block-04-BF16-KV-cache-and-native-BF16-f.patch": "d02c5d7fd0b8ccfb000419f86e118cba9a3c47aee1dcadfa8d1515a008eef9f5",
+          "0005-rdna-boosts-block-05-flash-attention-band-native-qua.patch": "8d1a57b4c4110d1f6af1e8c9b0bfbf0e128666502094cd76b8841b39606e5544",
+          "0006-rdna-boosts-block-06-MMB-quantized-prefill-GEMM.patch": "3d98feb0cd211ee5e8cb5919023c04f9a298e7f9f2be422541552fa93be039c2",
+          "0007-rdna-boosts-block-07-k-quant-boosts-mmvq-VDR-Q6_K-MM.patch": "e787926ff80cbe03e927c3dd0e7f8ef0db9c24d60889a0508f5dd1ed8591c32f",
+          "0008-rdna-boosts-block-08-fused-kernels-old-08-fusions-ol.patch": "ee7dabd64e5be08ad414cc9cb59a8e3c98412165b35ca6ca4183a68837d609c6",
+          "0009-rdna-boosts-block-09-host-resident-MoE-iface-schedul.patch": "5efa0dd6c90d3ef62ae95b728f30415432902c125d9f3627698bc84a1ab51d27",
+          "0010-rdna-boosts-block-10-slab-fusion-dispatcher-async-in.patch": "9c89440b3c52726df2d4f2ec1c15b845e33fc8395aea85157ee556ace8429772",
+          "0011-rdna-boosts-block-11-qwen4exp-model-hyper-connection.patch": "9a19e70b5afaa3c21864c3469241d419ff9ddf5dd1e5bcec8c861824d16e43e8",
+          "0012-rdna-boosts-block-12-campaign-remainder-CPU-wins-bac.patch": "1f52675d48a59a89d87347a23a4e8e173ad4396b155fe9fef866a6c22559789e",
+          "0013-rdna-boosts-block-13-MTP-draft-vocabulary-subset-spe.patch": "fff56d69dbb512c9e6ec4df2593c72e5af0c599c5be49dc46bf23ddfb2ca3327"
+        },
+        "patch_count": 14,
+        "gpu_target": "gfx1103",
+        "gpu_benchmark_certified": false
       },
-      "patch_count": 14,
-      "gpu_target": "gfx1103",
       "gpu_benchmark_certified": false
     },
     "upstream": {
       "repository": "https://github.com/ggml-org/llama.cpp.git",
       "branch": "master",
-      "commit": "06230cb8775899cceef146c19cd447a947ecac5b",
+      "commit": "8b28c2394324465bf7727089e7eaf7aec9442d6a",
       "gpu_benchmark_certified": false
     },
     "prism": {
       "repository": "https://github.com/PrismML-Eng/llama.cpp.git",
       "branch": "prism",
-      "commit": "73bfe6cc485554822f80c473a3c0c4f25e80f41b",
+      "commit": "c96baf4abe24d11a50f326e40b6223b687449d63",
       "gpu_benchmark_certified": false
     },
     "atomic": {
@@ -50,14 +59,14 @@
     },
     "strata": {
       "repository": "https://github.com/Niko1221/Strata.git",
-      "release_tag": "v0.2.3.1",
-      "release_published_utc": "2026-10-23T13:45:22Z",
+      "release_tag": "v0.2.6",
+      "release_published_utc": "2026-10-25T13:45:25Z",
       "gpu_benchmark_certified": false,
-      "engine_embedded_version": "UNVERIFIED_FOR_NEW_TAG",
+      "engine_embedded_version": "Qwen 0.1.50, DeepSeek/Control 0.1.51",
       "released_engine_manifest_sha256": "UNVERIFIED_FOR_NEW_TAG",
       "known_gfx1103_support": "UNVERIFIED; linux-amd-strixhalo prebuilt primarily gfx1151, no official Linux gfx1103 package listed; do not claim compatibility",
-      "release_commit": "7ddc17a38fe7f31637e895ecfba58c2cd43d65ec",
-      "notes": "Latest hotfix v0.2.3.1, engine build/package metadata must be separately verified before any benchmark.",
+      "release_commit": "4b9e05a2a806a3fe24f7b2560d98626c37dade35",
+      "notes": "Strata Linux gfx1103 remains UNVERIFIED. Qwen engine unchanged between v0.2.5 and v0.2.6 per release notes.",
       "annotated_tag_object_sha": "9bc5216413cefc7d1e4dd5f3f9d2f31aef6228f1"
     },
     "s1": {
@@ -68,11 +77,11 @@
       "provenance": "S1 v64 current branch head; Vulkan coopmat/GDN/QSA/MTP donor; originally Strix Halo gfx1151; Cloud9 gfx1103 not yet qualified."
     }
   },
-  "source_date": "2026-10-23",
+  "source_date": "2026-10-26",
   "flashnext_gt20_tps_certified": false,
   "production_approved": false,
   "note": "Only staging/CI candidate provenance. No assertion that latest model/engine is faster or more accurate.",
-  "notes_revision": "2026-10-23 10:40: newest upstream HEAD f5027fb (CANN const qualifiers vs f64a) and RDNA latest r116 (multi-GPU load staging block08; MMB block06 source unchanged). All old binaries historical, newest blocked until SHA/ABI QA.",
+  "notes_revision": "2026-10-26: pinned current verified HEADs/releases; RDNA r142 patchset old r120 metadata archived, R142 GPU/CI NOT CERTIFIED. Baselines must rebuild before new GPU; Atomic2 unchanged latest release.",
   "lab_candidate_binary_sha256": {
     "atomic4b": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
     "atomic4b-q8v": "8ddf5bf86d78797e72a1d82ccc23a48875887427eefde8464bd72f6bb1705e85",
@@ -87,7 +96,7 @@
     "chimera-062-mmb-on": "532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5",
     "chimera-062-mmb-mmf32": "532b76a356011865bd40f078f9ea3381d02c4242d9e289cf212c40e16e4aa3e5"
   },
-  "lab_candidate_binary_policy": "New GPU tests require exact binary SHA256; null fails closed before r113 artifact qualification.",
+  "lab_candidate_binary_policy": "ALL lab_candidate_binary_sha256 values from previous pins are HISTORICAL ONLY. New build must supply fresh exact SHA; no 2026-10-23 candidate GPU qualifiable.",
   "notes_s1_artifact": "S1 v64 Vulkan GitHub Actions success #39877829806, archive SHA256 4d56767008b4dca509fd77d1390bb79bef879b4f83f1ce845b46084a71a21f18, all 12 ELF sha checks PASS, 11 RPATH relinked, both --version PASS commit28316b0e; NOT GPU-certified.",
   "notes_upstream_f64a_artifact": "GitHub Actions success #39913390476, artifact SHA eee8ef96d8994b979a3a1928f2dcd3f511f58c62435d5d6df30c0e27b7a1f002. 12 ELF files precheck sha pass, 11 RPATH $ORIGIN relocation, CLI/server --version PASS b11835 commitf64a49819; NOT GPU-qualified.",
   "latest_native_chimera_ablation_policy": "3 isolated MMB/MMF32 env variants on same newest native HIP ELF plus exact newest upstream HIP baseline. Both latest donor r115 and trunk f64a live-attested for each hybrid. All blocked until official SHA pinned/CT410 GPU guard allows.",

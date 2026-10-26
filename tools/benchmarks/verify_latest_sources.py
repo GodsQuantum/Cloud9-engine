@@ -12,6 +12,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote, urlparse
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 MANIFEST = Path(__file__).with_name("latest_engine_sources_20261023.json")
 
@@ -35,22 +37,48 @@ def _repo_path(url):
 
 
 def github_api(path):
-    """Use authenticated first-party gh CLI, with strict timeout; never guess on failure."""
+    """Live official GitHub API; gh auth first, public REST fallback, fail closed."""
     try:
         cp = subprocess.run(["gh", "api", path], capture_output=True,
                             text=True, check=False, timeout=18)
-    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-        raise UnverifiedSource("GITHUB_API_UNAVAILABLE") from exc
-    if cp.returncode != 0:
-        raise UnverifiedSource("GITHUB_API_FAILURE: " + cp.stderr.strip()[:180])
-    try:
-        data = json.loads(cp.stdout)
-    except ValueError as exc:
+        if cp.returncode == 0:
+            data = json.loads(cp.stdout)
+            if not isinstance(data, dict):
+                raise UnverifiedSource("GITHUB_API_BAD_RESPONSE")
+            return data
+        # Avoid a silent fallback for server/authorization errors with valid auth.
+        error = cp.stderr.lower()
+        if not any(hint in error for hint in ("gh auth login", "not logged into", "no github hosts",
+                                              "gh_token", "authentication token")):
+            raise UnverifiedSource("GITHUB_API_FAILURE: " + cp.stderr.strip()[:180])
+    except FileNotFoundError:
+        pass
+    except subprocess.TimeoutExpired as exc:
+        raise UnverifiedSource("GITHUB_API_TIMEOUT") from exc
+    except json.JSONDecodeError as exc:
         raise UnverifiedSource("GITHUB_API_BAD_JSON") from exc
+    # Public GitHub read-only REST endpoint. This is NOT a stale-cache fallback:
+    # HTTP errors, rate limit, network failure and malformed responses all STOP.
+    if not path.startswith("repos/") or not re.fullmatch(
+        r"repos/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/(?:git/ref/(?:heads|tags)/[A-Za-z0-9_.@-]+|git/tags/[0-9a-f]{40}|releases/latest)",
+        path,
+    ):
+        raise UnverifiedSource("GITHUB_API_INVALID_PATH")
+    req = Request("https://api.github.com/" + path, headers={
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "Cloud9-engine-latest-source-gate",
+        "X-GitHub-Api-Version": "2022-11-28",
+    })
+    try:
+        with urlopen(req, timeout=18) as resp:
+            if resp.status != 200:
+                raise UnverifiedSource("GITHUB_REST_NON_200")
+            data = json.load(resp)
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        raise UnverifiedSource("GITHUB_REST_UNVERIFIED: " + type(exc).__name__) from exc
     if not isinstance(data, dict):
-        raise UnverifiedSource("GITHUB_API_BAD_RESPONSE")
+        raise UnverifiedSource("GITHUB_REST_BAD_RESPONSE")
     return data
-
 
 def _sha(value):
     if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{40}", value):
@@ -103,12 +131,11 @@ def verify_one(name, meta, api=github_api):
 CANDIDATE_TO_SOURCE = {
     "atomic4b": "atomic", "atomic4b-q8v": "atomic",
     "atomic4b-hip-turbo3": "atomic", "atomic4b-hip-q8v": "atomic",
-    "rdna-r120-hip-4b": "rdna", "upstream-master-4b": "upstream",
+    "rdna-latest-hip-4b": "rdna",
+    "upstream-master-4b": "upstream",
     "prism-head-4b": "prism", "s1-head-4b": "s1",
-    "upstream-062-hip-4b": "upstream",
-    "chimera-062-mmb-off": "upstream", "chimera-062-mmb-on": "upstream",
-    "chimera-062-mmb-mmf32": "upstream",
 }
+
 
 
 def verify_candidate(candidate, manifest, api=github_api):

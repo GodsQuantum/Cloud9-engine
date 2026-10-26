@@ -36,8 +36,8 @@ class LiveFreshnessGate(unittest.TestCase):
         self.assertEqual({x['source'] for x in results},{'rdna','upstream','prism','atomic','strata','s1'})
 
     def test_current_candidate_verified_live(self):
-        entry=mod.verify_candidate('rdna-r120-hip-4b',manifest,snapshot)
-        self.assertEqual(entry['track'],'release:v14-097cf33d9-r120')
+        entry=mod.verify_candidate('rdna-latest-hip-4b',manifest,snapshot)
+        self.assertEqual(entry['track'],'release:'+manifest['github_repositories']['rdna']['release_tag'])
         self.assertTrue(entry['checked_at_utc'])
 
     def test_latest_release_replaces_pin(self):
@@ -46,7 +46,7 @@ class LiveFreshnessGate(unittest.TestCase):
                 return {'tag_name':'v14-097cf33d9-r119'}
             return snapshot(path)
         with self.assertRaisesRegex(mod.StaleSource, 'r119'):
-            mod.verify_candidate('rdna-r120-hip-4b',manifest,newer)
+            mod.verify_candidate('rdna-latest-hip-4b',manifest,newer)
 
     def test_latest_head_change_replaces_pin(self):
         def newer(path):
@@ -71,7 +71,7 @@ class LiveFreshnessGate(unittest.TestCase):
             if 'stew675' in path and '/git/tags/' in path:
                 return {'object':{'type':'commit','sha':manifest['github_repositories']['rdna']['release_commit']}}
             return snapshot(path)
-        self.assertEqual(mod.verify_candidate('rdna-r120-hip-4b',manifest,tagged)['source'],'rdna')
+        self.assertEqual(mod.verify_candidate('rdna-latest-hip-4b',manifest,tagged)['source'],'rdna')
 
     def test_offline_is_unverified_not_approved(self):
         def no_network(path):
@@ -96,10 +96,12 @@ class LiveFreshnessGate(unittest.TestCase):
         with self.assertRaises(mod.StaleSource):
             mod.verify_one('upstream',pinned,snapshot)
 
-    def test_missing_gh_cli_fails_closed(self):
+    def test_missing_gh_cli_and_unavailable_public_api_fails_closed(self):
+        from urllib.error import URLError
         with patch.object(mod.subprocess,'run',side_effect=FileNotFoundError('gh')):
-            with self.assertRaises(mod.UnverifiedSource):
-                mod.github_api('repos/ggml-org/llama.cpp/git/ref/heads/master')
+            with patch.object(mod,'urlopen',side_effect=URLError('offline')):
+                with self.assertRaises(mod.UnverifiedSource):
+                    mod.github_api('repos/ggml-org/llama.cpp/git/ref/heads/master')
 
 
 if __name__=='__main__':

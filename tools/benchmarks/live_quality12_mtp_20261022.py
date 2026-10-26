@@ -140,10 +140,12 @@ CANDIDATES={
 }
 # Historical CANDIDATES remain inspectable for evidence parsing only.
 # Never allow a new live GPU run against retired b11798 or r111.
+# Only engines with source *and binary* at current pinned SHA are admissible.
+# Oct26 RDNA r142, upstream 8b28, Prism c96b outdate ALL r120/062/Oct23
+# artifacts. Preserve them in CANDIDATES for historical records, NOT execution.
 LATEST_ONLY_CANDIDATES=frozenset({
     "atomic4b", "atomic4b-q8v", "atomic4b-hip-turbo3", "atomic4b-hip-q8v",
-    "rdna-r120-hip-4b", "upstream-master-4b", "prism-head-4b", "s1-head-4b",
-    "chimera-062-mmb-off", "chimera-062-mmb-on", "chimera-062-mmb-mmf32", "upstream-062-hip-4b",
+    "s1-head-4b",
 })
 assert LATEST_ONLY_CANDIDATES <= set(CANDIDATES)
 LATEST_SOURCE_MANIFEST=Path(__file__).with_name("latest_engine_sources_20261023.json")
