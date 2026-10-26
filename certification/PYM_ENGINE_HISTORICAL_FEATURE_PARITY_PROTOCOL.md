@@ -31,3 +31,6 @@ Fiche de verdict Source de vérité : Sources/Worklogs/2026-10-26_PYM35B_FULL_GP
 
 ### Hypothèse de performance upstream à vérifier séparément
 Il existe un signalement récent sur un écart de vitesse Vulkan MTP v0.7 vs v0.6 (issue ggml-org/llama.cpp #30688 : https://github.com/ggml-org/llama.cpp/issues/30688). **Ne pas imputer les performances locales à ce bug sans reproduction** et ne pas appliquer de revert non testé. À investiguer après l’A/B Atomic1.6→Atomic2.
+
+## Native load-mode ablation — STOP sur erreur GPU
+26 octobre, unique paramètre modifié à l’identique sur Atomic1.6 et Atomic2 : -lm mmap vers -lm none. Atomic1.6 chargeant le vrai Pym fullGPU8K a échoué en RADV avec « Not enough memory for command submission » puis « vk::Queue::submit: ErrorDeviceLost », sans réponse. Atomic2 a été refusé par son précontrôle avant de charger, donc AUCUN verdict de débit non-mmap. Les embeddings et routeur sont restés actifs ; ZFS ARC max rétabli. Le banc refuse désormais cette variante avant chargement pour Pym fullGPU sur Radeon780M. Ne pas relancer automatiquement ; garder mmap comme référence historique.

@@ -153,6 +153,20 @@ class GuardTests(unittest.TestCase):
   self.assertIn('PARITY_PRESET',s)
   self.assertIn('layers={"full":"99"',s)
   self.assertIn('experts={"full":"0"',s)
+ def test_fullgpu_nonmmap_pym_device_lost_is_never_retried(self):
+  with mock.patch.object(b,"guardian") as guardian:
+   r=b.preflight("pym","atomic16","mtp2","full",b.PARITY_PRESET,"none")
+  self.assertFalse(r["admitted"])
+  self.assertIn("PYM_FULL_GPU_NOMMAP_RADV_DEVICE_LOST_20261026_DO_NOT_RETRY",r["reasons"])
+  guardian.assert_not_called()
+ def test_load_mode_single_parameter_ablation_keeps_other_flags_equal(self):
+  for engine in ("atomic16","atomic2","upstream_b11844"):
+   mmap=b.parity_extra_flags(engine,None,"mmap")
+   nommap=b.parity_extra_flags(engine,None,"none")
+   self.assertEqual(len(mmap),len(nommap))
+   self.assertEqual(mmap[1],"mmap")
+   self.assertEqual(nommap[1],"none")
+   self.assertEqual(mmap[:1]+mmap[2:],nommap[:1]+nommap[2:])
  def test_atomic16_reference_executable_is_in_same_engine_matrix(self):
   self.assertIn("atomic16",b.BINARIES)
   self.assertIn("atomic17",b.BINARIES)

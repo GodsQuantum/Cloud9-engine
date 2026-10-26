@@ -67,7 +67,15 @@ def psi_io_full():
  found=__import__("re").search(r"full avg10=([\d.]+)",Path("/proc/pressure/io").read_text())
  return float(found.group(1)) if found else None
 
-def preflight(model_key,engine,mode,profile="full",preset="explore"):
+def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_mode="mmap"):
+ # Hardware fail-closed: Native -lm none led to RADV vk::Queue::submit
+ # ErrorDeviceLost while loading Pym 35B fullGPU on Oct26; not retry.
+ # This is not a performance score and is no basis for ranking Atomic2.
+ if preset==PARITY_PRESET and model_key=="pym" and parity_load_mode=="none":
+  return {"admitted":False,
+          "reasons":["PYM_FULL_GPU_NOMMAP_RADV_DEVICE_LOST_20261026_DO_NOT_RETRY"],
+          "historical_parity_comparable":False,
+          "native_mmap_preserved":False}
  p=MODELS[model_key];b=BINARIES[engine]
  assert p.is_file() and b.is_file()
  if mode in ("mtp1","mtp2","mtp3","mtp_adaptive") and model_key not in ("pym","pym_heretic"):
@@ -148,15 +156,16 @@ PARITY_FEATURES=("GPU_full_99","CPU_MoE_off_0","inline_MTP2",
 PARITY_REQUIRED_HELP=("--poll", "--poll-batch", "--spec-draft-p-min",
                       "--no-spec-draft-backend-sampling", "--n-cpu-moe",
                       "--spec-type", "--spec-draft-n-max", "--no-cache-prompt")
-def parity_extra_flags(engine,help_text=None):
+def parity_extra_flags(engine,help_text=None,load_mode="mmap"):
  if engine not in BINARIES:raise ValueError("Unknown engine")
+ if load_mode not in ("mmap","none"):raise ValueError("Unsupported load mode")
  if help_text is not None:
   unavailable=[flag for flag in PARITY_REQUIRED_HELP if flag not in help_text]
   if unavailable:raise ValueError("PARITY_FEATURE_MISSING:"+",".join(unavailable))
  # All 3 binaries support native same-function flags; upstream additionally
  # requires explicit lazy-mode off; Atomic2 has no lazy-mode flag, so no
  # unsupported synthetic knob is passed.
- extra=["-lm","mmap","--poll","100","--poll-batch","0",
+ extra=["-lm",load_mode,"--poll","100","--poll-batch","0",
         "--no-cache-prompt","--spec-draft-p-min","0",
         "--no-spec-draft-backend-sampling","--reasoning-budget","0",
         "--jinja"]
@@ -183,6 +192,8 @@ def main():
                  help="Baseline copied to ALL engines before feature ablation; requires fullGPU Pym MTP2")
  ap.add_argument("--parity-context",type=int,choices=[8192,16384],default=16384,
                  help="16K documented Oct02 baseline; 8K secondary fallback CHANGING ONLY context on every engine")
+ ap.add_argument("--parity-load-mode",choices=["mmap","none"],default="mmap",
+                 help="Baseline mmap. Phase1 native ablation: none, same option across every compared engine.")
 
  ap.add_argument("--run-id",required=True)
  ap.add_argument("--max-output-tokens",type=int,choices=[128,192,256,384,768],default=768,
@@ -195,6 +206,8 @@ def main():
   ap.error("Historic feature-parity preset requires --model pym --mode mtp2 --profile full")
  if a.preset!="atomic16-mtp2-f16-fullgpu" and a.parity_context!=16384:
   ap.error("--parity-context only applies to the identical-features historical parity preset")
+ if a.preset!=PARITY_PRESET and a.parity_load_mode!="mmap":
+  ap.error("--parity-load-mode only applies to a historical fullGPU parity trial")
  if not(1<=len(a.run_id)<=45 and all(c.isalnum() or c in "-_" for c in a.run_id)):ap.error("invalid immutable run-id")
  report=LAB/("moe_upstream_"+a.run_id+".json")
  logfile=LAB/("moe_upstream_"+a.run_id+".log")
@@ -202,10 +215,11 @@ def main():
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
          "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,
          "max_output_tokens":a.max_output_tokens,"preset":a.preset,
-         "parity_context":a.parity_context if a.preset==PARITY_PRESET else None,"rows":[]}
+         "parity_context":a.parity_context if a.preset==PARITY_PRESET else None,
+         "parity_load_mode":a.parity_load_mode if a.preset==PARITY_PRESET else None,"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
-  start=preflight(a.model,a.engine,a.mode,a.profile,a.preset)
+  start=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode)
   result["preflight"]=start
   result["status"]="blocked_preflight" if not start["admitted"] else "eligible_not_executed"
   if not a.execute or not start["admitted"]:
@@ -215,7 +229,7 @@ def main():
    try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
    except BlockingIOError:
     result["status"]="gpu_lock_busy";save();return
-   second=preflight(a.model,a.engine,a.mode,a.profile,a.preset)
+   second=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode)
    result["second_preflight"]=second
    if not second["admitted"]:
     result["status"]="blocked_after_lock";save();return
@@ -241,8 +255,9 @@ def main():
    if a.preset==PARITY_PRESET:
     support=subprocess.run([str(bin),"--help"],capture_output=True,text=True,timeout=18)
     if support.returncode!=0:raise RuntimeError("Unable to validate candidate native feature support")
-    cmd+=parity_extra_flags(a.engine,support.stdout+support.stderr)
-    result["parity_features"]=list(PARITY_FEATURES)
+    cmd+=parity_extra_flags(a.engine,support.stdout+support.stderr,a.parity_load_mode)
+    result["parity_features"]=[f if f!="mmap" else "load_mode_"+a.parity_load_mode for f in PARITY_FEATURES]
+    result["changed_from_historical_baseline"]=(["load_mode: mmap -> none"] if a.parity_load_mode=="none" else [])
     result["parity_source"]={
       "atomic16_20260911":"model Qwen3.6-35B-A3B Pym Q2-MTP; inline MTP2; KV f16; median 36.28t/s (other flags not recorded)",
       "upstream_20261002":"Pym same GGUF ngl99 c16384 np1 b1024 ub1024 t8 tb8 FAon mmap poll100 pollbatch0 f16 KV, inline MTP2",

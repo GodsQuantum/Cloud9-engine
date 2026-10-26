@@ -792,9 +792,19 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
           "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741",
           "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+          "sha256": "cc83a9c059c7ada6b2159f059bc73e193ea5d160d18bc5eada44d8d29d9cda72",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+          "sha256": "3a4048791e9c4cd4a8182f5146a6438f11a5663069df5867a639a7ef2183c34c",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
         }
       ],
-      "remaining": "FULL GPU HISTORIC FEATURES, NOT OUT OF BOX! Found Atomic1.6 original native binary b10269 build10709 c044dff24, and atomic17 c99279d98, Atomic2 stock cda0f92, Atomic2 Zen4/LTO, upstream062; features parity preset in tools/qualification/moe_upstream_bakeoff.py. Atomic1.6 HOF Sep11 36.28t/s MTP2 f16 with incomplete flags; upstream Oct02 exact documented fullGPU99 c16384 b1024 ub1024 poll100/0 MTP2 f16 median30.49t/s. Reconstructed common 15-feature preset native supported across all5, tests31 PASS. 16K old+new failed watchdog PSI. 8K exact parity under ARC3GiB cap (restored original4.5GiB) Atomic1.6 completed3/3 math27.8104(code28.0922,FR23.9433)t/s correct math, Atomic2 math27.2461t/s correct but failed watchdog on code/FR (PSI1.83 and MemAvailable23.37GiB); Atomic2 -2.03pct single math only NOT total winner. Need complete Atomic2 and other engines at same settings with stable service-level available RAM, repeat3 times, QA math+compiled Python+strict JSON/tool calling and contexts16-128K. No production promotion. Follow certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md and manifest proof.",
+      "remaining": "FULL GPU HISTORIC FEATURES, NOT OUT OF BOX! Found Atomic1.6 original native binary b10269 build10709 c044dff24, and atomic17 c99279d98, Atomic2 stock cda0f92, Atomic2 Zen4/LTO, upstream062; features parity preset in tools/qualification/moe_upstream_bakeoff.py. Atomic1.6 HOF Sep11 36.28t/s MTP2 f16 with incomplete flags; upstream Oct02 exact documented fullGPU99 c16384 b1024 ub1024 poll100/0 MTP2 f16 median30.49t/s. Reconstructed common 15-feature preset native supported across all5, tests31 PASS. 16K old+new failed watchdog PSI. 8K exact parity under ARC3GiB cap (restored original4.5GiB) Atomic1.6 completed3/3 math27.8104(code28.0922,FR23.9433)t/s correct math, Atomic2 math27.2461t/s correct but failed watchdog on code/FR (PSI1.83 and MemAvailable23.37GiB); Atomic2 -2.03pct single math only NOT total winner. Need complete Atomic2 and other engines at same settings with stable service-level available RAM, repeat3 times, QA math+compiled Python+strict JSON/tool calling and contexts16-128K. No production promotion. Follow certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md and manifest proof. Native fullGPU8K Pym mmap->none single-parameter alternative directly caused RADV ErrorDeviceLost and memory-not-enough on original Atomic1.6; Atomic2 denied preflight in same mode. Rejected, banned in preflight with unit test. No LXC stopped, no host GPU reboot, original ARC cap restored. Continue only mmap native fullGPU with enough memory headroom and guard; no speed winner yet.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -1034,9 +1044,19 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
           "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741",
           "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+          "sha256": "cc83a9c059c7ada6b2159f059bc73e193ea5d160d18bc5eada44d8d29d9cda72",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+          "sha256": "3a4048791e9c4cd4a8182f5146a6438f11a5663069df5867a639a7ef2183c34c",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
         }
       ],
-      "remaining": "GPU full 8K parity on original Atomic1.6 successful 3 output / correct math. Same Pym fullGPU8K Atomic2 only math completed (-2.03pct in one math sample), watchdog stopped rest. Cannot claim engine winner until complete matched runs and quality; no production promotion. Temporary ZFS ARC3GiB only while benchmarking, restored to original4.5GiB each time, no guest stopped. Durable protocol and evidence committed; three newer engines await equal-feature score; candidate tweaks after winning baseline only.",
+      "remaining": "GPU full 8K parity on original Atomic1.6 successful 3 output / correct math. Same Pym fullGPU8K Atomic2 only math completed (-2.03pct in one math sample), watchdog stopped rest. Cannot claim engine winner until complete matched runs and quality; no production promotion. Temporary ZFS ARC3GiB only while benchmarking, restored to original4.5GiB each time, no guest stopped. Durable protocol and evidence committed; three newer engines await equal-feature score; candidate tweaks after winning baseline only. Hardware fail closed: native Pym fullGPU load mode none caused ErrorDeviceLost original Atomic1.6 (no scored prompts); automatically reject this precise variant until manually investigated; production router and embedding confirmed healthy. No production LLM promotion.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -1047,7 +1067,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~11:30 Paris: USER CORRECTED benchmarking method: never start out-of-box; retrieve original atomic1.6 binary c044dff24 and compare same historical winner features first across Atomic1.6,1.7,2.0,LTO,upstream with same Pym35B GGUF. Created preset atomic16-mtp2-f16-fullgpu with ngl99 CPU-MoE0 MTP2 f16 KV ctx16K (8K fallback), b/ub1024, t8, poll100/0, mmap, FA, no prompt-cache, spec pmin0/no backend sampling; flags verified for all candidates, no exact original Sep full CLI in ledger (Oct02 fully documented). 31 tests PASS. 16K original+Atomic2 failed live PSI guard. 8K ZFS ARC cap temporarily3GiB and ALWAYS restored4.5GiB: Atomic1.6 fullGPU returned three correct-visible responses math27.8104,code28.0922,FR23.9433t/s, math925 correct. Atomic2 fullGPU same features returned math27.2461t/s (-2.03pct), then memory PSI1.83 and host available23.37GiB tripped guard before code/FR. Result cannot rank engine overall; partial new Atomic2 math is slower. No LXC stopped or engine prod changed. NEXT: resource headroom from individual services not whole guests and complete full protocol, then ablate/port features.",
+  "latest_attempt_note": "26Oct2026 ~11:38 Paris: CORRECTED historical-feature-first MoE tournament. Original Atomic1.6 c044dff24 recovered, 31+ tests parity. True fullGPU Pym MTP2 KVf16 8K Atomic1.6 math27.8104/code28.0922/FR23.9433 tok/s 3/3 valid visible, original Atomic2 same feature only math27.2461tok/s (-2.03% one sample) then guardian PSI1.83 aborted. 16K both failed fullGPU guardian; no engine winner yet. Safe transient ZFS ARC cap3GiB to gain headroom always restored to original4.5GiB (3 attempts, confirmed). One native ablation -lm none vs mmap led Atomic1.6 RADV vk::Queue::submit ErrorDeviceLost (zero scored); Atomic2 denied preflight. Source runner now REJECTS fullGPU Pym nonmmap ahead of GPU, 33 unit tests. CT410 router/embedding active, no guest stops, no production promotion. Proofs and full protocol certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1598,6 +1618,16 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
       "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
       "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+      "sha256": "cc83a9c059c7ada6b2159f059bc73e193ea5d160d18bc5eada44d8d29d9cda72"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+      "sha256": "3a4048791e9c4cd4a8182f5146a6438f11a5663069df5867a639a7ef2183c34c"
     }
   ],
   "nextn_lab_candidate": {
