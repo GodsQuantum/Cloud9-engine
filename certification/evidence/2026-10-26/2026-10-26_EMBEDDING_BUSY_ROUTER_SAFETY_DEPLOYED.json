@@ -1,0 +1,15 @@
+{
+  "deployed_SHA256": "87c959b41cda040e8a0e48599edf827b837086e4e16a2f4ad7d24f8e72fbf07f",
+  "before_SHA256": "2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262",
+  "issue": "Router embedding_busy queried 127.0.0.1:8091 although embedding daemon binds 192.168.1.219:8091; exception returned False",
+  "fix": "Configurable real binding + fail-closed for unknown, unreachable, malformed slot data",
+  "tests_passed": 25,
+  "embeddings_service_not_stopped": true,
+  "router_restarted_without_active_worker_or_HTTP_clients": true,
+  "live_embedding_slots": 4,
+  "live_embedding_busy_slots": 4,
+  "default_routes_unchanged": true,
+  "rollback_original": "/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA/Sources/Worklogs/2026-10-26_CLOUD9_ROUTER_DEPLOYED_BEFORE_EMBED_FIX.py",
+  "current_service": "cloud9-engine-router.service",
+  "deployed_SHA_verified": true
+}

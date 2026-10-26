@@ -145,9 +145,14 @@
           "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
           "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
           "note": "router hash 2ce83aed, official GPU guard, VoiceStudio Speaches AutoSubs preserved"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_EMBEDDING_BUSY_ROUTER_SAFETY_DEPLOYED.json",
+          "sha256": "6e5afa2ba9bfe4e6dd1a83308b8e4a3b2c2e3b816a47d768bddaadcb6f293349",
+          "note": "CT410 live router binding bug fixed, fail-closed busy embedding slots on correct host, 25 unit tests pass"
         }
       ],
-      "remaining": "Prove stress and crash recovery and no interruptions under concurrent agent traffic",
+      "remaining": "Current CT410 router source caught up from live deployed 29KB native Python and deployed patched SHA87c959b41cda. Fixed embedding_busy() wrong localhost:8091 bind; now uses configurable actual192.168.1.219:8091, fail-closed on API error/malformed slots. 25 targeted router tests PASS, restart only when router worker idle and zero connections, embedding service remained active with 4 processing slots. Remaining: real exclusive preemption/rollback test ONLY during idle maintenance, not while real embedding tasks running.",
       "acceptance": "workload cannot stop embeddings, AutoSubs, VoiceStudio, Speaches or PBS"
     },
     {
@@ -462,9 +467,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
           "sha256": "df5547bed6526456f1ca63c0215f2d49bde16bcec015c364942a26774139d9ff",
           "note": "PBS IO PSI17.07 prevents reliable new Q4 benchmark before GPU launch"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
+          "sha256": "f98745a7cd2ffb42012ea70675263d4c1ee273d793ab8b87a42ab31a56144180",
+          "note": "Four production embedding GPU slots ACTIVE, no preemption; persistent host RAM and PBS IO pressure"
         }
       ],
-      "remaining": "Current Cloud9 host memory resource ceiling due CT40016.3GiB anon14, guest PBS9007.5GiB HAOS1006.6GiB CT2106.2GiB CT4104.6GiB; 4TB ST4000LM024 PBS disk heavily loaded by verify and backup, host IO PSI frequently >9. Preserve backups/USB/VM/services. No forced process or cache eviction to benchmark.",
+      "remaining": "Cloud9 shared RAM baseline24-27GiB available for 96GiB host, heavy swap17-18GiB, CT400 IA Studio16GiB, HAOS and PBS guests plus CT410 embeddings3GiB. Four embeddings slots repeatedly busy, PBS VM900 backup/verify IO pressure. LFM compact Q4 GPU trial host PSI peak2.05-2.35 and memory21-22G; own watchdog correctly killed only LAB child. Do not preempt busy embeddings or stop HAOS/PBS/CT400 to win synthetic speeds. No Pym13.22GB fair full GPU run under this RAM/PSI.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -532,9 +542,29 @@
           "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
           "sha256": "53db027ce3b173a1e59a830a1b23954c4841fad4fcaec5e6dcb4f511d41eae29",
           "note": "Official LFM2.5 8B-A1B MoE Q4 model native upstream full GPU load6.017s; no response due runtime pressure"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+          "sha256": "4e27a07816f21cbf4a864feb8513118dd0ffe4dcfa81ba5966ff10dd22bd0c5d",
+          "note": "Real same GGUF upstream b11844 LFM-Q4 math 38.975 t/s, thinking 256 tokens but no final"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+          "sha256": "7e66bda24f80d06fdffe7232d6d858ba0065486688af7b56dd4db30f82c53c55",
+          "note": "Real same GGUF Atomic2 LFM-Q4 math47.601, code44.512, FR39.973 t/s, no visible final"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+          "sha256": "3813e2640395c8b956acca0c48498c68f7a620fe6ea39ef64b6d73cf326ee08a",
+          "note": "Atomic2 think0 zero-response safety watchdog PSI2.05 before LFM answer"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
+          "sha256": "05e35855075a06d49769fbbef79012739e95664e1cb2edbf54e32b7f760d0e24",
+          "note": "Upstream think0 zero-response safety watchdog PSI2.35 before LFM answer"
         }
       ],
-      "remaining": "Pym historical baseline MTP2 34.56t/s median, math37.20 peak. Now two genuine Pym13.22GB upstream b11844 partial GPU LAB loads succeeded4.366s/2.403s, ZERO decoded response because official-memory watchdog at PSI2.35 or MemAvailable18.658. Full-ngl99 not admitted, no matched current speed. Lowering GPU layers failed to solve 96GB co-resident RAM pressure. New official LFM2.5 MoE Q4 pinned SHA valid and upstream native GPU load6.017s successful, ZERO generated response so far; safe A/B with Atomic2 pending. Never promote on load-only test.",
+      "remaining": "Real native SAME LFM2.5-8B-A1B Q4 model SHA pinned, same prompt 256tokens c1536 b128 ub32 FA f16KV: upstream b11844 math38.975t/s; Atomic2 math47.601t/s (+22.13%), code44.512, FR39.973 t/s. All completion visible outputs EMPTY because 256 tokens spent on reasoning, thus not agentic-quality qualified and not an engine WIN. Native reasoning-budget0 and expanded 768 output prepared, but real subsequent QA attempts both stopped by official host PSI watchdog during load. Pym 35B historical MTP2 median34.56 math peak37.20, Flash-Next tuned 17.878 remain distinct models; do not infer MoE model quality from LFM.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -644,9 +674,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
           "sha256": "a2a4a2b79d96dad30dad365ac114a23ba7b8df443bb2d0f45f3b819590e8880b",
           "note": "No winner under host PBS memory/IO pressure, real Pym loads but watchdog before inference; LFM A/B staged"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_LFM_Q4_REAL_GPU_SPEED_WITH_QA_BLOCKED.json",
+          "sha256": "7226e97091f326cc92e3f0bc2ec93a3d8d33135324bc412a2abf55ca3e968380",
+          "note": "Hardware same-GGUF 22.13pct math speed edge for Atomic2 but zero visible final, no release"
         }
       ],
-      "remaining": "No quality/speed winner CERTIFIED under realistic coexistence. Pym upstream b11844 exact real load profiles ngl8/ngl4 emergency watchdog before response. LFM official 8B-A1B Q4 integrity verified and loaded GPU successfully, but first inference guarded paused. Reuse pinned native one-engine lab with LFM compact only for matched baseline on upstream b11844 and Atomic2, then tweak observed winner and strict agentic/128K, after resources stable. Stable OmniRoute combos unchanged.",
+      "remaining": "FAIL CLOSED. Atomic2 +22.13pct math decode against upstream on exact LFM Q4 at c1536, BUT generated 0 visible final answers in both engines at 256token cap. At native reasoning-budget0 full QA both guard stopped before inference due host memory PSI, so NO agentic/coding/JSON winner certified. Require same-model full final responses, exact tools and coding quality, context32/64/128K and 24h canary before production promotion. Production 4 OmniRoute combos unchanged, current router safety fix installed.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -657,7 +692,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "26 Oct 2026 ~02:00 Paris: user demanded one-by-one active tests. Pym upstream b11844 ngl8 and ngl4 actually loaded at 4.366/2.403s; native watchdog stops at PSI full2.35/MemAvailable18.658, 0 generated tps. Pinned official LFM2.5-8B-A1B Q4 SHA verified5.155GB, compact MoE GPU server loaded6.017s, paused pre-inference; another blocked host IO PSI17.07. Upstream vs Atomic identical compact MoE queued only for a stable actual window. No model/backup/service production changes.",
+  "latest_attempt_note": "2026-10-26 02:41 Paris: LFM2.5-8B-A1B same model Atomic2 vs llama.cpp b11844 live on 780M: math47.6006 vs38.9751t/s (+22.13%), Atomic code44.512/fr39.973; all max256 outputs thinking only -> visible final EMPTY. New native LFM reasoning-budget0/768 QA tests blocked by real host PSI watchdog2.05-2.35, own children unloaded, no product release. Live embeddings slot UI exposed FOUR real processing tasks; router embedding_busy() used localhost while server binds192.168.1.219 and failed-open. Fixed and deployed native router SHA87c959b, fail-closed, 25 tests PASS, router restarted when idle and embeddings not interrupted. HOF appended two failed-quality speed records, HOF validation pass. Follow-up preserve safety and rebench in idle window before choosing engine.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -958,6 +993,41 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
       "project_path": "Sources/Worklogs/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
       "sha256": "a2a4a2b79d96dad30dad365ac114a23ba7b8df443bb2d0f45f3b819590e8880b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+      "sha256": "4e27a07816f21cbf4a864feb8513118dd0ffe4dcfa81ba5966ff10dd22bd0c5d"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+      "sha256": "7e66bda24f80d06fdffe7232d6d858ba0065486688af7b56dd4db30f82c53c55"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+      "sha256": "3813e2640395c8b956acca0c48498c68f7a620fe6ea39ef64b6d73cf326ee08a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
+      "sha256": "05e35855075a06d49769fbbef79012739e95664e1cb2edbf54e32b7f760d0e24"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_LFM_Q4_REAL_GPU_SPEED_WITH_QA_BLOCKED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_LFM_Q4_REAL_GPU_SPEED_WITH_QA_BLOCKED.json",
+      "sha256": "7226e97091f326cc92e3f0bc2ec93a3d8d33135324bc412a2abf55ca3e968380"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_EMBEDDING_BUSY_ROUTER_SAFETY_DEPLOYED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_EMBEDDING_BUSY_ROUTER_SAFETY_DEPLOYED.json",
+      "sha256": "6e5afa2ba9bfe4e6dd1a83308b8e4a3b2c2e3b816a47d768bddaadcb6f293349"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
+      "sha256": "f98745a7cd2ffb42012ea70675263d4c1ee273d793ab8b87a42ab31a56144180"
     }
   ],
   "nextn_lab_candidate": {

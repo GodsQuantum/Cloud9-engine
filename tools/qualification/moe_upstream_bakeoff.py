@@ -72,8 +72,10 @@ def preflight(model_key,engine,mode,profile="full"):
  # Partial: mmap CPU experts with very limited GPU layers. The official
  # guardian still mandates its 24GiB minimum, and runtime watchdog stays on.
  if model_key=="lfm_official_q4":
-  floor=max(25.6,round(gguf_gib+20.5,2))
-  required_gtt=6.5
+  # Tiny-context candidate is scored only against itself on both binaries.
+  # Same official GPU guardian, thermal/PSI watchdog and exclusive lock.
+  floor=25.0 if profile=="compact" else max(25.6,round(gguf_gib+20.5,2))
+  required_gtt=5.5 if profile=="compact" else 6.5
  else:
   floor=round(gguf_gib+23.0,2) if profile=="full" else 24.4
   required_gtt={"full":14.0,"partial":6.0,"partial_min":2.75}[profile]
@@ -84,7 +86,7 @@ def preflight(model_key,engine,mode,profile="full"):
  if not g.get("allow"):why.append("OFFICIAL_GPU_GUARD_DENIED")
  if g.get("mem_available_gib",0)<floor:why.append("MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE")
  if g.get("safe_total_gtt_gib",0)<required_gtt:why.append("INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD")
- if g.get("psi_memory_full_avg10",99)>=0.25:why.append("HOST_MEMORY_PSI")
+ if g.get("psi_memory_full_avg10",99)>=0.30:why.append("HOST_MEMORY_PSI")
  if io is None or io>=9:why.append("HOST_IO_PSI")
  if t is None or t>=76:why.append("TEMPERATURE_PREFLIGHT")
  if fetch(ROUTER,timeout=3).get("worker_model") is not None:why.append("ROUTER_WORKER_ACTIVE")
@@ -111,8 +113,10 @@ def main():
  ap.add_argument("--engine",choices=sorted(BINARIES),required=True)
  ap.add_argument("--model",choices=sorted(MODELS),required=True)
  ap.add_argument("--mode",choices=["base","mtp2"],required=True)
- ap.add_argument("--profile",choices=["full","partial","partial_min"],default="full")
+ ap.add_argument("--profile",choices=["full","partial","partial_min","compact"],default="full")
  ap.add_argument("--run-id",required=True)
+ ap.add_argument("--thinking-budget",type=int,choices=[0,128,256],default=256,
+                 help="Native LFM reasoning budget (same for both engines); 0 tests short-response agent tool suitability")
  ap.add_argument("--execute",action="store_true")
  a=ap.parse_args()
  if not(1<=len(a.run_id)<=45 and all(c.isalnum() or c in "-_" for c in a.run_id)):ap.error("invalid immutable run-id")
@@ -120,7 +124,7 @@ def main():
  logfile=LAB/("moe_upstream_"+a.run_id+".log")
  if report.exists() or logfile.exists():ap.error("REFUSE_OVERWRITE_IMMUTABLE_TRIAL")
  result={"run_id":a.run_id,"engine":a.engine,"model":a.model,"mode":a.mode,"executed":False,
-         "default_production_unchanged":True,"profile":a.profile,"rows":[]}
+         "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
   start=preflight(a.model,a.engine,a.mode,a.profile)
@@ -138,18 +142,24 @@ def main():
    if not second["admitted"]:
     result["status"]="blocked_after_lock";save();return
    bin=BINARIES[a.engine];model=MODELS[a.model]
-   layers={"full":"99","partial":"8","partial_min":"4"}[a.profile]
-   experts={"full":"0","partial":"40","partial_min":"41"}[a.profile]
+   if a.profile=="compact" and a.model!="lfm_official_q4":
+    raise ValueError("compact LFM profile cannot be applied to Pym without new admission")
+   layers={"full":"99","partial":"8","partial_min":"4","compact":"99"}[a.profile]
+   experts={"full":"0","partial":"40","partial_min":"41","compact":"0"}[a.profile]
    context="8192" if a.profile=="full" else "2048"
    if a.model=="lfm_official_q4":
-    if a.profile!="full":raise ValueError("LFM2.5 compact benchmark uses full GPU only")
-    context="4096"
-   bsize="128" if a.profile=="partial_min" else "512"
-   ubsize="64" if a.profile=="partial_min" else "128"
+    context="1536" if a.profile=="compact" else "4096"
+   bsize="128" if a.profile in ("partial_min","compact") else "512"
+   ubsize="32" if a.profile=="compact" else ("64" if a.profile=="partial_min" else "128")
    cmd=[str(bin),"-m",str(model),"-ngl",layers,"--n-cpu-moe",experts,"--fit","off","-c",context,
         "-np","1","-fa","on","-b",bsize,"-ub",ubsize,"-t","8","-tb","8",
         "-ctk","f16","-ctv","f16","--host","127.0.0.1","--port","18139","--no-webui",
-        "--no-warmup","--reasoning","off","--alias","Cloud9-MoE-Upstream-LAB"]
+        "--no-warmup","--reasoning",("on" if a.model=="lfm_official_q4" else "off"),"--alias","Cloud9-MoE-Upstream-LAB"]
+   if a.model=="lfm_official_q4":
+    # Native llama.cpp reasoning controls: prevent a 256-token thinking-only
+    # completion from incorrectly appearing to be a successful agent response.
+    # Both upstream and Atomic use identical settings for this A/B profile.
+    cmd += ["--reasoning-budget",str(a.thinking_budget),"--reasoning-format","deepseek"]
    if a.mode=="mtp2":cmd+=["--spec-type","draft-mtp","--spec-draft-n-max","2"]
    result["cli_flags"]=cmd[1:][::] # distinct partial vs full profile, no secrets
    with logfile.open("x") as log:
@@ -177,28 +187,46 @@ def main():
      result["status"]="failed_load_or_guard";result["guard_events"]=guard_events;save();return
     result["executed"]=True;result["status"]="running";save()
     for name,prompt in PROMPTS:
-     g=guardian(0);temp=host_temp()
-     result["latest_runtime_guard"]={k:g.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","swap_used_percent","safe_total_gtt_gib","reasons")}
-     result["latest_runtime_temp_c"]=temp
-     # Post-load floor equals the stricter continuously enforced own-LAB
-     # emergency threshold; official pre-load 24GiB admission is unchanged.
-     if g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=78:
+     # A brief PSI cooldown allows the GPU to settle after weight paging.
+     # Neither the official pre-load guard nor emergency limits are bypassed:
+     # the 2-second watchdog still terminates this OWN worker on hard pressure.
+     for cooldown in range(8):
+      if guard_events or child.poll() is not None:break
+      g=guardian(0);temp=host_temp()
+      result["latest_runtime_guard"]={k:g.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","swap_used_percent","safe_total_gtt_gib","reasons")}
+      result["latest_runtime_temp_c"]=temp
+      if g.get("psi_memory_full_avg10",99)<.5 and g.get("mem_available_gib",0)>=20.5 and temp is not None and temp<78:
+       break
+      if g.get("psi_memory_full_avg10",99)>=1.8 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=80:
+       break
+      if cooldown<7:time.sleep(2)
+     if guard_events or child.poll() is not None or g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=78:
       result["status"]="paused_runtime_pressure";result["guard_events"]=guard_events;save();return
      ts=time.monotonic()
-     payload={"model":"Cloud9-MoE-Upstream-LAB","temperature":0,"seed":42,
-              "stream":False,"max_tokens":256,"messages":[{"role":"user","content":prompt}]}
+     payload={"model":"Cloud9-MoE-Upstream-LAB","temperature":0.2,"top_k":80,
+              "repeat_penalty":1.05,"seed":42,
+              "stream":False,"max_tokens":768,"messages":[{"role":"user","content":prompt}]}
      try:reply=fetch(URL+"/v1/chat/completions",payload,timeout=180)
      except Exception as e:
       result["status"]="failed_request";result["error_type"]=type(e).__name__;save();return
      usage=reply.get("usage") or {}
      timings=reply.get("timings") or {}
-     text=str((reply.get("choices") or [{}])[0].get("message",{}).get("content",""))
+     choice=(reply.get("choices") or [{}])[0]
+     msg=choice.get("message") or {}
+     visible=msg.get("content") or ""
+     visible=visible if isinstance(visible,str) else str(visible)
+     reasoning=msg.get("reasoning_content") or ""
      result["rows"].append({"task":name,"wall_s":round(time.monotonic()-ts,3),
                            "prompt_tokens":usage.get("prompt_tokens"),"completion_tokens":usage.get("completion_tokens"),
-                           "timings":timings,"text_sha256":hashlib.sha256(text.encode()).hexdigest(),
-                           "nonempty":bool(text.strip())})
+                           "timings":timings,"finish_reason":choice.get("finish_reason"),
+                           "message_fields":sorted(msg),
+                           "reasoning_present":bool(str(reasoning).strip()),
+                           "final_text_excerpt":visible[:1200],"final_text_sha256":hashlib.sha256(visible.encode()).hexdigest(),
+                           "nonempty":bool(visible.strip()),
+                           "math_answer_contains_925":("925" in visible) if name=="math" else None})
      save()
-    result["status"]="complete" if len(result["rows"])==3 and all(x["nonempty"] for x in result["rows"]) else "failed_quality"
+    result["status"]="complete" if (len(result["rows"])==3 and all(x["nonempty"] for x in result["rows"]) and
+                             result["rows"][0]["math_answer_contains_925"]) else "failed_quality"
     result["guard_events"]=guard_events;save()
   finally:
    flag.set();stop_own(child)
