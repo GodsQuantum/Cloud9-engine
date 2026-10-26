@@ -63,7 +63,11 @@
       "id": "atomic2-zen4-lto-lab",
       "path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-zen4-lto-lab-20261026/bin/llama-server",
       "commit": "cda0f925",
-      "state": "building_unverified"
+      "state": "compiled_staged_CT410_native_elf_validated_GPU_benchmark_pending",
+      "compiled_2026_10_26": true,
+      "version_validated": true,
+      "sha256": "e4e24225deb1dfd2209d8a2bd3b0bf89b076f7032e7e82c7c22201e5fdb2ac3e",
+      "performance_gain_demonstrated": false
     }
   ],
   "features": [

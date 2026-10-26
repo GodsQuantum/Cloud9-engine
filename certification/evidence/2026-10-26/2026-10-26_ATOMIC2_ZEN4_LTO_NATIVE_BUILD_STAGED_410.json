@@ -1,0 +1,31 @@
+{
+  "utc": "2026-10-26T02:20:02.493805+00:00",
+  "source_commit": "cda0f9256665845cd9d6f3a0176880883f653a3d",
+  "variant": "Atomic2 native Vulkan Zen4/LTO LAB, original source code unchanged",
+  "baseline_GGML_NATIVE_ON_already": true,
+  "tweaks": [
+    "GGML_LTO=ON",
+    "CMAKE_INTERPROCEDURAL_OPTIMIZATION=ON",
+    "ELF RUNPATH $ORIGIN for portable CT410 LAB"
+  ],
+  "ct700_build_dir": "/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA/Sources/Builds/atomic2-cda0f92-zen4-lto-vulkan-20261026",
+  "ct410_lab_release": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-zen4-lto-lab-20261026",
+  "ct410_version": [
+    "version: b10298-2.0.0 (build 1, commit cda0f925)",
+    "built with GNU 15.2.0 for Linux x86_64"
+  ],
+  "all_ELF_runtime_dependencies_found": true,
+  "MTP_adaptive_available": true,
+  "rpath_fixed_for_LAB": true,
+  "binary_sha256": {
+    "llama-server": "e4e24225deb1dfd2209d8a2bd3b0bf89b076f7032e7e82c7c22201e5fdb2ac3e",
+    "llama-bench": "c370d14adb4407485eab9b054db350563fe4ee6250769343d14d8f675c0786ee",
+    "libggml-vulkan.so.0.18.1": "10afc63880b68c27282ddf96712824761b14a0f0b6f6b3aa902f6e9914b8155a",
+    "libllama-server-impl.so": "65e4008c9453aff214339bc422d842a7886ab95c4b8103041ef3f31d5fee940c"
+  },
+  "real_pym35B_GPU_bench_ran": false,
+  "performance_advantage_demonstrated": false,
+  "agentic_quality_128k_certified": false,
+  "production_engine_changed": false,
+  "next_proof_required": "same exact Qwen3.6-35B-A3B Pym Q2 and --spec-type draft-mtp n=2, full safe GPU under official guardian; compare stock Atomic2, Zen4/LTO, upstream b11844, code/tool/JSON + 8..128K context"
+}

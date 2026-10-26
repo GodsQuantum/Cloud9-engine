@@ -126,9 +126,14 @@
           "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
           "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
           "note": "202 local Python tests, Vulkan usable, Turbo backend protection"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+          "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519",
+          "note": "Original Atomic2 cda0f925 source native Vulkan Zen4 LTO compiled in CT700, separate 11-ELF LAB artifact CT410 with $ORIGIN; --version/help and ldd PASS, no GPU model loaded yet"
         }
       ],
-      "remaining": "Need separate GPU Turbo K/V validation before claim TurboQuant runtime production",
+      "remaining": "Atomic2 native Vulkan Zen4+LTO compiler-tuned 11 ELFs deployed LAB ONLY in CT410; source cda0f925 unchanged, RPATH $ORIGIN patched in isolated binaries and ldd/--version/MTP adaptive flag PASS. No unqualified runtime performance claim; GPU correctness/prefill+decode comparisons need same exact Pym35B model and resource admission. Stable production unchanged.",
       "acceptance": "native build and guard remain green; no untested backend activation",
       "measured": {
         "python_tests_passed": 202,
@@ -572,9 +577,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
           "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada",
           "note": "Exact actual Pym Q2 13.22GB and Heretic APEX 17.02GB verified present, upstream/Atomic2 feature flags checked in actual Vulkan help. Guard refuses Pym full GPU; no new Pym decode claim."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+          "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519",
+          "note": "Hardware-specialized Atomic2 Zen4/LTO LAB binary SHA pinned; no current speed/quality gain, matched Pym A/B pending guardian RAM/GTT admission"
         }
       ],
-      "remaining": "Prioritize exact Pym35B Q2-MTP GGUF13,222,476,000 bytes then Pym Heretic17,016,624,544, not 4B/8B substitute. Same SHA and sampling on upstream b11844 vs Atomic2 b10298, then Atomic2 Zen4/LTO LAB after build. Feature matrix in certification/moe_tournament_20261026.json and plan in MOE_ENGINE_TOURNAMENT_20261026.md. Current official guardian on full Pym request13G declined, safe_total_gtt8.626GiB with host PSI0.81. No honest matched new Pym benchmark possible until resource admission. Existing historical Atomic1.6 Pym MTP2 f16 36.28 vs Turbo3 34.40: do not assume Turbo3 automatically helps. Test MTP2 baseline first, then adaptive MTP+KV+poll+microbatch single-variable ablation and port winning features with quality checks.",
+      "remaining": "Prioritize exact Pym35B Q2-MTP GGUF13,222,476,000 bytes then Pym Heretic17,016,624,544, not 4B/8B substitute. Same SHA and sampling on upstream b11844 vs Atomic2 b10298, then Atomic2 Zen4/LTO LAB after build. Feature matrix in certification/moe_tournament_20261026.json and plan in MOE_ENGINE_TOURNAMENT_20261026.md. Current official guardian on full Pym request13G declined, safe_total_gtt8.626GiB with host PSI0.81. No honest matched new Pym benchmark possible until resource admission. Existing historical Atomic1.6 Pym MTP2 f16 36.28 vs Turbo3 34.40: do not assume Turbo3 automatically helps. Test MTP2 baseline first, then adaptive MTP+KV+poll+microbatch single-variable ablation and port winning features with quality checks. 2026-10-26 Atomic2 Zen4/LTO candidate now actually native-built and staged CT410, all ELF linked and same Atomic2 source cda0f925. Distinct compiler optimization only (GGML_NATIVE was already ON stock), no speed gain measured; do not promote or assume GPU shader acceleration.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -712,7 +722,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~03:13 Paris: Corrected benchmark policy; created certification/MOE_ENGINE_TOURNAMENT_20261026.md and JSON feature-by-feature cross-engine matrix for Pym35B, Heretic, original FlashNext; 7 local matrix tests PASS. CT410 --help shows Atomic2 MTP-adaptive + turbo3/4, upstream b11844 MoE cache; both native MTP, microbatch and FA. Host proof 2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json pinned; full Pym GTT requested13 GiB denied safe8.626 GiB and PSI0.81, no model load. Atomic2 source cda0f925 separate LTO build on LXC700 for later identical-GGUF A/B, not production. Flash AD-4.27 exact missing, GSQ coder distinct. No forced PBS/embedding/HAOS stop.",
+  "latest_attempt_note": "2026-10-26 ~03:16 Paris: new cross-engine Pym35B + Heretic + exact FlashNext model target plan and JSON manifest validated 7 unit tests. Official guardian refused Pym full GPU (safe GTT8.6GiB vs request13GiB), no full Pym test; Flash exact historical quant absent. Compiled Atomic2 cda0f925 Vulkan Zen4/LTO, 11 ELF native $ORIGIN relocated, CT410 --version/help/ldd SUCCESS, new isolated lab path checksummed, no model generation or speed gain yet. Source code and stable OmniRoute preserved.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1058,6 +1068,11 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
       "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
       "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+      "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519"
     }
   ],
   "nextn_lab_candidate": {
