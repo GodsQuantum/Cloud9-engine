@@ -39,3 +39,17 @@ E. Vrais A/B Pym et FlashNext sur mêmes GGUF, Atomic2/stock/upstream, fonctionn
 
 ## Urgent : intégrité PBS détectée sur archive cloud-arezki du 21–22 octobre
 Le dernier GC a signalé deux chunks physiquement absents du datastore mais encore référencés. Inspection native des six fichiers index payload ppxar : les deux références existent dans les snapshots cloud-arezki du 21 ET du 22 octobre ; elles sont absentes des index du 23, des deux du 24 et du 25 octobre. **NE PAS considérer que les nouveaux snapshots sont intégralement vérifiés** ; on a seulement prouvé que ces deux digests ne s’y retrouvent pas. Ne pas effacer les snapshots anciens avant forensic, ne pas inventer réparation. Urgence : vérifier/essayer de restaurer un échantillon de la sauvegarde cloud-arezki du 25, monitorer les flags PBS et le prochain GC. Preuve SHA sous 2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json.
+
+## Inventaire mémoire global réel (PVE API, 26 octobre)
+16 invités relevés, source : 2026-10-26_CLOUD9_FULL_GUEST_MEMORY_AUDIT.json. Les métriques PVE diffèrent des RSS processus host et des limites cgroup : éviter additions naïves / doubles comptages.
+- VM/CT 400 ia-studio : 13.5 Gio mémoire PVE observée (plafond configuré 32.0 Gio), état running.
+- VM/CT 100 haos : 7.16 Gio mémoire PVE observée (plafond configuré 8.0 Gio), état running.
+- VM/CT 210 famille-docs : 5.41 Gio mémoire PVE observée (plafond configuré 16.0 Gio), état running.
+- VM/CT 110 connexion : 2.56 Gio mémoire PVE observée (plafond configuré 6.0 Gio), état running.
+- VM/CT 410 ia-compute : 2.24 Gio mémoire PVE observée (plafond configuré 64.0 Gio), état running.
+- VM/CT 220 medias-photos : 2.22 Gio mémoire PVE observée (plafond configuré 12.0 Gio), état running.
+- VM/CT 900 pbs : 1.93 Gio mémoire PVE observée (plafond configuré 8.0 Gio), état running.
+- VM/CT 230 telechargements : 1.56 Gio mémoire PVE observée (plafond configuré 6.0 Gio), état running.
+- VM/CT 300 travail : 1.32 Gio mémoire PVE observée (plafond configuré 32.0 Gio), état running.
+- VM/CT 120 securite : 1.06 Gio mémoire PVE observée (plafond configuré 4.0 Gio), état running.
+Les plus importants consommateurs à examiner sans interruption : CT400 IA Studio 13,5 Gio, HAOS 7,16 Gio, CT210 famille-docs 5,41 Gio. CT700 DEV est redescendu à ~0,22 Gio ; le build Atomic2 n’est donc plus une cause directe de contention actuelle. CT410 est à ~2,24 Gio alors que worker LLM=NULL, embeddings conservés. Faire profiling temps/idle et comparer à mesures Docker avant modification de limites ou arrêt.
