@@ -532,9 +532,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
           "sha256": "1dda1621a376049e1b21f509f19bae164d397ec6e2c0eb7b667eadd282610a2a",
           "note": "Service-level inventory 14 LXC+2VM+host, timer costs and user correction: NEVER stop entire guest for benchmark"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
+          "sha256": "2e93872fb703fcdaac0d7004c314b92b27650d767194821a39d27759d4b106d2",
+          "note": "Native Homepage status poll halved 60s to 120s, unit active, before CPU1.7s/run, no app restart"
         }
       ],
-      "remaining": "26 Oct new LIVE PBS policies: prune daily20:30 3last14daily8weekly12monthly3yearly active; verify-new false, one weekly verified Sat12 with1read1verify and30day overdue recheck; GC Sun04 preserved. Real CT110 metadata dual backup 69s first then10s second with99.7pct data reuse; phase1 native PVE daily09:00 CT110/120/200/9500/9600, prior daily00:30 keeps ten remaining with no overlap. Phase2 must migrate heavy LXC cautiously, 80pct datastore used, ~745GB free. Cloud host backups already native metadata (no duplicate). Host timers zfsrehab5sec=>120s, ops8=>30s, PBS check15min=>3h, finished one-time scrub transition disabled; verified no production service restart. PBS GC last18h warnings2 removed-bad12 unresolved; xfs_scrub and GC on Sunday may overlap, investigate; no disabling backups or native monthly verification. Cloud9 still ~25GiB MemAvailable, CT400 CloakBrowser3.1GiB/Hindsight1.8GiB, need safe session TTL/cgroup optimization to release enough memory for full Pym bench without violating guardian. Full details certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md. CRITICAL 26OCT GC WARNINGS:2 resolved to two MISSING chunks physically absent: referenced by old host/cloud-arezki Oct21+Oct22 ppxar, NOT referenced by four newer Oct23-Oct25 ppxar indexes (binary digest search). New backups remain unverified; target latest Oct25 snapshot verify/restore on safe HDD window. Preserve corrupted older snapshots for forensic, avoid deleting and alert on next GC. Live PVE 16-guest inventory confirmed: CT400 IA Studio13.5GiB, HAOS VM1007.16GiB, CT2105.41GiB, CT4102.24GiB with no LLM worker, CT7000.22GiB. Need identify idle CT400 CloakBrowser/Hindsight instances via their NATIVE session management before attempting Pym full GPU; do not shut down agents for synthetic gain. USER OVERRIDE: audit/optimize only processes/timers/services within all guests, never pct shutdown. Host DaVinci arbiter5s is protective, CT300 supervisor/auto-sleep60s functional, CT400 Hindsight10m frequently no changes, CT410 ComfyUI idle-stop60s functional but broken proxy status. Distinguish harmless timer presence from measured IO stress.",
+      "remaining": "26 Oct new LIVE PBS policies: prune daily20:30 3last14daily8weekly12monthly3yearly active; verify-new false, one weekly verified Sat12 with1read1verify and30day overdue recheck; GC Sun04 preserved. Real CT110 metadata dual backup 69s first then10s second with99.7pct data reuse; phase1 native PVE daily09:00 CT110/120/200/9500/9600, prior daily00:30 keeps ten remaining with no overlap. Phase2 must migrate heavy LXC cautiously, 80pct datastore used, ~745GB free. Cloud host backups already native metadata (no duplicate). Host timers zfsrehab5sec=>120s, ops8=>30s, PBS check15min=>3h, finished one-time scrub transition disabled; verified no production service restart. PBS GC last18h warnings2 removed-bad12 unresolved; xfs_scrub and GC on Sunday may overlap, investigate; no disabling backups or native monthly verification. Cloud9 still ~25GiB MemAvailable, CT400 CloakBrowser3.1GiB/Hindsight1.8GiB, need safe session TTL/cgroup optimization to release enough memory for full Pym bench without violating guardian. Full details certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md. CRITICAL 26OCT GC WARNINGS:2 resolved to two MISSING chunks physically absent: referenced by old host/cloud-arezki Oct21+Oct22 ppxar, NOT referenced by four newer Oct23-Oct25 ppxar indexes (binary digest search). New backups remain unverified; target latest Oct25 snapshot verify/restore on safe HDD window. Preserve corrupted older snapshots for forensic, avoid deleting and alert on next GC. Live PVE 16-guest inventory confirmed: CT400 IA Studio13.5GiB, HAOS VM1007.16GiB, CT2105.41GiB, CT4102.24GiB with no LLM worker, CT7000.22GiB. Need identify idle CT400 CloakBrowser/Hindsight instances via their NATIVE session management before attempting Pym full GPU; do not shut down agents for synthetic gain. USER OVERRIDE: audit/optimize only processes/timers/services within all guests, never pct shutdown. Host DaVinci arbiter5s is protective, CT300 supervisor/auto-sleep60s functional, CT400 Hindsight10m frequently no changes, CT410 ComfyUI idle-stop60s functional but broken proxy status. Distinguish harmless timer presence from measured IO stress. New safe actual internal/service fix: Homepage activity systemd timer interval 60s=>120s, ~720 fewer PVE/PBS/SSH status scans daily, observed before per-run CPU1.708s and peak memory151.4MiB. Unit validated and active; backup retained. All actual Pym full-guest shutdown attempts now prohibited.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -652,9 +657,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
           "sha256": "1dda1621a376049e1b21f509f19bae164d397ec6e2c0eb7b667eadd282610a2a",
           "note": "Native Pym35B partial_min Atomic2 loaded 18s before guard memory PSI1.88 stopped own LAB: zero scores, CT400 restored"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
+          "sha256": "ca984de26195d4db951a28fdb6171ad5146ebd1e643f5a17b2d4628b586d56b2",
+          "note": "Same GGUF Pym35B Q2 MTP2 partial GPU exact 3 tasks on Atomic2 stock and Zen4 LTO; full rows and upstream guarded abort"
         }
       ],
-      "remaining": "Same exact Pym35B Q2 MTP remains primary, FlashNext original distinct second. LAB Pym partial loaded 2.405s but stopped by official watchdog at MemAvailable18.57 GiB after PBS verify pause; no decoded result. Active old production LLM worker null, embedding service separately active ~0.8GiB. Need ~10GiB real freed RAM to permit full GPU 8K; do NOT turn off VM HAOS/PBS, interrupt agents CT400 or weaken guard. Atomic2 Zen4/LTO compiled and staged but gain unproven. Reproduce features of Hall of Fame winners across engines at same GGUF; 8->128K context and quality gates still pending. CT700 DEV GPU is passed through but 72GiB cgroup cap not reserved RAM. Pym35B Atomic2 MTP2 partial_min with CT400 running aborted on guard memory PSI full1.88 after18s; zero scored responses. Never stop CT400 whole guest to bench.",
+      "remaining": "26 Oct verified genuine Pym35B Q2 MTP2 partial_min (-ngl4, CPU MoE41, c2048, f16 KV), same model and seed: Atomic2 stock 11.507 math/12.047 code/11.076 FR tps, load14.017s, total225.179s; Atomic2 Zen4-LTO 12.248 math/12.720 code/10.580 FR, load10.82s, total217.725s (3.31pct faster one run). Both 3/3 visible correct math and 0 watchdog. Upstream b11844 guard abort before scoring at host PSI full5.90pct. These are NOT comparable to previous 37.2tps full GPU or 128K; code output not executed, agent strict JSON/tool not certified, no winner for production. Need true full GPU and repeated quality.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -796,7 +806,7 @@
           "note": "Core protected backups preserved while staged metadata lowers disk contention for fair MoE benchmarks"
         }
       ],
-      "remaining": "No LLM production promotion; native backup/policy/timer fixes are in production and verified, stage1 migration backup union exact. Cloud9 persistent five-priority handoff updated, Git evidence hashes mirrored. Complete stage2 native PVE LXC metadata rollout, run first automatic phase1 09:00, inspect prune20:30, GC warnings and PBS verification completion; verify restore samples; then resource audit and true Pym/Flash A/B only with eligible guard, full tool/code/concurrency/long-context/canary/rollback.",
+      "remaining": "No LLM production promotion; native backup/policy/timer fixes are in production and verified, stage1 migration backup union exact. Cloud9 persistent five-priority handoff updated, Git evidence hashes mirrored. Complete stage2 native PVE LXC metadata rollout, run first automatic phase1 09:00, inspect prune20:30, GC warnings and PBS verification completion; verify restore samples; then resource audit and true Pym/Flash A/B only with eligible guard, full tool/code/concurrency/long-context/canary/rollback. Do not promote partial MTP2 as production: only 3 tasks visible and math right on Atomic2 stock/Zen4 LTO, code not executed, JSON/tool/8..128K/unload+rollback incomplete. Zen4 LTO 3.31pct lower end-to-end across three single-run prompts, FR 4.47pct slower.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -807,7 +817,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~09:23 Paris: explicit user veto of LXC shutdown. One earlier stop action eventually completed late, CT400 immediately restarted at09:11; all agents healthy. Audit 14 LXC 2VM host internal processes/timers. CT700 limit72GiB is not physical reservation. Pym35B Atomic2 partial_min aborted loading PSI full1.88; no scored output. Future: service-only memory cleanup.",
+  "latest_attempt_note": "2026-10-26 ~09:42 Paris: user corrected service-level audit no whole guest stops; CT400 healthy. Native Homepage activity timer corrected60s=>120s to halve 1.7CPU-sec/run repeated PVE/PBS queries; backup+systemd verify PASS. Pym35B Q2 same-GGUF MTP2 partial_min three tasks Atomic2 stock math11.507/code12.047/FR11.076, Zen4-LTO math12.248/code12.720/FR10.580; total wall225.179 vs217.725 (Zen4 3.31pct faster, French4.47pct slower). Both 3/3 visible correct arithmetic, no watchdog. Upstream load watchdog PSI full5.90 and no scored token. HOF now200 records two new clearly separated partial profile; production unchanged.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1218,6 +1228,16 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
       "project_path": "Sources/Worklogs/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
       "sha256": "1dda1621a376049e1b21f509f19bae164d397ec6e2c0eb7b667eadd282610a2a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
+      "sha256": "ca984de26195d4db951a28fdb6171ad5146ebd1e643f5a17b2d4628b586d56b2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
+      "project_path": "Sources/Worklogs/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
+      "sha256": "2e93872fb703fcdaac0d7004c314b92b27650d767194821a39d27759d4b106d2"
     }
   ],
   "nextn_lab_candidate": {

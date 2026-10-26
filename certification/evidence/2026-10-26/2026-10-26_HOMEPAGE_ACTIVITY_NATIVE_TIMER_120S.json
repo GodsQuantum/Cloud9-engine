@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-26T08:42:00.193575+00:00",
+  "unit": "cloud9-homepage-activity.timer",
+  "original_interval_s": 60,
+  "current_interval_s": 120,
+  "native_systemd_validator_passed": true,
+  "unit_active": true,
+  "last_measured_CPU_s_per_run_before": 1.707641,
+  "last_measured_memory_peak_mib_before": 151.4,
+  "expected_daily_timer_firings_before": 1440,
+  "after": 720,
+  "why": "PVE/PBS/source status scan (SSH, systemctl, pvesh) formerly every 60s; 2x less repeated scans with 120s freshness",
+  "backup_original": "cloud9-homepage-activity.timer.bak.20261026-093028-376598",
+  "services_restarted": "timer only; Homepage Docker and PVE services kept online",
+  "safe_rollback": "restore timer from named backup, systemctl daemon-reload, restart timer"
+}
