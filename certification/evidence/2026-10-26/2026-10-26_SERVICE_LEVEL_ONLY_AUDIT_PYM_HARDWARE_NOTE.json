@@ -1,0 +1,120 @@
+{
+  "date_utc": "2026-10-26T08:25:09.262845+00:00",
+  "corrected_user_requirement": "Inventory/optimize service units, timers, scripts, containers, and orphan workers INSIDE running LXC and VM, not shut down whole guests; prefer native methods",
+  "guest_audit_source": "/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA/Sources/Worklogs/2026-10-26_CLOUD9_ALL_GUESTS_SERVICE_TIMER_AUDIT.json",
+  "scope": "host+14 LXC+2 VM via best-effort introspection",
+  "guest400_event": {
+    "facts": "Earlier temporary guest-shutdown command from prior plan completed late despite TERM signal; CT400 briefly stopped at 09:11 then was immediately restarted with pct start 400. All key CT400 Docker apps recovered healthy by 09:13.",
+    "future_policy": "Never use pct shutdown 400 or stop whole LXC to benchmark"
+  },
+  "gpu_hardware": {
+    "lxc700_config_memory_mib": 73728,
+    "lxc700_max_memory_gib": 72,
+    "lxc700_swap_mib": 0,
+    "lxc700_gpu": "/dev/dri/renderD128 + /dev/kfd present; Atomic2 cda0f925 executable runs; quota does not reserve physical 72GiB",
+    "host_gpu_guard": "shares the same Ryzen 8845HS/Radeon780M and real ~92GiB host RAM; cgroup maximum is not additional RAM"
+  },
+  "custom_timers_for_decision": [
+    {
+      "scope": "host",
+      "unit": "davinci-gpu-arbiter.timer",
+      "frequency": "5s",
+      "status": "keep pending profile",
+      "role": "GPU arbitration and unfreezing embeddings after active DaVinci render; not safe to remove blindly"
+    },
+    {
+      "scope": "host",
+      "unit": "cloud9-zfs-rehab-collector.timer",
+      "frequency": "120s",
+      "status": "review for further slowdown or stop after ZFS rehab; uses SMART and zpool"
+    },
+    {
+      "scope": "host",
+      "unit": "cloud9-operations-collector.timer",
+      "frequency": "30s",
+      "status": "already optimized from 8s"
+    },
+    {
+      "scope": "LXC300",
+      "unit": "davinci-render-supervisor.timer",
+      "frequency": "60s",
+      "status": "keep while active render supervisor"
+    },
+    {
+      "scope": "LXC300",
+      "unit": "davinci-render-autosleep.timer",
+      "frequency": "60s",
+      "status": "keep pending audit render idle exit"
+    },
+    {
+      "scope": "LXC400",
+      "unit": "hindsight-guides-sync.timer",
+      "frequency": "10min",
+      "status": "candidate reduction 30min; most recent successful run queued=0, no destructive change performed"
+    },
+    {
+      "scope": "LXC410",
+      "unit": "comfyui-idle-stop.timer",
+      "frequency": "60s",
+      "status": "currently service failed/unavailable, should diagnose on-demand proxy before touching timer"
+    },
+    {
+      "scope": "LXC210",
+      "unit": "moneymatter-crypto-sync.timer",
+      "frequency": "four runs per day",
+      "status": "normal scheduled financial sync; keep"
+    }
+  ],
+  "other_findings": [
+    "CT300 davinci-fonts-refresh.path failed from start-limit-hit after repeated immediate asset refreshes",
+    "CT410 ComfyUI service/proxy socket and Docling proxy service/socket in failed states, Docker docling-serve itself healthy",
+    "Default sysstat 10minute timers present in most Ubuntu guests but low cost; not proven major resource source",
+    "CT400 had 61 Docker containers ~12.6GiB before reboot; cloakbrowser manager ~3.15GiB and Hindsight ~1.63GiB; native session cleanup requires proof of orphan sessions",
+    "HAOS guest agent introspection unavailable; PVE metrics still audited, no HAOS reboot"
+  ],
+  "pym_benchmark": {
+    "model": "Pym 35B Q2 MTP same actual local GGUF",
+    "engine": "Atomic2 b10298",
+    "profile": "partial_min 4 GPU layers, 41 CPU MoE layers, 2048 context",
+    "result": "failed_watchdog",
+    "model_load_duration_seconds": 18.067,
+    "scored_responses": 0,
+    "reason": [
+      {
+        "reason": "RUNTIME_PRESSURE",
+        "guardian": {
+          "timestamp": 1793002610.6697125,
+          "mem_available_gib": 29.261,
+          "swap_used_gib": 11.313,
+          "swap_total_gib": 23.519,
+          "swap_used_percent": 48.1,
+          "psi_memory_some_avg10": 1.88,
+          "psi_memory_full_avg10": 1.88,
+          "gtt_used_gib": 0.357,
+          "gtt_total_gib": 72.0,
+          "vram_used_gib": 0.071,
+          "safe_total_gtt_gib": 11.619,
+          "allow": false,
+          "mode": "coexist-light",
+          "request_gib": 0.0,
+          "reasons": [
+            "host memory PSI full avg10=1.88"
+          ],
+          "cooldown_sec": 0.0,
+          "host_reserve_gib": 18.0,
+          "runtime_max_gtt_gib": 70.0
+        },
+        "temp_c": 60.5
+      }
+    ],
+    "official_guard_kept": true,
+    "context": "Not comparable to historic GPU-full Hall of Fame; zero scored requests due host memory PSI full average10 1.88% during loading"
+  },
+  "production_actions": {
+    "entire_guest_currently_running": 400,
+    "stopped_or_disabled_internal_apps": 0,
+    "engine_prod_promoted": false,
+    "prod_router_embedding_preserved": true
+  },
+  "next_best_action": "Benchmark in DEV is physically feasible GPU device-wise, not yet safely memory feasible; profile/unload only proven orphan service work, warm GGUF/cache in idle time without bypassing guardian, then same GGUF across upstream/Atomic2/Zen4-LTO and strict quality."
+}
