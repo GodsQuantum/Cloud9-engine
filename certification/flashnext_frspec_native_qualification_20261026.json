@@ -61,7 +61,8 @@
   "test_logs": [
     "certification/evidence/2026-10-26/flashnext-qwen4exp-arch-gpu.txt",
     "certification/evidence/2026-10-26/flashnext-frspec-sidecar-clean-guard.txt",
-    "certification/evidence/2026-10-26/flashnext-frspec-gdb-stack.txt"
+    "certification/evidence/2026-10-26/flashnext-frspec-gdb-stack.txt",
+    "certification/evidence/2026-10-26/flashnext-f32-i64-setrows-gpu.txt"
   ],
   "no_live_service_restart": true,
   "remaining": [
@@ -69,5 +70,15 @@
     "validate draft logits/generation acceptance and math/code/FR quality",
     "benchmark true t/s against historical 17.878 and target >20",
     "re-run guard and quality tests, promote only if faster and correct"
-  ]
+  ],
+  "gpu_backend_d2t_scatter_test": {
+    "source": "certification/evidence/2026-10-26/flashnext-f32-i64-setrows-gpu.txt",
+    "backend": "Vulkan0 Radeon780M RADV",
+    "operation": "GGML_OP_SET_ROWS source F32 destination F32 indices I64",
+    "supported": true,
+    "executed_with_CPU_reference": true,
+    "passed": 21,
+    "total": 21,
+    "failed": 0
+  }
 }

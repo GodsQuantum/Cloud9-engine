@@ -1,0 +1,35 @@
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+Testing 2 devices
+
+Backend 1/2: Vulkan0
+  Device description: AMD Radeon 780M Graphics (RADV PHOENIX)
+  Device memory: 75776 MB (75296 MB free)
+
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[1,8,1,3],nr23=[1,1],r=2,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,5,1,3],nr23=[1,1],r=1,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,11,1,1],nr23=[2,3],r=7,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[3,3,1,1],nr23=[2,3],r=2,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[31,3,1,1],nr23=[2,3],r=2,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[33,5,1,1],nr23=[2,3],r=1,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,5,1,3],nr23=[1,1],r=1,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,11,1,1],nr23=[2,3],r=7,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[3,3,1,1],nr23=[2,3],r=2,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[31,3,1,1],nr23=[2,3],r=2,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[33,5,1,1],nr23=[2,3],r=1,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,5,7,3],nr23=[1,1],r=1,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,11,1,7],nr23=[2,3],r=7,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[3,3,7,1],nr23=[2,3],r=2,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[31,3,7,1],nr23=[2,3],r=2,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[33,5,1,7],nr23=[2,3],r=1,v=0): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,5,7,3],nr23=[1,1],r=1,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[256,11,1,7],nr23=[2,3],r=7,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[3,3,7,1],nr23=[2,3],r=2,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[31,3,7,1],nr23=[2,3],r=2,v=1): [1;32mOK[0m
+  SET_ROWS(type_src=f32,type_dst=f32,type_idx=i64,ne=[33,5,1,7],nr23=[2,3],r=1,v=1): [1;32mOK[0m
+  21/21 tests passed
+  Backend Vulkan0: [1;32mOK[0m
+Backend 2/2: CPU
+  Skipping
+2/2 backends passed
+[1;32mOK[0m
