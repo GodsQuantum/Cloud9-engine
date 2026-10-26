@@ -107,7 +107,7 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
   complete=(len(shards)==33 and indices==set(range(1,34)) and
             sum(x.stat().st_size for x in shards)==94525394976)
   return {"admitted":False,"reasons":([] if complete else ["FLASH_AD427_SHARDS_INCOMPLETE"])+[
-          "FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED", "FLASH_AD427_MEMORY_NOT_ADMITTED"],
+          "FLASH_AD427_QWEN4EXP_D2T_SCATTER_UNSUPPORTED_IN_ATOMIC2", "FLASH_AD427_MEMORY_NOT_ADMITTED"],
           "historic_target_gguf_found":complete,"historical_17_878_tps_comparable":False,
           "actual_sharded_bytes":sum(x.stat().st_size for x in shards),
           "expected_sharded_bytes":94525394976,"expected_shards":33,
@@ -115,9 +115,13 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
           "fr_spec_sidecar_present":draft.is_file(),
           "fr_spec_sidecar_size_verified":draft_bytes==3639245152,
           "fr_spec_sidecar_bytes":draft_bytes,
+          "fr_spec_draft_vocab":65536,
+          "fr_spec_trunk_vocab":248320,
+          "fr_spec_d2t_mapping_entries":65536,
+          "qwen4exp_d2t_native_support_qualified":False,
           "fr_spec_sidecar_expected_sha256":draft_expected_sha256,
           "fr_spec_sidecar_revision":"ac875a98457a8effe8fb83de8f3701421f507a24",
-          "note":"Exact target GGUF and pinned Q8 FRSpec sidecar are staged RO for CT410; launch -md/MTP3+GDN/TurboQuant HOF recipe not configured and 54-56GB resident RAM not admitted. No GPU run or throughput claim."}
+          "note":"Full SHA of 33/33 shards verified separately 2026-10-26; draft's 65K d2t mapping vs 248320 trunk vocab is not supported by native Qwen4Exp code in current Atomic2 b10298. Requires native compatibility patch and QA, then 54-56GB resident RAM admission. Zero GPU runs."}
  if model_key=="flash_alternate":
   # Strata GSQ-RCO IQ1_M is NOT the historical AD-4.27 + FR-Spec GGUF:
   # refusing a falsely matched benchmark, regardless of available RAM.
