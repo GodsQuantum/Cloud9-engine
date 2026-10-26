@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-26T10:39:37.710057+00:00",
+  "incident": "Atomic1.6 original Vulkan RADV after same Pym fullGPU MTP2 config with single -lm mmap -> none changed",
+  "affected_engine": "atomic16 original build 10709 c044dff24",
+  "file": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pymfull8k_nommap_atomic16_1026.log",
+  "source_run": "2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+  "error_exact": "radv/amdgpu: Not enough memory for command submission; vk::Queue::submit: ErrorDeviceLost",
+  "atomic16_result": "failed_load_or_guard, zero scored outputs",
+  "atomic2_result": "blocked_preflight, NO model load in none mode",
+  "ZFS_ARC_RESTORED": true,
+  "host_rebooted": false,
+  "router_and_embedding_services_after": "active, health http://192.168.1.219:8090/health status ok, embedding slots returned",
+  "safe_action": "Do not retry nonmmap full GPU Pym on Radeon 780M until separate driver and memory root cause resolved. Code now fails closed in preflight for all engines with this exact model/profile.",
+  "comparison_outcome": "NONE, no speed claimed"
+}
