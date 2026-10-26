@@ -36,7 +36,11 @@ def fetch(url,payload=None,timeout=4):
   return json.load(r)
 
 def guardian(gib):
- with socket.create_connection(GUARD,timeout=4) as s:
+ # Host-only launch binds to loopback (official guard allows 127.0.0.1).
+ # CT410 launches keep the natural 192.168.1.219 source. Never change guard ACL.
+ source=os.environ.get("CLOUD9_GUARD_SOURCE_IP","")
+ if source not in ("","127.0.0.1"):raise ValueError("UNAUTHORIZED_GUARD_SOURCE")
+ with socket.create_connection(GUARD,timeout=4,source_address=("127.0.0.1",0) if source else None) as s:
   s.settimeout(4);s.sendall(f"CHECK coexist-light {gib:.2f}\n".encode());return json.loads(s.recv(16000))
 
 def embeddings_busy():
@@ -110,7 +114,9 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
   # host_reserve_gib=18.0 and independently admits/rejects GTT allocation.
   # Keep the older ultra-conservative rule for exploratory profiles.
   if profile=="full" and preset==PARITY_PRESET:
-   floor=round(gguf_gib+18.0,2)
+   # Prior Pym35B load dropped MemAvailable 31.7 -> 23.7 GiB,
+   # host PSI.full=4.61 before decode: require real spare load margin.
+   floor=max(round(gguf_gib+18.0,2),round(gguf_gib+25.0,2))
   else:
    floor=round(gguf_gib+23.0,2) if profile=="full" else 24.4
   required_gtt={"full":14.0,"partial":6.0,"partial_min":2.75}[profile]
@@ -119,7 +125,8 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
  t=host_temp()
  why=[]
  if not g.get("allow"):why.append("OFFICIAL_GPU_GUARD_DENIED")
- if g.get("mem_available_gib",0)<floor:why.append("MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE")
+ if g.get("mem_available_gib",0)<floor:
+  why.append("PYM_PRIOR_PSI_LOAD_HEADROOM" if preset==PARITY_PRESET and model_key=="pym" and profile=="full" else "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE")
  if g.get("safe_total_gtt_gib",0)<required_gtt:why.append("INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD")
  if g.get("psi_memory_full_avg10",99)>=0.30:why.append("HOST_MEMORY_PSI")
  if io is None or io>=9:why.append("HOST_IO_PSI")
@@ -148,6 +155,8 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
 # optimization flags: ngl99/c16384/b1024/ub1024/t8/poll100/poll-batch0.
 # This is a RECONSTRUCTED parity preset, NOT a claim of exact Atomic1.6 CLI.
 PARITY_PRESET="atomic16-mtp2-f16-fullgpu"
+HOF_PYM_KV_ORDER=("f16","turbo4","q8_0","turbo3")
+HOF_PYM_TPS={"f16":36.28,"turbo4":35.20,"q8_0":35.07,"turbo3":34.40}
 PARITY_FEATURES=("GPU_full_99","CPU_MoE_off_0","inline_MTP2",
                  "KV_f16_both","FlashAttention_on","mmap",
                  "batch1024","ubatch1024","threads8",
@@ -194,6 +203,8 @@ def main():
                  help="16K documented Oct02 baseline; 8K secondary fallback CHANGING ONLY context on every engine")
  ap.add_argument("--parity-load-mode",choices=["mmap","none"],default="mmap",
                  help="Baseline mmap. Phase1 native ablation: none, same option across every compared engine.")
+ ap.add_argument("--parity-kv",choices=HOF_PYM_KV_ORDER,default="f16",
+                 help="Same GGUF Pym MTP2 HOF: f16=36.28, turbo4=35.20, q8_0=35.07, turbo3=34.40 (historical Atomic1.6)")
 
  ap.add_argument("--run-id",required=True)
  ap.add_argument("--max-output-tokens",type=int,choices=[128,192,256,384,768],default=768,
@@ -201,9 +212,16 @@ def main():
  ap.add_argument("--thinking-budget",type=int,choices=[0,128,256],default=256,
                  help="Native LFM reasoning budget (same for both engines); 0 tests short-response agent tool suitability")
  ap.add_argument("--execute",action="store_true")
+ ap.add_argument("--tasks",default="math,code,fr",
+                 help="Comma-separated subset of original immutable prompts; e.g. code,fr resumes an interrupted parity baseline")
  a=ap.parse_args()
+ if not a.tasks or any(x not in {"math","code","fr"} for x in a.tasks.split(",")) or len(set(a.tasks.split(",")))!=len(a.tasks.split(",")):
+  ap.error("tasks must be a unique subset of math,code,fr")
+ selected_prompts=[x for x in PROMPTS if x[0] in a.tasks.split(",")]
  if a.preset==PARITY_PRESET and not (a.model=="pym" and a.mode=="mtp2" and a.profile=="full"):
   ap.error("Historic feature-parity preset requires --model pym --mode mtp2 --profile full")
+ if a.preset!=PARITY_PRESET and a.parity_kv!="f16":
+  ap.error("--parity-kv requires HOF feature-parity preset")
  if a.preset!="atomic16-mtp2-f16-fullgpu" and a.parity_context!=16384:
   ap.error("--parity-context only applies to the identical-features historical parity preset")
  if a.preset!=PARITY_PRESET and a.parity_load_mode!="mmap":
@@ -216,7 +234,10 @@ def main():
          "default_production_unchanged":True,"profile":a.profile,"thinking_budget":a.thinking_budget,
          "max_output_tokens":a.max_output_tokens,"preset":a.preset,
          "parity_context":a.parity_context if a.preset==PARITY_PRESET else None,
-         "parity_load_mode":a.parity_load_mode if a.preset==PARITY_PRESET else None,"rows":[]}
+         "parity_load_mode":a.parity_load_mode if a.preset==PARITY_PRESET else None,
+         "parity_kv":a.parity_kv if a.preset==PARITY_PRESET else None,
+         "hof_atomic16_reference_tps":HOF_PYM_TPS.get(a.parity_kv) if a.preset==PARITY_PRESET else None,
+         "selected_tasks":[x[0] for x in selected_prompts],"rows":[]}
  def save():report.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
  try:
   start=preflight(a.model,a.engine,a.mode,a.profile,a.preset,a.parity_load_mode)
@@ -245,7 +266,8 @@ def main():
    ubsize="1024" if a.preset==PARITY_PRESET else ("32" if a.profile=="compact" else ("64" if a.profile=="partial_min" else "128"))
    cmd=[str(bin),"-m",str(model),"-ngl",layers,"--n-cpu-moe",experts,"--fit","off","-c",context,
         "-np","1","-fa","on","-b",bsize,"-ub",ubsize,"-t","8","-tb","8",
-        "-ctk","f16","-ctv","f16","--host","127.0.0.1","--port","18139","--no-webui",
+        "-ctk",(a.parity_kv if a.preset==PARITY_PRESET else "f16"),"-ctv",(a.parity_kv if a.preset==PARITY_PRESET else "f16"),
+        "--host","127.0.0.1","--port","18139","--no-webui",
         "--no-warmup","--reasoning",("on" if a.model=="lfm_official_q4" else "off"),"--alias","Cloud9-MoE-Upstream-LAB"]
    if a.model=="lfm_official_q4":
     # Native llama.cpp reasoning controls: prevent a 256-token thinking-only
@@ -255,9 +277,13 @@ def main():
    if a.preset==PARITY_PRESET:
     support=subprocess.run([str(bin),"--help"],capture_output=True,text=True,timeout=18)
     if support.returncode!=0:raise RuntimeError("Unable to validate candidate native feature support")
-    cmd+=parity_extra_flags(a.engine,support.stdout+support.stderr,a.parity_load_mode)
-    result["parity_features"]=[f if f!="mmap" else "load_mode_"+a.parity_load_mode for f in PARITY_FEATURES]
-    result["changed_from_historical_baseline"]=(["load_mode: mmap -> none"] if a.parity_load_mode=="none" else [])
+    help_text=support.stdout+support.stderr
+    if a.parity_kv.startswith("turbo") and a.parity_kv not in help_text:
+     raise RuntimeError("PARITY_KV_UNSUPPORTED_BY_BINARY")
+    cmd+=parity_extra_flags(a.engine,help_text,a.parity_load_mode)
+    result["parity_features"]=[("KV_"+a.parity_kv+"_both" if f=="KV_f16_both" else ("load_mode_"+a.parity_load_mode if f=="mmap" else f)) for f in PARITY_FEATURES]
+    result["changed_from_historical_baseline"]=(["load_mode: mmap -> none"] if a.parity_load_mode=="none" else []) + (["KV: f16 -> "+a.parity_kv] if a.parity_kv!="f16" else [])
+    result["hof_exact_cli_not_archived"]=True
     result["parity_source"]={
       "atomic16_20260911":"model Qwen3.6-35B-A3B Pym Q2-MTP; inline MTP2; KV f16; median 36.28t/s (other flags not recorded)",
       "upstream_20261002":"Pym same GGUF ngl99 c16384 np1 b1024 ub1024 t8 tb8 FAon mmap poll100 pollbatch0 f16 KV, inline MTP2",
@@ -295,7 +321,7 @@ def main():
     if not ready:
      result["status"]="failed_load_or_guard";result["guard_events"]=guard_events;save();return
     result["executed"]=True;result["status"]="running";save()
-    for name,prompt in PROMPTS:
+    for name,prompt in selected_prompts:
      # A brief PSI cooldown allows the GPU to settle after weight paging.
      # Neither the official pre-load guard nor emergency limits are bypassed:
      # the 2-second watchdog still terminates this OWN worker on hard pressure.
@@ -336,8 +362,9 @@ def main():
                            "nonempty":bool(visible.strip()),
                            "math_answer_contains_925":("925" in visible) if name=="math" else None})
      save()
-    result["status"]="complete" if (len(result["rows"])==3 and all(x["nonempty"] for x in result["rows"]) and
-                             result["rows"][0]["math_answer_contains_925"]) else "failed_quality"
+    math_rows=[x for x in result["rows"] if x["task"]=="math"]
+    result["status"]="complete" if (len(result["rows"])==len(selected_prompts) and all(x["nonempty"] for x in result["rows"]) and
+                             all(x["math_answer_contains_925"] for x in math_rows)) else "failed_quality"
     result["guard_events"]=guard_events;save()
   finally:
    flag.set();stop_own(child)
