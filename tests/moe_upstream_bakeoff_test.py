@@ -56,6 +56,33 @@ class GuardTests(unittest.TestCase):
   with mock.patch.object(b,"guardian") as g:
    out=b.preflight("flash_alternate","upstream_b11844","mtp2")
   self.assertFalse(out["admitted"]);g.assert_not_called()
+ def test_exact_flash_ad427_model_is_not_confused_with_missing_mtp_draft(self):
+  self.assertIn("FlashNext-AD427",str(b.MODELS["flash_ad427"]))
+  with mock.patch.object(b,"guardian") as guard:
+   result=b.preflight("flash_ad427","atomic2","base")
+  self.assertFalse(result["admitted"])
+  self.assertTrue(result["historic_target_gguf_found"])
+  self.assertEqual(result["actual_sharded_bytes"],94525394976)
+  self.assertIn("FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED",result["reasons"])
+  self.assertFalse(result["historical_17_878_tps_comparable"])
+  self.assertFalse(result["sha256_verified"])
+  guard.assert_not_called()
+ def test_flash_ad427_inline_mtp_not_falsely_supported(self):
+  with mock.patch.object(b,"guardian") as guard:
+   result=b.preflight("flash_ad427","atomic2","mtp3")
+  self.assertFalse(result["admitted"])
+  self.assertIn("NON_PYM_INLINE_MTP_UNVERIFIED",result["reasons"])
+  guard.assert_not_called()
+ def test_flash_ad427_missing_shards_fail_closed(self):
+  with tempfile.TemporaryDirectory() as td:
+   missing=pathlib.Path(td)/"Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf"
+   missing.write_bytes(b"GGUF")
+   with mock.patch.dict(b.MODELS,{"flash_ad427":missing}),mock.patch.object(b,"guardian") as guard:
+    result=b.preflight("flash_ad427","atomic2","base")
+  self.assertFalse(result["admitted"])
+  self.assertFalse(result["historic_target_gguf_found"])
+  self.assertIn("FLASH_AD427_SHARDS_INCOMPLETE",result["reasons"])
+  guard.assert_not_called()
  def test_flash_alternate_never_labeled_as_historical(self):
   with mock.patch.object(b,"guardian") as guard:
    r=b.preflight("flash_alternate","upstream_b11844","base")
