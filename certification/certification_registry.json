@@ -537,9 +537,34 @@
           "project_path": "Sources/Worklogs/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
           "sha256": "2e93872fb703fcdaac0d7004c314b92b27650d767194821a39d27759d4b106d2",
           "note": "Native Homepage status poll halved 60s to 120s, unit active, before CPU1.7s/run, no app restart"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CT300_DAVINCI_FONT_PATH_STORM_NATIVE_TIMER.json",
+          "sha256": "2267425cb0f72b7c3010b1c37360295cb754d73627e76128d21659ed38bde616",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ZFS_REHAB_COLLECTOR_COMPLETED_STOP.json",
+          "sha256": "9693920a300f068c46efb998670fa0bd462f933ef8d711bd4149c389fbddaeba",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_GPU_ARBITER_TIMER_SANE_10S.json",
+          "sha256": "7a8d80348325fb5e8508b8a1a51f07b63b4eea8f0d9381e0cd0316c8e30c3c6d",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_DOCKER_HEALTHCHECK_NATIVE_COMPOSE_TUNING_STAGED.json",
+          "sha256": "76ed0a42a93e7b01e4b9cbb943eb02e6d8dad68a1e5d23d29ef2f6c5b7cfc5b3",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
+          "sha256": "bf510f2da04f4f95a7cbec512d4350d42985853d5121277c5c3461ade5fcab6d",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
         }
       ],
-      "remaining": "26 Oct new LIVE PBS policies: prune daily20:30 3last14daily8weekly12monthly3yearly active; verify-new false, one weekly verified Sat12 with1read1verify and30day overdue recheck; GC Sun04 preserved. Real CT110 metadata dual backup 69s first then10s second with99.7pct data reuse; phase1 native PVE daily09:00 CT110/120/200/9500/9600, prior daily00:30 keeps ten remaining with no overlap. Phase2 must migrate heavy LXC cautiously, 80pct datastore used, ~745GB free. Cloud host backups already native metadata (no duplicate). Host timers zfsrehab5sec=>120s, ops8=>30s, PBS check15min=>3h, finished one-time scrub transition disabled; verified no production service restart. PBS GC last18h warnings2 removed-bad12 unresolved; xfs_scrub and GC on Sunday may overlap, investigate; no disabling backups or native monthly verification. Cloud9 still ~25GiB MemAvailable, CT400 CloakBrowser3.1GiB/Hindsight1.8GiB, need safe session TTL/cgroup optimization to release enough memory for full Pym bench without violating guardian. Full details certification/CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md. CRITICAL 26OCT GC WARNINGS:2 resolved to two MISSING chunks physically absent: referenced by old host/cloud-arezki Oct21+Oct22 ppxar, NOT referenced by four newer Oct23-Oct25 ppxar indexes (binary digest search). New backups remain unverified; target latest Oct25 snapshot verify/restore on safe HDD window. Preserve corrupted older snapshots for forensic, avoid deleting and alert on next GC. Live PVE 16-guest inventory confirmed: CT400 IA Studio13.5GiB, HAOS VM1007.16GiB, CT2105.41GiB, CT4102.24GiB with no LLM worker, CT7000.22GiB. Need identify idle CT400 CloakBrowser/Hindsight instances via their NATIVE session management before attempting Pym full GPU; do not shut down agents for synthetic gain. USER OVERRIDE: audit/optimize only processes/timers/services within all guests, never pct shutdown. Host DaVinci arbiter5s is protective, CT300 supervisor/auto-sleep60s functional, CT400 Hindsight10m frequently no changes, CT410 ComfyUI idle-stop60s functional but broken proxy status. Distinguish harmless timer presence from measured IO stress. New safe actual internal/service fix: Homepage activity systemd timer interval 60s=>120s, ~720 fewer PVE/PBS/SSH status scans daily, observed before per-run CPU1.708s and peak memory151.4MiB. Unit validated and active; backup retained. All actual Pym full-guest shutdown attempts now prohibited.",
+      "remaining": "26 Oct service-only audit now covers 14 LXC (12 active,2 stopped), VM100/900 (HAOS no QGA), host and ~165 Docker containers. NEW actual fixes CT300 broken DaVinci PathChanged storm to native30m service timer (service test PASS), host completed ZFS rehab collector disabled (720 SMART+journal polling/day gone), native DaVinci GPU timer5->10sec (8640 starts/day less). Compose source health intervals Redis Netbox x2 CT1101s->15s, Dify PostgreSQL CT4001s->15s, DaVinci PostgreSQL CT3005s->15s VALIDATED but not applied to running Docker without targeted service recreation. Pending CT410 ComfyUI/Docling failed sockets and CT700 stale preview units, no unsafe kills. CT400 WAS accidentally stopped by stale shutdown job; restarted 09:11, all key apps confirmed healthy. NEVER STOP WHOLE LXC/VM FOR BENCHMARK. Full sanitized audit certification/CLOUD9_SERVICE_AUDIT_20261026.md and proofs.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -662,9 +687,29 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
           "sha256": "ca984de26195d4db951a28fdb6171ad5146ebd1e643f5a17b2d4628b586d56b2",
           "note": "Same GGUF Pym35B Q2 MTP2 partial GPU exact 3 tasks on Atomic2 stock and Zen4 LTO; full rows and upstream guarded abort"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+          "sha256": "93d60d86d9b2aa9caff19a0c1b57338526a11a3f3163afc5ac8695713db67588",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+          "sha256": "643721bdbc24fca554de5c9225110c52337e5cce4b5721f1a5e825cb0e48559f",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+          "sha256": "fc8b55475f0df10bdcedbc2d9b10dd28bbd3271216fbe15875043c69d0094ae0",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+          "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
         }
       ],
-      "remaining": "26 Oct verified genuine Pym35B Q2 MTP2 partial_min (-ngl4, CPU MoE41, c2048, f16 KV), same model and seed: Atomic2 stock 11.507 math/12.047 code/11.076 FR tps, load14.017s, total225.179s; Atomic2 Zen4-LTO 12.248 math/12.720 code/10.580 FR, load10.82s, total217.725s (3.31pct faster one run). Both 3/3 visible correct math and 0 watchdog. Upstream b11844 guard abort before scoring at host PSI full5.90pct. These are NOT comparable to previous 37.2tps full GPU or 128K; code output not executed, agent strict JSON/tool not certified, no winner for production. Need true full GPU and repeated quality.",
+      "remaining": "Real Pym35B-A3B Q2 MTP same physical model run SUCCESS: Atomic2 stock partial_min ngl4 cpu-moe41 no MTP 2K ctx f16 KV, 768 tokens x3: maths8.974t/s correct 925, code6.956t/s text only, French8.598t/s text only, load2.516sec, 0 watchdog, 3/3 visible. This is strictly NOT historical Pym fullGPU MTP2 34.56 median/37.20math comparable or proven code quality. New matched192 trials: upstream MTP2 and base crash guarded PSI, Atomic2 Zen4/LTO base loaded7.496sec then paused PSI, stock192 denied preflight; unable to rank engines under current shared workloads. No production LLM worker switched, router&embedding healthy. Guard must NOT be bypassed, do not shutdown CT400 or any LXC; need safe memory/IO service-level improvement and genuine matched A/B quality/code/JSON 128K.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -804,9 +849,29 @@
           "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
           "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4",
           "note": "Core protected backups preserved while staged metadata lowers disk contention for fair MoE benchmarks"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+          "sha256": "93d60d86d9b2aa9caff19a0c1b57338526a11a3f3163afc5ac8695713db67588",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+          "sha256": "643721bdbc24fca554de5c9225110c52337e5cce4b5721f1a5e825cb0e48559f",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+          "sha256": "fc8b55475f0df10bdcedbc2d9b10dd28bbd3271216fbe15875043c69d0094ae0",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+          "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
         }
       ],
-      "remaining": "No LLM production promotion; native backup/policy/timer fixes are in production and verified, stage1 migration backup union exact. Cloud9 persistent five-priority handoff updated, Git evidence hashes mirrored. Complete stage2 native PVE LXC metadata rollout, run first automatic phase1 09:00, inspect prune20:30, GC warnings and PBS verification completion; verify restore samples; then resource audit and true Pym/Flash A/B only with eligible guard, full tool/code/concurrency/long-context/canary/rollback. Do not promote partial MTP2 as production: only 3 tasks visible and math right on Atomic2 stock/Zen4 LTO, code not executed, JSON/tool/8..128K/unload+rollback incomplete. Zen4 LTO 3.31pct lower end-to-end across three single-run prompts, FR 4.47pct slower.",
+      "remaining": "FAIL-CLOSED: no production promotion of any LLM. Pym true3/3 768-token base partial measurement on Atomic2 stock, actual comparative upstream/Atomic2 LTO at192 blocked due guardian memory PSI, no matched quality context >2K. Existing OmniRoute choices unchanged. Native timer/Compose source fixes documented; CT400 healthy after involuntary stop; explicit no whole-LXC shutdown rule. Revisit only when 780M safe coexistence, then canary24h rollback exact tasks. See sanitized service audit.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -817,7 +882,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~09:42 Paris: user corrected service-level audit no whole guest stops; CT400 healthy. Native Homepage activity timer corrected60s=>120s to halve 1.7CPU-sec/run repeated PVE/PBS queries; backup+systemd verify PASS. Pym35B Q2 same-GGUF MTP2 partial_min three tasks Atomic2 stock math11.507/code12.047/FR11.076, Zen4-LTO math12.248/code12.720/FR10.580; total wall225.179 vs217.725 (Zen4 3.31pct faster, French4.47pct slower). Both 3/3 visible correct arithmetic, no watchdog. Upstream load watchdog PSI full5.90 and no scored token. HOF now200 records two new clearly separated partial profile; production unchanged.",
+  "latest_attempt_note": "26 Oct 2026 ~10:12 Europe/Paris: user insisted audit of SERVICES INSIDE all LXCs, NOT turning LXCs off. CT400 past accidental delayed shutdown restored09:11, checked main Docker healthy. 14 LXC+2 VM+host read-only audit and Docker healthchecks; CT300 broken DaVinci font PathChanged event storm replaced native30m timer; finished ZFS rehab SMART/journal collector timer disabled; DaVinci GPU native arbiter5->10s, no script change. CT110 Netbox Redis2x1s, CT400 Dify PG1s, CT300 DaVinci PG5s Compose source health checks corrected native15s, validated, runtime remains unchanged without targeted container recreation. Atomic2 stock completed REAL Pym35B Q2 -ngl4 CPU-MoE41 2K no MTP 768tokens each math8.974 (correct 925), code6.956, FR8.598 3/3 visible/no watchdog; HOF new record201. Upstream b11844 MTP2 and noMTP failed_guard PSI; Atomic2 Zen4/LTO base paused PSI, not directly matched A/B. All exact proof JSON mirrored and tests checked, no LLM promotion.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1238,6 +1303,51 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
       "project_path": "Sources/Worklogs/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
       "sha256": "2e93872fb703fcdaac0d7004c314b92b27650d767194821a39d27759d4b106d2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CT300_DAVINCI_FONT_PATH_STORM_NATIVE_TIMER.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CT300_DAVINCI_FONT_PATH_STORM_NATIVE_TIMER.json",
+      "sha256": "2267425cb0f72b7c3010b1c37360295cb754d73627e76128d21659ed38bde616"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ZFS_REHAB_COLLECTOR_COMPLETED_STOP.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ZFS_REHAB_COLLECTOR_COMPLETED_STOP.json",
+      "sha256": "9693920a300f068c46efb998670fa0bd462f933ef8d711bd4149c389fbddaeba"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_DAVINCI_GPU_ARBITER_TIMER_SANE_10S.json",
+      "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_GPU_ARBITER_TIMER_SANE_10S.json",
+      "sha256": "7a8d80348325fb5e8508b8a1a51f07b63b4eea8f0d9381e0cd0316c8e30c3c6d"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_DOCKER_HEALTHCHECK_NATIVE_COMPOSE_TUNING_STAGED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_DOCKER_HEALTHCHECK_NATIVE_COMPOSE_TUNING_STAGED.json",
+      "sha256": "76ed0a42a93e7b01e4b9cbb943eb02e6d8dad68a1e5d23d29ef2f6c5b7cfc5b3"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
+      "sha256": "bf510f2da04f4f95a7cbec512d4350d42985853d5121277c5c3461ade5fcab6d"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+      "sha256": "93d60d86d9b2aa9caff19a0c1b57338526a11a3f3163afc5ac8695713db67588"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+      "sha256": "643721bdbc24fca554de5c9225110c52337e5cce4b5721f1a5e825cb0e48559f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+      "sha256": "fc8b55475f0df10bdcedbc2d9b10dd28bbd3271216fbe15875043c69d0094ae0"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+      "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713"
     }
   ],
   "nextn_lab_candidate": {

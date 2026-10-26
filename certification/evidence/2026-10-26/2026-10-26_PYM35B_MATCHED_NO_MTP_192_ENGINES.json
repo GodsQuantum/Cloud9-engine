@@ -1,0 +1,50 @@
+{
+  "created_utc": "2026-10-26T09:00:36.499232+00:00",
+  "model": "Pym 35B-A3B Q2 MTP exact same local GGUF",
+  "protocol": "matched base no MTP, -ngl4 --n-cpu-moe41, ctx2048, FA on, KV f16, b128 ub64, 192 max output, temp0.2, seed42, three prompts",
+  "production_services_stopped": false,
+  "guardian_enforced": true,
+  "rows": [
+    {
+      "engine": "upstream_b11844",
+      "run_id": "pym35_up_b11844_base_192_stable_1026",
+      "exit": 0,
+      "wall_s": 5.24,
+      "stdout": "",
+      "status": "failed_watchdog",
+      "load_s": 4.209,
+      "blocked_reasons": [],
+      "watchdog_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793005240.9236698,
+            "mem_available_gib": 21.693,
+            "swap_used_gib": 16.44,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 69.9,
+            "psi_memory_some_avg10": 5.27,
+            "psi_memory_full_avg10": 5.27,
+            "gtt_used_gib": 10.898,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 0.663,
+            "safe_total_gtt_gib": 14.591,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host MemAvailable 21.7 GiB < start floor 24.0 GiB",
+              "host memory PSI full avg10=5.27"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 60.75
+        }
+      ],
+      "qa": [],
+      "source_sha256": "b5eeede3af4ba0c58a7e13f03ae1fcf5f2ddf07f0b6c9c267a9dcb7245a6b5d6"
+    }
+  ]
+}
