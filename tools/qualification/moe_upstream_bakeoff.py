@@ -7,6 +7,7 @@ from pathlib import Path
 MODELS={
  "pym":Path("/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf"),
  "flash_alternate":Path("/srv/lxc/ia-compute/data/models/strata/coder-iq1m/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf"),
+ "flash_ad427":Path("/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf"),
  "lfm_official_q4":Path("/srv/lxc/ia-compute/data/models/lab-candidates/lfm25-a1b-official-q4/LFM2.5-8B-A1B-Q4_K_M.gguf"),
  "pym_heretic":Path("/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf"),
 }
@@ -90,6 +91,23 @@ def preflight(model_key,engine,mode,profile="full",preset="explore",parity_load_
   # Inference proceeds ONLY after the download was pinned by SHA256.
   if p.stat().st_size!=5155564768:
    return {"admitted":False,"reasons":["MODEL_DOWNLOAD_INCOMPLETE_OR_UNVERIFIED"]}
+ if model_key=="flash_ad427":
+  # Exact historic TARGET weights found on read-only shared NVMe, not CT410's
+  # different GSQ-RCO IQ1_M. This is a metadata-only admission, never GPU.
+  # A historical 17.878 t/s recreation requires the separate Q8 FR-Spec
+  # draft and a high-memory native launch policy; neither is configured yet.
+  directory=p.parent
+  shards=sorted(directory.glob("Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-*-of-00033.gguf"))
+  indices={int(x.name.rsplit("-of-",1)[0][-5:]) for x in shards}
+  complete=(len(shards)==33 and indices==set(range(1,34)) and
+            sum(x.stat().st_size for x in shards)==94525394976)
+  return {"admitted":False,"reasons":([] if complete else ["FLASH_AD427_SHARDS_INCOMPLETE"])+[
+          "FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED", "FLASH_AD427_MEMORY_NOT_ADMITTED"],
+          "historic_target_gguf_found":complete,"historical_17_878_tps_comparable":False,
+          "actual_sharded_bytes":sum(x.stat().st_size for x in shards),
+          "expected_sharded_bytes":94525394976,"expected_shards":33,
+          "sha256_verified":False,
+          "note":"Exact target GGUF is on shared NVMe; separate Q8 FRSpec missing; full 94.5GB model load is unsafe at current RAM; check official guard before any future GPU work"}
  if model_key=="flash_alternate":
   # Strata GSQ-RCO IQ1_M is NOT the historical AD-4.27 + FR-Spec GGUF:
   # refusing a falsely matched benchmark, regardless of available RAM.
