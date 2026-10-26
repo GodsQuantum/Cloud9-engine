@@ -1,0 +1,36 @@
+{
+  "run_id": "pym35_atomic2_mtp1_192_1026",
+  "engine": "atomic2",
+  "model": "pym",
+  "mode": "mtp1",
+  "executed": false,
+  "default_production_unchanged": true,
+  "profile": "partial_min",
+  "thinking_budget": 256,
+  "max_output_tokens": 192,
+  "rows": [],
+  "preflight": {
+    "admitted": false,
+    "reasons": [
+      "HOST_IO_PSI"
+    ],
+    "model_bytes": 13222476000,
+    "model_name": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+    "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+    "min_available_gib": 24.4,
+    "required_gtt_gib": 2.75,
+    "profile": "partial_min",
+    "guardian": {
+      "allow": true,
+      "mem_available_gib": 32.983,
+      "psi_memory_full_avg10": 0.0,
+      "swap_used_percent": 80.58,
+      "safe_total_gtt_gib": 15.34,
+      "reasons": []
+    },
+    "host_io_full_avg10": 11.64,
+    "max_host_gpu_temp_c": 58.0,
+    "note": "Flash GSQ-RCO is NOT the historical AD-4.27 + FR-Spec; invalid historical speed comparison"
+  },
+  "status": "blocked_preflight"
+}

@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-26T09:38:24.320744+00:00",
+  "same_Pym_gguf_sha_file": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf 13222476000 bytes",
+  "same_engine_binary_SHA256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+  "profile": "partial_min, ctx2048, 192 output, same prompt seed KV and sampling",
+  "per_prompt_tps": {
+    "math": {
+      "MTP2": 11.082084771022195,
+      "MTP3": 12.381874019848919
+    },
+    "code": {
+      "MTP2": 10.726173091383643,
+      "MTP3": 11.116564532265045
+    },
+    "fr": {
+      "MTP2": 11.168455442167295,
+      "MTP3": 9.680568467181814
+    }
+  },
+  "arithmetic_mean_tps": {
+    "MTP2": 10.992237768191044,
+    "MTP3": 11.059669006431927
+  },
+  "mtp3_over_mtp2_relative_pct": 0.61,
+  "quality_math_correct_both": true,
+  "three_outputs_visible_both": true,
+  "code_execution_verified": false,
+  "recommended_mtp_setting": "MTP2 until repeated longer prompts and real agent tool quality evaluated, because MTP3 degrades French case despite marginal average gain",
+  "latency_risk": "Both 192-token outputs truncation reason=length; require larger output + long context before promotion",
+  "upstream_same_GGUF_failed_loading_watchdog": true,
+  "production_engine_changed": false
+}
