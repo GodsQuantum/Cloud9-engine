@@ -477,9 +477,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
           "sha256": "f98745a7cd2ffb42012ea70675263d4c1ee273d793ab8b87a42ab31a56144180",
           "note": "Four production embedding GPU slots ACTIVE, no preemption; persistent host RAM and PBS IO pressure"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
+          "sha256": "0293e6c6d26bf3e960d42d5ea26f4fa38e5851403fbb4f65c7fa99065ce39897",
+          "note": "PBS verification temporarily paused, native verify tasks drained 13+weekly, 04:17 exact job schedule+verify-new restored. 26 Oct backup 214.87m; 74-100pct incremental reuse; high PBS I/O SMR datastore. Pym same GGUF partial LAB guarded before response even with verification off."
         }
       ],
-      "remaining": "Cloud9 shared RAM baseline24-27GiB available for 96GiB host, heavy swap17-18GiB, CT400 IA Studio16GiB, HAOS and PBS guests plus CT410 embeddings3GiB. Four embeddings slots repeatedly busy, PBS VM900 backup/verify IO pressure. LFM compact Q4 GPU trial host PSI peak2.05-2.35 and memory21-22G; own watchdog correctly killed only LAB child. Do not preempt busy embeddings or stop HAOS/PBS/CT400 to win synthetic speeds. No Pym13.22GB fair full GPU run under this RAM/PSI.",
+      "remaining": "26 Oct 2026 PBS maintenance proved: weekly verify schedule Sat03:00 and verify-new=true were temporarily paused; parent+13 verify UPIDs canceled via native PBS CLI; task list verified EMPTY and host IO full avg10 fell ~12.6pct to~2.9pct. After Pym trial, EXACT original PBS verification settings restored (verified at 04:17); daily job 00:30 stays enabled. Nightly 26 Oct backup took 214.87m, but LXC/VM logs prove INCREMENTAL 74%-100% reuse. CT410 31m49 ~95.7pct reused, CT700 48m06 ~89.2pct, VM100 50m53 ~74pct. Source 4TB ST4000LM024 SMR HDD with extreme I/O queue under concurrent verification; recommended separate native LXC metadata-mode migration validation to avoid reading unchanged files, but do NOT change daily backup now due expensive new mpxar/ppxar baseline, and user requested normal restoration. Pym partially GPU-loaded while verifications paused, but memory fell 25.0->18.57GiB and official watchdog stopped worker before inference. No product engine promotion; need safe RAM window beyond stopping PBS verification.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -732,7 +737,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~03:33 Paris: user authorized Pym priority A/B. Updated/deployed existing CT410 MoE LAB runner (rather than new wrappers) for Pym Q2 / Pym Heretic, upstream b11844, Atomic2 stock, Atomic2 Zen4-LTO, native MTP1/2/3/adaptive as supported and embedding fail-closed query. 24 runner unit tests PASS. Three actual same-GGUF Pym full GPU MTP2 8K native preflights performed (no GPU load) and all denied official guardian, resident host RAM and I/O PSI; proof 2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json. No new performance claim or production engine change.",
+  "latest_attempt_note": "2026-10-26 ~04:19 Europe/Paris: User explicitly approved pause PBS verifications for MoE tests, requested restore. Restored exact verify-job cloud9-weekly schedule Sat03:00, PBS datastore verify-new true, gc Sun04:00 and daily backup00:30 after native stop of verify parent+13 snapshots; active verify task list 0. Backups already incremental 74-100pct reusable data but 26 Oct job 3h34m52s due SMR disk I/O contention, 24 Oct 8h16, etc. Same Pym35B upstream b11844 MTP2 partial GPU LOAD2.405s during pause; official watchdog interrupted before first answer at MemAvailable18.57GiB and PSI full0.72, no scored throughput. Need memory mitigation separate; LLM production not stopped since no model loaded. Native PXAR metadata change detection could speed subsequent runs but not applied due first new-format baseline and exact restore request.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1088,6 +1093,11 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
       "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
       "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
+      "sha256": "0293e6c6d26bf3e960d42d5ea26f4fa38e5851403fbb4f65c7fa99065ce39897"
     }
   ],
   "nextn_lab_candidate": {
