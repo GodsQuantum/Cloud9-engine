@@ -36,6 +36,12 @@ class GithubRestFallbackTests(unittest.TestCase):
                 with self.assertRaises(gate.UnverifiedSource):
                     gate.github_api("repos/ggml-org/llama.cpp/releases/latest")
 
+    def test_overlong_rest_response_fails_closed(self):
+        with patch.object(gate.subprocess, "run", return_value=self.unauth()):
+            with patch.object(gate, "urlopen", return_value=Response(b"x" * (1024 * 1024 + 1))):
+                with self.assertRaisesRegex(gate.UnverifiedSource, "RESPONSE_TOO_LARGE"):
+                    gate.github_api("repos/ggml-org/llama.cpp/releases/latest")
+
     def test_http_failure_fails_closed(self):
         from urllib.error import HTTPError
         with patch.object(gate.subprocess, "run", return_value=self.unauth()):
