@@ -1,0 +1,71 @@
+{
+  "created": "2026-10-26T02:38:36.450633+00:00",
+  "target": "Pym35B exact GGUF 13.22GB, MTP2 full GPU 8K",
+  "results": [
+    {
+      "name": "pym_full_upstream_26oct_preflight_only3",
+      "source_sha256": "8121b43eeb3a04bff5429eb0ca6b3e9f65bca781d541434d821cbd655a7b147a",
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+        "HOST_IO_PSI"
+      ],
+      "guardian": {
+        "allow": false,
+        "mem_available_gib": 24.827,
+        "psi_memory_full_avg10": 0.0,
+        "swap_used_percent": 69.3,
+        "safe_total_gtt_gib": 7.184,
+        "reasons": [
+          "requested 14.0 GiB GTT > current safe total 7.2 GiB"
+        ]
+      },
+      "host_io_psi": 12.51
+    },
+    {
+      "name": "pym_full_atomic2_26oct_preflight_only3",
+      "source_sha256": "fb62ef03d32c82910e07f5a18c1ca4244d5c307358fbbadcfa9f6cefbefd2ce3",
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+        "HOST_IO_PSI"
+      ],
+      "guardian": {
+        "allow": false,
+        "mem_available_gib": 24.998,
+        "psi_memory_full_avg10": 0.0,
+        "swap_used_percent": 69.09,
+        "safe_total_gtt_gib": 7.355,
+        "reasons": [
+          "requested 14.0 GiB GTT > current safe total 7.4 GiB"
+        ]
+      },
+      "host_io_psi": 18.12
+    },
+    {
+      "name": "pym_full_atomic2_lto_26oct_preflight_only3",
+      "source_sha256": "55c0c13dae6dbe8c13bcc09907e268f3ede78e6f5cae4748ba72c91c66f738f1",
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "MODEL_SIZE_PLUS_PRODUCTION_RAM_RESERVE",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD",
+        "HOST_IO_PSI"
+      ],
+      "guardian": {
+        "allow": false,
+        "mem_available_gib": 24.972,
+        "psi_memory_full_avg10": 0.0,
+        "swap_used_percent": 69.09,
+        "safe_total_gtt_gib": 7.329,
+        "reasons": [
+          "requested 14.0 GiB GTT > current safe total 7.3 GiB"
+        ]
+      },
+      "host_io_psi": 18.12
+    }
+  ],
+  "any_model_inference": false,
+  "production_changed": false
+}

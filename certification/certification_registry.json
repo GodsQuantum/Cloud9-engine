@@ -582,9 +582,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
           "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519",
           "note": "Hardware-specialized Atomic2 Zen4/LTO LAB binary SHA pinned; no current speed/quality gain, matched Pym A/B pending guardian RAM/GTT admission"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+          "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a",
+          "note": "Three same-model native Pym35B MTP2 candidate preflights: upstream b11844, Atomic2 and new Atomic2 Zen4/LTO all denied host coexistence safely; no speed or quality claims"
         }
       ],
-      "remaining": "Prioritize exact Pym35B Q2-MTP GGUF13,222,476,000 bytes then Pym Heretic17,016,624,544, not 4B/8B substitute. Same SHA and sampling on upstream b11844 vs Atomic2 b10298, then Atomic2 Zen4/LTO LAB after build. Feature matrix in certification/moe_tournament_20261026.json and plan in MOE_ENGINE_TOURNAMENT_20261026.md. Current official guardian on full Pym request13G declined, safe_total_gtt8.626GiB with host PSI0.81. No honest matched new Pym benchmark possible until resource admission. Existing historical Atomic1.6 Pym MTP2 f16 36.28 vs Turbo3 34.40: do not assume Turbo3 automatically helps. Test MTP2 baseline first, then adaptive MTP+KV+poll+microbatch single-variable ablation and port winning features with quality checks. 2026-10-26 Atomic2 Zen4/LTO candidate now actually native-built and staged CT410, all ELF linked and same Atomic2 source cda0f925. Distinct compiler optimization only (GGML_NATIVE was already ON stock), no speed gain measured; do not promote or assume GPU shader acceleration.",
+      "remaining": "Prioritize exact Pym35B Q2-MTP GGUF13,222,476,000 bytes then Pym Heretic17,016,624,544, not 4B/8B substitute. Same SHA and sampling on upstream b11844 vs Atomic2 b10298, then Atomic2 Zen4/LTO LAB after build. Feature matrix in certification/moe_tournament_20261026.json and plan in MOE_ENGINE_TOURNAMENT_20261026.md. Current official guardian on full Pym request13G declined, safe_total_gtt8.626GiB with host PSI0.81. No honest matched new Pym benchmark possible until resource admission. Existing historical Atomic1.6 Pym MTP2 f16 36.28 vs Turbo3 34.40: do not assume Turbo3 automatically helps. Test MTP2 baseline first, then adaptive MTP+KV+poll+microbatch single-variable ablation and port winning features with quality checks. 2026-10-26 Atomic2 Zen4/LTO candidate now actually native-built and staged CT410, all ELF linked and same Atomic2 source cda0f925. Distinct compiler optimization only (GGML_NATIVE was already ON stock), no speed gain measured; do not promote or assume GPU shader acceleration. 2026-10-26 preflight three requested exact Pym35B 8K MTP2 engines upstream b11844/Atomic2 b10298/Atomic2 Zen4-LTO all fail closed before load due <13GiB safe GTT, unavailable memory projection, IO PSI >=9 and guardian; zero new decoded speeds. Runner code now supports Pym Heretic MTP1/2/3 and Atomic adaptive, and fail-closed embedding slots.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -709,9 +714,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
           "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada",
           "note": "Pym and Flash tournament matrix created: one GGUF per engine, feature-parity or explicit port unavailability, long-context quality safety before production"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+          "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a",
+          "note": "New benchmark runner patched for exact Pym Heretic + 3 engines, MTP1/2/3/adaptive, fail-closed embedding slots; 24 unit tests pass; current host GTT/memory/IO denies actual Pym"
         }
       ],
-      "remaining": "New hardware-specific MoE tournament plan and machine-readable matrix/tests validated; no final engine selection yet. Test Pym same GGUF across upstream and Atomic, cross-port/compare native features, qualify response visible, strict JSON/tool/code, 8→128K real context, cold/hot, stability and rollback before production. Official guardian denied full Pym GPU when live RAM~26GiB and safe GTT8.6GiB; no force preemption or unsafe model. Atomic2 Zen4/LTO hardware build is experimental, NO benchmark measured or prod promotion.",
+      "remaining": "New hardware-specific MoE tournament plan and machine-readable matrix/tests validated; no final engine selection yet. Test Pym same GGUF across upstream and Atomic, cross-port/compare native features, qualify response visible, strict JSON/tool/code, 8→128K real context, cold/hot, stability and rollback before production. Official guardian denied full Pym GPU when live RAM~26GiB and safe GTT8.6GiB; no force preemption or unsafe model. Atomic2 Zen4/LTO hardware build is experimental, NO benchmark measured or prod promotion. Latest LAB harness deployed CT410, targeted 24 unit tests pass. Three exact Pym candidate preflights blocked by host co-residency. No promotion or production changes. Retry only when official guardian and disk IO allow; cannot infer a Pym winner from LFM proxy.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -722,7 +732,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "2026-10-26 ~03:16 Paris: new cross-engine Pym35B + Heretic + exact FlashNext model target plan and JSON manifest validated 7 unit tests. Official guardian refused Pym full GPU (safe GTT8.6GiB vs request13GiB), no full Pym test; Flash exact historical quant absent. Compiled Atomic2 cda0f925 Vulkan Zen4/LTO, 11 ELF native $ORIGIN relocated, CT410 --version/help/ldd SUCCESS, new isolated lab path checksummed, no model generation or speed gain yet. Source code and stable OmniRoute preserved.",
+  "latest_attempt_note": "2026-10-26 ~03:33 Paris: user authorized Pym priority A/B. Updated/deployed existing CT410 MoE LAB runner (rather than new wrappers) for Pym Q2 / Pym Heretic, upstream b11844, Atomic2 stock, Atomic2 Zen4-LTO, native MTP1/2/3/adaptive as supported and embedding fail-closed query. 24 runner unit tests PASS. Three actual same-GGUF Pym full GPU MTP2 8K native preflights performed (no GPU load) and all denied official guardian, resident host RAM and I/O PSI; proof 2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json. No new performance claim or production engine change.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1073,6 +1083,11 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
       "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
       "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+      "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a"
     }
   ],
   "nextn_lab_candidate": {

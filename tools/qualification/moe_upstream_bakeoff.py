@@ -8,11 +8,13 @@ MODELS={
  "pym":Path("/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf"),
  "flash_alternate":Path("/srv/lxc/ia-compute/data/models/strata/coder-iq1m/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf"),
  "lfm_official_q4":Path("/srv/lxc/ia-compute/data/models/lab-candidates/lfm25-a1b-official-q4/LFM2.5-8B-A1B-Q4_K_M.gguf"),
+ "pym_heretic":Path("/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf"),
 }
 BINARIES={
  "upstream_b11840":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master36e-vulkan-gfx1103-20261023/bin/llama-server"),
  "upstream_b11844":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/upstream-master062-vulkan-gfx1103-20261023/llama-server"),
  "atomic2":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-vulkan-lab-20261025/bin/llama-server"),
+ "atomic2_zen4_lto":Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-zen4-lto-lab-20261026/bin/llama-server"),
 }
 GUARD=("192.168.1.200",19755)
 LOCK=Path("/run/cloud9-gpu.lock")
@@ -20,6 +22,7 @@ URL="http://127.0.0.1:18139"
 ROUTER="http://192.168.1.219:8090/health"
 AUTOSUBS="http://192.168.1.219:8007/health"
 LAB=Path("/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024")
+EMBED_SLOTS="http://192.168.1.219:8091/slots"
 PROMPTS=[
  ("math","Calcule 25 × 37, puis explique en français différentes méthodes de vérification, étape par étape, avec exemples complémentaires."),
  ("code","Écris une fonction Python déterministe qui fusionne plusieurs itérateurs déjà triés et fournis des tests unitaires pour entrées vides, doublons et nombres négatifs."),
@@ -33,6 +36,19 @@ def fetch(url,payload=None,timeout=4):
 def guardian(gib):
  with socket.create_connection(GUARD,timeout=4) as s:
   s.settimeout(4);s.sendall(f"CHECK coexist-light {gib:.2f}\n".encode());return json.loads(s.recv(16000))
+
+def embeddings_busy():
+ # Unlike the old router bug, any unknown/invalid slot state must fail CLOSED.
+ try:
+  slots=fetch(EMBED_SLOTS,timeout=3)
+  if not isinstance(slots,list) or not slots:return True
+  for slot in slots:
+   if not isinstance(slot,dict):return True
+   if slot.get("is_processing") is True or slot.get("state")=="processing":return True
+   if "is_processing" not in slot and slot.get("state") not in ("idle","available"):return True
+  return False
+ except (OSError,ValueError,TypeError,KeyError):
+  return True
 
 def host_temp():
  best=[]
@@ -52,8 +68,10 @@ def psi_io_full():
 def preflight(model_key,engine,mode,profile="full"):
  p=MODELS[model_key];b=BINARIES[engine]
  assert p.is_file() and b.is_file()
- if mode=="mtp2" and model_key!="pym":
+ if mode in ("mtp1","mtp2","mtp3","mtp_adaptive") and model_key not in ("pym","pym_heretic"):
   return {"admitted":False,"reasons":["NON_PYM_INLINE_MTP_UNVERIFIED"]}
+ if mode=="mtp_adaptive" and not engine.startswith("atomic2"):
+  return {"admitted":False,"reasons":["ADAPTIVE_MTP_NOT_SUPPORTED_UPSTREAM"]}
  if model_key=="lfm_official_q4":
   # Inference proceeds ONLY after the download was pinned by SHA256.
   if p.stat().st_size!=5155564768:
@@ -89,7 +107,10 @@ def preflight(model_key,engine,mode,profile="full"):
  if g.get("psi_memory_full_avg10",99)>=0.30:why.append("HOST_MEMORY_PSI")
  if io is None or io>=9:why.append("HOST_IO_PSI")
  if t is None or t>=76:why.append("TEMPERATURE_PREFLIGHT")
- if fetch(ROUTER,timeout=3).get("worker_model") is not None:why.append("ROUTER_WORKER_ACTIVE")
+ try:
+  if fetch(ROUTER,timeout=3).get("worker_model") is not None:why.append("ROUTER_WORKER_ACTIVE")
+ except Exception:why.append("ROUTER_HEALTH_UNREACHABLE")
+ if embeddings_busy():why.append("EMBEDDINGS_ACTIVE_OR_UNKNOWN")
  try:
   autosubs=fetch(AUTOSUBS,timeout=3)
   if autosubs.get("status")!="ok" or autosubs.get("loaded_models")!=[]:why.append("AUTOSUBS_GPU_IN_USE_OR_HEALTH_UNKNOWN")
@@ -112,7 +133,7 @@ def main():
  ap=argparse.ArgumentParser()
  ap.add_argument("--engine",choices=sorted(BINARIES),required=True)
  ap.add_argument("--model",choices=sorted(MODELS),required=True)
- ap.add_argument("--mode",choices=["base","mtp2"],required=True)
+ ap.add_argument("--mode",choices=["base","mtp1","mtp2","mtp3","mtp_adaptive"],required=True)
  ap.add_argument("--profile",choices=["full","partial","partial_min","compact"],default="full")
  ap.add_argument("--run-id",required=True)
  ap.add_argument("--thinking-budget",type=int,choices=[0,128,256],default=256,
@@ -160,7 +181,10 @@ def main():
     # completion from incorrectly appearing to be a successful agent response.
     # Both upstream and Atomic use identical settings for this A/B profile.
     cmd += ["--reasoning-budget",str(a.thinking_budget),"--reasoning-format","deepseek"]
-   if a.mode=="mtp2":cmd+=["--spec-type","draft-mtp","--spec-draft-n-max","2"]
+   if a.mode in ("mtp1","mtp2","mtp3"):
+    cmd+=["--spec-type","draft-mtp","--spec-draft-n-max",a.mode[-1]]
+   elif a.mode=="mtp_adaptive":
+    cmd+=["--spec-type","draft-mtp-adaptive","--spec-draft-n-max","3"]
    result["cli_flags"]=cmd[1:][::] # distinct partial vs full profile, no secrets
    with logfile.open("x") as log:
     child=subprocess.Popen(cmd,stdout=log,stderr=subprocess.STDOUT,env=os.environ.copy())
@@ -192,6 +216,8 @@ def main():
      # the 2-second watchdog still terminates this OWN worker on hard pressure.
      for cooldown in range(8):
       if guard_events or child.poll() is not None:break
+      if embeddings_busy():
+       result["status"]="paused_embeddings_active";result["guard_events"]=guard_events;save();return
       g=guardian(0);temp=host_temp()
       result["latest_runtime_guard"]={k:g.get(k) for k in ("allow","mem_available_gib","psi_memory_full_avg10","swap_used_percent","safe_total_gtt_gib","reasons")}
       result["latest_runtime_temp_c"]=temp
@@ -200,7 +226,7 @@ def main():
       if g.get("psi_memory_full_avg10",99)>=1.8 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=80:
        break
       if cooldown<7:time.sleep(2)
-     if guard_events or child.poll() is not None or g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=78:
+     if guard_events or child.poll() is not None or embeddings_busy() or g.get("psi_memory_full_avg10",99)>=.5 or g.get("mem_available_gib",0)<20.5 or temp is None or temp>=78:
       result["status"]="paused_runtime_pressure";result["guard_events"]=guard_events;save();return
      ts=time.monotonic()
      payload={"model":"Cloud9-MoE-Upstream-LAB","temperature":0.2,"top_k":80,
