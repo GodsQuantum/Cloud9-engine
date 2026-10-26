@@ -562,9 +562,14 @@
           "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
           "sha256": "bf510f2da04f4f95a7cbec512d4350d42985853d5121277c5c3461ade5fcab6d",
           "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_ASSETS_DAILY_PLUS_PREJOB.json",
+          "sha256": "8aba320d55cfd41ee0adbe3d39ca2b5345aaa1c7103a9c7154c76e85d9dd1a98",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
         }
       ],
-      "remaining": "26 Oct service-only audit now covers 14 LXC (12 active,2 stopped), VM100/900 (HAOS no QGA), host and ~165 Docker containers. NEW actual fixes CT300 broken DaVinci PathChanged storm to native30m service timer (service test PASS), host completed ZFS rehab collector disabled (720 SMART+journal polling/day gone), native DaVinci GPU timer5->10sec (8640 starts/day less). Compose source health intervals Redis Netbox x2 CT1101s->15s, Dify PostgreSQL CT4001s->15s, DaVinci PostgreSQL CT3005s->15s VALIDATED but not applied to running Docker without targeted service recreation. Pending CT410 ComfyUI/Docling failed sockets and CT700 stale preview units, no unsafe kills. CT400 WAS accidentally stopped by stale shutdown job; restarted 09:11, all key apps confirmed healthy. NEVER STOP WHOLE LXC/VM FOR BENCHMARK. Full sanitized audit certification/CLOUD9_SERVICE_AUDIT_20261026.md and proofs.",
+      "remaining": "26 Oct service-only audit now covers 14 LXC (12 active,2 stopped), VM100/900 (HAOS no QGA), host and ~165 Docker containers. NEW actual fixes CT300 broken DaVinci PathChanged storm to native30m service timer (service test PASS), host completed ZFS rehab collector disabled (720 SMART+journal polling/day gone), native DaVinci GPU timer5->10sec (8640 starts/day less). Compose source health intervals Redis Netbox x2 CT1101s->15s, Dify PostgreSQL CT4001s->15s, DaVinci PostgreSQL CT3005s->15s VALIDATED but not applied to running Docker without targeted service recreation. Pending CT410 ComfyUI/Docling failed sockets and CT700 stale preview units, no unsafe kills. CT400 WAS accidentally stopped by stale shutdown job; restarted 09:11, all key apps confirmed healthy. NEVER STOP WHOLE LXC/VM FOR BENCHMARK. Full sanitized audit certification/CLOUD9_SERVICE_AUDIT_20261026.md and proofs. CT300 DaVinci native asset refresh timer now daily 06:15 (formerly 30min); tested active. Both davinci-agent-node and davinci-render-node have existing ExecStartPre davinci-render-preflight.sh, which invokes assets-refresh.sh --prestart; this does NOT prove every new queued job in an already-running Resolve node, for which Resolve21 native Deliver Trigger Script at Start is available but not yet attached.",
       "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
     },
     {
@@ -707,9 +712,39 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
           "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713",
           "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+          "sha256": "e5bb3b495de22ca5170cb26b6341dfca9ea72f0db5b194d71d465ff87e8deed6",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+          "sha256": "fce6a22fbd1cea8a98cd79fd2f42e16d8a901296fa66831b5b2935d38aadbcc9",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+          "sha256": "4696db4e62a9cb4ae575bb25d759715a8c98dc786d72bece65aa1c85ac6eacd7",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+          "sha256": "b81bccca58c9e456d68cb821d7e612cddbc9826701a22eb6bffa4f6b9771e3ed",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtp1_192_1026.json",
+          "sha256": "b131af981461616789986eeceeb01f7d15d8413351774844849e16944ea3c774",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
+          "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
         }
       ],
-      "remaining": "Real Pym35B-A3B Q2 MTP same physical model run SUCCESS: Atomic2 stock partial_min ngl4 cpu-moe41 no MTP 2K ctx f16 KV, 768 tokens x3: maths8.974t/s correct 925, code6.956t/s text only, French8.598t/s text only, load2.516sec, 0 watchdog, 3/3 visible. This is strictly NOT historical Pym fullGPU MTP2 34.56 median/37.20math comparable or proven code quality. New matched192 trials: upstream MTP2 and base crash guarded PSI, Atomic2 Zen4/LTO base loaded7.496sec then paused PSI, stock192 denied preflight; unable to rank engines under current shared workloads. No production LLM worker switched, router&embedding healthy. Guard must NOT be bypassed, do not shutdown CT400 or any LXC; need safe memory/IO service-level improvement and genuine matched A/B quality/code/JSON 128K.",
+      "remaining": "Real Pym35B-A3B Q2 MTP same physical model run SUCCESS: Atomic2 stock partial_min ngl4 cpu-moe41 no MTP 2K ctx f16 KV, 768 tokens x3: maths8.974t/s correct 925, code6.956t/s text only, French8.598t/s text only, load2.516sec, 0 watchdog, 3/3 visible. This is strictly NOT historical Pym fullGPU MTP2 34.56 median/37.20math comparable or proven code quality. New matched192 trials: upstream MTP2 and base crash guarded PSI, Atomic2 Zen4/LTO base loaded7.496sec then paused PSI, stock192 denied preflight; unable to rank engines under current shared workloads. No production LLM worker switched, router&embedding healthy. Guard must NOT be bypassed, do not shutdown CT400 or any LXC; need safe memory/IO service-level improvement and genuine matched A/B quality/code/JSON 128K. Exact Pym35B Q2 Vulkan Atomic2 partial_min 2K ctx, same seed/prompts/tokens192: MTP2 math11.082/code10.726/French11.168 tok/s, 3/3 visible and 925 math; MTP3 math12.382/code11.117/French9.681, also 3/3 visible. MTP3 mean+0.61pct but French performance regressed, MTP2 balanced default pending repeated quality. Upstream b11844 MTP2 latest retry failed guardian before inference; Atomic2 MTP1+adaptive preflight blocked by host IO PSI from other workloads. No exact fullGPU 128K or agent QA. HOF now 203.",
       "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
     },
     {
@@ -869,9 +904,39 @@
           "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
           "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713",
           "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+          "sha256": "e5bb3b495de22ca5170cb26b6341dfca9ea72f0db5b194d71d465ff87e8deed6",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+          "sha256": "fce6a22fbd1cea8a98cd79fd2f42e16d8a901296fa66831b5b2935d38aadbcc9",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+          "sha256": "4696db4e62a9cb4ae575bb25d759715a8c98dc786d72bece65aa1c85ac6eacd7",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+          "sha256": "b81bccca58c9e456d68cb821d7e612cddbc9826701a22eb6bffa4f6b9771e3ed",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtp1_192_1026.json",
+          "sha256": "b131af981461616789986eeceeb01f7d15d8413351774844849e16944ea3c774",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
+          "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
         }
       ],
-      "remaining": "FAIL-CLOSED: no production promotion of any LLM. Pym true3/3 768-token base partial measurement on Atomic2 stock, actual comparative upstream/Atomic2 LTO at192 blocked due guardian memory PSI, no matched quality context >2K. Existing OmniRoute choices unchanged. Native timer/Compose source fixes documented; CT400 healthy after involuntary stop; explicit no whole-LXC shutdown rule. Revisit only when 780M safe coexistence, then canary24h rollback exact tasks. See sanitized service audit.",
+      "remaining": "FAIL-CLOSED: no production promotion of any LLM. Pym true3/3 768-token base partial measurement on Atomic2 stock, actual comparative upstream/Atomic2 LTO at192 blocked due guardian memory PSI, no matched quality context >2K. Existing OmniRoute choices unchanged. Native timer/Compose source fixes documented; CT400 healthy after involuntary stop; explicit no whole-LXC shutdown rule. Revisit only when 780M safe coexistence, then canary24h rollback exact tasks. See sanitized service audit. No LLM prod promotion; incumbent router and embeddings remained running. Actual Pym MTP2/MTP3 192token 3 prompts measured; upstream watchguard and MTP1/adaptive IO PSI block.",
       "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
     }
   ],
@@ -882,7 +947,7 @@
     "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
   ],
   "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
-  "latest_attempt_note": "26 Oct 2026 ~10:12 Europe/Paris: user insisted audit of SERVICES INSIDE all LXCs, NOT turning LXCs off. CT400 past accidental delayed shutdown restored09:11, checked main Docker healthy. 14 LXC+2 VM+host read-only audit and Docker healthchecks; CT300 broken DaVinci font PathChanged event storm replaced native30m timer; finished ZFS rehab SMART/journal collector timer disabled; DaVinci GPU native arbiter5->10s, no script change. CT110 Netbox Redis2x1s, CT400 Dify PG1s, CT300 DaVinci PG5s Compose source health checks corrected native15s, validated, runtime remains unchanged without targeted container recreation. Atomic2 stock completed REAL Pym35B Q2 -ngl4 CPU-MoE41 2K no MTP 768tokens each math8.974 (correct 925), code6.956, FR8.598 3/3 visible/no watchdog; HOF new record201. Upstream b11844 MTP2 and noMTP failed_guard PSI; Atomic2 Zen4/LTO base paused PSI, not directly matched A/B. All exact proof JSON mirrored and tests checked, no LLM promotion.",
+  "latest_attempt_note": "26 Oct 2026 ~10:44 Paris: CT300 timer now daily06:15, existing DaVinci node ExecStartPre checks on node START not every render job. Actual Pym Q2 Atomic2 MTP2 partial_min 3/3 at [11.082,10.726,11.168] tok/s and MTP3 at [12.382,11.117,9.681]; MTP2 preferred until full agent QA. Upstream b11844 Pym MTP2 retry aborted official guardian before first token, MTP1/adaptive refused at IO PSI. Do not stop any LXC or VM; prod unchanged. Original benchmark proofs mirrored immutable, HOF203. Remaining full GPU and 128K certification.",
   "repo_proof_snapshots": [
     {
       "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
@@ -1348,6 +1413,41 @@
       "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
       "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
       "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_DAVINCI_ASSETS_DAILY_PLUS_PREJOB.json",
+      "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_ASSETS_DAILY_PLUS_PREJOB.json",
+      "sha256": "8aba320d55cfd41ee0adbe3d39ca2b5345aaa1c7103a9c7154c76e85d9dd1a98"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+      "sha256": "e5bb3b495de22ca5170cb26b6341dfca9ea72f0db5b194d71d465ff87e8deed6"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+      "sha256": "fce6a22fbd1cea8a98cd79fd2f42e16d8a901296fa66831b5b2935d38aadbcc9"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+      "sha256": "4696db4e62a9cb4ae575bb25d759715a8c98dc786d72bece65aa1c85ac6eacd7"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+      "sha256": "b81bccca58c9e456d68cb821d7e612cddbc9826701a22eb6bffa4f6b9771e3ed"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/pym35_atomic2_mtp1_192_1026.json",
+      "project_path": "Sources/Worklogs/pym35_atomic2_mtp1_192_1026.json",
+      "sha256": "b131af981461616789986eeceeb01f7d15d8413351774844849e16944ea3c774"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/pym35_atomic2_mtpadaptive_192_1026.json",
+      "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
+      "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625"
     }
   ],
   "nextn_lab_candidate": {

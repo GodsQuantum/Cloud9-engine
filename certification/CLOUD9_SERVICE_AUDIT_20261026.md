@@ -46,3 +46,7 @@ Essais comparatifs même modèle : upstream MTP2 et sans MTP ont déclenché la 
 6. Avant une nouvelle session, lire CLOUD9_FIVE_PRIORITIES_PBS_MOE_20261026.md et certification/NEXT_HANDOFF.md ; ne pas rejouer de benchmarks déjà enregistrés.
 
 Retours arrière détaillés dans Sources/Worklogs et les miroirs SHA sous certification/evidence/2026-10-26. Aucun fichier Docker Compose complet ou secret n'est partagé sur GitHub.
+
+## 26 Oct — DaVinci quotidien et tournoi MoE 35B
+DaVinci CT300: refresh fonts/LUT via timer systemd daily06:15, script de service existant conservé, vérifié actif. Les deux services DaVinci agent/render ont déjà un preflight via ExecStartPre → assets-refresh.sh --prestart AVANT LE DÉMARRAGE DU NŒUD, et non une garantie sur chaque job reçu par un nœud déjà démarré. DaVinci 21 propose un « Trigger script at Start » natif par job/preset, à activer et tester sur le workflow de soumission distant.
+Moteur : Pym35B-A3B Q2 identique Atomic2 stock Vulkan partiel -ngl4 cpu-moe41 2048 ctx 192 tokens : MTP2 11.082 / 10.726 / 11.168 tok/s (math/code/fr), math 925 correct, 3 sorties visibles ; MTP3 12.382 / 11.117 / 9.681 tok/s. Moyennes MTP2=10.992, MTP3=11.060, +0.61% MTP3 avec FR nettement plus lent ; MTP2 plus équilibré provisoirement. Pas de test de code exécuté ni 128K, ni vitesse full GPU historique comparable. Upstream b11844 MTP2 à nouveau arrêté par guardian durant load ; Atomic2 MTP1/adaptive refusés préflight IO PSI. Aucun changement de moteur en production. Ne pas arrêter LXC.
