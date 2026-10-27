@@ -1,0 +1,118 @@
+ggml_vulkan: Found 1 Vulkan devices:
+ggml_vulkan: 0 = AMD Radeon 780M Graphics (RADV PHOENIX) (radv) | uma: 1 | fp16: 1 | bf16: 0 | fp4: 0 | warp size: 64 | shared memory: 65536 | int dot: 1 | matrix cores: KHR_coopmat
+accelerator: Vulkan0
+== q2_K ==
+ggml_backend_sched_register_expert_pool: expert pool for 'w_gu' on Vulkan0: 16/32 experts (0.16 MiB)
+ggml_backend_sched_register_expert_pool: expert pool for 'w_dn' on Vulkan0: 16/32 experts (0.16 MiB)
+q2_K nt=1 round1 (cold): ok
+q2_K nt=1 round2 (full eviction): ok
+q2_K nt=1 round3 (hit + reload): ok
+q2_K nt=1 round4 (after graph rebuild): ok
+q2_K nt=3 round1 (cold): ok
+q2_K nt=3 round2 (full eviction): ok
+q2_K nt=3 round3 (hit + reload): ok
+q2_K nt=3 round4 (after graph rebuild): ok
+q2_K nt=8 round1 (cold): ok
+q2_K nt=8 round2 (full eviction): ok
+q2_K nt=8 round3 (hit + reload): ok
+q2_K nt=8 round4 (after graph rebuild): ok
+q2_K nt=9 round1 (cold): ok
+q2_K nt=9 round2 (full eviction): ok
+q2_K nt=9 round3 (hit + reload): ok
+q2_K nt=9 round4 (after graph rebuild): ok
+== q3_K ==
+ggml_backend_sched_register_expert_pool: expert pool for 'w_gu' on Vulkan0: 16/32 experts (0.22 MiB)
+ggml_backend_sched_register_expert_pool: expert pool for 'w_dn' on Vulkan0: 16/32 experts (0.22 MiB)
+q3_K nt=1 round1 (cold): ok
+q3_K nt=1 round2 (full eviction): ok
+q3_K nt=1 round3 (hit + reload): ok
+q3_K nt=1 round4 (after graph rebuild): ok
+q3_K nt=3 round1 (cold): ok
+q3_K nt=3 round2 (full eviction): ok
+q3_K nt=3 round3 (hit + reload): ok
+q3_K nt=3 round4 (after graph rebuild): ok
+q3_K nt=8 round1 (cold): ok
+q3_K nt=8 round2 (full eviction): ok
+q3_K nt=8 round3 (hit + reload): ok
+q3_K nt=8 round4 (after graph rebuild): ok
+q3_K nt=9 round1 (cold): ok
+q3_K nt=9 round2 (full eviction): ok
+q3_K nt=9 round3 (hit + reload): ok
+q3_K nt=9 round4 (after graph rebuild): ok
+== q4_K ==
+ggml_backend_sched_register_expert_pool: expert pool for 'w_gu' on Vulkan0: 16/32 experts (0.28 MiB)
+ggml_backend_sched_register_expert_pool: expert pool for 'w_dn' on Vulkan0: 16/32 experts (0.28 MiB)
+q4_K nt=1 round1 (cold): ok
+q4_K nt=1 round2 (full eviction): ok
+q4_K nt=1 round3 (hit + reload): ok
+q4_K nt=1 round4 (after graph rebuild): ok
+q4_K nt=3 round1 (cold): ok
+q4_K nt=3 round2 (full eviction): ok
+q4_K nt=3 round3 (hit + reload): ok
+q4_K nt=3 round4 (after graph rebuild): ok
+q4_K nt=8 round1 (cold): ok
+q4_K nt=8 round2 (full eviction): ok
+q4_K nt=8 round3 (hit + reload): ok
+q4_K nt=8 round4 (after graph rebuild): ok
+q4_K nt=9 round1 (cold): ok
+q4_K nt=9 round2 (full eviction): ok
+q4_K nt=9 round3 (hit + reload): ok
+q4_K nt=9 round4 (after graph rebuild): ok
+== q6_K ==
+ggml_backend_sched_register_expert_pool: expert pool for 'w_gu' on Vulkan0: 16/32 experts (0.41 MiB)
+ggml_backend_sched_register_expert_pool: expert pool for 'w_dn' on Vulkan0: 16/32 experts (0.41 MiB)
+q6_K nt=1 round1 (cold): ok
+q6_K nt=1 round2 (full eviction): ok
+q6_K nt=1 round3 (hit + reload): ok
+q6_K nt=1 round4 (after graph rebuild): ok
+q6_K nt=3 round1 (cold): ok
+q6_K nt=3 round2 (full eviction): ok
+q6_K nt=3 round3 (hit + reload): ok
+q6_K nt=3 round4 (after graph rebuild): ok
+q6_K nt=8 round1 (cold): ok
+q6_K nt=8 round2 (full eviction): ok
+q6_K nt=8 round3 (hit + reload): ok
+q6_K nt=8 round4 (after graph rebuild): ok
+q6_K nt=9 round1 (cold): ok
+q6_K nt=9 round2 (full eviction): ok
+q6_K nt=9 round3 (hit + reload): ok
+q6_K nt=9 round4 (after graph rebuild): ok
+== q8_0 ==
+ggml_backend_sched_register_expert_pool: expert pool for 'w_gu' on Vulkan0: 16/32 experts (0.53 MiB)
+ggml_backend_sched_register_expert_pool: expert pool for 'w_dn' on Vulkan0: 16/32 experts (0.53 MiB)
+q8_0 nt=1 round1 (cold): ok
+q8_0 nt=1 round2 (full eviction): ok
+q8_0 nt=1 round3 (hit + reload): ok
+q8_0 nt=1 round4 (after graph rebuild): ok
+q8_0 nt=3 round1 (cold): ok
+q8_0 nt=3 round2 (full eviction): ok
+q8_0 nt=3 round3 (hit + reload): ok
+q8_0 nt=3 round4 (after graph rebuild): ok
+q8_0 nt=8 round1 (cold): ok
+q8_0 nt=8 round2 (full eviction): ok
+q8_0 nt=8 round3 (hit + reload): ok
+q8_0 nt=8 round4 (after graph rebuild): ok
+q8_0 nt=9 round1 (cold): ok
+q8_0 nt=9 round2 (full eviction): ok
+q8_0 nt=9 round3 (hit + reload): ok
+q8_0 nt=9 round4 (after graph rebuild): ok
+== mxfp4 ==
+ggml_backend_sched_register_expert_pool: expert pool for 'w_gu' on Vulkan0: 16/32 experts (0.27 MiB)
+ggml_backend_sched_register_expert_pool: expert pool for 'w_dn' on Vulkan0: 16/32 experts (0.27 MiB)
+mxfp4 nt=1 round1 (cold): ok
+mxfp4 nt=1 round2 (full eviction): ok
+mxfp4 nt=1 round3 (hit + reload): ok
+mxfp4 nt=1 round4 (after graph rebuild): ok
+mxfp4 nt=3 round1 (cold): ok
+mxfp4 nt=3 round2 (full eviction): ok
+mxfp4 nt=3 round3 (hit + reload): ok
+mxfp4 nt=3 round4 (after graph rebuild): ok
+mxfp4 nt=8 round1 (cold): ok
+mxfp4 nt=8 round2 (full eviction): ok
+mxfp4 nt=8 round3 (hit + reload): ok
+mxfp4 nt=8 round4 (after graph rebuild): ok
+mxfp4 nt=9 round1 (cold): ok
+mxfp4 nt=9 round2 (full eviction): ok
+mxfp4 nt=9 round3 (hit + reload): ok
+mxfp4 nt=9 round4 (after graph rebuild): ok
+expert pool test PASSED
