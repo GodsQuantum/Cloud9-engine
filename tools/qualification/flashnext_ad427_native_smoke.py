@@ -14,6 +14,7 @@ TARGET=ROOT/'Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27
 DRAFT=ROOT/'MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
 BIN=Path('/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-frspec65k-native-lab-20261026/bin/llama-server')
 LAB=Path('/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024')
+POOL_BIN=Path('/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/atomic2-frspec-expert-pool-20261027/bin/llama-server')
 URL='http://127.0.0.1:18148'
 
 # The GGUF's 35.763GiB per_layer_token_embd is demand-paged from CPU mmap.
@@ -105,7 +106,7 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
                          ('code','Écris une fonction Python qui renvoie le carré d’un entier.')]
                 for task,prompt in prompts:
                     if events or child.poll() is not None:break
-                    payload={'prompt':prompt,'n_predict':32,'temperature':0,'cache_prompt':False}
+                    payload={'prompt':prompt,'n_predict':result['n_predict'],'temperature':0,'cache_prompt':False}
                     try:
                         x=gate.fetch(URL+'/completion',payload,timeout=100)
                         timings=x.get('timings',{})
@@ -125,13 +126,19 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
         os.close(fd)
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--run-id',required=True);ap.add_argument('--execute',action='store_true');ap.add_argument('--max-load-s',type=int,default=210);ap.add_argument('--moe-cache',choices=['off','soft','auto','4096'],default='off');ap.add_argument('--cpu-moe-layers',type=int,choices=[44,46,48],default=48)
+    ap=argparse.ArgumentParser();ap.add_argument('--run-id',required=True);ap.add_argument('--execute',action='store_true');ap.add_argument('--max-load-s',type=int,default=210);ap.add_argument('--moe-cache',choices=['off','soft','auto','2048','4096'],default='off');ap.add_argument('--cpu-moe-layers',type=int,choices=[44,46,48],default=48);ap.add_argument('--draft-backend-sampling',action='store_true');ap.add_argument('--target-backend-sampling',action='store_true');ap.add_argument('--draft-depth',type=int,choices=[2,3,4,5],default=3);ap.add_argument('--cpu-threads',type=int,choices=[8,12,16],default=8);ap.add_argument('--n-predict',type=int,choices=[32,64,128],default=32);ap.add_argument('--engine',choices=['atomic2','portable-pool'],default='atomic2');ap.add_argument('--expert-slots',type=int,choices=[0,16,32,64],default=0)
     a=ap.parse_args()
     if not (1<=len(a.run_id)<=45 and all(c.isalnum() or c in '_-' for c in a.run_id)):ap.error('Invalid run id')
+    global BIN
+    if a.engine=='portable-pool':BIN=POOL_BIN
     path=LAB/('flashnext_ad427_'+a.run_id+'.json')
     if path.exists() or (LAB/('flashnext_ad427_'+a.run_id+'.log')).exists():ap.error('Refuse overwrite immutable trial')
-    launch_cmd=COMMAND.copy();launch_cmd[launch_cmd.index('--moe-cache')+1]=a.moe_cache;launch_cmd[launch_cmd.index('--n-cpu-moe')+1]=str(a.cpu_moe_layers)
-    result={'n_cpu_moe':a.cpu_moe_layers,'moe_cache_mode':a.moe_cache,'run_id':a.run_id,'utc':datetime.now(timezone.utc).isoformat(),'target':'Qwen3.8-Flash-Next AD4.27 33GGUF','draft':'FRSpec65k Q8','engine':'isolated Atomic2 patched3df182b0','model_quantization_unchanged':True,'n_cpu_moe':48,'gpu_layers':99,'ngram_cpu_mmap':True,'draft_depth':3,'status':'preflight','rows':[],'guard_events':[],'production_untouched':True,'command':launch_cmd[1:]}
+    launch_cmd=COMMAND.copy();launch_cmd[0]=str(BIN)
+    if a.engine=='portable-pool':launch_cmd.extend(['--moe-expert-cache',str(a.expert_slots)])
+    launch_cmd[launch_cmd.index('--moe-cache')+1]=a.moe_cache;launch_cmd[launch_cmd.index('--n-cpu-moe')+1]=str(a.cpu_moe_layers);launch_cmd[launch_cmd.index('--spec-draft-n-max')+1]=str(a.draft_depth);launch_cmd[launch_cmd.index('-t')+1]=str(a.cpu_threads);launch_cmd[launch_cmd.index('-tb')+1]=str(a.cpu_threads)
+    if a.draft_backend_sampling:launch_cmd.remove('--no-spec-draft-backend-sampling');launch_cmd.append('--spec-draft-backend-sampling')
+    if a.target_backend_sampling:launch_cmd.append('--backend-sampling')
+    result={'selected_engine':a.engine,'expert_slots':a.expert_slots,'n_cpu_moe':a.cpu_moe_layers,'moe_cache_mode':a.moe_cache,'draft_backend_sampling':a.draft_backend_sampling,'target_backend_sampling':a.target_backend_sampling,'draft_depth':a.draft_depth,'cpu_threads':a.cpu_threads,'n_predict':a.n_predict,'run_id':a.run_id,'utc':datetime.now(timezone.utc).isoformat(),'target':'Qwen3.8-Flash-Next AD4.27 33GGUF','draft':'FRSpec65k Q8','engine':'Atomic2 FRSpec portable expert pool' if a.engine=='portable-pool' else 'Atomic2 FRSpec native baseline','model_quantization_unchanged':True,'gpu_layers':99,'ngram_cpu_mmap':True,'draft_depth':3,'status':'preflight','rows':[],'guard_events':[],'production_untouched':True,'command':launch_cmd[1:]}
     try:
         preflight=readonly_preflight(a.cpu_moe_layers);result['preflight']=preflight
         if not preflight['allow']:result['status']='blocked_preflight'
