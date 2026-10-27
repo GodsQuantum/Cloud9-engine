@@ -30,22 +30,43 @@ COMMAND=[str(BIN),'-m',str(TARGET),'-md',str(DRAFT),'-ngl','99',
          '--reasoning','off','--host','127.0.0.1','--port','18148',
          '--no-webui','--alias','FlashNext-AD427-FRSpec65K-LAB']
 
-def readonly_preflight(cpu_moe_layers=48):
+def measured_gpu_physically_idle():
+    """Positive owner authorization requires live physical Radeon telemetry.
+
+    A busy embeddings slot alone is not proof of GPU activity on this host.
+    Any unavailable sample fails closed; no writes to GPU or service settings.
+    """
+    busy=Path('/sys/class/drm/card0/device/gpu_busy_percent')
+    gtt=Path('/sys/class/drm/card0/device/mem_info_gtt_used')
+    try:
+        samples=[]
+        for _ in range(12):
+            samples.append(int(busy.read_text().strip()))
+            time.sleep(0.2)
+        current_gtt=int(gtt.read_text().strip())
+        return bool(samples and max(samples)<=4 and current_gtt < 2*1024**3)
+    except (ValueError,OSError):
+        return False
+
+def readonly_preflight(cpu_moe_layers=48,owner_idle_coexist=False,owner_compact_start=False,required_gtt_gib=12.5):
     shards=sorted(TARGET.parent.glob('Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-*-of-00033.gguf'))
     actual=sum(f.stat().st_size for f in shards)
     reasons=[]
     if len(shards)!=33 or actual!=94525394976:reasons.append('TARGET_33_SHARDS_INCOMPLETE')
     if not DRAFT.is_file() or DRAFT.stat().st_size!=3639245152:reasons.append('FRSPEC_DRAFT_MISSING_OR_CHANGED')
     if not BIN.is_file():reasons.append('ISOLATED_NATIVE_ELF_MISSING')
-    health=gate.guardian(12.5 + max(0,48-cpu_moe_layers)*0.25)
+    health=gate.guardian(required_gtt_gib + max(0,48-cpu_moe_layers)*0.25)
     if not health.get('allow'):reasons.append('OFFICIAL_GPU_GUARD_DENIED')
-    if health.get('mem_available_gib',0)<30:reasons.append('HOST_AVAILABLE_RAM_BELOW_30GIB')
+    start_ram_floor=26 if owner_compact_start else 30
+    if health.get('mem_available_gib',0)<start_ram_floor:reasons.append('HOST_AVAILABLE_RAM_BELOW_'+str(start_ram_floor)+'GIB')
     if health.get('psi_memory_full_avg10',99)>=1.5:reasons.append('HOST_MEMORY_PSI')
     io=gate.psi_io_full()
     if io is None or io>=9:reasons.append('HOST_IO_PSI')
     temp=gate.host_temp()
     if temp is None or temp>=76:reasons.append('HOST_TEMPERATURE')
-    if gate.embeddings_busy():reasons.append('EMBEDDINGS_ACTIVE_OR_UNKNOWN')
+    embedding_active=gate.embeddings_busy()
+    physical_gpu_idle=measured_gpu_physically_idle() if embedding_active and owner_idle_coexist else False
+    if embedding_active and not physical_gpu_idle:reasons.append('EMBEDDINGS_ACTIVE_OR_UNKNOWN')
     try:
         if gate.fetch(gate.ROUTER,timeout=3).get('worker_model') is not None:reasons.append('ROUTER_WORKER_ACTIVE')
     except Exception:reasons.append('ROUTER_UNAVAILABLE')
@@ -53,7 +74,7 @@ def readonly_preflight(cpu_moe_layers=48):
         a=gate.fetch(gate.AUTOSUBS,timeout=3)
         if a.get('status')!='ok' or a.get('loaded_models')!=[]:reasons.append('AUTOSUBS_BUSY_OR_UNREACHABLE')
     except Exception:reasons.append('AUTOSUBS_UNREACHABLE')
-    return {'allow':not reasons,'reasons':reasons,'gpu_guardian':health,'host_io_psi_full10':io,'temp_c':temp,'main_model_bytes':actual,'draft_bytes':DRAFT.stat().st_size if DRAFT.is_file() else -1}
+    return {'allow':not reasons,'reasons':reasons,'gpu_guardian':health,'host_io_psi_full10':io,'temp_c':temp,'required_gtt_gib':required_gtt_gib,'owner_compact_start':owner_compact_start,'start_ram_floor_gib':start_ram_floor,'embedding_slots_report_busy':embedding_active,'owner_measured_gpu_idle_coexist':physical_gpu_idle,'main_model_bytes':actual,'draft_bytes':DRAFT.stat().st_size if DRAFT.is_file() else -1}
 
 def load_and_generate(result,path,max_load_s,launch_cmd):
     fd=os.open(str(gate.LOCK),os.O_CREAT|os.O_RDWR,0o660)
@@ -61,7 +82,7 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
         try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError:
             result['status']='gpu_lock_busy';return
-        double=readonly_preflight(result['n_cpu_moe']);result['second_preflight']=double
+        double=readonly_preflight(result['n_cpu_moe'],result.get('owner_idle_coexist',False),result.get('owner_compact_start',False),result.get('required_gtt_gib',12.5));result['second_preflight']=double
         if not double['allow']:result['status']='blocked_after_lock';return
         child=None;exiting=threading.Event();events=[]
         logfile=LAB/('flashnext_ad427_'+result['run_id']+'.log')
@@ -81,7 +102,7 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
                         # rather than terminating an existing job at transient PSI 0.5.
                         danger=(g.get('mem_available_gib',0)<20 or g.get('psi_memory_full_avg10',99)>=12.0 or
                                 g.get('swap_used_percent',100)>90 or temp is None or temp>=80 or
-                                io is None or io>24 or gate.embeddings_busy() or g.get('gtt_used_gib',99)>14.5)
+                                io is None or io>24 or (gate.embeddings_busy() and not result.get('owner_idle_coexist',False)) or g.get('gtt_used_gib',99)>min(14.5, g.get('safe_total_gtt_gib',0)+0.5))
                         if danger:
                             events.append({'reason':'RUNTIME_SAFETY_STOP','guardian':g,'io':io,'temp':temp})
                             gate.stop_own(child);return
@@ -126,7 +147,7 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
         os.close(fd)
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--run-id',required=True);ap.add_argument('--execute',action='store_true');ap.add_argument('--max-load-s',type=int,default=210);ap.add_argument('--moe-cache',choices=['off','soft','auto','2048','4096'],default='off');ap.add_argument('--cpu-moe-layers',type=int,choices=[44,46,48],default=48);ap.add_argument('--draft-backend-sampling',action='store_true');ap.add_argument('--target-backend-sampling',action='store_true');ap.add_argument('--draft-depth',type=int,choices=[2,3,4,5],default=3);ap.add_argument('--cpu-threads',type=int,choices=[8,12,16],default=8);ap.add_argument('--n-predict',type=int,choices=[32,64,128],default=32);ap.add_argument('--engine',choices=['atomic2','portable-pool'],default='atomic2');ap.add_argument('--expert-slots',type=int,choices=[0,16,32,64],default=0)
+    ap=argparse.ArgumentParser();ap.add_argument('--run-id',required=True);ap.add_argument('--execute',action='store_true');ap.add_argument('--max-load-s',type=int,default=210);ap.add_argument('--moe-cache',choices=['off','soft','auto','2048','4096'],default='off');ap.add_argument('--cpu-moe-layers',type=int,choices=[44,46,48],default=48);ap.add_argument('--draft-backend-sampling',action='store_true');ap.add_argument('--target-backend-sampling',action='store_true');ap.add_argument('--draft-depth',type=int,choices=[2,3,4,5],default=3);ap.add_argument('--cpu-threads',type=int,choices=[8,12,16],default=8);ap.add_argument('--n-predict',type=int,choices=[32,64,128],default=32);ap.add_argument('--engine',choices=['atomic2','portable-pool'],default='atomic2');ap.add_argument('--expert-slots',type=int,choices=[0,16,32,64],default=0);ap.add_argument('--owner-idle-coexist',action='store_true');ap.add_argument('--owner-compact-start',action='store_true')
     a=ap.parse_args()
     if not (1<=len(a.run_id)<=45 and all(c.isalnum() or c in '_-' for c in a.run_id)):ap.error('Invalid run id')
     global BIN
@@ -138,9 +159,10 @@ def main():
     launch_cmd[launch_cmd.index('--moe-cache')+1]=a.moe_cache;launch_cmd[launch_cmd.index('--n-cpu-moe')+1]=str(a.cpu_moe_layers);launch_cmd[launch_cmd.index('--spec-draft-n-max')+1]=str(a.draft_depth);launch_cmd[launch_cmd.index('-t')+1]=str(a.cpu_threads);launch_cmd[launch_cmd.index('-tb')+1]=str(a.cpu_threads)
     if a.draft_backend_sampling:launch_cmd.remove('--no-spec-draft-backend-sampling');launch_cmd.append('--spec-draft-backend-sampling')
     if a.target_backend_sampling:launch_cmd.append('--backend-sampling')
-    result={'selected_engine':a.engine,'expert_slots':a.expert_slots,'n_cpu_moe':a.cpu_moe_layers,'moe_cache_mode':a.moe_cache,'draft_backend_sampling':a.draft_backend_sampling,'target_backend_sampling':a.target_backend_sampling,'draft_depth':a.draft_depth,'cpu_threads':a.cpu_threads,'n_predict':a.n_predict,'run_id':a.run_id,'utc':datetime.now(timezone.utc).isoformat(),'target':'Qwen3.8-Flash-Next AD4.27 33GGUF','draft':'FRSpec65k Q8','engine':'Atomic2 FRSpec portable expert pool' if a.engine=='portable-pool' else 'Atomic2 FRSpec native baseline','model_quantization_unchanged':True,'gpu_layers':99,'ngram_cpu_mmap':True,'draft_depth':3,'status':'preflight','rows':[],'guard_events':[],'production_untouched':True,'command':launch_cmd[1:]}
+    required_gtt_gib=(9.0 if a.expert_slots==0 else 10.0 if a.expert_slots==16 else 11.5 if a.expert_slots==32 else 14.0) if a.engine=='portable-pool' else (9.5 if a.owner_compact_start else 12.5)
+    result={'required_gtt_gib':required_gtt_gib,'owner_compact_start':a.owner_compact_start,'owner_idle_coexist':a.owner_idle_coexist,'benchmarks_uncontended':not a.owner_idle_coexist,'selected_engine':a.engine,'expert_slots':a.expert_slots,'n_cpu_moe':a.cpu_moe_layers,'moe_cache_mode':a.moe_cache,'draft_backend_sampling':a.draft_backend_sampling,'target_backend_sampling':a.target_backend_sampling,'draft_depth':a.draft_depth,'cpu_threads':a.cpu_threads,'n_predict':a.n_predict,'run_id':a.run_id,'utc':datetime.now(timezone.utc).isoformat(),'target':'Qwen3.8-Flash-Next AD4.27 33GGUF','draft':'FRSpec65k Q8','engine':'Atomic2 FRSpec portable expert pool' if a.engine=='portable-pool' else 'Atomic2 FRSpec native baseline','model_quantization_unchanged':True,'gpu_layers':99,'ngram_cpu_mmap':True,'status':'preflight','rows':[],'guard_events':[],'production_untouched':True,'command':launch_cmd[1:]}
     try:
-        preflight=readonly_preflight(a.cpu_moe_layers);result['preflight']=preflight
+        preflight=readonly_preflight(a.cpu_moe_layers,a.owner_idle_coexist,a.owner_compact_start,required_gtt_gib);result['preflight']=preflight
         if not preflight['allow']:result['status']='blocked_preflight'
         elif not a.execute:result['status']='admitted_not_executed'
         else:load_and_generate(result,path,a.max_load_s,launch_cmd)

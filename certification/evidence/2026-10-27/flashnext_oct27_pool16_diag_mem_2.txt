@@ -1,0 +1,16 @@
+0.00.126.333 I srv    load_model: loading model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf'
+0.03.255.672 W init_expert_pools: LAB expert counts candidates=144 null_buf=0 nonhost=0 pooled=144 skipped=0
+0.03.350.443 I common_speculative_init_result: loading draft model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.10.606.530 W init_expert_pools: LAB first nonhost expert blk.48.ffn_up_exps.weight backend-buf=Vulkan0
+0.10.606.536 W init_expert_pools: LAB expert counts candidates=3 null_buf=0 nonhost=3 pooled=0 skipped=0
+0.10.606.536 W init_expert_pools: expert cache had no effect: no offloaded MoE expert weight tensors found
+0.12.898.988 I srv  llama_server: model loaded
+0.28.536.107 I slot print_timing: id  0 | task 0 | prompt eval time =    9591.43 ms /    18 tokens (  532.86 ms per token,     1.88 tokens per second)
+0.28.536.582 I slot print_timing: id  0 | task 0 |        eval time =    5974.88 ms /     9 tokens (  663.88 ms per token,     1.51 tokens per second)
+0.28.536.603 I slot print_timing: id  0 | task 0 | draft acceptance = 0.55556 (    5 accepted /     9 generated), mean len =  2.67
+0.54.140.558 I slot print_timing: id  0 | task 6 | prompt eval time =    7611.11 ms /    14 tokens (  543.65 ms per token,     1.84 tokens per second)
+0.54.140.570 I slot print_timing: id  0 | task 6 |        eval time =   17839.05 ms /    32 tokens (  557.47 ms per token,     1.79 tokens per second)
+0.54.140.579 I slot print_timing: id  0 | task 6 | draft acceptance = 0.72414 (   21 accepted /    29 generated), mean len =  3.10
+1.21.728.367 I slot print_timing: id  0 | task 19 | prompt eval time =    8860.13 ms /    16 tokens (  553.76 ms per token,     1.81 tokens per second)
+1.21.728.374 I slot print_timing: id  0 | task 19 |        eval time =   18493.22 ms /    32 tokens (  577.91 ms per token,     1.73 tokens per second)
+1.21.728.380 I slot print_timing: id  0 | task 19 | draft acceptance = 0.75000 (   21 accepted /    28 generated), mean len =  3.10

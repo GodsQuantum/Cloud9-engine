@@ -1,0 +1,448 @@
+{
+  "date": "2026-10-27",
+  "title": "AD4.27+FRSpec real 3-task GPU proof: expert-pool-size and MTP depth A/B",
+  "model": "Exact 33-shard Qwen3.8 Flash-Next AD4.27 Q4_K_M-M64",
+  "model_total_bytes": 94525394976,
+  "draft": "Exact reduced-65k FRSpec Q8, 3639245152 bytes",
+  "gpu": "Radeon780M RDNA3 Vulkan / AMD Ryzen8845HS",
+  "historical_best_under_prior_baseline": "2.685 t/s fully qualified warm Atomic2 MTP3 (Oct27)",
+  "original_hof_20260915_tps": 17.878,
+  "user_target_tps_over": 20,
+  "most_recent_synthetic_pool_qa_passed": true,
+  "native_hybrid_commit": "d51a783d",
+  "native_pool_backend_diagnostic": "main AD4.27 144 of 144 CPU expert tensors successfully pooled; draft blk.48 weights GPU resident and correctly not pooled; previous warning no offloaded weights refers only to draft",
+  "native_pool_diagnostic_lab_source_reverted": true,
+  "host_no_oom_ct410": true,
+  "no_prod_deployment": true,
+  "no_reboot": true,
+  "best_qualified_three_task_today_from_new_tests": 1.707,
+  "trials": [
+    {
+      "id": "oct27_hybrid_pool16_req10_trial1",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "portable-pool",
+      "gpu_expert_pool_slots": 16,
+      "draft_depth": 3,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 1.42,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 1.807,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 1.895,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.707,
+      "load_seconds": 20.034,
+      "requested_gtt_gib": 10.0,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_hybrid_pool16_req10_trial1.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_pool16_diag_mem_2",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "portable-pool",
+      "gpu_expert_pool_slots": 16,
+      "draft_depth": 3,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 1.506,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 1.794,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 1.73,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.677,
+      "load_seconds": 13.032,
+      "requested_gtt_gib": 10.0,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_pool16_diag_mem_2.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_hybrid_pool0_control_req9",
+      "status": "failed_load_or_safety",
+      "qualified_3_task": false,
+      "engine": "portable-pool",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": 13.019,
+      "requested_gtt_gib": 9.0,
+      "guardian_rejections": [],
+      "runtime_guard_events": [
+        {
+          "reason": "RUNTIME_SAFETY_STOP",
+          "free_gib": 22.949,
+          "safe_gtt_gib": 11.698,
+          "actual_gtt_gib": 6.749,
+          "psi_full10": 0.34
+        }
+      ],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_hybrid_pool0_control_req9.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_hybrid_pool0_control_req9_retry",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "portable-pool",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 1.467,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 1.648,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 1.475,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.53,
+      "load_seconds": 15.23,
+      "requested_gtt_gib": 9.0,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_hybrid_pool0_control_req9_retry.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_hybrid_pool32_req12_trial1",
+      "status": "blocked_preflight",
+      "qualified_3_task": false,
+      "engine": "portable-pool",
+      "gpu_expert_pool_slots": 32,
+      "draft_depth": 3,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": null,
+      "requested_gtt_gib": 12.0,
+      "guardian_rejections": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_hybrid_pool32_req12_trial1.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_hybrid_pool32_req11p5_trial2",
+      "status": "failed_load_or_safety",
+      "qualified_3_task": false,
+      "engine": "portable-pool",
+      "gpu_expert_pool_slots": 32,
+      "draft_depth": 3,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": 15.015,
+      "requested_gtt_gib": 11.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [
+        {
+          "reason": "RUNTIME_SAFETY_STOP",
+          "free_gib": 19.989,
+          "safe_gtt_gib": 11.547,
+          "actual_gtt_gib": 9.558,
+          "psi_full10": 1.96
+        }
+      ],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_hybrid_pool32_req11p5_trial2.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_atomic2_fr_draft5_req9p5",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 5,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 0.891,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 0.777,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 1.398,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.022,
+      "load_seconds": 11.032,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_fr_draft5_req9p5.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_atomic2_fr_draft2_req9p5",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 2,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 1.414,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 1.629,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 1.492,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.511,
+      "load_seconds": 14.03,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_fr_draft2_req9p5.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_atomic2_fr_mtp3_gpu_sampling",
+      "status": "blocked_preflight",
+      "qualified_3_task": false,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "target_backend_sampling": true,
+      "draft_backend_sampling": true,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": null,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_fr_mtp3_gpu_sampling.json",
+      "draft_depth_verified_from_command_argv": true
+    },
+    {
+      "id": "oct27_atomic2_mtp3_gpu_sampling_retry1",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "draft_depth_verified_from_command_argv": true,
+      "target_backend_sampling": true,
+      "draft_backend_sampling": true,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 1.458,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 1.66,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 1.676,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.598,
+      "load_seconds": 14.017,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_mtp3_gpu_sampling_retry1.json"
+    },
+    {
+      "id": "oct27_atomic2_mtp3_gpu_sampling_control",
+      "status": "blocked_preflight",
+      "qualified_3_task": false,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "draft_depth_verified_from_command_argv": true,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": null,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_mtp3_gpu_sampling_control.json"
+    },
+    {
+      "id": "oct27_atomic2_mtp3_sampling_control_retry1",
+      "status": "complete",
+      "qualified_3_task": true,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "draft_depth_verified_from_command_argv": true,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": false,
+      "scores": [
+        {
+          "task": "math",
+          "tps": 2.009,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "tps": 1.554,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "tps": 0.837,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.467,
+      "load_seconds": 13.05,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_mtp3_sampling_control_retry1.json"
+    },
+    {
+      "id": "oct27_atomic2_mtp3_sampling_targetonly_1",
+      "status": "failed_load_or_safety",
+      "qualified_3_task": false,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "draft_depth_verified_from_command_argv": true,
+      "target_backend_sampling": true,
+      "draft_backend_sampling": false,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": 5.005,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [
+        {
+          "reason": "RUNTIME_SAFETY_STOP",
+          "free_gib": 19.446,
+          "psi_full10": 0.05,
+          "actual_gtt_gib": 9.476
+        }
+      ],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_mtp3_sampling_targetonly_1.json"
+    },
+    {
+      "id": "oct27_atomic2_mtp3_sampling_draftonly_1",
+      "status": "failed_load_or_safety",
+      "qualified_3_task": false,
+      "engine": "atomic2",
+      "gpu_expert_pool_slots": 0,
+      "draft_depth": 3,
+      "draft_depth_verified_from_command_argv": true,
+      "target_backend_sampling": false,
+      "draft_backend_sampling": true,
+      "scores": [],
+      "mean_tps": null,
+      "load_seconds": 6.011,
+      "requested_gtt_gib": 9.5,
+      "guardian_rejections": [],
+      "runtime_guard_events": [
+        {
+          "reason": "RUNTIME_SAFETY_STOP",
+          "free_gib": 19.205,
+          "psi_full10": 0.02,
+          "actual_gtt_gib": 9.473
+        }
+      ],
+      "original_report_CT410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_atomic2_mtp3_sampling_draftonly_1.json"
+    }
+  ],
+  "ranking_caveat": "Pool16 vs pool0 tests are warm/cold and IO-pressure confounded; no claims of absolute speedup without repeated interleaved measurements",
+  "conclusion": "Pool16 live +~10% against pooled-engine0 control, but absolute slower than native Atomic2 baseline; pool32 RAM stop; MTP5 1.022, MTP2 1.511, combined GPU sampling 1.598 vs paired no GPU 1.467 = apparent +9% only, noisy and cannot certify; target/draft sampling alone never admitted to generation (RAM19GiB runtime stops); best validated remains Atomic2 MTP3 2.685 t/s, no OOM; production unchanged.",
+  "next": "Run native Atomic2 MTP3 paired target+draft backend-sampling once admitted then update proof. No production promotion until measured qualified superiority.",
+  "manifest_correction": {
+    "legacy_run_json_duplicate_draft_depth_metadata": true,
+    "resolution": "The immutable run JSON has duplicate draft_depth keys; later constant 3 masked requested depth 2 or 5. The actual --spec-draft-n-max argv is authoritative and evidence draft_depth is reconstructed from argv. Runner source corrected; raw trial JSON remains unchanged."
+  },
+  "gpu_backend_sampling_MTP3_latest": {
+    "run_id": "oct27_atomic2_mtp3_gpu_sampling_retry1",
+    "result": 1.598,
+    "status": "complete"
+  },
+  "paired_MTP3_sampling": {
+    "gpu_backend_sampling_both_mean_tps": 1.598,
+    "no_backend_sampling_control_mean_tps": 1.467,
+    "apparent_relative_gain_pct": 9.0,
+    "quality": "paired but single n=1 and IO-variable; not statistically certified; do not promote"
+  },
+  "standalone_GPU_sampling_ablation": {
+    "target_only": "not qualified; guarded memory floor at19.446GiB",
+    "draft_only": "not qualified; guarded memory floor at19.205GiB",
+    "both_GPU_sampling_qualified_three_tasks_tps": 1.598,
+    "paired_no_GPU_sampling_three_tasks_tps": 1.467,
+    "paired_apparent_gain_percent": 9.0,
+    "certified_reproducible_gain": false
+  },
+  "recommended_configuration": "Keep production unchanged. In lab Atomic2 native FRSpec use MTP3, sampling off (historical verified2.685 t/s); do not promote pool, MTP2, MTP5 or GPU sampling without verified repeatability."
+}

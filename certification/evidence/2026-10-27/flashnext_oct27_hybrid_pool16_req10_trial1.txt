@@ -1,0 +1,13 @@
+0.00.237.959 I srv    load_model: loading model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf'
+0.06.787.540 I common_speculative_init_result: loading draft model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.15.725.062 W init_expert_pools: expert cache had no effect: no offloaded MoE expert weight tensors found
+0.19.640.132 I srv  llama_server: model loaded
+0.37.595.887 I slot print_timing: id  0 | task 0 | prompt eval time =   11237.40 ms /    18 tokens (  624.30 ms per token,     1.60 tokens per second)
+0.37.596.303 I slot print_timing: id  0 | task 0 |        eval time =    6339.77 ms /     9 tokens (  704.42 ms per token,     1.42 tokens per second)
+0.37.596.319 I slot print_timing: id  0 | task 0 | draft acceptance = 0.55556 (    5 accepted /     9 generated), mean len =  2.67
+1.02.428.712 I slot print_timing: id  0 | task 6 | prompt eval time =    6963.65 ms /    14 tokens (  497.40 ms per token,     2.01 tokens per second)
+1.02.428.721 I slot print_timing: id  0 | task 6 |        eval time =   17704.58 ms /    32 tokens (  553.27 ms per token,     1.81 tokens per second)
+1.02.428.729 I slot print_timing: id  0 | task 6 | draft acceptance = 0.72414 (   21 accepted /    29 generated), mean len =  3.10
+1.28.104.200 I slot print_timing: id  0 | task 19 | prompt eval time =    8632.77 ms /    16 tokens (  539.55 ms per token,     1.85 tokens per second)
+1.28.104.208 I slot print_timing: id  0 | task 19 |        eval time =   16883.17 ms /    32 tokens (  527.60 ms per token,     1.90 tokens per second)
+1.28.104.215 I slot print_timing: id  0 | task 19 | draft acceptance = 0.75000 (   21 accepted /    28 generated), mean len =  3.10
