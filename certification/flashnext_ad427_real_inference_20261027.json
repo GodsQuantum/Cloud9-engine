@@ -1,0 +1,208 @@
+{
+  "date": "2026-10-27",
+  "title": "Actual Qwen3.8 Flash-Next AD4.27 exact 33-shard + Q8 FR-Spec measured on Cloud9 Radeon780M",
+  "runtime_mode": "Full Qwen4Exp trunk with GPU non-MoE layers and CPU MoE 48-layer mmap, Q8 FRSpec MTP3; exact original quant, ngram and expert lazy mmap",
+  "main_gguf_bytes": 94525394976,
+  "draft_gguf_bytes": 3639245152,
+  "native_source_commits": [
+    "3df182b0",
+    "2cfa55fe",
+    "58a92230",
+    "0780e182"
+  ],
+  "native_patch": "certification/patches/atomic2-flashnext-lazy-ple-moe-and-prefetch-20261027.patch",
+  "native_patch_sha256": "af2a65046ff2d90a5d550e375d20b5c35594ba828b4f7d19dc53bf414789d01d",
+  "gpu": "AMD Radeon780M Vulkan gfx1103",
+  "gpu_typical_busy_percent_while_running": "11-16",
+  "gpu_observed_gtt_used_gib": 6.76,
+  "vulkan_qwen4exp_synthetic_graph_pass": true,
+  "MTP_d2t_real_math_925_pass": true,
+  "baseline_cold_no_cache_tps": 1.913,
+  "best_verified_warm_no_cache_tps": 2.685,
+  "native_auto_moe_cache_3task_tps": 2.546,
+  "native_fixed_4096mb_cache_3task_tps": 2.223,
+  "soft_moe_cache_only_two_tasks_no_qualified_mean": true,
+  "critical_ablation_finding": "Cache mode is NOT a demonstrated speedup. Warm no-cache run 2.685 exceeded native auto2.546 despite cold initial1.913, proving disk-page warm-up can dominate; do not promote any cache option based on a single unpaired cold-vs-hot run.",
+  "historic_FlashNext_AD427_FRSpec_tps": 17.878,
+  "historic_record_reproduced": false,
+  "target_above_20_tps_achieved": false,
+  "production_unchanged": true,
+  "pve_rebooted": false,
+  "oom_kills_ct410": 0,
+  "native_GPU_production_promoted": false,
+  "attempts": [
+    {
+      "run_id": "oct27_flash_stage_trace_fullGPU_01",
+      "native_moe_cache_mode": "off",
+      "status": "complete",
+      "full_three_task_quality_valid": true,
+      "model_load_s": 16.071,
+      "tasks": [
+        {
+          "task": "math",
+          "output_tokens": 9,
+          "tps": 1.943,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "output_tokens": 32,
+          "tps": 1.924,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "output_tokens": 32,
+          "tps": 1.871,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 1.913,
+      "guard_stop_reasons": [],
+      "preflight_reasons": [],
+      "raw_CT410_report": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_stage_trace_fullGPU_01.json"
+    },
+    {
+      "run_id": "oct27_flash_moecache_soft_gpu_01",
+      "native_moe_cache_mode": "soft",
+      "status": "failed_quality_or_runtime",
+      "full_three_task_quality_valid": false,
+      "model_load_s": 14.035,
+      "tasks": [
+        {
+          "task": "math",
+          "output_tokens": 9,
+          "tps": 2.267,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "output_tokens": 32,
+          "tps": 1.957,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": null,
+      "guard_stop_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "preflight_reasons": [],
+      "raw_CT410_report": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_moecache_soft_gpu_01.json"
+    },
+    {
+      "run_id": "oct27_flash_moecache_4096_gpu_01",
+      "native_moe_cache_mode": "4096",
+      "status": "complete",
+      "full_three_task_quality_valid": true,
+      "model_load_s": 16.022,
+      "tasks": [
+        {
+          "task": "math",
+          "output_tokens": 9,
+          "tps": 1.939,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "output_tokens": 32,
+          "tps": 2.441,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "output_tokens": 32,
+          "tps": 2.288,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 2.223,
+      "guard_stop_reasons": [],
+      "preflight_reasons": [],
+      "raw_CT410_report": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_moecache_4096_gpu_01.json"
+    },
+    {
+      "run_id": "oct27_flash_moecache_auto_gpu_01",
+      "native_moe_cache_mode": "auto",
+      "status": "complete",
+      "full_three_task_quality_valid": true,
+      "model_load_s": 13.018,
+      "tasks": [
+        {
+          "task": "math",
+          "output_tokens": 9,
+          "tps": 2.378,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "output_tokens": 32,
+          "tps": 2.528,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "output_tokens": 32,
+          "tps": 2.732,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 2.546,
+      "guard_stop_reasons": [],
+      "preflight_reasons": [],
+      "raw_CT410_report": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_moecache_auto_gpu_01.json"
+    },
+    {
+      "run_id": "oct27_flash_repeat_off_gpu_01",
+      "native_moe_cache_mode": "off",
+      "status": "complete",
+      "full_three_task_quality_valid": true,
+      "model_load_s": 13.084,
+      "tasks": [
+        {
+          "task": "math",
+          "output_tokens": 9,
+          "tps": 2.531,
+          "correct_math": true
+        },
+        {
+          "task": "fr",
+          "output_tokens": 32,
+          "tps": 2.561,
+          "correct_math": null
+        },
+        {
+          "task": "code",
+          "output_tokens": 32,
+          "tps": 2.963,
+          "correct_math": null
+        }
+      ],
+      "mean_tps": 2.685,
+      "guard_stop_reasons": [],
+      "preflight_reasons": [],
+      "raw_CT410_report": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_repeat_off_gpu_01.json"
+    },
+    {
+      "run_id": "oct27_flash_repeat_auto_gpu_01",
+      "native_moe_cache_mode": "auto",
+      "status": "blocked_preflight",
+      "full_three_task_quality_valid": false,
+      "model_load_s": null,
+      "tasks": [],
+      "mean_tps": null,
+      "guard_stop_reasons": [],
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "HOST_MEMORY_PSI"
+      ],
+      "raw_CT410_report": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_repeat_auto_gpu_01.json"
+    }
+  ],
+  "storage_breakdown": "certification/flashnext_ad427_storage_breakdown_20261027.json",
+  "next_lab_steps": [
+    "A/B/A cache auto vs off under comparable warmed page cache and host load, GPU guardian admission",
+    "Evaluate keeping hot experts resident without forcing cold 47GiB expert loads",
+    "Investigate missing exact historical optimized native b10738 commit/ELF rather than claim generic Atomic2 parity"
+  ],
+  "recommended_live_config_change": "NONE"
+}
