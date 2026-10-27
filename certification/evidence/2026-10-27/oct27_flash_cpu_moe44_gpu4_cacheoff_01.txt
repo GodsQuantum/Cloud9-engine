@@ -1,0 +1,31 @@
+0.00.090.696 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.092.305 I srv          init: The UI is disabled
+0.00.092.330 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.092.694 W srv  llama_server: -----------------
+0.00.092.699 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.092.699 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.092.699 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.092.699 W srv  llama_server: -----------------
+0.00.094.486 I srv    load_model: loading model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf'
+0.00.094.622 I cmn  common_init_: MoE cache: mode=off
+0.00.616.089 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.19.529.395 I common_speculative_init_result: loading draft model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.32.946.290 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 1024, kv_unified = 'false'
+0.32.967.276 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.32.976.295 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+0.32.976.374 I srv  llama_server: model loaded
+0.32.976.382 I srv  llama_server: listening on http://127.0.0.1:18148
+0.33.005.857 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.33.005.897 I srv        update: prompt cache: 0 prompts, 0.0 MiB (limit 8192.0 MiB, 1024 tokens)
+0.33.005.951 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.40.412.755 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =     14, progress = 0.78, t =   7.41 s / 1.89 tokens per second
+0.49.935.649 I slot print_timing: id  0 | task 0 | prompt eval time =    9695.79 ms /    18 tokens (  538.66 ms per token,     1.86 tokens per second)
+0.49.935.655 I slot print_timing: id  0 | task 0 |        eval time =    7233.80 ms /     9 tokens (  803.76 ms per token,     1.24 tokens per second)
+0.49.936.156 I slot print_timing: id  0 | task 0 |       total time =   16929.59 ms /    27 tokens
+0.49.936.166 I slot print_timing: id  0 | task 0 |    graphs reused =          0
+0.49.936.170 I slot print_timing: id  0 | task 0 | draft acceptance = 0.55556 (    5 accepted /     9 generated), mean len =  2.67
+0.49.936.566 I slot      release: id  0 | task 0 | stop processing: n_tokens = 26, truncated = 0
+0.49.941.683 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 1140873248379
+0.50.132.148 I srv        update: prompt cache: 1 prompts, 225.9 MiB (limit 8192.0 MiB, 1024 tokens)
+0.50.132.200 I slot launch_slot_: id  0 | task 6 | processing task, is_child = 0
+0.50.132.204 I srv    operator(): operator(): cleaning up before exit...

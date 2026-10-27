@@ -40,6 +40,16 @@ class FlashNextLiveInferencesTest(unittest.TestCase):
         self.assertFalse(r['historic_record_reproduced'])
         self.assertEqual(r['recommended_live_config_change'],'NONE')
 
+    def test_gpu_expert_layer_offload_rejected_on_measurement(self):
+        run=self.record["gpu_more_expert_layer_trial"]
+        self.assertEqual(run["native_cpu_moe_layers"],44)
+        self.assertEqual(run["additional_gpu_expert_layers"],4)
+        self.assertLess(run["math_tps"],2.53)
+        self.assertFalse(run["all_three_tasks_quality_valid"])
+        self.assertTrue(run["no_oom"])
+        self.assertFalse(run["production_promoted"])
+        self.assertFalse(self.record["gpu_expert_offload_44_layers_is_winner"])
+
     def test_gpu_log_transcripts(self):
         path=ROOT/'certification/evidence/2026-10-27'
         log=(path/'oct27_flash_stage_trace_fullGPU_01.txt').read_text()

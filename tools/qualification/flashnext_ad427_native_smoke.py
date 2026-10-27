@@ -29,14 +29,14 @@ COMMAND=[str(BIN),'-m',str(TARGET),'-md',str(DRAFT),'-ngl','99',
          '--reasoning','off','--host','127.0.0.1','--port','18148',
          '--no-webui','--alias','FlashNext-AD427-FRSpec65K-LAB']
 
-def readonly_preflight():
+def readonly_preflight(cpu_moe_layers=48):
     shards=sorted(TARGET.parent.glob('Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-*-of-00033.gguf'))
     actual=sum(f.stat().st_size for f in shards)
     reasons=[]
     if len(shards)!=33 or actual!=94525394976:reasons.append('TARGET_33_SHARDS_INCOMPLETE')
     if not DRAFT.is_file() or DRAFT.stat().st_size!=3639245152:reasons.append('FRSPEC_DRAFT_MISSING_OR_CHANGED')
     if not BIN.is_file():reasons.append('ISOLATED_NATIVE_ELF_MISSING')
-    health=gate.guardian(12.5)
+    health=gate.guardian(12.5 + max(0,48-cpu_moe_layers)*0.25)
     if not health.get('allow'):reasons.append('OFFICIAL_GPU_GUARD_DENIED')
     if health.get('mem_available_gib',0)<30:reasons.append('HOST_AVAILABLE_RAM_BELOW_30GIB')
     if health.get('psi_memory_full_avg10',99)>=1.5:reasons.append('HOST_MEMORY_PSI')
@@ -60,7 +60,7 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
         try:fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
         except BlockingIOError:
             result['status']='gpu_lock_busy';return
-        double=readonly_preflight();result['second_preflight']=double
+        double=readonly_preflight(result['n_cpu_moe']);result['second_preflight']=double
         if not double['allow']:result['status']='blocked_after_lock';return
         child=None;exiting=threading.Event();events=[]
         logfile=LAB/('flashnext_ad427_'+result['run_id']+'.log')
@@ -80,7 +80,7 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
                         # rather than terminating an existing job at transient PSI 0.5.
                         danger=(g.get('mem_available_gib',0)<20 or g.get('psi_memory_full_avg10',99)>=12.0 or
                                 g.get('swap_used_percent',100)>90 or temp is None or temp>=80 or
-                                io is None or io>24 or gate.embeddings_busy())
+                                io is None or io>24 or gate.embeddings_busy() or g.get('gtt_used_gib',99)>14.5)
                         if danger:
                             events.append({'reason':'RUNTIME_SAFETY_STOP','guardian':g,'io':io,'temp':temp})
                             gate.stop_own(child);return
@@ -125,15 +125,15 @@ def load_and_generate(result,path,max_load_s,launch_cmd):
         os.close(fd)
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--run-id',required=True);ap.add_argument('--execute',action='store_true');ap.add_argument('--max-load-s',type=int,default=210);ap.add_argument('--moe-cache',choices=['off','soft','auto','4096'],default='off')
+    ap=argparse.ArgumentParser();ap.add_argument('--run-id',required=True);ap.add_argument('--execute',action='store_true');ap.add_argument('--max-load-s',type=int,default=210);ap.add_argument('--moe-cache',choices=['off','soft','auto','4096'],default='off');ap.add_argument('--cpu-moe-layers',type=int,choices=[44,46,48],default=48)
     a=ap.parse_args()
     if not (1<=len(a.run_id)<=45 and all(c.isalnum() or c in '_-' for c in a.run_id)):ap.error('Invalid run id')
     path=LAB/('flashnext_ad427_'+a.run_id+'.json')
     if path.exists() or (LAB/('flashnext_ad427_'+a.run_id+'.log')).exists():ap.error('Refuse overwrite immutable trial')
-    launch_cmd=COMMAND.copy();launch_cmd[launch_cmd.index('--moe-cache')+1]=a.moe_cache
-    result={'moe_cache_mode':a.moe_cache,'run_id':a.run_id,'utc':datetime.now(timezone.utc).isoformat(),'target':'Qwen3.8-Flash-Next AD4.27 33GGUF','draft':'FRSpec65k Q8','engine':'isolated Atomic2 patched3df182b0','model_quantization_unchanged':True,'n_cpu_moe':48,'gpu_layers':99,'ngram_cpu_mmap':True,'draft_depth':3,'status':'preflight','rows':[],'guard_events':[],'production_untouched':True,'command':launch_cmd[1:]}
+    launch_cmd=COMMAND.copy();launch_cmd[launch_cmd.index('--moe-cache')+1]=a.moe_cache;launch_cmd[launch_cmd.index('--n-cpu-moe')+1]=str(a.cpu_moe_layers)
+    result={'n_cpu_moe':a.cpu_moe_layers,'moe_cache_mode':a.moe_cache,'run_id':a.run_id,'utc':datetime.now(timezone.utc).isoformat(),'target':'Qwen3.8-Flash-Next AD4.27 33GGUF','draft':'FRSpec65k Q8','engine':'isolated Atomic2 patched3df182b0','model_quantization_unchanged':True,'n_cpu_moe':48,'gpu_layers':99,'ngram_cpu_mmap':True,'draft_depth':3,'status':'preflight','rows':[],'guard_events':[],'production_untouched':True,'command':launch_cmd[1:]}
     try:
-        preflight=readonly_preflight();result['preflight']=preflight
+        preflight=readonly_preflight(a.cpu_moe_layers);result['preflight']=preflight
         if not preflight['allow']:result['status']='blocked_preflight'
         elif not a.execute:result['status']='admitted_not_executed'
         else:load_and_generate(result,path,a.max_load_s,launch_cmd)

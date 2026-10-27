@@ -204,5 +204,27 @@
     "Evaluate keeping hot experts resident without forcing cold 47GiB expert loads",
     "Investigate missing exact historical optimized native b10738 commit/ELF rather than claim generic Atomic2 parity"
   ],
-  "recommended_live_config_change": "NONE"
+  "recommended_live_config_change": "NONE",
+  "gpu_more_expert_layer_trial": {
+    "run_id": "oct27_flash_cpu_moe44_gpu4_cacheoff_01",
+    "native_cpu_moe_layers": 44,
+    "additional_gpu_expert_layers": 4,
+    "gpu_gtt_observed_gib": 11.242,
+    "math_tps": 1.244,
+    "all_three_tasks_quality_valid": false,
+    "status": "failed_quality_or_runtime",
+    "guard_stop_reason": [
+      "RUNTIME_SAFETY_STOP"
+    ],
+    "trigger_psi_memory_full_avg10": [
+      12.61
+    ],
+    "stop_for_host_available_gib": [
+      21.286
+    ],
+    "no_oom": true,
+    "production_promoted": false,
+    "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_cpu_moe44_gpu4_cacheoff_01.json"
+  },
+  "gpu_expert_offload_44_layers_is_winner": false
 }
