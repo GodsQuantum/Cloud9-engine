@@ -226,5 +226,33 @@
     "production_promoted": false,
     "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_cpu_moe44_gpu4_cacheoff_01.json"
   },
-  "gpu_expert_offload_44_layers_is_winner": false
+  "gpu_expert_offload_44_layers_is_winner": false,
+  "auto_cache_warmed_second_attempt": {
+    "run_id": "oct27_flash_cache_auto_hot_rep2",
+    "status": "failed_quality_or_runtime",
+    "model_load_s": 8.009,
+    "task_scores": [
+      {
+        "task": "math",
+        "tps": 3.057
+      },
+      {
+        "task": "fr",
+        "tps": 1.945
+      }
+    ],
+    "mean_tps": null,
+    "three_task_quality_valid": false,
+    "guardian_events": [
+      {
+        "reason": "RUNTIME_SAFETY_STOP",
+        "memory_full_psi_avg10": 12.13,
+        "host_available_gib": 24.055
+      }
+    ],
+    "failed_not_winner": true,
+    "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_cache_auto_hot_rep2.json"
+  },
+  "best_verified_three_task_tps": 2.685,
+  "goal_20_tps_unmet": true
 }
