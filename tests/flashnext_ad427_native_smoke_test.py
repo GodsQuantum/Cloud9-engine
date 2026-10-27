@@ -45,6 +45,38 @@ class NativeFlashSmokeTest(unittest.TestCase):
         self.assertIn('HOST_MEMORY_PSI',x['reasons'])
         self.assertIn('HOST_IO_PSI',x['reasons'])
 
+    def test_embedded_service_busy_still_blocks_by_default(self):
+        health={'allow':True,'mem_available_gib':36,'psi_memory_full_avg10':0,'swap_used_percent':40}
+        with patch.object(module.gate,'guardian',return_value=health),patch.object(module.gate,'psi_io_full',return_value=0),patch.object(module.gate,'host_temp',return_value=62),patch.object(module.gate,'embeddings_busy',return_value=True),patch.object(module.gate,'fetch',side_effect=[{'worker_model':None},{'status':'ok','loaded_models':[]}]):
+            x=module.readonly_preflight()
+        self.assertFalse(x['allow'])
+        self.assertIn('EMBEDDINGS_ACTIVE_OR_UNKNOWN',x['reasons'])
+
+    def test_owner_coexist_only_when_physical_gpu_is_measured_idle(self):
+        health={'allow':True,'mem_available_gib':36,'psi_memory_full_avg10':0,'swap_used_percent':40}
+        for physically_idle in (False,True):
+            with patch.object(module.gate,'guardian',return_value=health),patch.object(module.gate,'psi_io_full',return_value=0),patch.object(module.gate,'host_temp',return_value=62),patch.object(module.gate,'embeddings_busy',return_value=True),patch.object(module,'measured_gpu_physically_idle',return_value=physically_idle),patch.object(module.gate,'fetch',side_effect=[{'worker_model':None},{'status':'ok','loaded_models':[]}]):
+                x=module.readonly_preflight(owner_idle_coexist=True)
+            self.assertEqual(x['allow'],physically_idle)
+            self.assertEqual(x['owner_measured_gpu_idle_coexist'],physically_idle)
+
+    def test_calibrated_gtt_request_keeps_native_guard_authoritative(self):
+        health={'allow':False,'mem_available_gib':29,'psi_memory_full_avg10':0,'swap_used_percent':42}
+        with patch.object(module.gate,'guardian',return_value=health) as g,patch.object(module.gate,'psi_io_full',return_value=0),patch.object(module.gate,'host_temp',return_value=62),patch.object(module.gate,'embeddings_busy',return_value=False),patch.object(module.gate,'fetch',side_effect=[{'worker_model':None},{'status':'ok','loaded_models':[]}]):
+            info=module.readonly_preflight(owner_compact_start=True,required_gtt_gib=10.0)
+        g.assert_called_once_with(10.0)
+        self.assertFalse(info['allow'])
+        self.assertEqual(info['required_gtt_gib'],10.0)
+        self.assertEqual(info['start_ram_floor_gib'],26)
+        self.assertIn('OFFICIAL_GPU_GUARD_DENIED',info['reasons'])
+
+    def test_owner_compact_start_requires_26_gib_no_unconditional_override(self):
+        h={'allow':True,'mem_available_gib':25,'psi_memory_full_avg10':0,'swap_used_percent':42}
+        with patch.object(module.gate,'guardian',return_value=h),patch.object(module.gate,'psi_io_full',return_value=0),patch.object(module.gate,'host_temp',return_value=62),patch.object(module.gate,'embeddings_busy',return_value=False),patch.object(module.gate,'fetch',side_effect=[{'worker_model':None},{'status':'ok','loaded_models':[]}]):
+            info=module.readonly_preflight(owner_compact_start=True,required_gtt_gib=10.0)
+        self.assertFalse(info['allow'])
+        self.assertIn('HOST_AVAILABLE_RAM_BELOW_26GIB',info['reasons'])
+
     def test_trusted_graph_shape_and_source_unchanged(self):
         a=json.loads((ROOT/'certification/flashnext_frspec_native_qualification_20261026.json').read_text())
         x=a['actual_target_vs_draft_metadata_comparison']
