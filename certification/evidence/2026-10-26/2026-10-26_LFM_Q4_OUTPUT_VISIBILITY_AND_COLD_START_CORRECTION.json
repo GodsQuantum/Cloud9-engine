@@ -1,0 +1,21 @@
+{
+  "evidence_status": "CORRECTION_OF_CAUSAL_INTERPRETATION",
+  "source_proofs": [
+    "2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+    "2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json"
+  ],
+  "proved": "256 tokens generated per request, message.content empty string, text_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "not_proved": "Which exact generated tokens were thinking, whether finish_reason=length, whether a chat-template/parsing fault contributed, or whether a final answer would have appeared at >256 tokens",
+  "plausible_interpretations": [
+    "thinking block not finished within 256 tokens",
+    "llama.cpp chat-template/reasoning_format parsing issue"
+  ],
+  "correct_label": "NO VISIBLE FINAL OUTPUT: QUALITY UNQUALIFIED",
+  "upstream_256_math_hot_decode_tps": 38.97508666607261,
+  "atomic2_256_math_hot_decode_tps": 47.60063070835689,
+  "atomic_hot_math_improvement_percent": 22.13,
+  "upstream_one_shot_cold_wall_s": 12.484,
+  "atomic2_one_shot_cold_wall_s": 21.502,
+  "one_shot_cold_start_caution": "Single load sample per engine under different host pressure; no visible final answer, NOT production E2E latency certification",
+  "production_selection_based_on_this": false
+}

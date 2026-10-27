@@ -1,0 +1,57 @@
+{
+  "utc": "2026-10-26T10:27:26.185053+00:00",
+  "engine": "atomic2",
+  "model": "Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+  "preset": "atomic16-mtp2-f16-fullgpu",
+  "context": 8192,
+  "original_arc_max": 4831838208,
+  "temporary_arc_cap": 3221225472,
+  "production_service_stopped": false,
+  "official_guardian_preserved": true,
+  "runner_exit_code": 0,
+  "wall_seconds": 39.7,
+  "stdout_tail": "",
+  "status": "failed_watchdog",
+  "trial_sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354",
+  "load_s": 6.754,
+  "guards": [
+    {
+      "reason": "RUNTIME_PRESSURE",
+      "guardian": {
+        "timestamp": 1793010485.4798865,
+        "mem_available_gib": 23.367,
+        "swap_used_gib": 18.624,
+        "swap_total_gib": 23.519,
+        "swap_used_percent": 79.19,
+        "psi_memory_some_avg10": 1.97,
+        "psi_memory_full_avg10": 1.83,
+        "gtt_used_gib": 11.307,
+        "gtt_total_gib": 72.0,
+        "vram_used_gib": 1.692,
+        "safe_total_gtt_gib": 16.673,
+        "allow": false,
+        "mode": "coexist-light",
+        "request_gib": 0.0,
+        "reasons": [
+          "host MemAvailable 23.4 GiB < start floor 24.0 GiB",
+          "host memory PSI full avg10=1.83"
+        ],
+        "cooldown_sec": 0.0,
+        "host_reserve_gib": 18.0,
+        "runtime_max_gtt_gib": 70.0
+      },
+      "temp_c": 65.875
+    }
+  ],
+  "preflight_reasons": [],
+  "rows": [
+    {
+      "task": "math",
+      "tps": 27.24612360033683,
+      "visible": true,
+      "correct_math": true
+    }
+  ],
+  "arc_reverted": true,
+  "finished_utc": "2026-10-26T10:28:09.916852+00:00"
+}

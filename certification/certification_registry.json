@@ -1,0 +1,1857 @@
+{
+  "schema_version": 1,
+  "product": "GodsQuantum/Cloud9-engine on Cloud9 Radeon780M gfx1103",
+  "as_of": "2026-10-26",
+  "principle": "NEVER invalidate or re-run a historic proof without a specific changed engine/weight/backend/quant/context risk; a source CI pass is not GPU model certification",
+  "canonical_hall_of_fame": "HALL_OF_FAME.json",
+  "hall_record_count_at_audit": 192,
+  "engine_current_id": "Cloud9-Chimera-Qwen4-MTP-Vulkan-LAB",
+  "engine_current_sha256": "2ce83aed1f1a54a7e14e295838d34f7d05d1fc7dac4554341e34d296fdc31262",
+  "catalog_sha256": "82581f2315ef7e95ab5cf6937cc0781a5531d89fdb4a00734dbb0502a3a2a288",
+  "historic_proofs_not_current_build_certification": [
+    "C01",
+    "C02",
+    "C03"
+  ],
+  "current_narrow_proofs": [
+    "C04",
+    "C05",
+    "C06",
+    "C07"
+  ],
+  "minimum_production_path": [
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C14",
+    "C15"
+  ],
+  "full_product_path": [
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C15"
+  ],
+  "status_legend": {
+    "HISTORICAL_VALID": "evidence valid on old exact engine, reusable workload not transferable release",
+    "CURRENT_PASS_LIMITED": "current build/service passed narrow test only",
+    "PARTIAL": "some evidence but criteria not complete",
+    "BLOCKED_RESOURCE": "not safe to run until memory/IO recovered",
+    "NOT_RUN": "not executed on current scope"
+  },
+  "gates": [
+    {
+      "id": "C01",
+      "title": "Historique: noyau Vulkan MUL_MAT_ID 921/921",
+      "status": "HISTORICAL_VALID",
+      "scope": "Cloud9 Engine 534cda00; NOT current master9ae chimera",
+      "evidence": [
+        {
+          "project_path": "Cloud9 Engine/docs/benchmarks.md",
+          "sha256": "15acfa78a5cd8cbf1310006ec8a0c0603c64c8ab1071d895eb7574196e5eaea8",
+          "note": "921/921 shader/backend tests old engine"
+        }
+      ],
+      "remaining": "Do not re-run old 921 cases unless exact kernel touched",
+      "acceptance": "Historic proof stays pinned to old engine and SHA",
+      "measured": {
+        "kernel_correctness_cases_passed": 921,
+        "cases_total": 921,
+        "runtime": "2026-09-16 old Cloud9 engine",
+        "limitations": "Old 534cda kernel only"
+      }
+    },
+    {
+      "id": "C02",
+      "title": "Historique: cinq aiguilles 8K réelles 3/3",
+      "status": "HISTORICAL_VALID",
+      "scope": "Atomic TurboQuant 2.0.0 Qwen4 Q4_K_M Vulkan Q8K Turbo3V",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-8192-reps3.json",
+          "sha256": "d764aa5749cdaf5ee12cb295ef5f2890e34145df351712930cdda03788a97f65",
+          "note": "8026 prompt tokens, five position retrieval 3/3"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-22_1127_ATOMIC_TURBO3_4B_MTP2_NEEDLE5_GUARDED.log",
+          "sha256": "79a38b0c1148b226c5079092c2ea44926f3d60714a288bb19d1b69fec964a3ff",
+          "note": "historical original log"
+        }
+      ],
+      "remaining": "Only port fixture to current chimera; never rebuild the historic test",
+      "acceptance": "5 markers retrieved with same or stronger protocol on current master9ae",
+      "measured": {
+        "prompt_tokens_consumed": 8026,
+        "five_markers_exact_retrieval": "3/3",
+        "engine": "Atomic TurboQuant 2.0.0"
+      }
+    },
+    {
+      "id": "C03",
+      "title": "Historique: cinq aiguilles 16K réelles 3/3",
+      "status": "HISTORICAL_VALID",
+      "scope": "Atomic TurboQuant 2.0.0 Qwen4 Q4_K_M Vulkan Q8K Turbo3V",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-16384-reps3.json",
+          "sha256": "e4fd8c4bea478652185be8661c41651f10dc6a8c0718844c42cff0dc303be4fa",
+          "note": "16330 prompt tokens, five position retrieval 3/3"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-22_1131_ATOMIC_TURBO3_4B_MTP2_NEEDLE5_16K_GUARDED.log",
+          "sha256": "656840fbd3d4e88b031335e862b552620c849ceb08166be1836fb12222649b37",
+          "note": "historical original log"
+        }
+      ],
+      "remaining": "Only certify current chimera relevant context; keep 16330-token source benchmark",
+      "acceptance": "current chimera 8K/16K full effective context with markers, no truncation",
+      "measured": {
+        "prompt_tokens_consumed": 16330,
+        "five_markers_exact_retrieval": "3/3",
+        "engine": "Atomic TurboQuant 2.0.0"
+      }
+    },
+    {
+      "id": "C04",
+      "title": "CI chimera native MMB MTP Turbo source / backend guard",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "Cloud9 chimera master9ae source Vulkan/HIP CPU build, NOT GPU TurboQuant",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "202 local Python tests, Vulkan usable, Turbo backend protection"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+          "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519",
+          "note": "Original Atomic2 cda0f925 source native Vulkan Zen4 LTO compiled in CT700, separate 11-ELF LAB artifact CT410 with $ORIGIN; --version/help and ldd PASS, no GPU model loaded yet"
+        }
+      ],
+      "remaining": "Atomic2 native Vulkan Zen4+LTO compiler-tuned 11 ELFs deployed LAB ONLY in CT410; source cda0f925 unchanged, RPATH $ORIGIN patched in isolated binaries and ldd/--version/MTP adaptive flag PASS. No unqualified runtime performance claim; GPU correctness/prefill+decode comparisons need same exact Pym35B model and resource admission. Stable production unchanged.",
+      "acceptance": "native build and guard remain green; no untested backend activation",
+      "measured": {
+        "python_tests_passed": 202,
+        "ci": "last relevant CI success 5cf4e66; newest b855a12 in progress during audit"
+      }
+    },
+    {
+      "id": "C05",
+      "title": "CT410 router safe nonpreemptive, stable services",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "active 2026-10-25 CT410 guarded 9-model catalog; only one worker",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "router hash 2ce83aed, official GPU guard, VoiceStudio Speaches AutoSubs preserved"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_EMBEDDING_BUSY_ROUTER_SAFETY_DEPLOYED.json",
+          "sha256": "6e5afa2ba9bfe4e6dd1a83308b8e4a3b2c2e3b816a47d768bddaadcb6f293349",
+          "note": "CT410 live router binding bug fixed, fail-closed busy embedding slots on correct host, 25 unit tests pass"
+        }
+      ],
+      "remaining": "Current CT410 router source caught up from live deployed 29KB native Python and deployed patched SHA87c959b41cda. Fixed embedding_busy() wrong localhost:8091 bind; now uses configurable actual192.168.1.219:8091, fail-closed on API error/malformed slots. 25 targeted router tests PASS, restart only when router worker idle and zero connections, embedding service remained active with 4 processing slots. Remaining: real exclusive preemption/rollback test ONLY during idle maintenance, not while real embedding tasks running.",
+      "acceptance": "workload cannot stop embeddings, AutoSubs, VoiceStudio, Speaches or PBS"
+    },
+    {
+      "id": "C06",
+      "title": "Chimera native Qwen4 real GPU 2K + strict read-only tool",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "opt-in Qwen4 Q4_K_M, MTP draft, Vulkan, f16 KV, ctx2048, threads6 batch256",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/Chimera_optional_native_router_after_tuning.json",
+          "sha256": "5eda99f010e92f3ef14c62e291f93a8bc1884ab13a29c5f13714ab1fe6b71277",
+          "note": "32 generated @33.7565 tok/s; one strict Proxmox tool, 5.369s cold"
+        }
+      ],
+      "remaining": "Tool quality is only 1 case; incorrect technical suggestions in chat observed",
+      "acceptance": "repeatable matched live QA without regression and with proper args",
+      "measured": {
+        "decode_tps": 33.756523992721654,
+        "prefill_tps": 394.8046352198254,
+        "wall_seconds": 5.369,
+        "strict_tool_correct": "1/1"
+      }
+    },
+    {
+      "id": "C07",
+      "title": "OpenBMB MiniCPM5+DSpark live speed and tool",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "MiniCPM5-2B Heretic derivative Q6_K and separate DSpark 2.6B, ctx16384 in catalog",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/OpenBMB_MiniCPM5_2B_DSpark_real_decode.json",
+          "sha256": "ff7957d134f361480660075d3be873d8be9663f99df202e42ae5bb9c8eba3333",
+          "note": "137 tokens @22.1551 tok/s, NOT historic 47.73"
+        },
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/OpenBMB_MiniCPM5_2B_agentic_guarded.json",
+          "sha256": "c637caf5f8f930c9a91110f4e411eccc1e27dba9cfe0427da91378d091c9c6da",
+          "note": "one correct tool case, stopped by PSI"
+        }
+      ],
+      "remaining": "Not 3/3 scenario suite nor untouched OpenBMB weights",
+      "acceptance": "role-specific tool/extraction thresholds with same weights",
+      "measured": {
+        "decode_tps": 22.155087239728633,
+        "tool_strict_correct": "1/1",
+        "historical_catalog_decode_tps_not_repeated": 47.73
+      }
+    },
+    {
+      "id": "C08",
+      "title": "Current chimera long effective context 8K 16K and maximum useful",
+      "status": "PARTIAL",
+      "scope": "current master9ae; historical Atomic 8K/16K proofs C02/C03 reusable as protocol",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-22/atomic-turboquant2-qwen4b-mtp2-q8turbo3-needle5-16384-reps3.json",
+          "sha256": "e4fd8c4bea478652185be8661c41651f10dc6a8c0718844c42cff0dc303be4fa",
+          "note": "reusable existing fixture"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_8K_GUARD_STOP_NO_INFERENCE.json",
+          "sha256": "5fe1ebbf72a0a0931c70f469f4f1f4cf7ed831089990aa024cf017c9bc3f2325",
+          "note": "Unsuccessful guarded 8K initialization; inference NOT executed, no five marker pass claimed"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
+          "sha256": "db5678ef0ada0a03817514eced77a47b31128e036d216d8c6f191e56bcbc8d5b",
+          "note": "Real 8K 1/3 all five markers, remaining stopped for memory pressure"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
+          "sha256": "68f81916c490c4c6091029175dfdb5a3183dbea7aee4d857f6be0f2555237c80",
+          "note": "Reused real five-marker 8K: Qwen4 master9ae Vulkan two runs both 5/5; third paused on PSI"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
+          "sha256": "d928ff4a16ee430a530d52ec0d25730e729eb1175946bb01d910917d597b1d4c",
+          "note": "Missing seeded rep3 attempted once more 2026-10-25 02:13: model loaded, guardian stop before inference PSI 2.32 / MemAvailable22.681 GiB; C08 stays 2/3"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
+          "sha256": "dd9851f373f8a22bd9ef6b417889b1af01da222a300dc1beb1d2b3e96da4e74b",
+          "note": "Stricter C08 LAB-only GPU admission prevents unsafe new 8K/16K launches; no new inference"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2205_C08_ZRAM2_CONDITIONAL_GPU_ADMISSION.md",
+          "sha256": "6445ce92205c8937b3c5d69274917d12577aab7bde833f0c445d839151a32dd2",
+          "note": "Native ZRAM2-conditional 8K seed3 admission; no official guard changes, GPU validation still pending"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C08_8K_SEED3_SUCCESS_ZRAM2.json",
+          "sha256": "e9cc679e9fa2a18feb48b3bcf5b2775347ac52fa99ee1ce3367355f521e8a075",
+          "note": "Qwen4 master9ae native 8K five markers 3/3, exact seed3 8026 input, 8.48 tokens/s; no watchdog"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2210_C08_NATIVE_8K_3OF3_PASS.md",
+          "sha256": "cea5947fa2d81de9018a072ee6a40e17ef0b13d0316d6ddc584752533f933713",
+          "note": "Qwen4 master9ae native 8K five markers 3/3, exact seed3 8026 input, 8.48 tokens/s; no watchdog"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C08_NATIVE_16K_WATCHDOG_FAIL_NO_SCORE.json",
+          "sha256": "0991f95f197a4d25a41de20dd2d3f893e33ad99c4754796a4bc1a9328fa03daf",
+          "note": "Actual current chimera 16K f16 KV first attempt failed watchdog PSI2.11 before full prompt; no successful row"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
+          "sha256": "00b1e4a6fc26d5d88b899cfb06cd46ab8187de55b0fadd9036406b9c0b47f6d3",
+          "note": "Actual current chimera 16K f16 KV first attempt failed watchdog PSI2.11 before full prompt; no successful row"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
+          "sha256": "1e2878a1b3fbfa623ef3fd474d6cb17cc58503461ff0f3ceefd7335b5541a1f1",
+          "note": "16K Q8 no safe preflight; own LAB child watchdog cleanup bounded; no new inference"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_QWEN35_4B_REAL_GGUF_LONG_CONTEXT_CAPABILITY.json",
+          "sha256": "184ad9ed09cd0dfb991dc0168cef70e40c54f4eadbdadee6f275c97ce4e0cf59",
+          "note": "Actual local GGUF header native context262144 and estimated static 32/64/128/256K KV envelope; NONE above 8K GPU certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
+          "sha256": "a36a1b2bf31ae1546f6bf8d4e2312ee3d7d04e5d3920560a7563041739ba4368",
+          "note": "Actual local GGUF header native context262144 and estimated static 32/64/128/256K KV envelope; NONE above 8K GPU certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_CONTEXT_32K_64K_128K_PREFLIGHT.json",
+          "sha256": "dba520829f059f56049d577185b1b8b83515004f01b40865ef0bca178e4d519f",
+          "note": "Native 32K/64K/128K guards blocked without GPU inference"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_128K_NEEDLE_FIXTURE_DISTRIBUTION_CPU.json",
+          "sha256": "d0bc885bb1a3bc0ba6723fd1574635c0cf87550f1eca23e6f9144d34162911ce",
+          "note": "CPU-only 5-marker distributed fixture test, not tokenized"
+        }
+      ],
+      "remaining": "Native GGUF advertises 262144 max; target agentic product 128K. Current 8K five-marker 3/3 PASS. 16K f16 strict PSI watchdog FAIL, 16K q8 no quality. Native LAB 32K 64K 128K q8_0 both caches gated and 3 preflights BLOCKED before GPU. Need genuine full-prompt 3x5-marker passes plus long-context agent tool performance and fallback before full production.",
+      "acceptance": "same exact GGUF, 5 marker extraction / no shift, GTT/PSI guarded, tokens actually consumed",
+      "measured_attempt_2026_10_25": {
+        "ctx_allocated": 12288,
+        "synthetic_tokenizer_tokens": 8015,
+        "repetitions_executed": 0,
+        "preload_mem_available_gib": 25.045,
+        "after_load_mem_available_gib": 22.151,
+        "after_load_psi_full_avg10": 0.54,
+        "status": "guardian_stopped_before_inference"
+      },
+      "measured_8k_single": {
+        "prompt_tokens": 8026,
+        "correct_markers": 5,
+        "repetitions_run": 1,
+        "repetitions_required": 3,
+        "decode_tps": 9.47569,
+        "prefill_tps": 326.32954
+      },
+      "measured_8k_2of3": {
+        "ctx": 8704,
+        "prompt_tokens_each": 8026,
+        "repetitions_passed": 2,
+        "repetitions_required": 3,
+        "mark_correct_each": 5,
+        "decode_tps": [
+          8.035247659541493,
+          8.622268911086572
+        ]
+      }
+    },
+    {
+      "id": "C09",
+      "title": "Functional agentic JSON tools coding and French regression",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "new chimera has 1/1 correct read-only tool, older engine has distinct 36-case trials",
+      "evidence": [
+        {
+          "project_path": "Sources/Benchmarks/Engine-Tournament/2026-10-24/Cloud9_Chimera_OpenBMB/Chimera_optional_native_router_after_tuning.json",
+          "sha256": "5eda99f010e92f3ef14c62e291f93a8bc1884ab13a29c5f13714ab1fe6b71277",
+          "note": "single strict read-only tool PASS"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
+          "sha256": "77c87809f07171664d7a8af0951c95d5b2667a3cd863e37f97b80b5b0d3f3c8b",
+          "note": "One real strict safe Proxmox tool call 1/1; rest of 36 checkpointed and halted on PSI"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_2OF36_VERIFIED.json",
+          "sha256": "3c4abf676cb4876f4a938c39794529494ae696f1339362a1da00aff9791eb89a",
+          "note": "Real checkpointed native C09 advanced from 1/36 to 2/36, both strict read-only tool calls correct; paused official memory guard after rep1 second scenario."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_28OF36_VERIFIED.json",
+          "sha256": "89f90668fffd06fcf3d6f17c5d944e0b3ce719556be7b626d197e59001b32b59",
+          "note": "Exact native guarded Qwen4 C09 checkpoint 28/36 passing; 0 unsafe; 12+12+4 repetitions, resource-pressure pause before remaining eight"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2115_C09_CHECKPOINT_28_OF_36_REAL_GPU.md",
+          "sha256": "2ee1b56b27f4f4e3b78fd3a860a6faae0e05382102c649ffc1f1a5d8f5ab161f",
+          "note": "Exact native guarded Qwen4 C09 checkpoint 28/36 passing; 0 unsafe; 12+12+4 repetitions, resource-pressure pause before remaining eight"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_36OF36_VERIFIED.json",
+          "sha256": "bfbc0a2eccf4da8d029b5cbb60c73b47b2f67c6d5951437878ef90f02882ab7f",
+          "note": "FULL native C09 12x3 simulated tool selection 36/36 correct 0 unsafe, fixture pinned"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
+          "sha256": "67bac6a8cbb161fa412e42c901d2d03b222356178803209ffdd21797c8cd29a2",
+          "note": "C09 complete and native non-intrusive zram2 activation audit"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_C09_CHECKPOINT_FIRST_2OF36.json",
+          "sha256": "a667f115fbb1f8cc63c83c39ec6fe2f7a4a0b7edee2447efc7597a4b16bb6739",
+          "note": "Atomic2 new live same simulated C09 fixture: 2/36 correct and zero unsafe; guardian PSI1.35 pause"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_C09_CHECKPOINT_3OF36_WATCHDOG.json",
+          "sha256": "5eafcc4ca01b9fc04a1468c2d5e240530156a5f7d320c2b7aa5d0d7d8bb37e9c",
+          "note": "Atomic2 exact current Qwen4 C09 3/36 correct, zero unsafe, watchdog PSI2.20 abort with no replay"
+        }
+      ],
+      "remaining": "Chimera native strict simulated diagnostic tool selection 36/36 correct/0 unsafe. Atomic2 original Vulkan Qwen4 now 3/36 correct/0unsafe on IDENTICAL suite, then own-LAB watchdog correctly stopped at host PSI full2.20; native checkpoint preserved and resume supports immutable attempt logs, no duplicates, bound 20s transient PSI recovery. Atomic historical separate creative benchmark JSON3/9 tool6/9 code0/9 FR7/9 still fails general agentic QA. Complete same-suite and quality only after PBS storage contention resolved.",
+      "acceptance": "no dangerous tool; >=95% correct safe tool calls and mandatory zero unsafe, no critical code corruption",
+      "measured_c09_checkpoint": {
+        "cases_passed": 1,
+        "cases_executed": 1,
+        "cases_planned": 36,
+        "decode_tps": 34.578918014500836,
+        "status": "paused_resource_pressure"
+      },
+      "result": "Native strict simulated 12 scenarios x 3 = 36/36 correct JSON tools, zero unsafe; no real infrastructure actions"
+    },
+    {
+      "id": "C10",
+      "title": "Multi-agent concurrency and performance envelope",
+      "status": "CURRENT_PASS_LIMITED",
+      "scope": "current native router and experimental Qwen4 chimera, 1 active model-worker",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
+          "sha256": "99b6e4751822aa59280422b8d81de309cb77c445b6f0a62c144665cc48d97f16",
+          "note": "Read-only safe C10 runner staged and dry-run on CT410; ten CPU tests PASS; NO real GPU benchmark; C10 NOT_RUN"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C10_CAPACITY_1OF42_PSI_STOP.json",
+          "sha256": "99a9623b056c334e7518eb79ed45f125897c45256a10592a127bff2d77761009",
+          "note": "Native real C10 initial slot1, 1/42 correct and PSI1.70 stop, resumable group checkpoint guard"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2220_C10_RESUMABLE_GROUPS_GUARD_COOLDOWN.md",
+          "sha256": "301feb6b502b4f4ac5839e55eef9fac86e238c785760b028a4cbe55a827e1486",
+          "note": "Native real C10 initial slot1, 1/42 correct and PSI1.70 stop, resumable group checkpoint guard"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2230_C10_POSTLOAD_AND_C14_AGENT_HEALTH.md",
+          "sha256": "f932904e2f65aaf018c92e350fb04b67e68b6e3149267eb36f7353d788950355",
+          "note": "C10 preloaded exact model postload guard correction; no performance pass"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C10_NATIVE_CLIENT_QUEUE_42OF42_PASS.json",
+          "sha256": "593877e6854bd4080e0eb8f8fe9f82e348d77c0fcd57602c9fcdaae74783c492",
+          "note": "42/42 native Qwen4 client queue one slot, 21/21 tool and 21/21 SSE correct; native parallel not proven"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
+          "sha256": "da1e0b413fbc5b82fcd3f76700e7c427249075c99083242cd16345c7178dc9a0",
+          "note": "42/42 native Qwen4 client queue one slot, 21/21 tool and 21/21 SSE correct; native parallel not proven"
+        }
+      ],
+      "remaining": "C10 client queue 42/42 for fan-outs 1,2,4 across 3 repetitions; 21/21 safe tool selection, 21/21 streaming, p95 total 9.0427s, p95 first stream fragment 6.5728s. Native llama worker has ONLY one decoding slot, so real 2/4 GPU parallel decode, exact ITL and long soak remain. Test explicit native --parallel N safely before claiming full multiagent GPU production.",
+      "acceptance": "p95 TTFT and ITL thresholds, no lost requests, no worker preemption, no duplicate tool calls"
+    },
+    {
+      "id": "C11",
+      "title": "Host memory/GPU sharing/PBS stability reboot proof",
+      "status": "BLOCKED_RESOURCE",
+      "scope": "Cloud9 92GiB, 19.5GiB zram near full, runtime ZFS ARC4.5GiB not boot-persistent",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "temporary ARC guard and swap constraints"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0100_PBS_PAUSE_RECOVERY_AND_8K_LAB.md",
+          "sha256": "f9bd68a3ae056537c7d92ad3ee38cbf3634b7aa1ad1a92d79b3a6716b94b7b45",
+          "note": "User-authorized short PBS backup pause, native stop, original schedule restored and measured 8K memory insufficiency"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C11_HOST_IO_ZRAM_PRESSURE_OBSERVED.json",
+          "sha256": "356b6c45bb2c3008eefa40945d9ae1c1880876079999750f2e33b4b5f2803fcd",
+          "note": "Read-only 3-second host diskstats+PSI/ZRAM snapshot, confirmed storage pressure; no modifications"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
+          "sha256": "f87c5a86f3343d881cbc20e713c648733af1c0631bf0511c7c82125876a0fd6e",
+          "note": "Read-only 3-second host diskstats+PSI/ZRAM snapshot, confirmed storage pressure; no modifications"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
+          "sha256": "8f9cee897f3022f5f9204a8570b4928dbe36e8f46d64ae96533172c865deccbe",
+          "note": "Native persistent zram2 4GiB lz4 resident limit2GiB priority60; legacy zram0/1 unchanged"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
+          "sha256": "c3337b392028aea9e53763305eb2dbe2c829f22469ac63ceb4abc57b3bf606ac",
+          "note": "PBS verification IO contention, six task-stop requests not fully quiesced"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0032_ATOMIC2_READINESS_AND_PBS_WATCHDOG.md",
+          "sha256": "2040ce3541d28a0aa8c628fbb1d5a3e8ec64e92401bffcea3f59c9c2ced890ff",
+          "note": "PBS six verifying task stop calls non-quiescing and task log reads time out, IO contention; no VM restart"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
+          "sha256": "df5547bed6526456f1ca63c0215f2d49bde16bcec015c364942a26774139d9ff",
+          "note": "PBS IO PSI17.07 prevents reliable new Q4 benchmark before GPU launch"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
+          "sha256": "f98745a7cd2ffb42012ea70675263d4c1ee273d793ab8b87a42ab31a56144180",
+          "note": "Four production embedding GPU slots ACTIVE, no preemption; persistent host RAM and PBS IO pressure"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
+          "sha256": "0293e6c6d26bf3e960d42d5ea26f4fa38e5851403fbb4f65c7fa99065ce39897",
+          "note": "PBS verification temporarily paused, native verify tasks drained 13+weekly, 04:17 exact job schedule+verify-new restored. 26 Oct backup 214.87m; 74-100pct incremental reuse; high PBS I/O SMR datastore. Pym same GGUF partial LAB guarded before response even with verification off."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+          "sha256": "6909d891151be89ed613e31dd5daaea30da8c50f8b2dd961ec46c7a5067eca04",
+          "note": "PBS original prune disabled and verify-new true, exact backup of native config before mutation"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED.json",
+          "sha256": "0c19af249f8b066fda52ead34dfd6155ee2d43a9b4c434646f5f08e9733a44bb",
+          "note": "PBS LIVE retention daily20:30 keep3/14/8/12/3; verify-new OFF; weekly Sat12 1reader1verifier ttl30; restore evidence"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+          "sha256": "4263dc7c335b41cc005f7b81a714d07c831275851b333dd92720478e166240dd",
+          "note": "CT110 PVE9 native metadata 69sec first baseline then10sec second and 99.7pct reused on same files"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_BEFORE.json",
+          "sha256": "c1df9ad578e42d9293ebe3ccc9768b87f1fd673a9baf24510a075a7b790f4c78",
+          "note": "PVE backup daily original 15 VMIDs captured before phase1 split"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+          "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4",
+          "note": "PVE metadata phase1 enabled 09:00 CT110/120/200/9500/9600 and legacy existing 00:30 10 remaining; union exact"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+          "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580",
+          "note": "Cloud9 stale ZFS rehab workflow corrected and high-frequency ZFS/telemetry/PBS verification timers reduced natively"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json",
+          "sha256": "077bc325e4d10a17b3e5e6191d6b00541a31cea60ab756659dee0048a8d2fa5f",
+          "note": "Critical PBS integrity: two missing data chunks referenced by cloud-arezki Oct21/22 snapshots; newer Oct23-25 ppxar indices do not reference them, but full integrity not yet verified. Never claim archive healthy or prune damaged forensic copies."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_FULL_GUEST_MEMORY_AUDIT.json",
+          "sha256": "0c12dfc30f47c167217b25bcf3c8e9c18d11b49954c1aec5928d446cabdd41eb",
+          "note": "PVE live inventory all 16 guests, CT40013.5GiB HAOS7.16 CT2105.41, CT4102.24 and CT7000.22, memory pressure explanation; no guest stopped"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_ALL_GUESTS_SERVICE_TIMER_AUDIT.json",
+          "sha256": "b1be8a8bef9055aa8fe632b24c5d3c290061a584e010caea741268180ccb91b8",
+          "note": "Service-level inventory 14 LXC+2VM+host, timer costs and user correction: NEVER stop entire guest for benchmark"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
+          "sha256": "1dda1621a376049e1b21f509f19bae164d397ec6e2c0eb7b667eadd282610a2a",
+          "note": "Service-level inventory 14 LXC+2VM+host, timer costs and user correction: NEVER stop entire guest for benchmark"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
+          "sha256": "2e93872fb703fcdaac0d7004c314b92b27650d767194821a39d27759d4b106d2",
+          "note": "Native Homepage status poll halved 60s to 120s, unit active, before CPU1.7s/run, no app restart"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CT300_DAVINCI_FONT_PATH_STORM_NATIVE_TIMER.json",
+          "sha256": "2267425cb0f72b7c3010b1c37360295cb754d73627e76128d21659ed38bde616",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ZFS_REHAB_COLLECTOR_COMPLETED_STOP.json",
+          "sha256": "9693920a300f068c46efb998670fa0bd462f933ef8d711bd4149c389fbddaeba",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_GPU_ARBITER_TIMER_SANE_10S.json",
+          "sha256": "7a8d80348325fb5e8508b8a1a51f07b63b4eea8f0d9381e0cd0316c8e30c3c6d",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_DOCKER_HEALTHCHECK_NATIVE_COMPOSE_TUNING_STAGED.json",
+          "sha256": "76ed0a42a93e7b01e4b9cbb943eb02e6d8dad68a1e5d23d29ef2f6c5b7cfc5b3",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
+          "sha256": "bf510f2da04f4f95a7cbec512d4350d42985853d5121277c5c3461ade5fcab6d",
+          "note": "Host/LXC service-only optimization and sanitized Docker native policy; no whole-LXC stop"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_ASSETS_DAILY_PLUS_PREJOB.json",
+          "sha256": "8aba320d55cfd41ee0adbe3d39ca2b5345aaa1c7103a9c7154c76e85d9dd1a98",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        }
+      ],
+      "remaining": "26 Oct service-only audit now covers 14 LXC (12 active,2 stopped), VM100/900 (HAOS no QGA), host and ~165 Docker containers. NEW actual fixes CT300 broken DaVinci PathChanged storm to native30m service timer (service test PASS), host completed ZFS rehab collector disabled (720 SMART+journal polling/day gone), native DaVinci GPU timer5->10sec (8640 starts/day less). Compose source health intervals Redis Netbox x2 CT1101s->15s, Dify PostgreSQL CT4001s->15s, DaVinci PostgreSQL CT3005s->15s VALIDATED but not applied to running Docker without targeted service recreation. Pending CT410 ComfyUI/Docling failed sockets and CT700 stale preview units, no unsafe kills. CT400 WAS accidentally stopped by stale shutdown job; restarted 09:11, all key apps confirmed healthy. NEVER STOP WHOLE LXC/VM FOR BENCHMARK. Full sanitized audit certification/CLOUD9_SERVICE_AUDIT_20261026.md and proofs. CT300 DaVinci native asset refresh timer now daily 06:15 (formerly 30min); tested active. Both davinci-agent-node and davinci-render-node have existing ExecStartPre davinci-render-preflight.sh, which invokes assets-refresh.sh --prestart; this does NOT prove every new queued job in an already-running Resolve node, for which Resolve21 native Deliver Trigger Script at Start is available but not yet attached.",
+      "acceptance": "stability across realistic workloads and after authorized reboot, guard admission stable, 0 PBS/ZFS service disruptions"
+    },
+    {
+      "id": "C12",
+      "title": "Feature speed parity and Turbo KV real backend GPU",
+      "status": "PARTIAL",
+      "scope": "MMB MTP TurboQuant mixed; current f16 KV only",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "real chimera Vulkan GPU 33.7565 t/s, Turbo GPU not certified"
+        },
+        {
+          "project_path": "Sources/Builds/cloud9-chimera-nextn-revert-20261025/nextn-reserve-regression-revert-only.patch",
+          "sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee",
+          "note": "Single-file LAB-only revert of upstream #30020; this evidence is source only, not a performance or correctness certification"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0200_NEXTN_VULKAN_TURBO3_AB_PLAN.md",
+          "sha256": "209c44cde49b02c417e6cd6f5b89880131dca24ff4e7d8e6b1b068a6b1439ebe",
+          "note": "Exact plan and native runner changed; experimental source only and no GPU cache performance claim"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
+          "sha256": "faa396b03cc6f62ec35bc0b2e18dd0344d076e631fc342296a3f7782b14f55df",
+          "note": "Vulkan CI success, verified archive 12 members, native CT410 loader and unit tests; NO GPU inference claim"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
+          "sha256": "f4c371bf851ed8a04a50964950cc270d8e5b7a3aa7ab1d81c905bac1bd9b164e",
+          "note": "Negative quality proof: experimental Vulkan K q8_0 / V turbo3 8K full prompt but failed 5/5 criterion (per-marker wrong count not recorded), decode3.51 tok/s; not a speed-certificate"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_1745_IMMUTABLE_TRIAL_HARNESS_GUARD.md",
+          "sha256": "8b4190dbc3ba10fa8f22f4c1feaac5f7e564ca304bc920d0aea61f2349862de2",
+          "note": "Immutable LAB benchmark guard and no-inference policy denial; not a new performance or correctness pass"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
+          "sha256": "e84618c2a84ca8d91cdc9d31d84a269251ec0c9dadf91decbfd08203125235c4",
+          "note": "Immutable LAB benchmark guard and no-inference policy denial; not a new performance or correctness pass"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
+          "sha256": "4a2324729c6dade899d335c47628f97948d11df18ff101e50c7d89490100d3d6",
+          "note": "Exact Atomic2 original native Vulkan backend 13 ELF staged inactive CT410 with original SHA pinned"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+          "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa",
+          "note": "Native upstream b11840/b11844 Pym MTP2/base full GPU attempted and blocked before load; exact config, guardian and unique fingerprints"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL8_LOAD_WATCHDOG.json",
+          "sha256": "54ade11608068f1b7d09260003db0d5fe0d509d38aa8599941dd21af7e0deab8",
+          "note": "Pym upstream b11844 Pym 13GB ngl8 genuine load4.366s then host memory PSI2.35 watchdog, no generation"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL4_LOAD_WATCHDOG.json",
+          "sha256": "6e3571c24b23190798d3e75c61683e8b5cdd5414469d4449296faedbd4595654",
+          "note": "Pym upstream b11844 ngl4 CPU experts41 load2.403s, memory available18.658GiB emergency watchdog, no generation"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
+          "sha256": "53db027ce3b173a1e59a830a1b23954c4841fad4fcaec5e6dcb4f511d41eae29",
+          "note": "Official LFM2.5 8B-A1B MoE Q4 model native upstream full GPU load6.017s; no response due runtime pressure"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+          "sha256": "4e27a07816f21cbf4a864feb8513118dd0ffe4dcfa81ba5966ff10dd22bd0c5d",
+          "note": "Real same GGUF upstream b11844 LFM-Q4 math 38.975 t/s, thinking 256 tokens but no final"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+          "sha256": "7e66bda24f80d06fdffe7232d6d858ba0065486688af7b56dd4db30f82c53c55",
+          "note": "Real same GGUF Atomic2 LFM-Q4 math47.601, code44.512, FR39.973 t/s, no visible final"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+          "sha256": "3813e2640395c8b956acca0c48498c68f7a620fe6ea39ef64b6d73cf326ee08a",
+          "note": "Atomic2 think0 zero-response safety watchdog PSI2.05 before LFM answer"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
+          "sha256": "05e35855075a06d49769fbbef79012739e95664e1cb2edbf54e32b7f760d0e24",
+          "note": "Upstream think0 zero-response safety watchdog PSI2.35 before LFM answer"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_OUTPUT_VISIBILITY_AND_COLD_START_CORRECTION.json",
+          "sha256": "6073d969ca879109afd1c42257df646d39f6c18451aba607a8390e5995149ed2",
+          "note": "Raw proof audit: content empty after 256 generation tokens; exact thinking reason or finish reason NOT captured. Cold startup Atomic21.502s vs upstream12.484s for one math 256 token request, only one sample."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
+          "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada",
+          "note": "Exact actual Pym Q2 13.22GB and Heretic APEX 17.02GB verified present, upstream/Atomic2 feature flags checked in actual Vulkan help. Guard refuses Pym full GPU; no new Pym decode claim."
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+          "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519",
+          "note": "Hardware-specialized Atomic2 Zen4/LTO LAB binary SHA pinned; no current speed/quality gain, matched Pym A/B pending guardian RAM/GTT admission"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+          "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a",
+          "note": "Three same-model native Pym35B MTP2 candidate preflights: upstream b11844, Atomic2 and new Atomic2 Zen4/LTO all denied host coexistence safely; no speed or quality claims"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+          "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580",
+          "note": "Low-risk reduced CPU/IO polling overhead but 10 GiB true RAM still required to run Pym full GPU"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
+          "sha256": "1dda1621a376049e1b21f509f19bae164d397ec6e2c0eb7b667eadd282610a2a",
+          "note": "Native Pym35B partial_min Atomic2 loaded 18s before guard memory PSI1.88 stopped own LAB: zero scores, CT400 restored"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
+          "sha256": "ca984de26195d4db951a28fdb6171ad5146ebd1e643f5a17b2d4628b586d56b2",
+          "note": "Same GGUF Pym35B Q2 MTP2 partial GPU exact 3 tasks on Atomic2 stock and Zen4 LTO; full rows and upstream guarded abort"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+          "sha256": "93d60d86d9b2aa9caff19a0c1b57338526a11a3f3163afc5ac8695713db67588",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+          "sha256": "643721bdbc24fca554de5c9225110c52337e5cce4b5721f1a5e825cb0e48559f",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+          "sha256": "fc8b55475f0df10bdcedbc2d9b10dd28bbd3271216fbe15875043c69d0094ae0",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+          "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+          "sha256": "e5bb3b495de22ca5170cb26b6341dfca9ea72f0db5b194d71d465ff87e8deed6",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+          "sha256": "fce6a22fbd1cea8a98cd79fd2f42e16d8a901296fa66831b5b2935d38aadbcc9",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+          "sha256": "4696db4e62a9cb4ae575bb25d759715a8c98dc786d72bece65aa1c85ac6eacd7",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+          "sha256": "b81bccca58c9e456d68cb821d7e612cddbc9826701a22eb6bffa4f6b9771e3ed",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtp1_192_1026.json",
+          "sha256": "b131af981461616789986eeceeb01f7d15d8413351774844849e16944ea3c774",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
+          "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+          "sha256": "0b12cf60f1083871436840ca7cff1f591fc7884391f6032fc0e6c84938cb3086",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+          "sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+          "sha256": "b32ae96c71f5a016077ca5ec29078de9fdfef96c7812d1981b46b7327e72c507",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+          "sha256": "24b1cb583367fbf351f8b3cd0afb98e8252ec5e32e3832ea208561b561de0cf0",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+          "sha256": "cb6fe1081532dedfd7ffab226fb1203ffbfc3432db9dfbb42c7ca2b8f49c5f29",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+          "sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+          "sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+          "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+          "sha256": "cc83a9c059c7ada6b2159f059bc73e193ea5d160d18bc5eada44d8d29d9cda72",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+          "sha256": "3a4048791e9c4cd4a8182f5146a6438f11a5663069df5867a639a7ef2183c34c",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
+        }
+      ],
+      "remaining": "FULL GPU HISTORIC FEATURES, NOT OUT OF BOX! Found Atomic1.6 original native binary b10269 build10709 c044dff24, and atomic17 c99279d98, Atomic2 stock cda0f92, Atomic2 Zen4/LTO, upstream062; features parity preset in tools/qualification/moe_upstream_bakeoff.py. Atomic1.6 HOF Sep11 36.28t/s MTP2 f16 with incomplete flags; upstream Oct02 exact documented fullGPU99 c16384 b1024 ub1024 poll100/0 MTP2 f16 median30.49t/s. Reconstructed common 15-feature preset native supported across all5, tests31 PASS. 16K old+new failed watchdog PSI. 8K exact parity under ARC3GiB cap (restored original4.5GiB) Atomic1.6 completed3/3 math27.8104(code28.0922,FR23.9433)t/s correct math, Atomic2 math27.2461t/s correct but failed watchdog on code/FR (PSI1.83 and MemAvailable23.37GiB); Atomic2 -2.03pct single math only NOT total winner. Need complete Atomic2 and other engines at same settings with stable service-level available RAM, repeat3 times, QA math+compiled Python+strict JSON/tool calling and contexts16-128K. No production promotion. Follow certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md and manifest proof. Native fullGPU8K Pym mmap->none single-parameter alternative directly caused RADV ErrorDeviceLost and memory-not-enough on original Atomic1.6; Atomic2 denied preflight in same mode. Rejected, banned in preflight with unit test. No LXC stopped, no host GPU reboot, original ARC cap restored. Continue only mmap native fullGPU with enough memory headroom and guard; no speed winner yet. 26 Oct HOF-FIRST: Atomic2 2.0 fullGPU Pym MTP2 Turbo4 8K candidate configured from Atomic1.6 HOF 35.20t/s; OFFICIAL preflight blocked 33.095GiB MemAvailable < empirically safe37.31GiB after previous PSI4.61. Zero new GPU tokens; 37/37 harness tests PASS. Do not repeat until memory admission; no backend switching. 26 Oct 14h: RAM MemAvailable~33.7GiB, headroom37.31GiB still absent; GitHub CI+Evidence success commit70954201. Exact FlashNext GGUF discovery does not affect Pym runner threshold. 40/40 targeted offline tests after Flash qualification guard changes. No GPU benchmark and no winner. 26 Oct 15h15 NEW CT410 native HOF-Turbo4 8K preflight block: guard GPU allows 14.35GiB GTT (>=14 required), temp62.625C, swap84.94%, host ~31.993GiB MemAvailable <37.31GiB empirically safe. Immutable moe_upstream_oct26_1515_pym_atomic2_hof_guard.json. 0 outputs. Real host memory pressure averaged PSI.full~7% earlier, no unsafe launch. This is hardware/RAM blocker, not missing HOF flags. 26Oct15:50-16:09: 12 REAL Atomic2 Vulkan Pym35 trials, 11 passed preflight+math925+nonempty, 1 chain3 blocked when PSI high. Immutable per-run CT410 JSON/log. Same-profile ngl8 CPU MoE40 MTP2 f16 winner MoE cache soft mean12.667 tok/s across math/code/fr vs default11.851 (+6.9%); precise report certification/pym35_atomic2_native_sweep_20261026.json. MTP3, MTP adaptive, KV turbo3/turbo4, q8, cache off/soft, 16/24GPU layer offloads, spec-chain2 tested; chain2 mean8.284 (regression). NO fullGPU comparable to HOF 36.28, host 29-32GiB available under pressure, PSI.full avg10 7.26 after later trial. Keep production unchanged. 2026-10-26 16:28-16:44: USER EXPLICITLY REQUESTED FULLGPU; temporary lab-only owner authorization, no production restart, official GPU check & watchdog preserved, exact Pym35 Atomic2 MTP2 ngl99 n-cpu-moe0 c8192 with KV turbo4 tested. Repeated preflights blocked by authentic fluctuating PSI/GTT. When admitted, full GPU weight load reached GTT6.139 GiB plus dedicated VRAM1.992 GiB, BUT memory PSI.full avg10=12.77%, swap used22.861/23.519GiB=97.2%, MemAvailable27.021GiB. Automatic watchdog terminated own worker before decoded outputs (CT410 immutable file moe_upstream_pym35_a2_full_8k_turbo4_recheck_1_1026.json); CT410 memory.events oom=0 oom_kill=0; GPU router & Autosubs healthy. Even without manual builds, host memory/swap are loaded. NO CLAIM OOM happened, only observed near-exhaustion and severe page faults. Relaxing PSI watch further unsafe, not a benchmark. Temporary permissive experimental runner changes REMOVED/restored to original guard thresholds, and CT410 lab runner synced to canonical; official GPU guardian never modified. NO VM/LXC/ARC/PBS disrupted. 2026-10-26 17:02-18:00: User-approved true full GPU (ngl99 n-cpu-moe0), native ggml Atomic1.6/Atomic2/Atomic2 Zen4 LTO exact Pym Q2 MTP. CT410 8G cold file-cache cgroup memory.reclaim (non-destructive), new 16GiB native low-priority zram3 zstd /etc/systemd/zram-generator.conf.d/70-cloud9-fullgpu-zram3.conf (no reboot/service restart), total swap39.5GiB, no OOM. 43 immutable trials, 29 3-task pass; full details certification/pym35_fullgpu_native_qualification_20261026.json. Q8 Atomic2 MTP2 8K 27.852t/s mean over 2 3-task trials; priority1 27.945t/s mean over 3 trials (~0.33%, insufficient evidence significant), Atomic1.6 F16 8K 27.925t/s, Atomic2 F16 8K 26.35t/s. Reconstructed 16K/HOF F16 MTP2 on same prompts Atomic1.6 27.44, Atomic2 27.21: historic Atomic1.6 36.28 not replicated. In matched KV Turbo3 A2 27.11 > Atomic1.6 25.90. New LTO, Turbo2/4, MTP1/3/adaptive, chain, unified KV, no repack, ubatch512, CPU governors/affinity do not improve replicated Q8 baseline. Production unchanged; certification gate remains PARTIAL pending original HOF exact protocol and FlashNext FRspec mapping. GPU guardian protected every run. 2026-10-26 22:25-22:53 additional 19 real owner-authorized Pym35 -ngl99 n-cpu-moe0 GPU trials (15 full 3-task valid) documented certification/pym35_gpu_native_optimizations_20261026.json. Same target Qwen3.6-Pym35-Q2-MTP full AMD780M Vulkan: MTP4/6 lose to MTP2, gating p-min75 loses, force/disable-MMVQ, no-coopmat, no-async lose to default. GPU hardware utilization directly observed 87-95%; paired clock A/B/A auto28.02/high27.67/auto27.97, no confirmed high speed gain; profile_peak timeout during 78C, reverted auto. Matched sustained 3x768 tokens KV-Q8 MTP2 Atomic1.6 mean28.24 t/s vs Atomic2 27.86 t/s; historic HOF Atomic1.6 36.28 remains unreproduced. Same model, different output lengths explicitly distinguished. All guardian safeguards preserved, OOM count0, production router untouched, no engine promotion. FlashNext AD4.27 FRspec reduced 65K/248K d2t incompatibility remains in separate gate. 2026-10-26 23h+ FlashNext exact AD4.27 33 GGUF shards / FR-Spec sidecar 3,639,245,152 bytes inspected: 36 tensors, separate fc_embd/fc_hidden, draft output 65,536 rows vs trunk tokenizer 248,320, I64 d2t[65,536] all distinct and in range (max248069). Isolated Atomic2 source worktree branch lab/qwen4exp-frspec65k-20261026 commit3df182b0 patched split Q8 matrix graph + aliases + native ggml_fill/set_rows scatter; 655 native Vulkan build SUCCESS on CT700, synthetic Qwen4Exp GPU Radeon780M PASS NMSE8.66e-8, CPU PASS. Real FR-Spec GGUF loads tensor metadata successfully; standalone target use initially segfaulted (full gdb stack captured), fixed via graph fail-closed with expected EXIT1 and clear use -md instruction. NOT tested as real target+draft: 94.525GB target plus 3.639GB draft exceeds admitted RAM profile. Do not claim actual FlashNext speed improvement. Native patch + QA traces + manifest in certification/flashnext_frspec_native_qualification_20261026.json. Pym fullGPU Q8 192 new challengers Atomic1.7 26.795 t/s, upstream b11844 25.782 vs Atomic2 baseline27.852; no winner, no promotion. Further direct Vulkan0/Radeon780M GGML SET_ROWS F32 output I64 gather/index scatter operator run: 21/21 correctness versus CPU backend PASS, transcript certification/evidence/2026-10-26/flashnext-f32-i64-setrows-gpu.txt. This proves the native GPU scatter primitive, not the complete real target+draft generation. Production remains unchanged. Historical exact FlashNext safe17.878t/s provenance confirmed from HALL_OF_FAME.json + BENCHMARK_LEDGER.jsonl: 2026-09-15 Cloud9 RDNA Vulkan b10738 commit53f34cfaa, MTP3 AD4.27+FR-Spec GDN disabled, TurboQuant/SET_ROWS/FlashAttention/CPU-WHT. 48 local Git repositories searched for 53f34cfaa/b1ea2c634 and 104 binary/library paths scanned, no original SHA/object/ELF found. Therefore no reproducible exact historic executable or original launch; recovery audit in FRspec manifest. Proper 94.525GB target+3.639GB draft cannot currently be admitted at full GPU in 92GiB total host while production remains on. Current generated patch supports native metadata/backend, does NOT certify live target+draft acceptance or speed. 2026-10-27 01:32: Native Qwen4Exp no-prefetch+lazy PLE35.763GiB+CPU MoE47.168GiB achieved FIRST ACTUAL matched FlashNext AD4.27 33 GGUF shards + real FRSpec65k Q8 MTP3 decoding on Radeon780M, with MTP draft acceptance and math=925. Main and draft ready in ~16s, baseline cold no cache 3tasks mean1.913 t/s; 4GiB native MoE cache2.223; native auto2.546; repeated warm no-cache2.685. Therefore warm cache confounds isolated cache wins: no cache option certified faster. Still far below historic17.878 and user target>20; no prod promotion. Official guardian and CT410 health kept; zero OOM. Complete per-run metrics and logs certification/flashnext_ad427_real_inference_20261027.json; patch cert/patches/atomic2-flashnext-lazy-ple-moe-and-prefetch-20261027.patch. Temporary FRSPEC-LAB tracing source reverted, clean fork commit 0780e182.  2026-10-27 ~01h52: owner GPU experiment --n-cpu-moe44 (4 expert layers from CPU to Vulkan) used GTT11.242GiB but math only1.244t/s; native guardian safely stopped at MemAvailable21.286GiB and memory PSI.full10=12.61; no OOM, no promotion. Full raw evidence certification/flashnext_ad427_real_inference_20261027.json. Working native lab code restores n-cpu-moe48 by default; owner override only in CLI. Warm auto-cache repetition reached 3.057t/s in math but incomplete (PSI.full10=12.13 runtime guard stopped before code), so no qualified mean / no new winner. Current full 3-task best warm cache OFF 2.685. Hist17.878 and goal>20 not achieved. Evidence in Oct27 real inference JSON.  2026-10-27 02h+: researched ggml-org discussion #28248 portable --moe-expert-cache, source memoriaru/llama.cpp 555d1ec; cloned in DEV and validated stand-alone Vulkan test-expert-pool on Radeon780M. Ported 1117 lines 14 files into isolated Atomic2 FR-Spec lab worktree source commit d51a783d atop 0780e182. CMake Vulkan llama-server test-expert-pool and Qwen4Exp test-llama-archs PASS (synthetic graph Radeon780M NMSE8.43e-08, no OOM). Binaries staged CT410 isolated lab. Original source provenance + patch + QA: certification/flashnext_portable_expert_pool_20261027.json. Full AD4.27 33GGUF -md FRSpec actual new portable-pool run NOT authorized by the lab GPU gate: /slots on embedding 8091 reports four simultaneous is_processing=true all times for 30 attempts; no GPU score. Need true uncontended A/B 0/32/64 slots; best validated AD427+FRSpec remains2.685 t/s, historic17.878 target>20 both still unmet. Production untouched. 2026-10-27 03h: NEXT real AD4.27+Q8FRSpec live A/B (same target 33GGUF) native Atomic2 MTP2=1.511t/s full maths/fr/code, MTP5=1.022t/s, matched MTP3 backend sampling BOTH1.598 vs NO1.467 (apparent+9% but noisy, NOT certified gain). Hybrid Atomic2+portable persistent Vulkan pool16 trials1.707/1.677 t/s; same hybrid pool0=1.530; 144 CPU MoE source tensors correctly registered in main, apparent no-offloaded-weight warning solely FRspec draft on Vulkan. Pool32 guard stopped at19.989GiB host MemAvailable, ~9.558GiB GTT; target-only GPU sampling and draft-only GPU sampling separate safely stopped at19.446/19.205GiB available before generation. Final judgment production unchanged; original 2.685t/s warm MTP3 still top in these tests, historic17.878 not reached, >20 not achieved. Exact all run outputs+stops in certification/flashnext_ad427_expert_pool_mtp_sweep_20261027.json. Corrected misleading `draft_depth` JSON duplicate metadata; argv was correct, raw immutable outputs retained.",
+      "acceptance": "hardware guard, lossless/known error budget, reproducible non-inferiority + meaningful gain"
+    },
+    {
+      "id": "C13",
+      "title": "Four role-selected models and FlashNext >20 t/s",
+      "status": "PARTIAL",
+      "scope": "old catalog 8 small+large; Qwen4/miniCPM real; FlashNext still historic 17.878",
+      "evidence": [
+        {
+          "project_path": "Sources/Records/BENCHMARK_LEDGER.jsonl",
+          "sha256": "a57072c3493d80eaba1180e11149201b9352b72e6f1a29e13ff98f7f850f2762",
+          "note": "historic FlashNext 17.878 and older candidates"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "current selected Qwen4 / OpenBMB"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
+          "sha256": "f3b3c0fc70029cb0ed712efb6d68cb4c66cb7be9b8b9dab417353504c22e57cc",
+          "note": "Official Nemotron 3.5 Bolt 74B-A9B/E4B source research; candidates only, no weights downloaded nor GPU benchmark"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
+          "sha256": "5f9ba041a7f654ad7d7f82dd9f15c9d9c42e318adf4891ccb903ad9d30db536e",
+          "note": "Flash-Next historic 17.878 tweaked b10738 MTP3 TurboQuant SET_ROWS CPU-WHT; local different GSQ IQ1M model is NOT matched"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_OFFICIAL_SHA256_PINNED.json",
+          "sha256": "c8d6752f3c8619545c8dbc0189266ff071339226cdb8da56e75f747d7f753ab3",
+          "note": "LiquidAI MoE Q4 exact model official SHA/size trusted download, LAB only not Pym replacement"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
+          "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada",
+          "note": "Original Flash-Next AD427+FR-Spec GGUF not on local model list, alternate GSQ coder present but different quant; targeted tournament priority is Pym then Flash, no LFM substitution."
+        }
+      ],
+      "remaining": "26 Oct 2026 CORRECTION FACTUELLE: modèle cible exact retrouvé sur NVMe RO /srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64, et accessible dans CT410 par mp2 RO. 33/33 GGUF = 94,525,394,976 bytes, manifest pinned AtomicChat SHA c4f844865189c05eeaa05406576a8d7d4931df5c, toutes tailles exactement conformes à tools/benchmarks/flashnext_ad427_hf_manifest_20261022.json. GGUF v3 metadata: architecture qwen4exp, 512 experts, contexte annoncé 262144; sha256 FULL SHARDS NON FAIT, GPU tokens ZERO. Ancien diagnostic 'poids AD427 absents' FAUX et SUPPLANTE. Autre GSQ-RCO IQ1M coder 58.4GB reste distinct et ne doit pas substituer le modèle AD. HOF17.878tok/s correspond Atomic-era RDNA b10738 AD427 avec Q8 FR-Spec 65k MTP3, TurboQuant+SET_ROWS+CPU-WHT et GDN OFF. CORRECTION 14h: sidecar exact mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf maintenant STAGÉ sous FlashNext-AD427/MTP, 3,639,245,152 octets, SHA256 vérifié c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f, version drluoto revision ac875a98457a8effe8fb83de8f3701421f507a24. La recette native HOF MTP3 -md + TurboQuant/GDN/SET_ROWS reste NON CONFIGURÉE et NON QUALIFIÉE; 94.5GB avec 38.4GB SSD-table pages demande environ 54-56GB résidents selon éditeur, > MemAvailable ~33.7GiB hôte, et production doit être préservée. Runner a désormais --model flash_ad427 avec fail-closed distinguant présence poids vs draft+admission RAM. Préflight local oct26_flash_ad427_exact_weights_gate: blocked_preflight [FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED, FLASH_AD427_MEMORY_NOT_ADMITTED], aucun chargement GPU. PRIORITÉ: Atomic2 Pym full-GPU HOF à 37.31GiB headroom, ensuite sidecar FRSpec + admission vraie RAM avant test Atomic2 Flash; puis comparaison séquentielle du prochain moteur. Ne pas retélécharger les 94.5GB déjà présents; ne pas promouvoir et ne pas inférer vitesse. Deuxième préflight immutable oct26_flash_ad427_frspec_staged_gate enregistre sidecar présent/size-pinned mais bloque avant GPU; les poids AD restent SHA256 complet en attente. Répéter uniquement avec la mémoire sûre et les flags HOF validés. 26 Oct 15h: full SHA-256 verified for ALL 33/33 GGUF AD427 files against pinned HuggingFace manifest (94,525,394,976 bytes; manifest AtomicChat c4f84486), offline memory-neutral streaming with nice+ionice, 87.02 sec; not just file sizes. Native Atomic2 b10298 Qwen4Exp lacks reduced-vocabulary d2t wiring. Draft real GGUF header: output.weight vocab65536, token_embd.weight vocab248320, d2t 65536 entries GGML_TYPE_I64(27); Qwen4Exp source loader expects output.weight width n_vocab without d2t and graph_mtp never scatters logits, while generic DFlash does. Consequently direct -md MTP3 would not be compatible until native qwen4exp d2t loader+scatter corrected/compiled/tested. Offline metadata inspector/test added; CT410 immutable flash_ad427_d2t_gate blocked [QWEN4EXP_D2T_SCATTER_UNSUPPORTED_IN_ATOMIC2, MEMORY_NOT_ADMITTED]. Source/format incompatibility PROVEN, zero GPU tokens; do not pretend short output speed. No source kernel change yet, because one engine at a time and Pym priority. ",
+      "acceptance": "per role latency, quality and useful context proven on the target device"
+    },
+    {
+      "id": "C14",
+      "title": "OmniRoute Dify n8n Paperclip end-to-end",
+      "status": "PARTIAL",
+      "scope": "OmniRoute provider active; combo unchanged, no agent-level end-to-end tests",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_LOCAL_AGENTS_READINESS_OMNIROUTE_NATIVE.md",
+          "sha256": "a83ce191d08b110433dfe77b5943b165e318b69a1ef24d11dd114a6d0f288c4b",
+          "note": "active native provider 8090 and 4-small-model Cloud9-Engine combo"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_0215_OMNIROUTE_ROUTER_READONLY_AUDIT.json",
+          "sha256": "f2fb15f84058b8c32a13c6b49f1f3282d3de0dee5baae4c33f2d4395084527d2",
+          "note": "Verified active OmniRoute llama-cpp connection, unchanged 4-model Cloud9-Engine priority combo and separate 9-model CT410 catalog; no live Dify/n8n/Paperclip task certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C14_STATIC_NATIVE_AGENT_SERVICES_AUDIT.json",
+          "sha256": "1fcb679147f67a5f3c563ea0c7fa141ade5f75d328716b4b3067eaab6526c899",
+          "note": "Native real health/provider mapping read-only; C14 E2E still unverified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
+          "sha256": "3c5127998a12d54231a489554a8c5440a4acb3f0e403f3e864fd6801002a4b8c",
+          "note": "Actual OmniRoute authenticated model enumeration HTTP200, model absent from all 3 clients; no secrets captured"
+        }
+      ],
+      "remaining": "Static native provider/agent services healthy, but live authenticated OmniRoute model enumeration: Chimera Qwen4 LAB NOT visible to Omniroute Master, N8N, IA CLI (HTTP200, 2541 IDs, 21 existing Cloud9 IDs). Must publish opt-in model via supported native provider-model management API (not SQLite), then validate OpenAI-compatible direct call via OmniRoute and real Dify/n8n/Paperclip multi-step workflows, permissions, fallback, rollback. Preserve existing 4-model Cloud9-Engine stable combo.",
+      "acceptance": "real 2-3 step agent tasks and concurrent operation, explicit tool profiles and API privileges",
+      "observed_2026_10_25": {
+        "omniroute_llama_cpp_provider_active": true,
+        "default_combo_model_count": 4,
+        "ct410_catalog_model_count": 9,
+        "chimera_not_in_default_combo": true,
+        "end_to_end_agent_calls_certified": 0
+      }
+    },
+    {
+      "id": "C15",
+      "title": "Controlled v1 release default / rollback and live monitoring",
+      "status": "NOT_RUN",
+      "scope": "experimental chimera deliberately opt-in LAB only",
+      "evidence": [
+        {
+          "project_path": "Sources/Worklogs/2026-10-24_2358_CHIMERA_ENGINE_OPENBMB_LIVE.md",
+          "sha256": "26d83772a301a5f3e86d5698cf74bf6b7b12b261a8f36d0fb16d43337489fdfa",
+          "note": "versioned optional release and pre-change backup"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_HARDWARE_ENGINE_SELECTION_MATRIX.json",
+          "sha256": "45d407bbb8fe9332fa3978c9d6a55e53160f67398d10e8db499dbb2a79c98613",
+          "note": "Evidence-based winner decision: Atomic2 faster 16K but historical coding/JSON fails; full product unqualified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0023_ENGINE_WINNER_QA_FAIL_CLOSED.md",
+          "sha256": "86cff1d4c0b1ef4cb583f43b4f6a15165a32f9bc80ec8caecf67ede3e5ea6ffb",
+          "note": "Read-only hardware winner summary and safety/qualification gates; no production cutover"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0032_HALL_OF_FAME_ENGINE_CERTIFICATION_AUDIT.json",
+          "sha256": "3b690e9860b0334956bbed75c40f72299fd3202f1c3b0a004f7389c99dc55976",
+          "note": "HOF canonical 195 records, two immutable current GPU agentic sources, validated"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+          "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa",
+          "note": "No new MoE winner; upstream Pym preflight blocked, Flash-Next historical GGUF missing, stable production unchanged"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
+          "sha256": "a2a4a2b79d96dad30dad365ac114a23ba7b8df443bb2d0f45f3b819590e8880b",
+          "note": "No winner under host PBS memory/IO pressure, real Pym loads but watchdog before inference; LFM A/B staged"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_LFM_Q4_REAL_GPU_SPEED_WITH_QA_BLOCKED.json",
+          "sha256": "7226e97091f326cc92e3f0bc2ec93a3d8d33135324bc412a2abf55ca3e968380",
+          "note": "Hardware same-GGUF 22.13pct math speed edge for Atomic2 but zero visible final, no release"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
+          "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada",
+          "note": "Pym and Flash tournament matrix created: one GGUF per engine, feature-parity or explicit port unavailability, long-context quality safety before production"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+          "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a",
+          "note": "New benchmark runner patched for exact Pym Heretic + 3 engines, MTP1/2/3/adaptive, fail-closed embedding slots; 24 unit tests pass; current host GTT/memory/IO denies actual Pym"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+          "sha256": "4263dc7c335b41cc005f7b81a714d07c831275851b333dd92720478e166240dd",
+          "note": "Native metadata no-reread proven production LXC; unrelated to MoE winner still pending"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+          "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4",
+          "note": "Core protected backups preserved while staged metadata lowers disk contention for fair MoE benchmarks"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+          "sha256": "93d60d86d9b2aa9caff19a0c1b57338526a11a3f3163afc5ac8695713db67588",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+          "sha256": "643721bdbc24fca554de5c9225110c52337e5cce4b5721f1a5e825cb0e48559f",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+          "sha256": "fc8b55475f0df10bdcedbc2d9b10dd28bbd3271216fbe15875043c69d0094ae0",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+          "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713",
+          "note": "Real same GGUF Pym35B partial-GPU and guard-separated attempts, quality protocol limited"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+          "sha256": "e5bb3b495de22ca5170cb26b6341dfca9ea72f0db5b194d71d465ff87e8deed6",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+          "sha256": "fce6a22fbd1cea8a98cd79fd2f42e16d8a901296fa66831b5b2935d38aadbcc9",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+          "sha256": "4696db4e62a9cb4ae575bb25d759715a8c98dc786d72bece65aa1c85ac6eacd7",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+          "sha256": "b81bccca58c9e456d68cb821d7e612cddbc9826701a22eb6bffa4f6b9771e3ed",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtp1_192_1026.json",
+          "sha256": "b131af981461616789986eeceeb01f7d15d8413351774844849e16944ea3c774",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
+          "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625",
+          "note": "26 Oct: native DaVinci daily and same-Pym Atomic2 spec-depth proof, no production promotion"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+          "sha256": "0b12cf60f1083871436840ca7cff1f591fc7884391f6032fc0e6c84938cb3086",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+          "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+          "sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+          "sha256": "b32ae96c71f5a016077ca5ec29078de9fdfef96c7812d1981b46b7327e72c507",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+          "sha256": "24b1cb583367fbf351f8b3cd0afb98e8252ec5e32e3832ea208561b561de0cf0",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+          "sha256": "cb6fe1081532dedfd7ffab226fb1203ffbfc3432db9dfbb42c7ca2b8f49c5f29",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+          "sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+          "sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+          "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741",
+          "note": "26 Oct HOF-first exact original Atomic1.6 binary vs Atomic2 identical Pym MTP2 f16 full GPU; 16K failed PSI; 8K original completed3/3 vs new math-only before guardian; no speed winner certified"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+          "sha256": "cc83a9c059c7ada6b2159f059bc73e193ea5d160d18bc5eada44d8d29d9cda72",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
+        },
+        {
+          "project_path": "Sources/Worklogs/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+          "sha256": "3a4048791e9c4cd4a8182f5146a6438f11a5663069df5867a639a7ef2183c34c",
+          "note": "Single native load-mode ablation in same Pym fullGPU setup failed on Atomic1.6 RADV ErrorDeviceLost, Atomic2 not admitted, safe preflight ban added; no throughput claimed"
+        }
+      ],
+      "remaining": "GPU full 8K parity on original Atomic1.6 successful 3 output / correct math. Same Pym fullGPU8K Atomic2 only math completed (-2.03pct in one math sample), watchdog stopped rest. Cannot claim engine winner until complete matched runs and quality; no production promotion. Temporary ZFS ARC3GiB only while benchmarking, restored to original4.5GiB each time, no guest stopped. Durable protocol and evidence committed; three newer engines await equal-feature score; candidate tweaks after winning baseline only. Hardware fail closed: native Pym fullGPU load mode none caused ErrorDeviceLost original Atomic1.6 (no scored prompts); automatically reject this precise variant until manually investigated; production router and embedding confirmed healthy. No production LLM promotion. HOF-first order changed: ONE engine Atomic2 2.0 -> Pym, Flash-Next with same model, then next promising current upstream. No parallel source builds or promotion until both actual GGUFs safely tested; stable production unchanged.",
+      "acceptance": "published tag/release, observable health/p95, canary auto rollback, user can select it natively"
+    }
+  ],
+  "hall_recent_record_ids": [
+    "2026-10-25:cloud9-native-chimera-master9ae-vulkan:Qwen4-2K-native-strict-tool",
+    "2026-10-25:openbmb-minicpm5-2b-heretic-Q6K-dspark:live137tokens",
+    "2026-10-25:chimera-master9ae:qwen4-8k-five-needle-partial-2of3",
+    "2026-10-25:chimera-master9ae:qwen4-agentic-checkpoint-1of36"
+  ],
+  "source_integrity_update": "HALL_OF_FAME 192 records and 1344 evidence, native validator PASS; 8K two successful seeded cases and one real checkpointed tool case added, neither full C08 nor C09 certified.",
+  "latest_attempt_note": "26Oct2026 ~11:38 Paris: CORRECTED historical-feature-first MoE tournament. Original Atomic1.6 c044dff24 recovered, 31+ tests parity. True fullGPU Pym MTP2 KVf16 8K Atomic1.6 math27.8104/code28.0922/FR23.9433 tok/s 3/3 valid visible, original Atomic2 same feature only math27.2461tok/s (-2.03% one sample) then guardian PSI1.83 aborted. 16K both failed fullGPU guardian; no engine winner yet. Safe transient ZFS ARC cap3GiB to gain headroom always restored to original4.5GiB (3 attempts, confirmed). One native ablation -lm none vs mmap led Atomic1.6 RADV vk::Queue::submit ErrorDeviceLost (zero scored); Atomic2 denied preflight. Source runner now REJECTS fullGPU Pym nonmmap ahead of GPU, 33 unit tests. CT410 router/embedding active, no guest stops, no production promotion. Proofs and full protocol certification/PYM_ENGINE_HISTORICAL_FEATURE_PARITY_PROTOCOL.md.",
+  "repo_proof_snapshots": [
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_1OF3_VERIFIED.json",
+      "sha256": "db5678ef0ada0a03817514eced77a47b31128e036d216d8c6f191e56bcbc8d5b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_2OF3_VERIFIED.json",
+      "sha256": "68f81916c490c4c6091029175dfdb5a3183dbea7aee4d857f6be0f2555237c80"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_1OF36.json",
+      "sha256": "77c87809f07171664d7a8af0951c95d5b2667a3cd863e37f97b80b5b0d3f3c8b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/qwen4-8k-two-passes.json",
+      "project_path": "Sources/Records/2026-10-25_CHIMERA_CONTEXT_AND_TOOLS_HOF/qwen4-8k-two-passes.json",
+      "sha256": "adf3938ada1e934ea62d03d63634bb2523b32aca3a11b184c39b4e8356cab7c2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/qwen4-agentic-one-case.json",
+      "project_path": "Sources/Records/2026-10-25_CHIMERA_CONTEXT_AND_TOOLS_HOF/qwen4-agentic-one-case.json",
+      "sha256": "212657c08e9ac6290e2148d60b967bb170ae66f46c62fde7c1bd9f03e66c5604"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_0125_CHIMERA_8K_TWO_PASSES_AGENTIC_CHECKPOINT.md",
+      "project_path": "Sources/Worklogs/2026-10-25_0125_CHIMERA_8K_TWO_PASSES_AGENTIC_CHECKPOINT.md",
+      "sha256": "ca604a76d28ad34ddf1fea307ed15ab320ed76e532cf34a496a636a0dad52764"
+    },
+    {
+      "repo_path": "tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch",
+      "project_path": "Sources/Builds/cloud9-chimera-nextn-revert-20261025/nextn-reserve-regression-revert-only.patch",
+      "sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/nextn-revert-lab-ct410-provenance.json",
+      "project_path": "Sources/Builds/cloud9-chimera-nextn-revert-20261025/ci-run-40144538324/native-nextn-revert-vulkan-lab/PROVENANCE_LAB.json",
+      "sha256": "fe4378e522684b48308f4e71678e284e6165e927252b0066eae463f55a663307"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
+      "project_path": "Sources/Worklogs/2026-10-25_0210_NEXTN_VULKAN_CI_REAL_ELF_STAGE.md",
+      "sha256": "faa396b03cc6f62ec35bc0b2e18dd0344d076e631fc342296a3f7782b14f55df"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/omniroute-native-model-route-readonly-audit.json",
+      "project_path": "Sources/Worklogs/2026-10-25_0215_OMNIROUTE_ROUTER_READONLY_AUDIT.json",
+      "sha256": "f2fb15f84058b8c32a13c6b49f1f3282d3de0dee5baae4c33f2d4395084527d2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_MASTER9AE_8K_REP3_SAFETY_STOP.json",
+      "sha256": "d928ff4a16ee430a530d52ec0d25730e729eb1175946bb01d910917d597b1d4c"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_0214_C08_REP3_NOT_EXECUTED_AFTER_GUARD.md",
+      "project_path": "Sources/Worklogs/2026-10-25_0214_C08_REP3_NOT_EXECUTED_AFTER_GUARD.md",
+      "sha256": "c6148a3ad6c4a366ce904c0bcc8ad90152354bf844b4272a560c46d33b459525"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_2OF36_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_2OF36_VERIFIED.json",
+      "sha256": "3c4abf676cb4876f4a938c39794529494ae696f1339362a1da00aff9791eb89a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_QWEN4_8K_TURBO3_VULKAN_FAILED.json",
+      "sha256": "f4c371bf851ed8a04a50964950cc270d8e5b7a3aa7ab1d81c905bac1bd9b164e"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
+      "project_path": "Sources/Worklogs/2026-10-25_1733_ENGINE_CERT_C09_TURBO3_NEMOTRON_REVIEW.md",
+      "sha256": "f3b3c0fc70029cb0ed712efb6d68cb4c66cb7be9b8b9dab417353504c22e57cc"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_1745_IMMUTABLE_TRIAL_HARNESS_GUARD.md",
+      "project_path": "Sources/Worklogs/2026-10-25_1745_IMMUTABLE_TRIAL_HARNESS_GUARD.md",
+      "sha256": "8b4190dbc3ba10fa8f22f4c1feaac5f7e564ca304bc920d0aea61f2349862de2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_TURBO3_POLICY_DENIED_NO_INFERENCE.json",
+      "sha256": "e84618c2a84ca8d91cdc9d31d84a269251ec0c9dadf91decbfd08203125235c4"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_28OF36_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_28OF36_VERIFIED.json",
+      "sha256": "89f90668fffd06fcf3d6f17c5d944e0b3ce719556be7b626d197e59001b32b59"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2115_C09_CHECKPOINT_28_OF_36_REAL_GPU.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2115_C09_CHECKPOINT_28_OF_36_REAL_GPU.md",
+      "sha256": "2ee1b56b27f4f4e3b78fd3a860a6faae0e05382102c649ffc1f1a5d8f5ab161f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2125_C10_CONCURRENCY_HARNESS_PREPARED.md",
+      "sha256": "99b6e4751822aa59280422b8d81de309cb77c445b6f0a62c144665cc48d97f16"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2135_C08_MEMORY_PREFLIGHT_SAFE.md",
+      "sha256": "dd9851f373f8a22bd9ef6b417889b1af01da222a300dc1beb1d2b3e96da4e74b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C11_HOST_IO_ZRAM_PRESSURE_OBSERVED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C11_HOST_IO_ZRAM_PRESSURE_OBSERVED.json",
+      "sha256": "356b6c45bb2c3008eefa40945d9ae1c1880876079999750f2e33b4b5f2803fcd"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2140_C11_RESOURCE_BLOCKER_DIAGNOSIS.md",
+      "sha256": "f87c5a86f3343d881cbc20e713c648733af1c0631bf0511c7c82125876a0fd6e"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C09_CHECKPOINT_36OF36_VERIFIED.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C09_CHECKPOINT_36OF36_VERIFIED.json",
+      "sha256": "bfbc0a2eccf4da8d029b5cbb60c73b47b2f67c6d5951437878ef90f02882ab7f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2200_C09_36OF36_AND_NATIVE_ZRAM2.md",
+      "sha256": "67bac6a8cbb161fa412e42c901d2d03b222356178803209ffdd21797c8cd29a2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
+      "project_path": "Sources/Worklogs/2026-10-25_C11_NATIVE_ZRAM2_CONFIG.conf",
+      "sha256": "8f9cee897f3022f5f9204a8570b4928dbe36e8f46d64ae96533172c865deccbe"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2205_C08_ZRAM2_CONDITIONAL_GPU_ADMISSION.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2205_C08_ZRAM2_CONDITIONAL_GPU_ADMISSION.md",
+      "sha256": "6445ce92205c8937b3c5d69274917d12577aab7bde833f0c445d839151a32dd2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_CHIMERA_C08_8K_SEED3_SUCCESS_ZRAM2.json",
+      "project_path": "Sources/Worklogs/2026-10-25_CHIMERA_C08_8K_SEED3_SUCCESS_ZRAM2.json",
+      "sha256": "e9cc679e9fa2a18feb48b3bcf5b2775347ac52fa99ee1ce3367355f521e8a075"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2210_C08_NATIVE_8K_3OF3_PASS.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2210_C08_NATIVE_8K_3OF3_PASS.md",
+      "sha256": "cea5947fa2d81de9018a072ee6a40e17ef0b13d0316d6ddc584752533f933713"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C10_CAPACITY_1OF42_PSI_STOP.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C10_CAPACITY_1OF42_PSI_STOP.json",
+      "sha256": "99a9623b056c334e7518eb79ed45f125897c45256a10592a127bff2d77761009"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2220_C10_RESUMABLE_GROUPS_GUARD_COOLDOWN.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2220_C10_RESUMABLE_GROUPS_GUARD_COOLDOWN.md",
+      "sha256": "301feb6b502b4f4ac5839e55eef9fac86e238c785760b028a4cbe55a827e1486"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C14_STATIC_NATIVE_AGENT_SERVICES_AUDIT.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C14_STATIC_NATIVE_AGENT_SERVICES_AUDIT.json",
+      "sha256": "1fcb679147f67a5f3c563ea0c7fa141ade5f75d328716b4b3067eaab6526c899"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2230_C10_POSTLOAD_AND_C14_AGENT_HEALTH.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2230_C10_POSTLOAD_AND_C14_AGENT_HEALTH.md",
+      "sha256": "f932904e2f65aaf018c92e350fb04b67e68b6e3149267eb36f7353d788950355"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C10_NATIVE_CLIENT_QUEUE_42OF42_PASS.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C10_NATIVE_CLIENT_QUEUE_42OF42_PASS.json",
+      "sha256": "593877e6854bd4080e0eb8f8fe9f82e348d77c0fcd57602c9fcdaae74783c492"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2300_C10_42OF42_ONE_NATIVE_SLOT.md",
+      "sha256": "da1e0b413fbc5b82fcd3f76700e7c427249075c99083242cd16345c7178dc9a0"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C08_NATIVE_16K_WATCHDOG_FAIL_NO_SCORE.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C08_NATIVE_16K_WATCHDOG_FAIL_NO_SCORE.json",
+      "sha256": "0991f95f197a4d25a41de20dd2d3f893e33ad99c4754796a4bc1a9328fa03daf"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2310_C08_16K_STOP_CPU_IO_PSI.md",
+      "sha256": "00b1e4a6fc26d5d88b899cfb06cd46ab8187de55b0fadd9036406b9c0b47f6d3"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2320_C08_Q8_PREFLIGHT_AND_C14_VISIBILITY.md",
+      "sha256": "1e2878a1b3fbfa623ef3fd474d6cb17cc58503461ff0f3ceefd7335b5541a1f1"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
+      "project_path": "Sources/Worklogs/2026-10-25_C14_OMNIROUTE_LIVE_AUTH_MODEL_VISIBILITY.json",
+      "sha256": "3c5127998a12d54231a489554a8c5440a4acb3f0e403f3e864fd6801002a4b8c"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_QWEN35_4B_REAL_GGUF_LONG_CONTEXT_CAPABILITY.json",
+      "project_path": "Sources/Worklogs/2026-10-25_QWEN35_4B_REAL_GGUF_LONG_CONTEXT_CAPABILITY.json",
+      "sha256": "184ad9ed09cd0dfb991dc0168cef70e40c54f4eadbdadee6f275c97ce4e0cf59"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2340_LONG_CONTEXT_TARGET_128K_QA.md",
+      "sha256": "a36a1b2bf31ae1546f6bf8d4e2312ee3d7d04e5d3920560a7563041739ba4368"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_AGENTIC_CONTEXT_32K_64K_128K_PREFLIGHT.json",
+      "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_CONTEXT_32K_64K_128K_PREFLIGHT.json",
+      "sha256": "dba520829f059f56049d577185b1b8b83515004f01b40865ef0bca178e4d519f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_AGENTIC_128K_NEEDLE_FIXTURE_DISTRIBUTION_CPU.json",
+      "project_path": "Sources/Worklogs/2026-10-25_AGENTIC_128K_NEEDLE_FIXTURE_DISTRIBUTION_CPU.json",
+      "sha256": "d0bc885bb1a3bc0ba6723fd1574635c0cf87550f1eca23e6f9144d34162911ce"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-25/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
+      "project_path": "Sources/Worklogs/2026-10-25_2350_CONTEXT_PBS_CONTENTION_HANDOFF.md",
+      "sha256": "c3337b392028aea9e53763305eb2dbe2c829f22469ac63ceb4abc57b3bf606ac"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_C09_CHECKPOINT_FIRST_2OF36.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_C09_CHECKPOINT_FIRST_2OF36.json",
+      "sha256": "a667f115fbb1f8cc63c83c39ec6fe2f7a4a0b7edee2447efc7597a4b16bb6739"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_EXACT_ENGINE_STAGED_LAB.json",
+      "sha256": "4a2324729c6dade899d335c47628f97948d11df18ff101e50c7d89490100d3d6"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_HARDWARE_ENGINE_SELECTION_MATRIX.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_HARDWARE_ENGINE_SELECTION_MATRIX.json",
+      "sha256": "45d407bbb8fe9332fa3978c9d6a55e53160f67398d10e8db499dbb2a79c98613"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0023_ENGINE_WINNER_QA_FAIL_CLOSED.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0023_ENGINE_WINNER_QA_FAIL_CLOSED.md",
+      "sha256": "86cff1d4c0b1ef4cb583f43b4f6a15165a32f9bc80ec8caecf67ede3e5ea6ffb"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_C09_CHECKPOINT_3OF36_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_C09_CHECKPOINT_3OF36_WATCHDOG.json",
+      "sha256": "5eafcc4ca01b9fc04a1468c2d5e240530156a5f7d320c2b7aa5d0d7d8bb37e9c"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0032_HALL_OF_FAME_ENGINE_CERTIFICATION_AUDIT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_0032_HALL_OF_FAME_ENGINE_CERTIFICATION_AUDIT.json",
+      "sha256": "3b690e9860b0334956bbed75c40f72299fd3202f1c3b0a004f7389c99dc55976"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0032_ATOMIC2_READINESS_AND_PBS_WATCHDOG.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0032_ATOMIC2_READINESS_AND_PBS_WATCHDOG.md",
+      "sha256": "2040ce3541d28a0aa8c628fbb1d5a3e8ec64e92401bffcea3f59c9c2ced890ff"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_MODEL_PROVENANCE_AND_AB_PROTOCOL.md",
+      "sha256": "5f9ba041a7f654ad7d7f82dd9f15c9d9c42e318adf4891ccb903ad9d30db536e"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_UPSTREAM_PYM_FLASH_FAILCLOSED_PREFLIGHT.json",
+      "sha256": "6bb7ab208ac3e0e658ab7eb1561e5cdb6cf1784ea50124675f6c441dbf84d3aa"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_PYM_PARTIAL_NGL8_LOAD_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL8_LOAD_WATCHDOG.json",
+      "sha256": "54ade11608068f1b7d09260003db0d5fe0d509d38aa8599941dd21af7e0deab8"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_PYM_PARTIAL_NGL4_LOAD_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_PARTIAL_NGL4_LOAD_WATCHDOG.json",
+      "sha256": "6e3571c24b23190798d3e75c61683e8b5cdd5414469d4449296faedbd4595654"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_B11844_REAL_LOAD_PAUSED.json",
+      "sha256": "53db027ce3b173a1e59a830a1b23954c4841fad4fcaec5e6dcb4f511d41eae29"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_UPSTREAM_IO_PREFLIGHT_DENIED.json",
+      "sha256": "df5547bed6526456f1ca63c0215f2d49bde16bcec015c364942a26774139d9ff"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM25_Q4_OFFICIAL_SHA256_PINNED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM25_Q4_OFFICIAL_SHA256_PINNED.json",
+      "sha256": "c8d6752f3c8619545c8dbc0189266ff071339226cdb8da56e75f747d7f753ab3"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0200_MOE_PYM_LOAD_RESOURCE_AUDIT.md",
+      "sha256": "a2a4a2b79d96dad30dad365ac114a23ba7b8df443bb2d0f45f3b819590e8880b"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_256_THINKING_NO_FINAL.json",
+      "sha256": "4e27a07816f21cbf4a864feb8513118dd0ffe4dcfa81ba5966ff10dd22bd0c5d"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_256_THINKING_NO_FINAL.json",
+      "sha256": "7e66bda24f80d06fdffe7232d6d858ba0065486688af7b56dd4db30f82c53c55"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_ATOMIC2_THINK0_WATCHDOG.json",
+      "sha256": "3813e2640395c8b956acca0c48498c68f7a620fe6ea39ef64b6d73cf326ee08a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_UPSTREAM_THINK0_WATCHDOG.json",
+      "sha256": "05e35855075a06d49769fbbef79012739e95664e1cb2edbf54e32b7f760d0e24"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_LFM_Q4_REAL_GPU_SPEED_WITH_QA_BLOCKED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_LFM_Q4_REAL_GPU_SPEED_WITH_QA_BLOCKED.json",
+      "sha256": "7226e97091f326cc92e3f0bc2ec93a3d8d33135324bc412a2abf55ca3e968380"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_EMBEDDING_BUSY_ROUTER_SAFETY_DEPLOYED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_EMBEDDING_BUSY_ROUTER_SAFETY_DEPLOYED.json",
+      "sha256": "6e5afa2ba9bfe4e6dd1a83308b8e4a3b2c2e3b816a47d768bddaadcb6f293349"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
+      "project_path": "Sources/Worklogs/2026-10-26_0240_MOE_ATOMIC2_UPSTREAM_EMBEDDING_SAFETY_HANDOFF.md",
+      "sha256": "f98745a7cd2ffb42012ea70675263d4c1ee273d793ab8b87a42ab31a56144180"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_LFM_Q4_OUTPUT_VISIBILITY_AND_COLD_START_CORRECTION.json",
+      "project_path": "Sources/Worklogs/2026-10-26_LFM_Q4_OUTPUT_VISIBILITY_AND_COLD_START_CORRECTION.json",
+      "sha256": "6073d969ca879109afd1c42257df646d39f6c18451aba607a8390e5995149ed2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
+      "project_path": "Sources/Worklogs/2026-10-26_MOE_PYM_FLASH_REAL_PRECHECK_FEATURE_PARITY.json",
+      "sha256": "24fd2fe884bb971693dffa44fe41f2fc3ba652ddaed3bac8f80810a2b84afada"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ATOMIC2_ZEN4_LTO_NATIVE_BUILD_STAGED_410.json",
+      "sha256": "6831ae1dfe41e7e34c9337437f5498ca3a44cb70ac9b40ad2897685ba8d0e519"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_ATOMIC2_LTO_PRECHECKS.json",
+      "sha256": "742449bde872cb0cfbc0f33e218451d65cd4c607adbaa6a0a1417a468034f37a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_VERIFY_PAUSE_RESTORE_BACKUP_DIAGNOSIS.json",
+      "sha256": "0293e6c6d26bf3e960d42d5ea26f4fa38e5851403fbb4f65c7fa99065ce39897"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+      "sha256": "6909d891151be89ed613e31dd5daaea30da8c50f8b2dd961ec46c7a5067eca04"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_NATIVE_RETENTION_VERIFY_POLICY_APPLIED.json",
+      "sha256": "0c19af249f8b066fda52ead34dfd6155ee2d43a9b4c434646f5f08e9733a44bb"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CT110_PVE_METADATA_TWO_RUN_REAL_PROOF.json",
+      "sha256": "4263dc7c335b41cc005f7b81a714d07c831275851b333dd92720478e166240dd"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PVE_METADATA_PHASE1_BEFORE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_BEFORE.json",
+      "sha256": "c1df9ad578e42d9293ebe3ccc9768b87f1fd673a9baf24510a075a7b790f4c78"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PVE_METADATA_PHASE1_APPLIED.json",
+      "sha256": "622a56c349002b8a378a2fd84affd9d0913075a77dbd6e0a5deb7f4b34dd08d4"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_REHAB_REDUNDANT_TIMER_REDUCTION.json",
+      "sha256": "7bb0e3bde089a9e3e09e9570543428a5b25aa05daae104435538efbb3648e580"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PBS_TWO_MISSING_CHUNKS_FORENSIC.json",
+      "sha256": "077bc325e4d10a17b3e5e6191d6b00541a31cea60ab756659dee0048a8d2fa5f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_FULL_GUEST_MEMORY_AUDIT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_FULL_GUEST_MEMORY_AUDIT.json",
+      "sha256": "0c12dfc30f47c167217b25bcf3c8e9c18d11b49954c1aec5928d446cabdd41eb"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_ALL_GUESTS_SERVICE_TIMER_AUDIT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_ALL_GUESTS_SERVICE_TIMER_AUDIT.json",
+      "sha256": "b1be8a8bef9055aa8fe632b24c5d3c290061a584e010caea741268180ccb91b8"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_SERVICE_LEVEL_ONLY_AUDIT_PYM_HARDWARE_NOTE.json",
+      "sha256": "1dda1621a376049e1b21f509f19bae164d397ec6e2c0eb7b667eadd282610a2a"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_THREE_WAY_REAL.json",
+      "sha256": "ca984de26195d4db951a28fdb6171ad5146ebd1e643f5a17b2d4628b586d56b2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
+      "project_path": "Sources/Worklogs/2026-10-26_HOMEPAGE_ACTIVITY_NATIVE_TIMER_120S.json",
+      "sha256": "2e93872fb703fcdaac0d7004c314b92b27650d767194821a39d27759d4b106d2"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CT300_DAVINCI_FONT_PATH_STORM_NATIVE_TIMER.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CT300_DAVINCI_FONT_PATH_STORM_NATIVE_TIMER.json",
+      "sha256": "2267425cb0f72b7c3010b1c37360295cb754d73627e76128d21659ed38bde616"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_ZFS_REHAB_COLLECTOR_COMPLETED_STOP.json",
+      "project_path": "Sources/Worklogs/2026-10-26_ZFS_REHAB_COLLECTOR_COMPLETED_STOP.json",
+      "sha256": "9693920a300f068c46efb998670fa0bd462f933ef8d711bd4149c389fbddaeba"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_DAVINCI_GPU_ARBITER_TIMER_SANE_10S.json",
+      "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_GPU_ARBITER_TIMER_SANE_10S.json",
+      "sha256": "7a8d80348325fb5e8508b8a1a51f07b63b4eea8f0d9381e0cd0316c8e30c3c6d"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_DOCKER_HEALTHCHECK_NATIVE_COMPOSE_TUNING_STAGED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_DOCKER_HEALTHCHECK_NATIVE_COMPOSE_TUNING_STAGED.json",
+      "sha256": "76ed0a42a93e7b01e4b9cbb943eb02e6d8dad68a1e5d23d29ef2f6c5b7cfc5b3"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
+      "project_path": "Sources/Worklogs/2026-10-26_CLOUD9_SERVICES_SANITIZED_SUMMARY.json",
+      "sha256": "bf510f2da04f4f95a7cbec512d4350d42985853d5121277c5c3461ade5fcab6d"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_BASE_PARTIAL_3OF3_REAL.json",
+      "sha256": "93d60d86d9b2aa9caff19a0c1b57338526a11a3f3163afc5ac8695713db67588"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_192TOKEN_NATIVE_ENGINES.json",
+      "sha256": "643721bdbc24fca554de5c9225110c52337e5cce4b5721f1a5e825cb0e48559f"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MATCHED_NO_MTP_192_ENGINES.json",
+      "sha256": "fc8b55475f0df10bdcedbc2d9b10dd28bbd3271216fbe15875043c69d0094ae0"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_LTO_VS_STOCK_192.json",
+      "sha256": "b64e59f842e07a88f1a84a3208b1b38ac93f56888817c7f6b783774f34dbb713"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_DAVINCI_ASSETS_DAILY_PLUS_PREJOB.json",
+      "project_path": "Sources/Worklogs/2026-10-26_DAVINCI_ASSETS_DAILY_PLUS_PREJOB.json",
+      "sha256": "8aba320d55cfd41ee0adbe3d39ca2b5345aaa1c7103a9c7154c76e85d9dd1a98"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_PARTIAL_3OF3_NATIVE.json",
+      "sha256": "e5bb3b495de22ca5170cb26b6341dfca9ea72f0db5b194d71d465ff87e8deed6"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MTP3_REAL_EVIDENCE.json",
+      "sha256": "fce6a22fbd1cea8a98cd79fd2f42e16d8a901296fa66831b5b2935d38aadbcc9"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_UPSTREAM_RETRY_REAL_EVIDENCE.json",
+      "sha256": "4696db4e62a9cb4ae575bb25d759715a8c98dc786d72bece65aa1c85ac6eacd7"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC2_MTP2_VS_MTP3_EQUAL_PROTOCOL.json",
+      "sha256": "b81bccca58c9e456d68cb821d7e612cddbc9826701a22eb6bffa4f6b9771e3ed"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/pym35_atomic2_mtp1_192_1026.json",
+      "project_path": "Sources/Worklogs/pym35_atomic2_mtp1_192_1026.json",
+      "sha256": "b131af981461616789986eeceeb01f7d15d8413351774844849e16944ea3c774"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/pym35_atomic2_mtpadaptive_192_1026.json",
+      "project_path": "Sources/Worklogs/pym35_atomic2_mtpadaptive_192_1026.json",
+      "sha256": "2e16879f2122681943ad35d34a4fd67feb9c75e0cdcf2a3927978a45e8625625"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_HISTORICAL_FEATURE_PARITY_MANIFEST.json",
+      "sha256": "0b12cf60f1083871436840ca7cff1f591fc7884391f6032fc0e6c84938cb3086"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ATOMIC16_FULL_PARITY_RUN.json",
+      "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC16_16K_NATIVE.json",
+      "sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_ATOMIC2_16K_NATIVE.json",
+      "sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_16K_NO_WINNER_DUE_MEMORY.json",
+      "sha256": "b32ae96c71f5a016077ca5ec29078de9fdfef96c7812d1981b46b7327e72c507"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_ARC_NATIVE_SAFE_8K_PARITY_A_B.json",
+      "sha256": "24b1cb583367fbf351f8b3cd0afb98e8252ec5e32e3832ea208561b561de0cf0"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_ATOMIC2_ARC3G_FULL8K_SECOND_WINDOW.json",
+      "sha256": "cb6fe1081532dedfd7ffab226fb1203ffbfc3432db9dfbb42c7ca2b8f49c5f29"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC16_COMPLETE.json",
+      "sha256": "06bf8f40b91daa63cce01c379cf06957f75d6a3338b4d04af9124d3be89a44f5"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM_FULL_PARITY_8K_ATOMIC2_PARTIAL.json",
+      "sha256": "ed92195e0bb72c2076e671f0e79346bb18ffe195981188aaa52cbf31bdaf6354"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_FULL_GPU_FEATURE_MATCHED_AB_CURRENT_VERDICT.json",
+      "sha256": "cb9880215e367d64bcf9f23ce7f96b5a22f4ff0bc8fb01cfadb69c6c271f0741"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_MMAP_NONE_SAME_FEATURES_ABLATION_8K.json",
+      "sha256": "cc83a9c059c7ada6b2159f059bc73e193ea5d160d18bc5eada44d8d29d9cda72"
+    },
+    {
+      "repo_path": "certification/evidence/2026-10-26/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+      "project_path": "Sources/Worklogs/2026-10-26_PYM35B_NONMMAP_VULKAN_DEVICE_LOST_FAIL_CLOSED.json",
+      "sha256": "3a4048791e9c4cd4a8182f5146a6438f11a5663069df5867a639a7ef2183c34c"
+    }
+  ],
+  "nextn_lab_candidate": {
+    "upstream_commit": "1a3011cc0c183f184849b5fa4fa15ab0399f17d8",
+    "upstream_issue": "https://github.com/ggml-org/llama.cpp/issues/30688",
+    "tree": "d122b09e38c4e5397601c1ade0c3c6cc3aea39cc",
+    "patch_sha256": "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee",
+    "safety": "research-only; reverting scheduler reserve can reintroduce allocation hazards; no production promotion",
+    "github_ci_run_id": 40144538324,
+    "ci_stage_last_verified": "Source tree reproducible, Vulkan builder in progress, no binary promoted",
+    "github_ci_conclusion": "success",
+    "source_archive_sha256": "7c52d34ddfdd735139d60fc4db577ad7fa028129232f79d4465b779fa28fc6c0",
+    "relocated_elf_count": 12,
+    "sha256sum_relocated_manifest": "97ab4aff7f6edcad84ebf592b3db65a7ba55eef81ea7d3921d2ce8a92b802b03",
+    "ct410_inactive_binary_sha256": "25e2d4560ecceeda57a9c6fa88bfd8b440c46f5bac5dfc71204002a1f798ed63",
+    "ct410_inactive_path": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/chimera-master9ae-nextn-revert-vulkan-20261025",
+    "host_loader_units": "llama-server version OK, MTP-adaptive OK, 20/20 Turbo fail-closed, quant functions exit0",
+    "GPU_inference_tested": false,
+    "production_promoted": false
+  },
+  "latest_source_qualification": {
+    "observed_at_utc": "2026-10-26T11:41:22.988473+00:00",
+    "status": "SOURCE_CURRENT_BINARY_UNQUALIFIED",
+    "github_branch": "lab/20261022-one-engine-qualification",
+    "previous_commit": "e27dd397a43a8b7bfb9c0b5680b3a232bb408ce0",
+    "upstream_head": "8b28c2394324465bf7727089e7eaf7aec9442d6a",
+    "prism_head": "c96baf4abe24d11a50f326e40b6223b687449d63",
+    "rdna_release": "v15-6050b467c-r142",
+    "strata_release": "v0.2.6",
+    "atomic_release": "b10298-2.0.0",
+    "evidence": "Github Actions 40316483379 build in_progress last observed; CI compilation not GPU benchmark",
+    "safety": "Retired RDNA r120, 062 master and chimera barred from fresh GPU runs; no backend promotion, no GPU tests this session",
+    "original_pym_matched_atomic16_math_tps": 27.81044458906519,
+    "original_pym_matched_atomic2_math_tps": 27.24612360033683,
+    "outcome": "NO_ENGINE_WINNER_YET"
+  },
+  "hof_first_atomic2_20261026": {
+    "utc": "2026-10-26T12:31:12.532564+00:00",
+    "target_release": "Atomic2 b10298-2.0.0 cda0f925",
+    "binary_sha256": "84ba09949952fc9f5c96bc98b895d91f8eeddc09d9f31a193ec16f6b333e8f5a",
+    "same_pym_model_bytes": 13222476000,
+    "historical_atomic16_pym_hof_tps": {
+      "f16": 36.28,
+      "turbo4": 35.2,
+      "q8_0": 35.07,
+      "turbo3": 34.4
+    },
+    "pym_turbo4_preflight": {
+      "status": "blocked_preflight",
+      "reasons": [
+        "PYM_PRIOR_PSI_LOAD_HEADROOM"
+      ],
+      "required_mem_gib": 37.31,
+      "available_mem_gib": 33.095,
+      "new_tps": null
+    },
+    "flashnext_preflight": {
+      "status": "blocked_preflight",
+      "reasons": [
+        "FLASH_UNMATCHED_HISTORICAL_MODEL"
+      ],
+      "alternate_gsq_rco_sharded_bytes": 58408584928,
+      "historic_AD427_FRSpec_available": false,
+      "new_tps": null
+    },
+    "winner_declared": false,
+    "production_untouched": true,
+    "benchmark_parallelism": "one engine then Pym + Flash, next engine only after both",
+    "flash_ad427_exact_target_discovery_20261026": {
+      "shards": 33,
+      "bytes": 94525394976,
+      "architecture": "qwen4exp",
+      "expert_count": 512,
+      "context_metadata": 262144,
+      "manifest_size_verified": true,
+      "full_sha256_verified": false,
+      "sidecar_fr_spec_present": true,
+      "gpu_test_run": false,
+      "preflight_status": "blocked_preflight",
+      "preflight_reasons": [
+        "FLASH_AD427_DRAFT_FRSPEC_NOT_CONFIGURED",
+        "FLASH_AD427_MEMORY_NOT_ADMITTED"
+      ],
+      "previous_absent_claim_superseded": true,
+      "gpu_routing_unchanged": true,
+      "sidecar_size_bytes": 3639245152,
+      "sidecar_sha256_verified": true,
+      "sidecar_sha256": "c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f",
+      "sidecar_pinned_revision": "ac875a98457a8effe8fb83de8f3701421f507a24",
+      "flash_hof_native_runtime_configured": false,
+      "latest_admission_report": "oct26_1516_flash_ad427_d2t_gate",
+      "full_sha256_verified_20261026": true,
+      "sha256_verified_shards": 33,
+      "sha256_verified_bytes": 94525394976,
+      "sha256_verified_manifest_repo": "AtomicChat/Qwen3.8-Flash-Next-GGUF",
+      "sha256_verified_manifest_revision": "c4f844865189c05eeaa05406576a8d7d4931df5c",
+      "full_hash_validation_seconds": 87.02,
+      "reduced_vocab_d2t": {
+        "sidecar_output_vocab": 65536,
+        "main_input_vocab": 248320,
+        "mapping_entries": 65536,
+        "d2t_ggml_type": 27,
+        "atomic2_native_qwen4exp_scatter": false
+      }
+    },
+    "pym_atomic2_latest_preflight_1515": {
+      "status": "blocked_preflight",
+      "available_gib": 31.993,
+      "required_gib": 37.31,
+      "guardian_allow": true,
+      "safe_gtt_gib": 14.35,
+      "gpu_temp_c": 62.625,
+      "swap_used_percent": 84.94,
+      "gpu_tokens": 0
+    },
+    "pym35_atomic2_native_sweep_20261026": {
+      "evidence": "certification/pym35_atomic2_native_sweep_20261026.json",
+      "live_trials": 12,
+      "valid_trials": 11,
+      "best_same_8layer_profile": "pym35_a2_ngl8_mtp2_f16_soft_1026",
+      "best_3task_mean_tps": 12.667,
+      "production_promoted": false,
+      "historical_full_gpu_reproduced": false,
+      "observed_host_psi_full_avg10_after_sweep": 7.26,
+      "native_spec_chain_2_slow": true
+    },
+    "owner_fullgpu_attempts_20261026": {
+      "trials": 7,
+      "evidence": "certification/pym35_fullgpu_attempt_incident_20261026.json",
+      "successful_fullgpu_all_three_prompts": false,
+      "max_observed_swap_used_percent": 97.2,
+      "max_observed_psi_memory_full_avg10": 12.77,
+      "OOM_kills_observed": 0,
+      "runner_restored": true
+    },
+    "verified_pym35_fullgpu_native_matrix_20261026": {
+      "evidence": "certification/pym35_fullgpu_native_qualification_20261026.json",
+      "live_native_trial_records": 43,
+      "qualifying_complete_three_task_trials": 29,
+      "context_8192_atomic2_q8_mtp2_2run_mean_tps": 27.852,
+      "context_8192_atomic2_q8_mtp2_prio1_3run_mean_tps": 27.945,
+      "context_8192_atomic16_f16_mtp2_mean_tps": 27.925,
+      "context_8192_atomic2_f16_mtp2_mean_tps": 26.345,
+      "context_16384_atomic16_f16_reconstructed_mean_tps": 27.44,
+      "context_16384_atomic2_f16_reconstructed_mean_tps": 27.212,
+      "historical_hof_36_28_reproduced": false,
+      "owner_authorized_user_fullgpu": true,
+      "production_promoted": false,
+      "oom_kills_observed": 0,
+      "zram_native_config": "/etc/systemd/zram-generator.conf.d/70-cloud9-fullgpu-zram3.conf"
+    },
+    "gpu_only_native_kernel_and_long_decode_20261026": {
+      "evidence": "certification/pym35_gpu_native_optimizations_20261026.json",
+      "new_immutable_trials": 19,
+      "qualified_trials": 15,
+      "GPU_auto_A_B_A": [
+        28.022,
+        27.674,
+        27.967
+      ],
+      "long_768_ATOMIC16_q8": 28.239,
+      "long_768_ATOMIC2_q8": 27.865,
+      "Vulkan_GGML_MMVQ_force_tps": 27.234,
+      "Vulkan_GGML_MMVQ_disabled_tps": 24.772,
+      "max_historic_reproduced": false,
+      "promoted_to_production": false,
+      "OOM_kills": 0,
+      "GPU_mode_restored_to_auto": true
+    },
+    "flashnext_frspec_d2t_native_20261026": {
+      "evidence": "certification/flashnext_frspec_native_qualification_20261026.json",
+      "patch": "certification/patches/atomic2-qwen4exp-frspec65k-20261026.patch",
+      "source_commit": "3df182b0",
+      "GGUF_d2t_65536_unique": true,
+      "vulkan_qwen4exp_graph_test_passed": true,
+      "standalone_sidecar_null_graph_segfault_fixed": true,
+      "target_plus_draft_end_to_end_qualified": false,
+      "measured_ad427_frspec_tps": null,
+      "production_promoted": false,
+      "actual_ggml_I64_scatter_gpu_tests_passed": "21/21",
+      "gpu_backend_test_evidence": "certification/evidence/2026-10-26/flashnext-f32-i64-setrows-gpu.txt",
+      "historical_safebuild_commit": "53f34cfaa",
+      "original_runtime_recovered": false
+    },
+    "flashnext_ad427_real_inference_20261027": {
+      "evidence": "certification/flashnext_ad427_real_inference_20261027.json",
+      "on_device_math_fr_code_qualified": true,
+      "baseline_cold_no_cache_tps": 1.913,
+      "best_hot_no_cache_tps": 2.685,
+      "auto_cache_tps": 2.546,
+      "4G_cache_tps": 2.223,
+      "target_over_20tps_met": false,
+      "production_changed": false,
+      "OOM": 0,
+      "extra_4_GPU_expert_layers_qualified": false
+    },
+    "portable_expert_pool_20261027": {
+      "manifest": "certification/flashnext_portable_expert_pool_20261027.json",
+      "native_source_commit": "d51a783d",
+      "Vulkan_pool_matrix_passed": true,
+      "Qwen4Exp_gpu_graph_passed": true,
+      "full_AD427_FRSpec_inference_tested": false,
+      "real_AD427_FRSpec_pool_tps": null,
+      "production_promoted": false,
+      "blocked_by": "four continuous active embeddings slots",
+      "oom_kills": 0
+    },
+    "ad427_expert_pool_and_MTP2_3_5_sweep_20261027": {
+      "evidence": "certification/flashnext_ad427_expert_pool_mtp_sweep_20261027.json",
+      "baseline_verified_native_MTP3_mean_tps": 2.685,
+      "hybrid_pool0_mean_tps": 1.53,
+      "hybrid_pool16_means_tps": [
+        1.707,
+        1.677
+      ],
+      "hybrid_pool32_qualified": false,
+      "atomic2_native_MTP5_mean_tps": 1.022,
+      "atomic2_native_MTP2_mean_tps": 1.511,
+      "atomic2_native_gpu_sampling_MTP3_mean_tps": 1.598,
+      "paired_native_GPU_sampling_off_MTP3_mean_tps": 1.467,
+      "new_qualified_ablation_winner_over_original": false,
+      "all_production_untouched": true,
+      "oom_kills": 0,
+      "real_target_over20_tps_achieved": false
+    }
+  }
+}

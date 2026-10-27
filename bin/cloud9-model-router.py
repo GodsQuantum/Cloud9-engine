@@ -5,6 +5,7 @@ import http.client
 import json
 import os
 import signal
+import socket
 import subprocess
 import sys
 import threading
@@ -26,9 +27,13 @@ a=ap.parse_args()
 ENGINE=Path(a.engine_home)
 CATALOG_PATH=Path(a.catalog)
 GPU_LOCK=Path("/run/cloud9-gpu.lock")
+ALLOW_SERVICE_PREEMPTION = os.environ.get("CLOUD9_ENGINE_ALLOW_SERVICE_PREEMPTION", "0") == "1"
+GPU_GUARDIAN_ADDRESS = ("192.168.1.200", 19755)
 EMBED_SERVICE="cloud9-embedding.service"
+EMBED_ENDPOINT=os.environ.get("CLOUD9_EMBED_ENDPOINT", "http://192.168.1.219:8091").rstrip("/")
 SPEACHES_CONTAINER="speaches"
 VOICE_CONTAINER="voicestudio"
+AUTOSUBS_CONTAINER="autosubs-aligner-gpu"
 STATE_DIR=ENGINE/"state"
 STATE_DIR.mkdir(parents=True,exist_ok=True)
 WORKER_LOG=STATE_DIR/"model-router-worker.log"
@@ -78,17 +83,20 @@ def tcp_port_busy(port):
         return False
 
 def embedding_busy():
+    """Fail closed: never preempt embeddings unless its live slots prove idle."""
     try:
-        with urllib.request.urlopen("http://127.0.0.1:8091/slots",timeout=1) as r:
-            raw=r.read().decode("utf-8","replace")
-        data=json.loads(raw)
-        if isinstance(data,list):
-            for x in data:
-                if x.get("is_processing") is True or x.get("state")=="processing":
-                    return True
+        with urllib.request.urlopen(f"{EMBED_ENDPOINT}/slots", timeout=2) as r:
+            data=json.load(r)
+        if not isinstance(data, list) or not data:
+            return True
+        for slot in data:
+            if not isinstance(slot, dict):
+                return True
+            if slot.get("is_processing") is True or slot.get("state")=="processing":
+                return True
         return False
-    except Exception:
-        return False
+    except (OSError, ValueError, TypeError, KeyError):
+        return True
 
 def gpu_users():
     target=os.path.realpath("/dev/dri/renderD128")
@@ -152,13 +160,66 @@ def model_oversize_decision(m,model_bytes,max_bytes,max_special_resident_bytes,e
         )
     return True,"typed-ngram-on-disk"
 
+def conservative_request_gib(model):
+    # GGUF is a lower bound on offloaded UMA/GTT; include draft weights and
+    # 1536 MiB for runtime/KV. Memory guard remains the final authority.
+    weight_bytes = Path(model["model"]).stat().st_size
+    args = list(model.get("extra_args", []))
+    for i, arg in enumerate(args):
+        if arg == "--model-draft" and i+1 < len(args):
+            draft = Path(args[i+1])
+            if draft != Path(model["model"]):
+                weight_bytes += draft.stat().st_size
+    declared = int(model.get("estimated_resident_bytes", 0) or 0)
+    return (max(weight_bytes, declared) + 1610612736) / (1024 ** 3)
+
+def guardian_preflight(model):
+    """Read-only official admission; no GPU acquisition, writes or service stops."""
+    mode = model.get("gpu_mode", catalog.get("defaults", {}).get("gpu_mode", "exclusive"))
+    if mode not in ("coexist-light", "exclusive"):
+        raise RuntimeError("Invalid local Cloud9 GPU mode")
+    if mode == "exclusive" and not ALLOW_SERVICE_PREEMPTION:
+        raise RuntimeError(
+            "Exclusive local GPU mode requires explicit maintenance opt-in; "
+            "embeddings, Speaches and VoiceStudio were not interrupted."
+        )
+    required = conservative_request_gib(model)
+    try:
+        with socket.create_connection(GPU_GUARDIAN_ADDRESS, timeout=3) as sock:
+            sock.settimeout(3)
+            sock.sendall(("CHECK %s %.2f\n" % (mode, required)).encode())
+            result = json.loads(sock.recv(16384).decode())
+    except (OSError, ValueError) as exc:
+        raise RuntimeError("Official Cloud9 GPU admission unavailable; refusing model load") from exc
+    if not result.get("allow"):
+        raise RuntimeError("Official Cloud9 GPU guardian declined allocation: " +
+                           "; ".join(map(str, result.get("reasons") or ["no permission"])))
+    return mode
+
 def container_id(name):
     p=run_docker("inspect","-f","{{.Id}}",name,timeout=10)
     return p.stdout.strip() if p.returncode==0 else ""
 
-def light_gpu_user(user,speaches_id):
+def autosubs_gpu_idle():
+    # Native FastAPI health returns loaded_models=[] when no aligner is resident.
+    # Never share the render device while an /align HTTP request is active.
+    if tcp_port_busy(8007):
+        return False
+    try:
+        with urllib.request.urlopen("http://192.168.1.219:8007/health", timeout=2) as response:
+            state = json.load(response)
+        return state.get("status") == "ok" and state.get("loaded_models") == []
+    except (OSError, ValueError):
+        return False
+
+def light_gpu_user(user,speaches_id,voice_id="",autosubs_id=""):
     _pid,_cmd,cgroup=user
-    return "cloud9-embedding.service" in cgroup or bool(speaches_id and speaches_id in cgroup)
+    return (
+        "cloud9-embedding.service" in cgroup
+        or bool(speaches_id and speaches_id in cgroup)
+        or bool(voice_id and voice_id in cgroup)
+        or bool(autosubs_id and autosubs_id in cgroup)
+    )
 
 def wait_health(proc,timeout=180):
     end=time.monotonic()+timeout
@@ -196,6 +257,7 @@ class RouterState:
 
     def acquire_gpu(self,m,timeout=120):
         if self.gpu_fd is not None: return
+        guardian_preflight(m)
         fd=open(GPU_LOCK,"a+")
         end=time.monotonic()+timeout
         while True:
@@ -218,9 +280,12 @@ class RouterState:
             max_gtt=int(catalog.get("defaults",{}).get("coexist_max_gtt_mib",8192))
             avail=mem_available_mib(); gtt=gtt_used_mib()
             if avail < min_avail or gtt > max_gtt:
-                print(f"Cloud9 router: coexist-light unsafe for {m['id']} "
-                      f"(MemAvailable={avail}MiB GTT={gtt}MiB); falling back to exclusive",flush=True)
-                mode="exclusive"
+                fcntl.flock(fd.fileno(),fcntl.LOCK_UN)
+                fd.close()
+                raise RuntimeError(
+                    f"Cloud9 coexist-light denied: MemAvailable={avail}MiB GTT={gtt}MiB. "
+                    "Never automatically preempt embeddings or Speaches."
+                )
 
         was=service_active(EMBED_SERVICE)
         speaches_was=container_running(SPEACHES_CONTAINER)
@@ -250,7 +315,14 @@ class RouterState:
             # VoiceStudio holds the render device even while idle. Yield it only
             # when nobody is connected; restore it on every failure/unload path.
             # Do not bypass the existing GPU lock or relax memory/GTT limits.
-            if voice_was:
+            if voice_was and mode == "coexist-light":
+                # Pinned idle ROCm context, not an exclusive GPU user.
+                # Preserve VoiceStudio; refuse sharing if any client is active.
+                if tcp_port_busy(3900) or tcp_port_busy(7443):
+                    raise RuntimeError("VoiceStudio is serving a client; refusing GPU coexistence")
+            if voice_was and mode == "exclusive":
+                if not ALLOW_SERVICE_PREEMPTION:
+                    raise RuntimeError("VoiceStudio is running; refusing to interrupt it for a local model")
                 if tcp_port_busy(3900) or tcp_port_busy(7443):
                     raise RuntimeError("VoiceStudio has an active HTTP client; refusing GPU preemption")
                 run_docker("stop","--time","20",VOICE_CONTAINER,check=True,timeout=35)
@@ -262,13 +334,26 @@ class RouterState:
                     raise RuntimeError("VoiceStudio did not stop cleanly; refusing GPU admission")
 
             sid=container_id(SPEACHES_CONTAINER) if mode=="coexist-light" else ""
+            vid=""
+            aid=""
+            if mode=="coexist-light":
+                if voice_was:
+                    vid=container_id(VOICE_CONTAINER)
+                    if not vid:
+                        raise RuntimeError("VoiceStudio container identity unavailable")
+                if container_running(AUTOSUBS_CONTAINER):
+                    if not autosubs_gpu_idle():
+                        raise RuntimeError("AutoSubs Aligner GPU is busy or its health is unavailable; refusing GPU coexistence")
+                    aid=container_id(AUTOSUBS_CONTAINER)
+                    if not aid:
+                        raise RuntimeError("AutoSubs Aligner container identity unavailable")
             users=gpu_users()
-            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+            blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid,vid,aid)]
             if blocked:
                 for _ in range(80):
                     time.sleep(.25)
                     users=gpu_users()
-                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid)]
+                    blocked=users if mode=="exclusive" else [u for u in users if not light_gpu_user(u,sid,vid,aid)]
                     if not blocked: break
             if blocked:
                 raise RuntimeError(f"GPU render device has incompatible users for {mode}: {blocked!r}")
@@ -328,7 +413,7 @@ class RouterState:
         args=[
             self.runtime(m),"-m",m["model"],"-ngl","99","-c",str(m.get("context",16384)),"-np","1",
             "-b",str(m.get("batch",1024)),"-ub",str(m.get("ubatch",1024)),
-            "-t","8","-tb","8","-fa",m.get("flash_attention","on"),
+            "-t",str(m.get("threads",8)),"-tb",str(m.get("threads_batch",8)),"-fa",m.get("flash_attention","on"),
             "-ctk",m.get("cache_type_k","f16"),"-ctv",m.get("cache_type_v","f16"),
             "--fit","off","--jinja","--reasoning","off","--reasoning-budget","0",
             "-lm",m.get("load_mode","mmap"),"--poll","100","--poll-batch","0",
@@ -398,6 +483,8 @@ class RouterState:
                 left=end-time.monotonic()
                 if left<=0: raise RuntimeError("timed out waiting for active requests before model switch")
                 self.cv.wait(min(left,1))
+        # Protect the existing worker against a denied new-model request.
+        guardian_preflight(m)
         self.stop_worker_locked()
         self.acquire_gpu(m,timeout=int(catalog.get("defaults",{}).get("gpu_lock_timeout_seconds",120)))
         args=self.worker_args(m)

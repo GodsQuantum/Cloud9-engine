@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "kind": "LAB_NATIVE_CHIMERA_TURBO_BACKEND_FAIL_CLOSED_NOT_PRODUCTION",
+  "date": "2026-10-24",
+  "base": {
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "commit": "9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2",
+    "tree": "3be23ccb41236df3d19222de88805d6e32e67b6e"
+  },
+  "upstream_adaptive_tree": "b736cfe2fe66014d988e41c6e39fee0d9665d265",
+  "port": {
+    "patch": "tools/chimera/patches/20261024-master9ae-r120-turbo-adaptive-backend-guard.patch",
+    "patch_sha256": "99ad06303b2388fed5d6d0b9a9bcb342c15ae9b09a30e41991eb450a417d998a",
+    "resulting_tree": "dc0db44e3eb40fb2df5f8e49dc623674fa85116a",
+    "changed_files": 60
+  },
+  "added_policy": {
+    "path": "src/llama-cloud9-turbo-backend-policy.h",
+    "purpose": "Reject TurboQuant KV when an active model GPU backend is other than Vulkan, before buffer allocation; CPU allowed; normal KV unaffected",
+    "source_hook": "src/llama-kv-cache.cpp",
+    "test": "test-cloud9-turbo-backend-policy",
+    "test_cases": 20,
+    "protects": [
+      "ROCm",
+      "CUDA",
+      "MUSA",
+      "Metal",
+      "unrecognized GPU backend"
+    ],
+    "keeps": [
+      "Vulkan",
+      "CPU",
+      "ordinary KV"
+    ],
+    "release_mode_assertions_enabled": true
+  },
+  "qualification": {
+    "pure_policy_unit": true,
+    "cpu_server_build": true,
+    "ctest_native": true,
+    "vulkan_build": false,
+    "hip_build": false,
+    "gpu_model_quality": false,
+    "production": false
+  }
+}

@@ -1,0 +1,156 @@
+name: LAB native chimera MMB r120 on latest llama
+
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-native-chimera-mmb-r120-on-latest.yml
+      - tools/chimera/native-mmb-r120-on-latest062.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lab-native-mmb-gfx1103-r120-latest
+  cancel-in-progress: false
+
+jobs:
+  build-latest-mmb-hip:
+    name: Cloud9 latest native chimera — compile HIP gfx1103
+    runs-on: ubuntu-24.04
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Source freshness on Github API, fail closed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 tools/benchmarks/verify_latest_sources.py --all
+          python3 -m json.tool tools/chimera/native-mmb-r120-on-latest062.json >/dev/null
+      - name: Retrieve pinned current source and proven MMB donor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          m=json.load(open('tools/chimera/native-mmb-r120-on-latest062.json'))
+          l=json.load(open('tools/benchmarks/latest_engine_sources_20261023.json'))
+          assert m['base']['commit']==l['github_repositories']['upstream']['commit']
+          assert m['donor']['commit']==l['github_repositories']['rdna']['release_commit']
+          assert m['donor']['release_tag']==l['github_repositories']['rdna']['release_tag']
+          # The immutable source gate applies even after a previous successful build.
+          # Never reject a valid rebuild merely because CI already certified compilation.
+          print('ONLY_NEWEST_SOURCE_LOCKS_MATCH')
+          PY
+          git clone --filter=blob:none https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/chimera-source"
+          git -C "$RUNNER_TEMP/chimera-source" checkout 06230cb8775899cceef146c19cd447a947ecac5b
+          git clone --filter=blob:none https://github.com/stew675/llama-cpp-rdna-boosts.git "$RUNNER_TEMP/donor-r120"
+          git -C "$RUNNER_TEMP/donor-r120" checkout ece2d7531b8630413770f61db46ff0700e6a8999
+          test "$(git -C "$RUNNER_TEMP/chimera-source" rev-parse HEAD)" = 06230cb8775899cceef146c19cd447a947ecac5b
+          test "$(git -C "$RUNNER_TEMP/donor-r120" rev-parse HEAD)" = ece2d7531b8630413770f61db46ff0700e6a8999
+      - name: Port only latest donor MMB kernels to latest llama, verify tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,json,hashlib,subprocess,pathlib
+          m=json.load(open('tools/chimera/native-mmb-r120-on-latest062.json'))
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])
+          source=root/'chimera-source'
+          p=root/'donor-r120'/m['donor']['patch']
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==m['donor']['sha256']
+          assert subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD^{tree}'],text=True).strip()==m['base']['tree']
+          subprocess.run(['git','-C',str(source),'apply','--check','--exclude=tests/CMakeLists.txt',str(p)],check=True)
+          subprocess.run(['git','-C',str(source),'apply','--exclude=tests/CMakeLists.txt',str(p)],check=True)
+          subprocess.run(['git','-C',str(source),'add','ggml/src/ggml-cuda/ggml-cuda.cu','ggml/src/ggml-cuda/mmb.cu','ggml/src/ggml-cuda/mmb.cuh','ggml/src/ggml-cuda/mmf32.cu','ggml/src/ggml-cuda/mmf32.cuh','tests/test-logits-width-probe.cpp'],check=True)
+          subprocess.run(['git','-C',str(source),'diff','--cached','--check'],check=True)
+          tree=subprocess.check_output(['git','-C',str(source),'write-tree'],text=True).strip()
+          if tree!=m['port']['resulting_tree']:raise SystemExit(f'MMB_PORT_TREE_CHANGED expected={m["port"]["resulting_tree"]} got={tree}')
+          print('LATEST_NATIVE_MMB_PORT_TREE_PASS',tree)
+          PY
+      - name: Repair upstream CUDA graph chunk invalidation before HIP compilation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, json, hashlib, pathlib, subprocess
+          m=json.load(open('tools/chimera/native-mmb-r120-on-latest062.json'))
+          local=m['port']['post_port_fix']
+          patch=pathlib.Path(local['patch'])
+          assert hashlib.sha256(patch.read_bytes()).hexdigest()==local['sha256']
+          source=pathlib.Path(os.environ['RUNNER_TEMP'])/'chimera-source'
+          target=source/'ggml/src/ggml-cuda/ggml-cuda.cu'
+          text=target.read_text()
+          assert text.count('n_captured += graph->instance != nullptr;')==1
+          subprocess.run(['git','-C',str(source),'apply','--check',str(patch.resolve())],check=True)
+          subprocess.run(['git','-C',str(source),'apply',str(patch.resolve())],check=True)
+          assert 'n_captured += !graph->instances.empty();' in target.read_text()
+          subprocess.run(['git','-C',str(source),'add','ggml/src/ggml-cuda/ggml-cuda.cu'],check=True)
+          subprocess.run(['git','-C',str(source),'diff','--cached','--check'],check=True)
+          actual=subprocess.check_output(['git','-C',str(source),'write-tree'],text=True).strip()
+          assert actual==local['resulting_tree'], (actual,local['resulting_tree'])
+          print('DA2_CUDA_GRAPH_INSTANCES_FIX_SOURCE_TREE_PASS',actual)
+          PY
+      - name: Install ROCm HIP gfx1103 isolated to free CI runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends cmake ninja-build ccache patchelf libnuma-dev
+          python3 -m venv "$RUNNER_TEMP/rocm-venv"
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://stable.repo.amd.com/rocm/whl-next/ \
+            'rocm[libraries,devel,device-gfx1103]==10.1.0'
+          rocm-sdk init
+          hipcc --version | head -8
+      - name: Compile newest llama plus actual MMB kernels — NO GPU available on runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/rocm-venv/bin/activate"
+          ROCM_PATH=$(rocm-sdk path --root)
+          export ROCM_PATH HIP_PATH="$ROCM_PATH"
+          export PATH="$ROCM_PATH/bin:$PATH"
+          export LD_LIBRARY_PATH="$ROCM_PATH/lib:${LD_LIBRARY_PATH:-}"
+          export CMAKE_PREFIX_PATH="$ROCM_PATH:${CMAKE_PREFIX_PATH:-}"
+          export CCACHE_DIR="$RUNNER_TEMP/ci-ccache"
+          ccache -M 2G
+          cmake -S "$RUNNER_TEMP/chimera-source" -B "$RUNNER_TEMP/chimera-build" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release -DGGML_HIP=ON -DGGML_HIP_RCCL=OFF \
+            -DGPU_TARGETS=gfx1103 -DLLAMA_CURL=OFF \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_HIP_COMPILER_LAUNCHER=ccache
+          cmake --build "$RUNNER_TEMP/chimera-build" --parallel 2 \
+            --target llama-server llama-cli test-backend-ops | tee "$RUNNER_TEMP/chimera-compile.log"
+          grep -q 'mmb.cu' "$RUNNER_TEMP/chimera-compile.log" || { echo MMB_KERNEL_NOT_COMPILED; exit 7; }
+          grep -q 'mmf32.cu' "$RUNNER_TEMP/chimera-compile.log" || { echo MMF32_KERNEL_NOT_COMPILED; exit 8; }
+          "$RUNNER_TEMP/chimera-build/bin/llama-server" --version
+          "$RUNNER_TEMP/chimera-build/bin/llama-cli" --version
+      - name: Final upstream source freshness gate and archive
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 tools/benchmarks/verify_latest_sources.py --all
+          D="$RUNNER_TEMP/chimera-uncertified"
+          mkdir -p "$D/bin"
+          cp -a "$RUNNER_TEMP/chimera-build/bin/." "$D/bin/"
+          cp tools/chimera/native-mmb-r120-on-latest062.json "$D/"
+          cp tools/benchmarks/latest_engine_sources_20261023.json "$D/"
+          cp "$RUNNER_TEMP/chimera-source/LICENSE" "$D/UPSTREAM-MIT-LICENSE"
+          cp "$RUNNER_TEMP/donor-r120/LICENSE" "$D/RDNA-DONOR-MIT-LICENSE"
+          echo 'LAB only. Newest upstream+RDNA r120 MMB/MMF32. No hardware GPU or quality claim.' > "$D/NOT-QUALIFIED.txt"
+          (cd "$D" && find bin -type f -print0 | sort -z | xargs -0 sha256sum > BIN-SHA256SUMS.txt)
+          tar -czf chimera-mmb-r120-on-latest062-hip-uncertified.tar.gz -C "$RUNNER_TEMP" chimera-uncertified
+          sha256sum chimera-mmb-r120-on-latest062-hip-uncertified.tar.gz
+      - name: Upload experimental chimera binaries
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: native-mmb-r120-on-latest062-hip-uncertified
+          path: chimera-mmb-r120-on-latest062-hip-uncertified.tar.gz
+          retention-days: 7
+          if-no-files-found: error

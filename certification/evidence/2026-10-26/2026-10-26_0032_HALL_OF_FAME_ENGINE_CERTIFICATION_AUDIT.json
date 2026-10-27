@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-25T23:33:11.921375+00:00",
+  "canonical_hall": "HALL_OF_FAME.json",
+  "sha256": "8ef43ce806b65b9e59a28174e65eb8662dbce267668fff81b2bf17a7e67b9d91",
+  "records_count": 195,
+  "native_hall_validation": true,
+  "new_immutable_record_ids": [
+    "2026-10-25:cloud9-chimera-master9ae:qwen4b:C09-36of36-native-diagnostics",
+    "2026-10-26:atomic2:vulkan-qwen4b-native:C09-3of36-watchdog-fail"
+  ],
+  "no_replay": true,
+  "atomic2_native_current_36_cases_scored": 3,
+  "atomic2_correct": 3,
+  "atomic2_unsafe": 0,
+  "atomic2_watchdog_memory_PSI_full": 2.2,
+  "release_winner_all_purpose_certified": false
+}

@@ -1,0 +1,10 @@
+{
+  "updated_utc": "2026-10-26T09:28:16.360633+00:00",
+  "original": "# /etc/systemd/system/davinci-assets-refresh.timer\n[Unit]\nDescription=DaVinci assets refresh, native rate-limited\nAfter=network-online.target\n\n[Timer]\nOnBootSec=3min\nOnUnitActiveSec=30min\nAccuracySec=2min\nUnit=davinci-assets-refresh.service\n\n[Install]\nWantedBy=timers.target",
+  "updated": "# /etc/systemd/system/davinci-assets-refresh.timer\n[Unit]\nDescription=DaVinci assets refresh, native rate-limited\nAfter=network-online.target\n\n[Timer]\nOnCalendar=*-*-* 06:15:00\nAccuracySec=5min\nPersistent=true\nUnit=davinci-assets-refresh.service\n\n[Install]\nWantedBy=timers.target",
+  "cadence": "daily at06:15 local (Persistent)",
+  "existing_pre_job": "both davinci-render-node and davinci-agent-node ExecStartPre davinci-render-preflight.sh calls assets-refresh.sh --prestart",
+  "limitation": "Preflight guaranteed at render-node start, not certified for multiple queue jobs within same running process",
+  "lxc_stopped": false,
+  "rollback": "restore /etc/systemd/system/davinci-assets-refresh.timer.original-20261026 and daemon-reload restart timer"
+}

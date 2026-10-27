@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-26",
+  "feature": "Qwen3.8 Flash-Next FR-Spec 65K reduced vocabulary draft-only native support",
+  "base_upstream_commit": "cda0f925",
+  "isolated_native_branch": "lab/qwen4exp-frspec65k-20261026",
+  "isolated_native_commit": "3df182b0",
+  "production_mutated": false,
+  "sources": "CT700 only, immutable isolated git worktree",
+  "patch": "certification/patches/atomic2-qwen4exp-frspec65k-20261026.patch",
+  "patch_sha256": "e794631a64e3fd2707cbcb1e3a30e4fb41eac75e114f1ffedd0ea35966ea4f80",
+  "binary_sha256": "0a504ffc591ceeebcaa2312eb0e4e19cfbae63cc666f5eb93a60bd768f1f94c3",
+  "libllama_sha256": "7fe2dc860de305094371e6b219df0235b54ffc128d48cc70a5b3008c3e0785f1",
+  "sidecar_filename": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+  "sidecar_length_bytes": 3639245152,
+  "sidecar_sha256_previously_verified": "c9c505c1f68f008827a29733d5d2fe40a8170c324c676168831798b05217df4f",
+  "sidecar_tensor_count": 36,
+  "target_vocabulary_size": 248320,
+  "draft_output_vocabulary_size": 65536,
+  "d2t_type": "I64",
+  "d2t_entries": 65536,
+  "d2t_min": 0,
+  "d2t_max": 248069,
+  "d2t_unique_entries": 65536,
+  "d2t_within_target_vocab": true,
+  "sidecar_projection_shapes": {
+    "blk.48.nextn.fc_embd.weight": [
+      2560,
+      2560
+    ],
+    "blk.48.nextn.fc_hidden.weight": [
+      2560,
+      2560
+    ],
+    "token_embd.weight": [
+      2560,
+      248320
+    ],
+    "output.weight": [
+      2560,
+      65536
+    ]
+  },
+  "native_changes": [
+    "split fc_embd and fc_hidden quantized matmul and add",
+    "hc_norm/hc_down/hc_up draft aliases",
+    "load reduced 65K output head and d2t I64 metadata",
+    "restore target 248320 logit coordinates using native ggml_fill + ggml_set_rows",
+    "reject standalone MTP-only graph with user-facing error rather than crashing"
+  ],
+  "native_build": "PASS CMake Vulkan llama-server and test-llama-archs in LXC700",
+  "native_synthetic_qwen4exp_MoE_device_test": "PASS Radeon780M Vulkan NMSE=8.66e-08 CPU=0.0",
+  "actual_sidecar_metadata_and_tensor_load": "PASS (reached context graph creation using real 3.64GB FR-Spec checkpoint)",
+  "standalone_draft_as_main_rejected_cleanly": true,
+  "standalone_expected_exit": 1,
+  "segfault_after_guard": false,
+  "actual_matched_target_plus_frspec_inference": "NOT_EXECUTED",
+  "actual_flashnext_tps": null,
+  "reason_full_validation_missing": "Target GGUF is 94.525 GB, 33 complete shards, not yet admitted together with 3.639 GB FR-Spec under host RAM/GTT/IO guard; do not confuse standalone with proper -md draft use",
+  "target_gguf_shards": 33,
+  "target_gguf_length_bytes": 94525394976,
+  "test_logs": [
+    "certification/evidence/2026-10-26/flashnext-qwen4exp-arch-gpu.txt",
+    "certification/evidence/2026-10-26/flashnext-frspec-sidecar-clean-guard.txt",
+    "certification/evidence/2026-10-26/flashnext-frspec-gdb-stack.txt",
+    "certification/evidence/2026-10-26/flashnext-f32-i64-setrows-gpu.txt"
+  ],
+  "no_live_service_restart": true,
+  "remaining": [
+    "run native matched full target + -md FR-Spec on admitted memory profile",
+    "validate draft logits/generation acceptance and math/code/FR quality",
+    "benchmark true t/s against historical 17.878 and target >20",
+    "re-run guard and quality tests, promote only if faster and correct"
+  ],
+  "gpu_backend_d2t_scatter_test": {
+    "source": "certification/evidence/2026-10-26/flashnext-f32-i64-setrows-gpu.txt",
+    "backend": "Vulkan0 Radeon780M RADV",
+    "operation": "GGML_OP_SET_ROWS source F32 destination F32 indices I64",
+    "supported": true,
+    "executed_with_CPU_reference": true,
+    "passed": 21,
+    "total": 21,
+    "failed": 0
+  },
+  "actual_target_vs_draft_metadata_comparison": {
+    "target_first_shard": "Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf",
+    "draft": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+    "both_gguf_arch": "qwen4exp",
+    "target_block_count": 48,
+    "draft_block_count_including_MTP": 49,
+    "draft_nextn_predict_layers": 1,
+    "draft_last_MTP_block_index": 48,
+    "both_embedding_length": 2560,
+    "both_tokenizer_vocab": 248320,
+    "both_context_length": 262144,
+    "both_expert_count": 512,
+    "both_active_experts": 10,
+    "both_hyperconnection_count": 4,
+    "both_hyperconnection_lowrank": 320,
+    "both_rope_dimensions": [
+      11,
+      11,
+      10,
+      0
+    ],
+    "target_output_matrix": [
+      2560,
+      248320
+    ],
+    "draft_output_matrix": [
+      2560,
+      65536
+    ],
+    "target_general_name": "Src",
+    "draft_general_name": "Qwen/Qwen3.8-Flash-Next",
+    "name_mismatch_is_not_architecture_mismatch": true,
+    "structural_relation_correct": true,
+    "real_execution_qualification": "NOT_RUN"
+  },
+  "legacy_safe_engine_recovery_audit": {
+    "historical_hof_commit": "53f34cfaa",
+    "historical_hof_build": "b10738",
+    "historical_engine": "Cloud9 RDNA Vulkan 2026-09-15",
+    "historical_safe_MTP_depth": 3,
+    "historical_target_quant": "AD-4.27bpw-Q4_K_M-M64",
+    "historical_draft": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+    "historical_safe_decode_tps": 17.878,
+    "historical_GDN_fusion_enabled": false,
+    "original_Q8_injection_fix_commit": "b1ea2c634",
+    "candidate_gitrepos_checked": 48,
+    "source_commit_resolved": false,
+    "runtime_executables_and_libs_scanned": 104,
+    "historical_commit_embedded_found": false,
+    "original_build_exact_cli_available": false,
+    "note": "Official HALL_OF_FAME and BENCHMARK_LEDGER establish provenance, but source object and live historic ELF were not found on present Cloud9 checkout. No false claim that an Atomic2 patch reproduces all historical optimizations."
+  }
+}

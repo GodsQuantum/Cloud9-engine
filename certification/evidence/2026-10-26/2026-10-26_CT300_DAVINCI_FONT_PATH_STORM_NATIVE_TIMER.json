@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-10-26T08:43:18.248147+00:00",
+  "ctid": 300,
+  "before": {
+    "path": "# /etc/systemd/system/davinci-fonts-refresh.path\n[Unit]\nDescription=Refresh DaVinci font cache when shared font directory changes\n\n[Path]\nPathChanged=/opt/resolve/Shared-Fonts-Cloud9\nUnit=davinci-assets-refresh.service\n\n[Install]\nWantedBy=multi-user.target",
+    "service": "# /etc/systemd/system/davinci-assets-refresh.service\n[Unit]\nDescription=Refresh DaVinci Resolve shared fonts and LUT metadata\nConditionPathIsDirectory=/opt/resolve/LUT\n\n[Service]\nType=oneshot\nUser=arezki\nGroup=arezki\nEnvironment=HOME=/home/arezki\nExecStart=/usr/local/sbin/davinci-assets-refresh.sh\nNice=10\nIOSchedulingClass=best-effort\nIOSchedulingPriority=7",
+    "path_enabled": true
+  },
+  "after": {
+    "new_timer": "[Unit]\nDescription=DaVinci assets refresh, native rate-limited\nAfter=network-online.target\n\n[Timer]\nOnBootSec=3min\nOnUnitActiveSec=30min\nAccuracySec=2min\nUnit=davinci-assets-refresh.service\n\n[Install]\nWantedBy=timers.target\n",
+    "timer_active": true,
+    "old_path_enabled": false,
+    "service_state_after_start": "inactive"
+  },
+  "cause": "PathChanged on NFS/symlink font directory caused rapid repeated no-op starts and start-limit-hit on Oct23",
+  "effect": "Reuse existing service and its hash-based skip; native systemd timer every 30m instead of event storm",
+  "no_application_or_lxc_stopped": true,
+  "rollback": "systemctl disable --now davinci-assets-refresh.timer; rm /etc/systemd/system/davinci-assets-refresh.timer; systemctl daemon-reload; systemctl enable --now davinci-fonts-refresh.path"
+}

@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-26T08:44:13.232714+00:00",
+  "unit": "cloud9-zfs-rehab-collector.timer",
+  "original_unit": "# /etc/systemd/system/cloud9-zfs-rehab-collector.timer\n[Unit]\nDescription=Refresh cloud_arezki ZFS rehabilitation dashboard every 5 seconds\n\n[Timer]\nOnBootSec=8s\nOnUnitActiveSec=5s\nAccuracySec=1s\nUnit=cloud9-zfs-rehab-collector.service\n\n[Install]\nWantedBy=timers.target\n\n# /etc/systemd/system/cloud9-zfs-rehab-collector.timer.d/90-cloud9-minimize-io.conf\n[Timer]\nOnUnitActiveSec=\nOnUnitActiveSec=120s\nAccuracySec=12s",
+  "why": "Completed one-time ZFS recovery and 4 cloud uploads; polling zpool, smartctl and kernel journal every120sec now redundant",
+  "workflow_at_disable": {
+    "clear_done": true,
+    "cleared_at": "2026-10-23T23:24:50.056152+00:00",
+    "old_errors": {
+      "read": 14,
+      "write": 0,
+      "checksum": 11
+    },
+    "pool_after_clear": "ONLINE",
+    "pbs_launch_at": "2026-10-23T23:24:50.085761+00:00",
+    "pbs_state": "transfer_complete_verify_pending",
+    "pbs_verification": {
+      "cloud-family": {
+        "snapshot_present": true,
+        "snapshot_timestamp": 1792921150,
+        "verification": "pending"
+      },
+      "cloud-apps": {
+        "snapshot_present": true,
+        "snapshot_timestamp": 1792921679,
+        "verification": "pending"
+      },
+      "cloud-arezki": {
+        "snapshot_present": true,
+        "snapshot_timestamp": 1792922252,
+        "verification": "pending"
+      },
+      "cloud-fella": {
+        "snapshot_present": true,
+        "snapshot_timestamp": 1792922881,
+        "verification": "ok"
+      }
+    },
+    "pbs_verification_checked_at": "2026-10-26T06:36:17.741811+00:00",
+    "cloud9_maintenance_state_correction_utc": "2026-10-26T03:40:18.076445+00:00"
+  },
+  "zpool_status": "all pools are healthy",
+  "polling_seconds_before": 120,
+  "timer_invocations_saved_per_day_estimate": 720,
+  "after_state": "disabled/inactive",
+  "other_monitors_and_services_preserved": true,
+  "no_LXC_stop": true,
+  "rollback": "systemctl enable --now cloud9-zfs-rehab-collector.timer only if a new scrub/rehab project starts"
+}

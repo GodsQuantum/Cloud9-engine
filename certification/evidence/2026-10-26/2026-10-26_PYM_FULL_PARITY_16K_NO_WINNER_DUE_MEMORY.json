@@ -1,0 +1,68 @@
+{
+  "utc": "2026-10-26T10:23:05.618202+00:00",
+  "model": "Qwen3.6-35B-A3B Pym Q2 MTP 13222476000 bytes",
+  "preset": "atomic16-mtp2-f16-fullgpu",
+  "parity_context": 16384,
+  "conclusion": "No engine can be called faster or slower from two load watchdog events; NONE completed decoding",
+  "guardian_bypassed": false,
+  "no_LXC_stopped": true,
+  "cases": [
+    {
+      "engine": "atomic16",
+      "trial_id": "pym_full_parity_atomic16_20261026",
+      "status": "failed_watchdog",
+      "same_feature_parity": [
+        "GPU_full_99",
+        "CPU_MoE_off_0",
+        "inline_MTP2",
+        "KV_f16_both",
+        "FlashAttention_on",
+        "mmap",
+        "batch1024",
+        "ubatch1024",
+        "threads8",
+        "poll100_batch0",
+        "spec_pmin_zero",
+        "no_backend_sampling",
+        "prompt_cache_off",
+        "no_warmup",
+        "reasoning_off"
+      ],
+      "same_model_path": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "last_watchdog_reason": "RUNTIME_PRESSURE",
+      "guardian_memory_gib": 32.328,
+      "guardian_memory_psi_full10": 1.84,
+      "model_loaded_and_inference_success": false,
+      "source_sha256": "a98b5c1946cb2cd418decbfde054b6e727d705568713709c0019a4af8b240360"
+    },
+    {
+      "engine": "atomic2",
+      "trial_id": "pym_full_parity_atomic2_20261026",
+      "status": "failed_watchdog",
+      "same_feature_parity": [
+        "GPU_full_99",
+        "CPU_MoE_off_0",
+        "inline_MTP2",
+        "KV_f16_both",
+        "FlashAttention_on",
+        "mmap",
+        "batch1024",
+        "ubatch1024",
+        "threads8",
+        "poll100_batch0",
+        "spec_pmin_zero",
+        "no_backend_sampling",
+        "prompt_cache_off",
+        "no_warmup",
+        "reasoning_off"
+      ],
+      "same_model_path": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "last_watchdog_reason": "RUNTIME_PRESSURE",
+      "guardian_memory_gib": 23.171,
+      "guardian_memory_psi_full10": 4.46,
+      "model_loaded_and_inference_success": false,
+      "source_sha256": "fbb900215858264b0107e7a610b24521e9fa7e63476d357f51aa35b44951a7f1"
+    }
+  ],
+  "next": "Same features 8192 context alternative and service RAM profiling; do not fake faster engine"
+}

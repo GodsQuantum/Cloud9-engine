@@ -1,0 +1,35 @@
+name: LAB adaptive MTP controller isolated unit
+on:
+  push:
+    branches: [lab/20261022-one-engine-qualification]
+    paths:
+      - .github/workflows/lab-adaptive-mtp-controller.yml
+      - tools/chimera/adaptive/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-controller:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Verify pinned donor source identity and scope
+        run: |
+          python3 - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          root=Path('tools/chimera/adaptive')
+          m=json.loads((root/'MANIFEST.json').read_text())
+          assert m['qualification']['standalone_controller_unit_pass']
+          assert not m['qualification']['integrated_runtime']
+          assert not m['qualification']['production']
+          for spec in m['files']:
+              assert hashlib.sha256((root/spec['name']).read_bytes()).hexdigest()==spec['sha256']
+          print('ADAPTIVE_DONOR_SHA_AND_LAB_SCOPE_PASS')
+          PY
+      - name: Compile and run adaptive controller state machine
+        run: |
+          set -euo pipefail
+          g++ -O2 -Wall -Wextra -std=c++17 -I tools/chimera/adaptive tools/chimera/adaptive/test-speculative-adaptive.cpp -o "$RUNNER_TEMP/test-adaptive-mtp"
+          "$RUNNER_TEMP/test-adaptive-mtp"

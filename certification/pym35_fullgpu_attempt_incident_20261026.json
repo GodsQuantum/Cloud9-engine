@@ -1,0 +1,227 @@
+{
+  "date": "2026-10-26",
+  "target": "Pym35 Pym Q2 MTP2 Atomic2 Vulkan FULL GPU",
+  "trials": [
+    {
+      "id": "pym35_atomic2_fullgpu_owner_1629_1026",
+      "status": "blocked_preflight",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD"
+      ],
+      "official_gpu_guard": {
+        "allow": false,
+        "mem_available_gib": 31.467,
+        "psi_memory_full_avg10": 0.0,
+        "swap_used_percent": 81.32,
+        "safe_total_gtt_gib": 13.825,
+        "reasons": [
+          "requested 14.0 GiB GTT > current safe total 13.8 GiB"
+        ]
+      },
+      "guard_events": [],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_owner_1629_1026.json"
+    },
+    {
+      "id": "pym35_atomic2_fullgpu_turbo4_1631_1026",
+      "status": "blocked_preflight",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "INSUFFICIENT_GTT_FOR_MATCHED_FULL_OFFLOAD"
+      ],
+      "official_gpu_guard": {
+        "allow": false,
+        "mem_available_gib": 29.407,
+        "psi_memory_full_avg10": 0.18,
+        "swap_used_percent": 79.24,
+        "safe_total_gtt_gib": 11.764,
+        "reasons": [
+          "requested 13.5 GiB GTT > current safe total 11.8 GiB"
+        ]
+      },
+      "guard_events": [],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_turbo4_1631_1026.json"
+    },
+    {
+      "id": "pym35_a2_owner_full_turbo4_gtt125_1026",
+      "status": "failed_watchdog",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [],
+      "official_gpu_guard": {
+        "allow": true,
+        "mem_available_gib": 30.922,
+        "psi_memory_full_avg10": 0.0,
+        "swap_used_percent": 79.14,
+        "safe_total_gtt_gib": 13.279,
+        "reasons": []
+      },
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793029084.6232672,
+            "mem_available_gib": 30.204,
+            "swap_used_gib": 18.612,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 79.14,
+            "psi_memory_some_avg10": 2.1,
+            "psi_memory_full_avg10": 1.95,
+            "gtt_used_gib": 0.357,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 0.071,
+            "safe_total_gtt_gib": 12.561,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host memory PSI full avg10=1.95"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 62.125
+        }
+      ],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_owner_full_turbo4_gtt125_1026.json"
+    },
+    {
+      "id": "pym35_a2_owner_full_turbo4_1637_1026",
+      "status": "failed_watchdog",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [],
+      "official_gpu_guard": {
+        "allow": true,
+        "mem_available_gib": 31.231,
+        "psi_memory_full_avg10": 0.0,
+        "swap_used_percent": 79.13,
+        "safe_total_gtt_gib": 13.588,
+        "reasons": []
+      },
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793029216.3274198,
+            "mem_available_gib": 29.192,
+            "swap_used_gib": 19.148,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 81.42,
+            "psi_memory_some_avg10": 7.07,
+            "psi_memory_full_avg10": 6.92,
+            "gtt_used_gib": 4.214,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 1.989,
+            "safe_total_gtt_gib": 15.406,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host memory PSI full avg10=6.92"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 66.625
+        }
+      ],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_owner_full_turbo4_1637_1026.json"
+    },
+    {
+      "id": "pym35_atomic2_fullgpu_lightbatch_1640_1026",
+      "status": "blocked_preflight",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [
+        "HOST_MEMORY_PSI"
+      ],
+      "official_gpu_guard": {
+        "allow": true,
+        "mem_available_gib": 32.468,
+        "psi_memory_full_avg10": 0.38,
+        "swap_used_percent": 84.15,
+        "safe_total_gtt_gib": 14.825,
+        "reasons": []
+      },
+      "guard_events": [],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_lightbatch_1640_1026.json"
+    },
+    {
+      "id": "pym35_atomic2_fullgpu_lightbatch_1642_1026",
+      "status": "blocked_preflight",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED"
+      ],
+      "official_gpu_guard": {
+        "allow": false,
+        "mem_available_gib": 32.629,
+        "psi_memory_full_avg10": 1.3,
+        "swap_used_percent": 86.8,
+        "safe_total_gtt_gib": 14.986,
+        "reasons": [
+          "host memory PSI full avg10=1.30"
+        ]
+      },
+      "guard_events": [],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_atomic2_fullgpu_lightbatch_1642_1026.json"
+    },
+    {
+      "id": "pym35_a2_full_8k_turbo4_recheck_1_1026",
+      "status": "failed_watchdog",
+      "actual_gpu_tokens": 0,
+      "preflight_reasons": [],
+      "official_gpu_guard": {
+        "allow": true,
+        "mem_available_gib": 32.692,
+        "psi_memory_full_avg10": 0.09,
+        "swap_used_percent": 87.18,
+        "safe_total_gtt_gib": 15.049,
+        "reasons": []
+      },
+      "guard_events": [
+        {
+          "reason": "RUNTIME_PRESSURE",
+          "guardian": {
+            "timestamp": 1793029399.1047256,
+            "mem_available_gib": 27.021,
+            "swap_used_gib": 22.861,
+            "swap_total_gib": 23.519,
+            "swap_used_percent": 97.2,
+            "psi_memory_some_avg10": 14.57,
+            "psi_memory_full_avg10": 12.77,
+            "gtt_used_gib": 6.139,
+            "gtt_total_gib": 72.0,
+            "vram_used_gib": 1.992,
+            "safe_total_gtt_gib": 15.161,
+            "allow": false,
+            "mode": "coexist-light",
+            "request_gib": 0.0,
+            "reasons": [
+              "host memory PSI full avg10=12.77"
+            ],
+            "cooldown_sec": 0.0,
+            "host_reserve_gib": 18.0,
+            "runtime_max_gtt_gib": 70.0
+          },
+          "temp_c": 66.625
+        }
+      ],
+      "owner_approved_fullgpu": true,
+      "report_path_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pym35_a2_full_8k_turbo4_recheck_1_1026.json"
+    }
+  ],
+  "OOM_events_CT410": 0,
+  "OOM_kill_events_CT410": 0,
+  "production_unchanged": true,
+  "temporary_lab_permission_removed": true,
+  "unsafe_to_repeat_until_memory_and_swap_headroom_improve": true
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "cloud9-adaptive-mtp-lab-controller-v1",
+  "date": "2026-10-24",
+  "upstream_base": "9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2",
+  "donor": "https://github.com/stew675/llama-cpp-rdna-boosts",
+  "donor_release": "v14-097cf33d9-r120",
+  "donor_patch_sha256": "95354d073d80bc1d571d05e2a4e350fdcaf8f072dc12173575cc7851d7dbb6cc",
+  "files": [
+    {
+      "name": "speculative-adaptive.h",
+      "sha256": "1030aed3a0bf84bbdaa807be21d224d0efa5c0ac57899975013ecedfddc2cfa1"
+    },
+    {
+      "name": "test-speculative-adaptive.cpp",
+      "sha256": "18107a7cc20b002b4accd604557ac1f2617f7246273fae4670d6fb82560c9b9d"
+    }
+  ],
+  "qualification": {
+    "standalone_controller_unit_pass": true,
+    "integrated_runtime": false,
+    "cpu_chimera": false,
+    "gpu": false,
+    "production": false
+  },
+  "experimental_worktree": "Sources/Scratch/cloud9-chimera-master9ae-r120-mtp-turbo-adaptive-20261024",
+  "rejected_hunks": 24,
+  "rejected_files": 12,
+  "conclusion": "Proof-of-concept adaptive controller ready for rebase; no claim of runtime integration"
+}

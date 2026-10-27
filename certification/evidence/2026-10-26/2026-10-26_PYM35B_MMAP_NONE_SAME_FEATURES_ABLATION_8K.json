@@ -1,0 +1,44 @@
+{
+  "utc": "2026-10-26T10:36:08.577975+00:00",
+  "same_features": "Pym35B Q2, ngl99, cpu-moe0, MTP2, f16, 8K, FA on, poll100, batch1024, 192 x3",
+  "only_change_from_historical_parity": "load-mode mmap -> none (NATIVE BOTH ATOMIC1.6+2)",
+  "engines": [
+    "atomic16",
+    "atomic2"
+  ],
+  "arc_before_bytes": 4831838208,
+  "arc_temporary_bytes": 3221225472,
+  "guardian_preserved": true,
+  "all_guests_remain_running": true,
+  "cases": [
+    {
+      "engine": "atomic16",
+      "exit": 0,
+      "duration_s": 4.47,
+      "output": "",
+      "status": "failed_load_or_guard",
+      "load_s": 3.618,
+      "guard_events": [],
+      "reasons": [],
+      "sha256": "3aa8f731913d23129416b6b46538f0f3fbb6f84af9f8581c95e1a04f8b5aca5a",
+      "rows": []
+    },
+    {
+      "engine": "atomic2",
+      "exit": 0,
+      "duration_s": 0.76,
+      "output": "{\"status\": \"blocked_preflight\", \"reasons\": [\"OFFICIAL_GPU_GUARD_DENIED\", \"HOST_MEMORY_PSI\"], \"path\": \"/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/moe_upstream_pymfull8k_nommap_atomic2_1026.json\"}\n",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "guard_events": null,
+      "reasons": [
+        "OFFICIAL_GPU_GUARD_DENIED",
+        "HOST_MEMORY_PSI"
+      ],
+      "sha256": "044d0c3045f54f742a520298179a65d71bc48086af91de9f724e4b7a0136b158",
+      "rows": []
+    }
+  ],
+  "arc_restored": true,
+  "finished_utc": "2026-10-26T10:36:17.832190+00:00"
+}

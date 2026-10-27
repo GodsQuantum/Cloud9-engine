@@ -1,0 +1,1296 @@
+{
+  "date_utc": "2026-10-26T07:59:37.446813+00:00",
+  "scope": "all 14 LXC + 2 VMs + host; QGA best effort, no service stopped",
+  "raw": {
+    "host:cloud9": {
+      "rc": 0,
+      "out": "{\"timers\": [\"Mon 2026-10-26 08:59:32 CET       4s Mon 2026-10-26 08:59:27 CET    842ms ago davinci-gpu-arbiter.timer                    davinci-gpu-arbiter.service\", \"Mon 2026-10-26 08:59:34 CET       6s Mon 2026-10-26 07:59:34 CET    59min ago aooscope-host-storage.timer                  aooscope-host-storage.service\", \"Mon 2026-10-26 08:59:38 CET      10s Mon 2026-10-26 08:58:38 CET      49s ago cloud9-homepage-activity.timer               cloud9-homepage-activity.service\", \"Mon 2026-10-26 08:59:39 CET      11s Mon 2026-10-26 08:59:09 CET      18s ago cloud9-operations-collector.timer            cloud9-operations-collector.service\", \"Mon 2026-10-26 09:00:44 CET 1min 16s Mon 2026-10-26 08:58:44 CET      43s ago cloud9-zfs-rehab-collector.timer             cloud9-zfs-rehab-collector.service\", \"Mon 2026-10-26 09:02:00 CET 2min 32s Mon 2026-10-26 08:02:04 CET    57min ago cloud9-netbox-discover.timer                 cloud9-netbox-discover.service\", \"Mon 2026-10-26 09:03:18 CET 3min 49s Mon 2026-10-26 08:52:22 CET     7min ago cloud9-agent-knowledge-converge.timer        cloud9-agent-knowledge-converge.service\", \"Mon 2026-10-26 09:10:16 CET    10min Mon 2026-10-26 08:37:38 CET    21min ago cloud9-vaultwarden-resurrection-sync.timer   cloud9-vaultwarden-resurrection-sync.service\", \"Mon 2026-10-26 09:11:37 CET    12min Mon 2026-10-26 08:56:10 CET 3min 17s ago paperless-documents-sync.timer               paperless-documents-sync.service\", \"Mon 2026-10-26 09:39:24 CET    39min Mon 2026-10-26 08:39:14 CET    20min ago cloud9-davinci-lut-sync.timer                cloud9-davinci-lut-sync.service\", \"Mon 2026-10-26 10:35:18 CET 1h 35min Sun 2026-10-25 10:38:07 CET      22h ago cloud9-pbs-clouds-sequential.timer           cloud9-pbs-clouds-sequential.service\", \"Mon 2026-10-26 10:36:17 CET 1h 36min Mon 2026-10-26 07:36:17 CET 1h 23min ago cloud9-pbs-check-verification.timer          cloud9-pbs-check-verification.service\", \"Mon 2026-10-26 12:37:09 CET 3h 37min Mon 2026-10-26 06:32:52 CET 2h 26min ago cloud9-openwebui-kb-sync.timer               cloud9-openwebui-kb-sync.service\", \"Mon 2026-10-26 14:10:28 CET 5h 10min Mon 2026-10-26 08:00:30 CET    58min ago cloud9-homeassistant-resurrection-sync.timer cloud9-homeassistant-resurrection-sync.service\", \"Mon 2026-10-26 17:34:34 CET       8h Sun 2026-10-25 21:56:05 CET      11h ago apt-daily.timer                              apt-daily.service\", \"Mon 2026-10-26 21:12:25 CET      12h Sun 2026-10-25 21:12:25 CET      11h ago systemd-tmpfiles-clean.timer                 systemd-tmpfiles-clean.service\", \"Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:00 CET       8h ago dpkg-db-backup.timer                         dpkg-db-backup.service\", \"Tue 2026-10-27 00:10:08 CET      15h Mon 2026-10-26 01:14:05 CET       7h ago beszel-agent-update.timer                    beszel-agent-update.service\", \"Tue 2026-10-27 00:57:16 CET      15h Mon 2026-10-26 00:42:57 CET       8h ago logrotate.timer                              logrotate.service\", \"Tue 2026-10-27 03:30:00 CET      18h Mon 2026-10-26 03:30:00 CET 5h 29min ago autosubs-standup-corpus.timer                autosubs-standup-corpus.service\", \"Tue 2026-10-27 05:30:39 CET      20h Mon 2026-10-26 05:24:39 CET 3h 34min ago cloud9-netbox-db-backup.timer                cloud9-netbox-db-backup.service\", \"Tue 2026-10-27 05:35:09 CET      20h Mon 2026-10-26 05:36:40 CET 3h 22min ago cloud9-finance-source-refresh.timer          cloud9-finance-source-refresh.service\", \"Tue 2026-10-27 05:48:34 CET      20h Mon 2026-10-26 02:41:39 CET       6h ago pve-daily-update.timer                       pve-daily-update.service\", \"Tue 2026-10-27 06:04:37 CET      21h Mon 2026-10-26 06:02:08 CET 2h 57min ago cloud9-pve-host-config-backup.timer          cloud9-pve-host-config-backup.service\", \"Tue 2026-10-27 06:40:25 CET      21h Mon 2026-10-26 06:40:29 CET 2h 18min ago apt-daily-upgrade.timer                      apt-daily-upgrade.service\", \"Tue 2026-10-27 07:03:40 CET      22h Mon 2026-10-26 07:06:16 CET 1h 53min ago cloud9-pbs-vm900-bootstrap.timer             cloud9-pbs-vm900-bootstrap.service\", \"Tue 2026-10-27 10:26:42 CET 1 day 1h Mon 2026-10-26 03:01:16 CET 5h 58min ago man-db.timer                                 man-db.service\", \"Sun 2026-11-01 03:10:24 CET   5 days Sun 2026-10-25 03:10:35 CET 1 day 5h ago e2scrub_all.timer                            e2scrub_all.service\", \"Sun 2026-11-01 03:10:43 CET   5 days Sun 2026-10-25 03:10:06 CET 1 day 5h ago xfs_scrub_all.timer                          xfs_scrub_all.service\", \"Mon 2026-11-02 00:18:25 CET   6 days Mon 2026-10-26 00:41:54 CET       8h ago fstrim.timer                                 fstrim.service\", \"Mon 2026-11-02 00:38:31 CET   6 days Mon 2026-10-26 00:46:30 CET       8h ago zfs-trim-weekly@rpool.timer                  zfs-trim@rpool.service\"], \"cron\": {\"crontab\": \"ERR=no crontab for arezki\\n\", \"cron_d\": \"total 10\\n-rw-r--r-- 1 root root 188 May  9 13:36 e2scrub_all\\nlrwxrwxrwx 1 root root  20 Sep  4 02:37 vzdump -> /etc/pve/vzdump.cron\\n-rw-r--r-- 1 root root 377 May 20  2023 zfsutils-linux\\n\"}, \"memory\": \"               total        used        free      shared  buff/cache   available\\nMem:           94360       69244        8063        7841       26521       25116\\nSwap:          24082       15640        8442\\n\", \"top\": [\"    PID   RSS %CPU     ELAPSED COMMAND\", \"   6661 7657156 21.1 12-12:01:47 kvm\", \"3252457 4625920 17.2 5-19:45:37 kvm\", \"3252434 3103092 4.5 5-19:45:37 virtiofsd\", \"2756770 2192936 26.8 6-17:20:17 llama-server\", \"1023559 1596252 3.1 2-07:46:25 hindsight-api\", \"  14668 1519212 0.7 12-12:01:40 betterbird-bin\", \"3609088 932608 3.1  3-16:32:19 jellyfin\", \" 162680 790628 0.2  2-08:45:34 chrome\", \"3009845 772220 0.3  3-06:58:22 dotnet\", \"1328921 768168 1.4  1-10:50:33 omniroute (v16.\", \"2257895 715576 3.7  1-09:45:09 MainThread\", \"2162057 660032 13.3 4-18:34:18 mcpproxy\", \"3110236 643956 0.4  3-17:08:33 uvicorn\", \"3475693 629232 0.4  3-11:25:58 python3\", \"4128776 555288 0.0  9-18:52:29 MainThread\", \"1283047 528512 0.1  1-05:51:41 docling-serve\"], \"docker\": [], \"failed\": [\"\\u25cf srv-remotes-celestra.mount                       loaded failed failed /srv/remotes/celestra\", \"\\u25cf srv-remotes-resurrection-backup\\\\x2dfiles.mount   loaded failed failed /srv/remotes/resurrection/backup-files\", \"\\u25cf srv-remotes-resurrection-backup\\\\x2dsystems.mount loaded failed failed /srv/remotes/resurrection/backup-systems\", \"\\u25cf srv-remotes-resurrection-Resurrection.mount      loaded failed failed /srv/remotes/resurrection/Resurrection\", \"\\u25cf cloud9-backup-local-xfs-repair-once.service      loaded failed failed Cloud9 backup-local XFS offline diagnosis and repair (one-shot)\"], \"active\": [\"  beszel-agent.service                      loaded active running Beszel Agent - Cloud9 Proxmox\", \"  chrony.service                            loaded active running chrony, an NTP client/server\", \"  cloud9-fan-profile.service                loaded active running Cloud9 thermal-aware fan controller\", \"  cloud9-gpu-memory-guard.service           loaded active running Cloud9 AMD APU shared-memory/GTT safety guard\", \"  cloud9-homepage-metrics.service           loaded active running Cloud9 read-only Homepage metrics bridge\", \"  colonial-one-moonlight-eis-bridge.service loaded active running Colonial One Moonlight virtual input via KDE native EIS\", \"  colonial-one-wol.service                  loaded active running Wake Colonial One LXC from standard Wake-on-LAN packets\", \"  cron.service                              loaded active running Regular background program processing daemon\", \"  dbus.service                              loaded active running D-Bus System Message Bus\", \"  filebrowser-remotes-bindfs.service        loaded active running UID-mapped remote storage view for FileBrowser Quantum\", \"  fsidd.service                             loaded active running NFS FSID Daemon\", \"  getty@tty1.service                        loaded active running Getty on tty1\", \"  lxc-monitord.service                      loaded active running LXC Container Monitoring Daemon\", \"  lxcfs.service                             loaded active running FUSE filesystem for LXC\", \"  nfs-blkmap.service                        loaded active running pNFS block layout mapping daemon\", \"  nfs-idmapd.service                        loaded active running NFSv4 ID-name mapping service\", \"  nfs-mountd.service                        loaded active running NFS Mount Daemon\", \"  nfsdcld.service                           loaded active running NFSv4 Client Tracking Daemon\", \"  postfix.service                           loaded active running Postfix Mail Transport Agent (main/default instance)\", \"  proxmox-firewall.service                  loaded active running Proxmox nftables firewall\", \"  pve-cluster.service                       loaded active running The Proxmox VE cluster filesystem\", \"  pve-container@110.service                 loaded active running PVE LXC Container: 110\", \"  pve-container@120.service                 loaded active running PVE LXC Container: 120\", \"  pve-container@130.service                 loaded active running PVE LXC Container: 130\", \"  pve-container@200.service                 loaded active running PVE LXC Container: 200\", \"  pve-container@210.service                 loaded active running PVE LXC Container: 210\", \"  pve-container@220.service                 loaded active running PVE LXC Container: 220\", \"  pve-container@230.service                 loaded active running PVE LXC Container: 230\", \"  pve-container@300.service                 loaded active running PVE LXC Container: 300\", \"  pve-container@400.service                 loaded active running PVE LXC Container: 400\", \"  pve-container@410.service                 loaded active running PVE LXC Container: 410\", \"  pve-container@500.service                 loaded active running PVE LXC Container: 500\", \"  pve-container@700.service                 loaded active running PVE LXC Container: 700\", \"  pve-firewall.service                      loaded active running Proxmox VE firewall\", \"  pve-lxc-syscalld.service                  loaded active running Proxmox VE LXC Syscall Daemon\", \"  pvedaemon.service                         loaded active running PVE API Daemon\", \"  pvefw-logger.service                      loaded active running Proxmox VE firewall logger\", \"  pveproxy.service                          loaded active running PVE API Proxy Server\", \"  pvescheduler.service                      loaded active running Proxmox VE scheduler\", \"  pvestatd.service                          loaded active running PVE Status Daemon\", \"  qmeventd.service                          loaded active running PVE Qemu Event Daemon\", \"  rrdcached.service                         loaded active running Data caching daemon for rrdtool\", \"  sentinelx-cloud-core.service              loaded active running SentinelX Core (Cloud9, UID1000 arezki + sudo)\", \"  smartmontools.service                     loaded active running Self Monitoring and Reporting Technology (SMART) Daemon\", \"  smbd.service                              loaded active running Samba SMB Daemon\", \"  spiceproxy.service                        loaded active running PVE SPICE Proxy Server\", \"  ssh-mcp-actions.service                   loaded active running SSH MCP action fleet control\", \"  ssh.service                               loaded active running OpenBSD Secure Shell server\", \"  systemd-journald.service                  loaded active running Journal Service\", \"  systemd-logind.service                    loaded active running User Login Management\", \"  systemd-udevd.service                     loaded active running Rule-based Manager for Device Events and Files\", \"  zfs-zed.service                           loaded active running ZFS Event Daemon (zed)\"]}\n",
+      "err": ""
+    },
+    "lxc:110": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:32 CET     8min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 14:22:26 CET 5h 22min Mon 2026-10-26 04:30:32 CET 4h 28min ago motd-news.timer              motd-news.service",
+          "Mon 2026-10-26 21:19:12 CET      12h Sun 2026-10-25 21:19:12 CET      11h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 21:48:52 CET      12h Mon 2026-10-26 07:26:48 CET 1h 32min ago apt-daily.timer              apt-daily.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:32 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:23:55 CET      15h Mon 2026-10-26 00:40:32 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 05:45:06 CET      20h Mon 2026-10-26 05:43:21 CET 3h 16min ago man-db.timer                 man-db.service",
+          "Tue 2026-10-27 06:16:46 CET      21h Mon 2026-10-26 06:33:30 CET 2h 25min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Sun 2026-11-01 03:10:33 CET   5 days Sun 2026-10-25 03:10:32 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:            6144        2800        3016         192         519        3343\nSwap:            512         511           0\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "3660467 772220 0.3  3-06:58:23 dotnet",
+          "1045490 378268 0.7  2-21:42:39 MainThread",
+          "3404036 319992 0.0  4-08:43:13 python",
+          "3404034 291544 0.0  4-08:43:13 python",
+          "3404040 282876 0.0  4-08:43:13 python",
+          "3404038 214088 0.0  4-08:43:13 python",
+          " 742471 100992 0.0  2-23:24:36 postgres",
+          "1279937 64784  2.0  9-22:40:15 dockerd",
+          " 742468 57332  0.0  2-23:24:36 postgres",
+          "3407344 56044  0.0  4-08:42:08 python",
+          "3407620 55368  0.1  4-08:42:02 python",
+          "3064839 49440  0.3  3-10:22:10 cloudflared",
+          "    342 48524  1.9 12-12:01:55 containerd",
+          " 899876 47684  0.2  2-22:31:54 traefik",
+          " 742469 41436  0.0  2-23:24:36 postgres",
+          " 742470 39148  0.0  2-23:24:36 postgres"
+        ],
+        "docker": [
+          "pangolin|403.5MiB / 1GiB|0.01%",
+          "pangolin-cloudflare-tunnel|14.22MiB / 256MiB|0.00%",
+          "pangolin-traefik|46.41MiB / 256MiB|0.94%",
+          "technitium-dns|749.2MiB / 2GiB|0.19%",
+          "tailscale|26.41MiB / 256MiB|0.10%",
+          "pangolin-postgres|148MiB / 512MiB|0.04%",
+          "netbox-netbox-worker-1|93.23MiB / 3GiB|0.18%",
+          "netbox-netbox-1|1.055GiB / 3GiB|0.00%",
+          "netbox-postgres-1|47.79MiB / 3GiB|0.00%",
+          "netbox-redis-1|3.383MiB / 3GiB|3.22%",
+          "netbox-redis-cache-1|3.988MiB / 3GiB|3.67%",
+          "cloudflared|40.3MiB / 256MiB|1.65%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service        loaded active running Beszel Agent - CT110 Connexion",
+          "  console-getty.service       loaded active running Console Getty",
+          "  container-getty@1.service   loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service   loaded active running Container Getty on /dev/tty2",
+          "  containerd.service          loaded active running containerd container runtime",
+          "  cron.service                loaded active running Regular background program processing daemon",
+          "  dbus.service                loaded active running D-Bus System Message Bus",
+          "  docker.service              loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service           loaded active running Agent to connect with Komodo Core",
+          "  postfix.service             loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service             loaded active running System Logging Service",
+          "  ssh.service                 loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service    loaded active running Journal Service",
+          "  systemd-logind.service      loaded active running User Login Management",
+          "  systemd-networkd.service    loaded active running Network Management",
+          "  systemd-resolved.service    loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:120": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:16 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 18:09:11 CET       9h Mon 2026-10-26 06:52:20 CET  2h 7min ago apt-daily.timer              apt-daily.service",
+          "Mon 2026-10-26 20:54:33 CET      11h Mon 2026-10-26 08:17:02 CET    42min ago motd-news.timer              motd-news.service",
+          "Mon 2026-10-26 21:19:13 CET      12h Sun 2026-10-25 21:19:13 CET      11h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:16 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:16 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:16 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:07:04 CET      15h Mon 2026-10-26 00:28:16 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 06:55:13 CET      21h Mon 2026-10-26 06:42:44 CET 2h 16min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Tue 2026-10-27 11:59:59 CET 1 day 3h Mon 2026-10-26 02:22:16 CET       6h ago man-db.timer                 man-db.service",
+          "Sun 2026-11-01 03:10:41 CET   5 days Sun 2026-10-25 03:10:16 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:            4096        1193        2697         105         309        2902\nSwap:            256          46         209\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "1004683 277168 0.4    03:14:38 gunicorn: worke",
+          "3876679 276464 0.2  2-21:53:29 python",
+          "1012576 276336 0.2    02:50:59 gunicorn: worke",
+          "3876690 271912 0.0  2-21:53:29 gunicorn: maste",
+          "3876488 88868  0.0  2-21:53:35 postgres",
+          "3877047 87460  0.0  2-21:53:14 postgres",
+          "3877130 66476  0.0  2-21:53:10 postgres",
+          "3547296 52784  0.0  3-14:21:40 vaultwarden",
+          "    471 51868  1.0 12-12:01:48 dockerd",
+          "    328 34032  0.9 12-12:01:48 containerd",
+          "1004684 28044  0.0    03:14:38 postgres",
+          "3876662 27592  0.0  2-21:53:29 authentik",
+          "3876485 21960  0.0  2-21:53:35 postgres",
+          "1068246 21448  0.0       02:03 postgres",
+          "1068910 21416  0.0       00:03 postgres",
+          "3876431 20000  0.0  2-21:53:35 postgres"
+        ],
+        "docker": [
+          "authentik-worker|272.8MiB / 1GiB|0.12%",
+          "authentik-server|630.8MiB / 1.5GiB|0.54%",
+          "authentik-postgresql|145.2MiB / 768MiB|0.01%",
+          "vaultwarden|52.66MiB / 256MiB|0.00%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service        loaded active running Beszel Agent - CT120 S��curit��",
+          "  console-getty.service       loaded active running Console Getty",
+          "  container-getty@1.service   loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service   loaded active running Container Getty on /dev/tty2",
+          "  containerd.service          loaded active running containerd container runtime",
+          "  cron.service                loaded active running Regular background program processing daemon",
+          "  dbus.service                loaded active running D-Bus System Message Bus",
+          "  docker.service              loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service           loaded active running Agent to connect with Komodo Core",
+          "  postfix.service             loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service             loaded active running System Logging Service",
+          "  ssh.service                 loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service    loaded active running Journal Service",
+          "  systemd-logind.service      loaded active running User Login Management",
+          "  systemd-networkd.service    loaded active running Network Management",
+          "  systemd-resolved.service    loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:130": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:16 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 18:33:47 CET       9h Mon 2026-10-26 06:14:02 CET 2h 45min ago apt-daily.timer              apt-daily.service",
+          "Mon 2026-10-26 21:19:13 CET      12h Sun 2026-10-25 21:19:13 CET      11h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 22:27:41 CET      13h Mon 2026-10-26 07:00:08 CET 1h 59min ago motd-news.timer              motd-news.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:16 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:16 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:16 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:52:31 CET      15h Mon 2026-10-26 00:42:16 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 06:53:50 CET      21h Mon 2026-10-26 06:32:16 CET 2h 27min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Tue 2026-10-27 10:06:45 CET 1 day 1h Mon 2026-10-26 04:32:16 CET 4h 27min ago man-db.timer                 man-db.service",
+          "Sun 2026-11-01 03:10:09 CET   5 days Sun 2026-10-25 03:11:08 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:            3072         711        2003           0         357        2360\nSwap:            256         246           9\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "3865704 207664 0.9  3-06:56:31 mongod",
+          " 769273 188088 1.2  1-05:53:49 uptime-kuma",
+          " 653753 141956 0.2  1-10:57:21 next-server (v",
+          "3630121 52480  2.0  3-17:16:29 dockerd",
+          " 768548 49120  0.1  1-05:54:33 beszel",
+          "    326 35232  1.0 12-12:01:48 containerd",
+          " 206557 33188  0.4  2-06:58:43 core",
+          "3631053 20836  3.5  3-17:16:27 aooscope",
+          "   1624 14060  0.0 12-12:01:45 beszel-agent",
+          " 486786 12144  0.0  1-18:25:26 python3",
+          "1432423 10336 15.3       00:00 python3",
+          "      1  8780  0.0 12-12:01:50 systemd",
+          "3630589  8128  0.0  3-17:16:27 containerd-shim",
+          "    303  8092  0.0 12-12:01:48 periphery",
+          " 653677  7872  0.0  1-10:57:21 containerd-shim",
+          " 206477  7840  0.0  2-06:58:43 containerd-shim"
+        ],
+        "docker": [
+          "uptime-kuma|187.2MiB / 512MiB|10.10%",
+          "beszel|44.68MiB / 256MiB|0.00%",
+          "homepage|136.2MiB / 512MiB|0.01%",
+          "komodo-core|32.44MiB / 512MiB|2.15%",
+          "komodo-mongo|211.6MiB / 1GiB|1.47%",
+          "aooscope|20.82MiB / 512MiB|0.00%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service              loaded active running Beszel Agent - CT130 Administration",
+          "  cloud9-homepage-telemetry.service loaded active running Cloud9 Homepage operations read-only data using the Python standard-library HTTP server",
+          "  console-getty.service             loaded active running Console Getty",
+          "  container-getty@1.service         loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service         loaded active running Container Getty on /dev/tty2",
+          "  containerd.service                loaded active running containerd container runtime",
+          "  cron.service                      loaded active running Regular background program processing daemon",
+          "  dbus.service                      loaded active running D-Bus System Message Bus",
+          "  docker.service                    loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service       loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service                 loaded active running Agent to connect with Komodo Core",
+          "  postfix.service                   loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service                   loaded active running System Logging Service",
+          "  ssh.service                       loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service          loaded active running Journal Service",
+          "  systemd-logind.service            loaded active running User Login Management",
+          "  systemd-networkd.service          loaded active running Network Management",
+          "  systemd-resolved.service          loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:200": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:00 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 13:30:00 CET 4h 30min Sun 2026-10-25 13:30:00 CET      19h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 21:59:58 CET      13h Mon 2026-10-26 00:20:56 CET       8h ago motd-news.timer              motd-news.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:00 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:00 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:37 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:19:50 CET      15h Mon 2026-10-26 03:05:09 CET 5h 54min ago man-db.timer                 man-db.service",
+          "Tue 2026-10-27 00:51:05 CET      15h Mon 2026-10-26 00:36:56 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 02:10:53 CET      17h Mon 2026-10-26 07:58:35 CET  1h 0min ago apt-daily.timer              apt-daily.service",
+          "Tue 2026-10-27 06:28:19 CET      21h Mon 2026-10-26 06:50:55 CET  2h 8min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Sun 2026-11-01 03:10:24 CET   5 days Sun 2026-10-25 03:10:56 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:            3072         613        2229           0         229        2458\nSwap:            256          51         204\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "   1308 287492 2.7  5-19:45:37 syncthing",
+          " 756107 177336 2.1  3-16:51:36 filebrowser",
+          "    478 47972  0.9  5-19:45:38 dockerd",
+          "    345 36744  0.9  5-19:45:39 containerd",
+          " 755652 31708  0.0  3-16:51:49 sftpgo",
+          " 747914 14188  0.0  3-17:11:25 syncbridge",
+          "   1374 14080  0.0  5-19:45:37 beszel-agent",
+          "    949 13516  0.0  5-19:45:37 garage",
+          "2654405 10184 35.7       00:00 python3",
+          "    294  8100  0.0  5-19:45:39 periphery",
+          "   1227  7912  0.0  5-19:45:37 syncthing",
+          "    844  7684  0.0  5-19:45:37 containerd-shim",
+          " 755564  7600  0.0  3-16:51:49 containerd-shim",
+          " 747889  7568  0.0  3-17:11:25 containerd-shim",
+          " 756031  7564  0.0  3-16:51:36 containerd-shim",
+          "   1145  7544  0.0  5-19:45:37 containerd-shim"
+        ],
+        "docker": [
+          "filebrowser-quantum|190.3MiB / 768MiB|0.00%",
+          "sftpgo|30.27MiB / 512MiB|0.00%",
+          "syncbridge|14.22MiB / 256MiB|0.00%",
+          "syncthing|291.5MiB / 1GiB|0.08%",
+          "garage|10.16MiB / 256MiB|0.06%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service        loaded active running Beszel Agent - CT200 Stockage",
+          "  console-getty.service       loaded active running Console Getty",
+          "  container-getty@1.service   loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service   loaded active running Container Getty on /dev/tty2",
+          "  containerd.service          loaded active running containerd container runtime",
+          "  cron.service                loaded active running Regular background program processing daemon",
+          "  dbus.service                loaded active running D-Bus System Message Bus",
+          "  docker.service              loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service           loaded active running Agent to connect with Komodo Core",
+          "  postfix.service             loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service             loaded active running System Logging Service",
+          "  smbd.service                loaded active running Samba SMB Daemon",
+          "  ssh.service                 loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service    loaded active running Journal Service",
+          "  systemd-logind.service      loaded active running User Login Management",
+          "  systemd-networkd.service    loaded active running Network Management",
+          "  systemd-resolved.service    loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:210": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      27s Mon 2026-10-26 08:50:17 CET     9min ago sysstat-collect.timer           sysstat-collect.service",
+          "Mon 2026-10-26 09:09:26 CET     9min Sun 2026-10-25 14:36:44 CET      18h ago motd-news.timer                 motd-news.service",
+          "Mon 2026-10-26 09:14:15 CET    14min Mon 2026-10-26 03:16:37 CET 5h 42min ago moneymatter-crypto-sync.timer   moneymatter-crypto-sync.service",
+          "Mon 2026-10-26 12:46:19 CET 3h 46min Sun 2026-10-25 19:20:50 CET      13h ago apt-daily.timer                 apt-daily.service",
+          "Mon 2026-10-26 21:18:54 CET      12h Sun 2026-10-25 21:18:54 CET      11h ago systemd-tmpfiles-clean.timer    systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 22:21:57 CET      13h Sun 2026-10-25 22:18:30 CET      10h ago moneymatter-swisslife-nav.timer moneymatter-swisslife-nav.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago dpkg-db-backup.timer            dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago sysstat-rotate.timer            sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:37 CET       8h ago sysstat-summary.timer           sysstat-summary.service",
+          "Tue 2026-10-27 00:44:40 CET      15h Mon 2026-10-26 00:48:44 CET       8h ago logrotate.timer                 logrotate.service",
+          "Tue 2026-10-27 06:40:01 CET      21h Mon 2026-10-26 06:14:15 CET 2h 45min ago apt-daily-upgrade.timer         apt-daily-upgrade.service",
+          "Tue 2026-10-27 08:18:54 CET      23h Mon 2026-10-26 01:19:15 CET       7h ago man-db.timer                    man-db.service",
+          "Sun 2026-11-01 03:10:32 CET   5 days Sun 2026-10-25 03:10:44 CET 1 day 5h ago e2scrub_all.timer               e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                    fstrim.service",
+          "-                                  - -                                      - ua-timer.timer                  ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           16384        6040        9765         244         822       10343\nSwap:           1536        1118         417\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "   1375 1519212 0.7 12-12:01:44 betterbird-bin",
+          "2725860 459464 0.4  3-13:56:51 MainThread",
+          "    587 368764 0.2 12-12:01:46 betterbird-bin",
+          "2914376 365288 1.0  3-11:30:02 openbb-mcp",
+          "2471150 321832 0.2  3-17:10:07 python",
+          "2695433 242608 0.1  1-05:58:14 mealie",
+          "2902682 198896 0.0  3-11:36:32 granian asginl ",
+          "2473201 191376 0.0  3-17:08:52 docservice",
+          " 716086 165332 0.0       09:26 [celeryd: celer",
+          " 660545 165320 0.0       54:23 [celeryd: celer",
+          "2902626 162540 0.1  3-11:36:33 [celeryd: celer",
+          "2902633 161528 0.0  3-11:36:33 [celery beat] -",
+          "2901611 146540 0.1  3-11:36:58 java",
+          "2902627 143328 0.0  3-11:36:33 python3",
+          "2473233 104436 0.0  3-17:08:50 converter",
+          "2914455 85920  0.1  3-11:30:01 python"
+        ],
+        "docker": [
+          "pick-a-recipe|63.3MiB / 2GiB|0.01%",
+          "mealie|235.5MiB / 1GiB|0.12%",
+          "mealie-db|35.39MiB / 512MiB|0.01%",
+          "cryptocom-app-read-mcp|85.62MiB / 256MiB|0.09%",
+          "gods-eye-read-mcp|37.83MiB / 256MiB|0.45%",
+          "sec-edgar-mcp|75.43MiB / 768MiB|0.75%",
+          "cdcx-paper-mcp|41.34MiB / 192MiB|0.19%",
+          "fincept-mcp|82.98MiB / 768MiB|0.16%",
+          "gods-eye-view|50.05MiB / 2GiB|0.09%",
+          "cdcx-paper|412KiB / 128MiB|0.00%",
+          "openbb-mcp|356.4MiB / 2GiB|0.17%",
+          "kiwix|16.41MiB / 256MiB|0.00%",
+          "paperless-mcp|63MiB / 256MiB|0.00%",
+          "paperless|819.9MiB / 6GiB|0.23%",
+          "paperless-db|161.8MiB / 1GiB|0.00%",
+          "paperless-gotenberg|164.2MiB / 1GiB|3.49%",
+          "paperless-tika|207.4MiB / 1GiB|0.18%",
+          "paperless-dragonfly|14.96MiB / 1GiB|0.87%",
+          "moneymatter|4.086MiB / 256MiB|0.10%",
+          "moneymatter-backend|455.5MiB / 1GiB|0.98%",
+          "moneymatter-db|97.36MiB / 512MiB|1.30%",
+          "moneymatter-currency-rates|35.57MiB / 256MiB|0.01%",
+          "moneymatter-dragonfly|18.65MiB / 512MiB|0.50%",
+          "tradingagents-mcp|18.6MiB / 4GiB|0.19%",
+          "cryptocom-exchange-mcp|62.33MiB / 384MiB|0.01%",
+          "transmute|331.3MiB / 1GiB|0.27%",
+          "onlyoffice|330.2MiB / 2GiB|0.01%",
+          "actual-budget|65.21MiB / 512MiB|0.00%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service             loaded active running Beszel Agent - CT210 Famille-Docs",
+          "  betterbird-arezki.service        loaded active running Betterbird Arezki headless",
+          "  betterbird-fella.service         loaded active running Betterbird Fella headless",
+          "  console-getty.service            loaded active running Console Getty",
+          "  container-getty@1.service        loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service        loaded active running Container Getty on /dev/tty2",
+          "  containerd.service               loaded active running containerd container runtime",
+          "  cron.service                     loaded active running Regular background program processing daemon",
+          "  dbus.service                     loaded active running D-Bus System Message Bus",
+          "  docker.service                   loaded active running Docker Application Container Engine",
+          "  fincept-native-paper-mcp.service loaded active running Fincept v4.5.0 native paper trading MCP bridge",
+          "  networkd-dispatcher.service      loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service                loaded active running Agent to connect with Komodo Core",
+          "  postfix.service                  loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service                  loaded active running System Logging Service",
+          "  ssh.service                      loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service         loaded active running Journal Service",
+          "  systemd-logind.service           loaded active running User Login Management",
+          "  systemd-networkd.service         loaded active running Network Management",
+          "  systemd-resolved.service         loaded active running Network Name Resolution",
+          "  user@1000.service                loaded active running User Manager for UID 1000"
+        ]
+      }
+    },
+    "lxc:220": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      27s Mon 2026-10-26 08:50:21 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 21:19:12 CET      12h Sun 2026-10-25 21:19:12 CET      11h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 23:12:28 CET      14h Mon 2026-10-26 07:10:21 CET 1h 49min ago motd-news.timer              motd-news.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:21 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:16:46 CET      15h Mon 2026-10-26 00:58:14 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 00:23:21 CET      15h Mon 2026-10-26 06:32:21 CET 2h 27min ago apt-daily.timer              apt-daily.service",
+          "Tue 2026-10-27 06:57:27 CET      21h Mon 2026-10-26 06:06:32 CET 2h 52min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Tue 2026-10-27 11:53:22 CET 1 day 2h Mon 2026-10-26 00:54:07 CET       8h ago man-db.timer                 man-db.service",
+          "Sun 2026-11-01 03:10:42 CET   5 days Sun 2026-10-25 03:11:08 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           12288        2796        8957         479        1014        9491\nSwap:           1024          54         969\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          " 127709 932608 3.1  3-16:32:23 jellyfin",
+          "2647792 412148 0.1  1-05:57:08 python",
+          " 128019 400276 0.9  3-16:32:21 Readarr",
+          "2650152 125820 0.7  1-05:56:16 silo",
+          " 126667 104000 0.1  3-16:32:24 jellyfin-mcp",
+          "2649989 96156  0.0  1-05:56:22 postgres",
+          "2647784 83236  0.0  1-05:57:09 python",
+          "4082942 77856  0.0       43:14 postgres",
+          "2649927 75576  0.2  1-05:56:22 GarnetServer",
+          "2647663 72356  0.4  1-05:57:11 dragonfly",
+          "2647767 64352  0.0  1-05:57:10 python",
+          " 126162 62540  3.6  3-16:32:25 dockerd",
+          " 127847 59084  0.0  3-16:32:23 MainThread",
+          "4082943 56868  0.0       43:14 postgres",
+          "4097489 53984  0.0       25:14 postgres",
+          "4091083 52620  0.0       33:14 postgres"
+        ],
+        "docker": [
+          "stump|13.58MiB / 256MiB|0.00%",
+          "silo-postgres|292.5MiB / 2GiB|0.15%",
+          "silo-garnet|70.01MiB / 512MiB|0.17%",
+          "immich-server|0B / 0B|0.00%",
+          "immich-machine-learning|515.4MiB / 4GiB|0.13%",
+          "silo|172.5MiB / 4GiB|0.92%",
+          "immich-postgres|48.66MiB / 2GiB|0.01%",
+          "immich-dragonfly|71.68MiB / 512MiB|0.39%",
+          "jellyfin-mcp|137.8MiB / 384MiB|0.19%",
+          "jellyfin|987.8MiB / 2GiB|1.10%",
+          "komga|52.73MiB / 512MiB|0.00%",
+          "bookshelf|394.7MiB / 512MiB|35.02%",
+          "stremio-server|66.38MiB / 2GiB|0.02%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service        loaded active running Beszel Agent - CT220 M��dias-Photos",
+          "  console-getty.service       loaded active running Console Getty",
+          "  container-getty@1.service   loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service   loaded active running Container Getty on /dev/tty2",
+          "  containerd.service          loaded active running containerd container runtime",
+          "  cron.service                loaded active running Regular background program processing daemon",
+          "  dbus.service                loaded active running D-Bus System Message Bus",
+          "  docker.service              loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service           loaded active running Agent to connect with Komodo Core",
+          "  postfix.service             loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service             loaded active running System Logging Service",
+          "  ssh.service                 loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service    loaded active running Journal Service",
+          "  systemd-logind.service      loaded active running User Login Management",
+          "  systemd-networkd.service    loaded active running Network Management",
+          "  systemd-resolved.service    loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:230": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      27s Mon 2026-10-26 08:50:20 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 12:49:33 CET 3h 50min Sun 2026-10-25 20:43:20 CET      12h ago apt-daily.timer              apt-daily.service",
+          "Mon 2026-10-26 21:19:23 CET      12h Sun 2026-10-25 21:19:23 CET      11h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 22:22:37 CET      13h Mon 2026-10-26 06:08:20 CET 2h 51min ago motd-news.timer              motd-news.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:18 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:20 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:48:53 CET      15h Mon 2026-10-26 00:21:04 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 06:52:26 CET      21h Mon 2026-10-26 06:25:19 CET 2h 34min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Tue 2026-10-27 08:01:51 CET      23h Mon 2026-10-26 03:11:20 CET 5h 48min ago man-db.timer                 man-db.service",
+          "Sun 2026-11-01 03:10:40 CET   5 days Sun 2026-10-25 03:10:06 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:            6144        1902        3627         268         882        4241\nSwap:            512         118         393\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "1798002 238672 0.3  1-05:54:47 Radarr",
+          "1797895 218452 0.4  1-05:54:48 Prowlarr",
+          "1797955 200584 0.3  1-05:54:48 node",
+          "1797412 183220 0.1  1-05:54:49 Whisparr",
+          "1797654 181272 0.7  1-05:54:48 Sonarr",
+          "3697639 112988 0.2  3-11:03:56 python",
+          "3696545 103208 0.1  3-11:04:08 python",
+          "3696948 102736 0.0  3-11:04:04 node-MainThread",
+          "3697140 99340  0.0  3-11:04:03 python",
+          "3697133 97364  0.0  3-11:04:03 python3",
+          "3697214 94368  0.1  3-11:04:02 arr-mcp",
+          "3697361 92060  0.1  3-11:04:00 Cleanuparr",
+          "    388 62472  1.9 12-12:01:43 dockerd",
+          "1796445 40760  0.0  1-05:54:50 node",
+          "    327 38944  1.7 12-12:01:44 containerd",
+          "3697523 35776  0.0  3-11:03:58 wsm-torznab"
+        ],
+        "docker": [
+          "sonarr|175.7MiB / 512MiB|0.05%",
+          "radarr|234.4MiB / 512MiB|0.06%",
+          "whisparr|172.8MiB / 512MiB|0.05%",
+          "qbittorrent|34.16MiB / 1GiB|0.29%",
+          "comet-postgres|33.96MiB / 512MiB|0.71%",
+          "seerr-catalog|39.41MiB / 256MiB|0.00%",
+          "prowlarr|209.7MiB / 768MiB|0.04%",
+          "seerr|219.9MiB / 512MiB|0.00%",
+          "watchsomuch-torznab|35.55MiB / 256MiB|0.00%",
+          "cleanuparr|90.31MiB / 768MiB|0.06%",
+          "arr-mcp|114MiB / 256MiB|0.20%",
+          "questarr|91.41MiB / 512MiB|0.01%",
+          "comet|183.2MiB / 1GiB|17.58%",
+          "kapowarr|128MiB / 1.5GiB|0.01%",
+          "byparr|122.8MiB / 2GiB|0.12%"
+        ],
+        "failed": [],
+        "active": [
+          "  beszel-agent.service        loaded active running Beszel Agent - CT230 T��l��chargements",
+          "  console-getty.service       loaded active running Console Getty",
+          "  container-getty@1.service   loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service   loaded active running Container Getty on /dev/tty2",
+          "  containerd.service          loaded active running containerd container runtime",
+          "  cron.service                loaded active running Regular background program processing daemon",
+          "  dbus.service                loaded active running D-Bus System Message Bus",
+          "  docker.service              loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service           loaded active running Agent to connect with Komodo Core",
+          "  postfix.service             loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service             loaded active running System Logging Service",
+          "  ssh.service                 loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service    loaded active running Journal Service",
+          "  systemd-logind.service      loaded active running User Login Management",
+          "  systemd-networkd.service    loaded active running Network Management",
+          "  systemd-resolved.service    loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:300": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET    27s Mon 2026-10-26 08:50:42 CET     8min ago sysstat-collect.timer           sysstat-collect.service",
+          "Mon 2026-10-26 09:00:03 CET    31s Mon 2026-10-26 08:59:03 CET      28s ago davinci-render-autosleep.timer  davinci-render-autosleep.service",
+          "Mon 2026-10-26 09:00:03 CET    31s Mon 2026-10-26 08:59:03 CET      28s ago davinci-render-supervisor.timer davinci-render-supervisor.service",
+          "Mon 2026-10-26 09:09:33 CET  10min Mon 2026-10-26 08:39:33 CET    19min ago mediamtx-upnp.timer             mediamtx-upnp.service",
+          "Mon 2026-10-26 17:10:43 CET     8h Mon 2026-10-26 05:29:32 CET 3h 29min ago motd-news.timer                 motd-news.service",
+          "Mon 2026-10-26 17:49:35 CET     8h Sun 2026-10-25 21:45:39 CET      11h ago apt-daily.timer                 apt-daily.service",
+          "Mon 2026-10-26 21:14:46 CET    12h Sun 2026-10-25 21:14:46 CET      11h ago systemd-tmpfiles-clean.timer    systemd-tmpfiles-clean.service",
+          "Tue 2026-10-27 00:00:00 CET    15h Mon 2026-10-26 00:00:16 CET       8h ago dpkg-db-backup.timer            dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET    15h Mon 2026-10-26 00:00:16 CET       8h ago sysstat-rotate.timer            sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET    15h Mon 2026-10-26 00:07:36 CET       8h ago sysstat-summary.timer           sysstat-summary.service",
+          "Tue 2026-10-27 00:10:22 CET    15h Mon 2026-10-26 00:46:42 CET       8h ago logrotate.timer                 logrotate.service",
+          "Tue 2026-10-27 00:21:08 CET    15h Mon 2026-10-26 02:45:42 CET       6h ago man-db.timer                    man-db.service",
+          "Tue 2026-10-27 06:04:15 CET    21h Mon 2026-10-26 06:20:11 CET 2h 39min ago apt-daily-upgrade.timer         apt-daily-upgrade.service",
+          "Sun 2026-11-01 03:10:21 CET 5 days Sun 2026-10-25 03:11:08 CET 1 day 5h ago e2scrub_all.timer               e2scrub_all.service",
+          "-                                - -                                      - fstrim.timer                    fstrim.service",
+          "-                                - -                                      - ua-timer.timer                  ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           32768        1738       30659         281         651       31029\nSwap:           2048        1009        1038\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "2955552 454304 0.0  3-13:56:03 node",
+          "3694749 187012 3.1  2-21:50:33 temporal-server",
+          "2955550 100952 0.0  3-13:56:03 next-server (v1",
+          "    429 91264  0.2 12-12:01:37 python",
+          "    430 79412  2.5 12-12:01:37 dockerd",
+          "3654296 67340  0.0  6-18:26:18 postgres",
+          "   2149 54136  0.0 12-12:01:25 node",
+          "   1569 53464  0.0 12-12:01:29 GarnetServer",
+          "    339 49708  2.1 12-12:01:38 containerd",
+          "3654232 37572  0.0  6-18:26:18 postgres",
+          "2955232 36144  0.1  3-13:56:11 PM2 v7.0.4: God",
+          "2955551 35804 10.2  3-13:56:03 node",
+          "2955452 34964  0.1  3-13:56:03 node /usr/local",
+          "2955472 34864  0.1  3-13:56:03 node /usr/local",
+          "2955471 34860  0.1  3-13:56:03 node /usr/local",
+          "   2227 34268  0.0 12-12:01:23 node"
+        ],
+        "docker": [
+          "postiz-temporal|183.9MiB / 2GiB|2.36%",
+          "postiz-temporal-ready|3.48MiB / 256MiB|0.00%",
+          "obs-lazytainer|13.36MiB / 32GiB|0.09%",
+          "postiz-app|724.7MiB / 6GiB|10.34%",
+          "scribewatch|6.168MiB / 512MiB|0.00%",
+          "autosubs|11.21MiB / 6GiB|0.00%",
+          "davinci-mcp-gateway|17.34MiB / 128MiB|0.00%",
+          "mediamtx|14.88MiB / 1GiB|0.00%",
+          "postiz-temporal-postgres|102.8MiB / 1.5GiB|0.18%",
+          "postiz-postgres|55.54MiB / 1GiB|0.00%",
+          "postiz-garnet|53.36MiB / 512MiB|0.01%",
+          "davinci-studio-server|46.51MiB / 512MiB|0.01%",
+          "davinci-studio-postgres|177MiB / 2GiB|0.01%",
+          "postiz-cli-auth|85.66MiB / 256MiB|0.00%"
+        ],
+        "failed": [
+          "● davinci-fonts-refresh.path     loaded failed failed Refresh DaVinci font cache when shared font directory changes",
+          "● davinci-assets-refresh.service loaded failed failed Refresh DaVinci Resolve shared fonts and LUT metadata"
+        ],
+        "active": [
+          "  beszel-agent.service           loaded active running Beszel Agent - CT300 Travail",
+          "  console-getty.service          loaded active running Console Getty",
+          "  container-getty@1.service      loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service      loaded active running Container Getty on /dev/tty2",
+          "  containerd.service             loaded active running containerd container runtime",
+          "  cron.service                   loaded active running Regular background program processing daemon",
+          "  davinci-dmmdea-bridge.service  loaded active running DaVinci Resolve dmmdea Python Bridge",
+          "  davinci-dmmdea-mcp.service     loaded active running DaVinci Resolve dmmdea MCP",
+          "  davinci-gursky-mcp.service     loaded active running DaVinci Resolve Gursky MCP (compound full-coverage)",
+          "  davinci-h265-finalizer.service loaded active running Cloud9 DaVinci DNxHR to H.265 MP4 finalizer",
+          "  dbus.service                   loaded active running D-Bus System Message Bus",
+          "  docker.service                 loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service    loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service              loaded active running Agent to connect with Komodo Core",
+          "  postfix.service                loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service                loaded active running System Logging Service",
+          "  ssh.service                    loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service       loaded active running Journal Service",
+          "  systemd-logind.service         loaded active running User Login Management",
+          "  systemd-networkd.service       loaded active running Network Management",
+          "  systemd-resolved.service       loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:400": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      24s Mon 2026-10-26 08:50:15 CET      9min ago sysstat-collect.timer          sysstat-collect.service",
+          "Mon 2026-10-26 09:00:43 CET  1min 8s Mon 2026-10-26 08:50:22 CET      9min ago hindsight-guides-sync.timer    hindsight-guides-sync.service",
+          "Mon 2026-10-26 13:30:17 CET 4h 30min Mon 2026-10-26 02:58:22 CET        6h ago apt-daily.timer                apt-daily.service",
+          "Mon 2026-10-26 19:49:24 CET      10h Mon 2026-10-26 05:58:22 CET   3h 1min ago motd-news.timer                motd-news.service",
+          "Mon 2026-10-26 21:10:10 CET      12h Sun 2026-10-25 21:10:10 CET       11h ago update-notifier-download.timer update-notifier-download.service",
+          "Mon 2026-10-26 21:20:10 CET      12h Sun 2026-10-25 21:20:10 CET       11h ago systemd-tmpfiles-clean.timer   systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 21:27:52 CET      12h Tue 2026-10-20 18:34:26 CEST   5 days ago update-notifier-motd.timer     update-notifier-motd.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:11 CET        8h ago dpkg-db-backup.timer           dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:11 CET        8h ago sysstat-rotate.timer           sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:22 CET        8h ago sysstat-summary.timer          sysstat-summary.service",
+          "Tue 2026-10-27 00:09:50 CET      15h Mon 2026-10-26 00:35:22 CET        8h ago logrotate.timer                logrotate.service",
+          "Tue 2026-10-27 00:52:57 CET      15h Mon 2026-10-26 08:48:22 CET     11min ago man-db.timer                   man-db.service",
+          "Tue 2026-10-27 06:52:05 CET      21h Mon 2026-10-26 06:33:26 CET  2h 26min ago apt-daily-upgrade.timer        apt-daily-upgrade.service",
+          "Sun 2026-11-01 03:10:38 CET   5 days Sun 2026-10-25 03:11:08 CET  1 day 5h ago e2scrub_all.timer              e2scrub_all.service",
+          "-                                  - -                                       - fstrim.timer                   fstrim.service",
+          "-                                  - -                                       - ua-timer.timer                 ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           32768       14234       16750         672        2455       18533\nSwap:           4096        3862         233\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          " 114451 1596252 3.1 2-07:46:32 hindsight-api",
+          "4068118 790628 0.2  2-08:45:41 chrome",
+          "1255931 768232 1.4  1-10:50:39 omniroute (v16.",
+          "1553257 715576 3.7  1-09:45:16 MainThread",
+          "1675460 660048 13.3 4-18:34:25 mcpproxy",
+          "1561430 629232 0.4  3-11:26:05 python3",
+          "3071279 555288 0.0  9-18:52:36 MainThread",
+          " 296428 518328 5.8  8-19:07:46 n8n start",
+          "1602950 428300 0.3  3-11:17:08 gunicorn",
+          " 717970 427836 0.1  5-12:15:43 agent-browser",
+          "1602940 413156 0.3  3-11:17:08 gunicorn",
+          " 936260 406800 0.1  5-11:59:34 agent-browser",
+          "2188973 402252 0.4  3-09:03:07 n8n worker",
+          "1595076 398068 0.3  3-11:17:51 celery",
+          "1915988 359536 1.6  3-10:07:50 hermes",
+          "2881766 300316 0.0  1-20:55:59 chrome"
+        ],
+        "docker": [
+          "omniroute|937.4MiB / 10GiB|0.17%",
+          "omniroutecodex-chatgpt-web-codex-browser-1|286.6MiB / 32GiB|0.00%",
+          "lightpanda|4.797MiB / 768MiB|0.01%",
+          "hindsight|1.636GiB / 2.5GiB|0.35%",
+          "hindsight-postgres|169.1MiB / 512MiB|0.14%",
+          "searxng-mcp|52.34MiB / 256MiB|0.00%",
+          "searxng|99.69MiB / 512MiB|0.26%",
+          "searxng-valkey|2.508MiB / 256MiB|0.17%",
+          "dify-nginx-1|10.88MiB / 256MiB|0.06%",
+          "dify-worker-1|409.9MiB / 2GiB|0.09%",
+          "dify-api-1|807.3MiB / 3GiB|0.06%",
+          "dify-agent_backend-1|182.1MiB / 1GiB|0.13%",
+          "dify-api_websocket-1|28.88MiB / 768MiB|0.03%",
+          "dify-worker_beat-1|63.54MiB / 512MiB|0.00%",
+          "dify-plugin_daemon-1|129.3MiB / 1GiB|0.15%",
+          "dify-db_postgres-1|199MiB / 1.5GiB|5.17%",
+          "dify-web-1|125.5MiB / 768MiB|0.00%",
+          "dify-weaviate-1|34.14MiB / 1.5GiB|0.12%",
+          "dify-redis-1|40.49MiB / 768MiB|0.51%",
+          "dify-agent_ssrf_proxy-1|8.168MiB / 256MiB|0.02%",
+          "dify-ssrf_proxy-1|17.62MiB / 256MiB|0.02%",
+          "dify-local_sandbox-1|16.99MiB / 768MiB|0.06%",
+          "dify-sandbox-1|39.68MiB / 512MiB|0.00%",
+          "open-webui|628.2MiB / 4GiB|0.85%",
+          "openwebui-postgres|172.6MiB / 1.5GiB|0.76%",
+          "openwebui-garnet|33.4MiB / 512MiB|0.01%",
+          "omniroute-garnet|32.08MiB / 512MiB|0.00%",
+          "aliexpress-mcp|65.06MiB / 1.5GiB|0.19%",
+          "google-flights-mcp|77.79MiB / 512MiB|0.00%",
+          "crawl4ai|152.1MiB / 4GiB|0.31%",
+          "coverforge|26.52MiB / 768MiB|0.00%",
+          "gorilla-studio|11.08MiB / 4GiB|0.12%",
+          "netbox-mcp|151.2MiB / 768MiB|0.19%",
+          "mcp-control|9.215MiB / 128MiB|0.00%",
+          "vinted-public-vinted-public-mcp-1|41.09MiB / 32GiB|0.00%",
+          "mcpproxy|510MiB / 1.5GiB|7.00%",
+          "warden-mcp|113.3MiB / 2GiB|0.00%",
+          "n8n-main|519.1MiB / 3GiB|1.01%",
+          "n8n-worker|402.4MiB / 3GiB|0.37%",
+          "n8n-worker-runners|72.64MiB / 2GiB|0.09%",
+          "n8n-main-runners|5.941MiB / 2GiB|0.00%",
+          "mcpproxy-gateway|14.21MiB / 128MiB|0.00%",
+          "immich-mcp-cloud9|30.45MiB / 256MiB|1.11%",
+          "workspace-mcp|153.8MiB / 512MiB|0.17%",
+          "ms365-mcp|16.03MiB / 256MiB|0.01%",
+          "oauth-loopback-router|944KiB / 32MiB|0.00%",
+          "cloakbrowser-manager|3.139GiB / 8GiB|0.50%",
+          "cloakbrowser-manager-fella|204.5MiB / 3GiB|0.27%",
+          "oauth-loopback-router-mcpproxy|0B / 0B|0.00%",
+          "youtube-creator-mcp|155.3MiB / 768MiB|0.00%",
+          "n8n-postgres|137.8MiB / 3GiB|0.49%",
+          "n8n-cache|10.86MiB / 512MiB|0.49%",
+          "fred-mcp|66.39MiB / 192MiB|0.20%",
+          "youtube-oauth-control|20.32MiB / 192MiB|0.00%",
+          "science-pubchem|59.19MiB / 32GiB|0.61%",
+          "science-europepmc|55.22MiB / 32GiB|0.18%",
+          "science-clinicaltrials|64.97MiB / 32GiB|0.16%",
+          "science-ncbi-eutils|57.19MiB / 32GiB|0.17%",
+          "youtube-mcp|84.73MiB / 512MiB|0.16%",
+          "proxmox-mcp-read|115.7MiB / 256MiB|0.15%",
+          "reclaim-mcp-community|70.91MiB / 384MiB|2.09%"
+        ],
+        "failed": [],
+        "active": [
+          "  autopublisher-visual.service          loaded active running AUTOPUBLISHER visual orchestration",
+          "  beszel-agent.service                  loaded active running Beszel Agent - CT400 IA-Studio",
+          "  betterbird-mcp-arezki-gateway.service loaded active running Betterbird Arezki MCP HTTP Gateway",
+          "  betterbird-mcp-fella-gateway.service  loaded active running Betterbird Fella MCP HTTP Gateway",
+          "  cloud9-dify-agent-bridge.service      loaded active running Cloud9 privileged Dify agent bridge",
+          "  console-getty.service                 loaded active running Console Getty",
+          "  container-getty@1.service             loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service             loaded active running Container Getty on /dev/tty2",
+          "  containerd.service                    loaded active running containerd container runtime",
+          "  cron.service                          loaded active running Regular background program processing daemon",
+          "  dbus.service                          loaded active running D-Bus System Message Bus",
+          "  docker.service                        loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service           loaded active running Dispatcher daemon for systemd-networkd",
+          "  paperclip.service                     loaded active running Paperclip Agent Control Plane",
+          "  periphery.service                     loaded active running Agent to connect with Komodo Core",
+          "  postfix.service                       loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service                       loaded active running System Logging Service",
+          "  ssh.service                           loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service              loaded active running Journal Service",
+          "  systemd-logind.service                loaded active running User Login Management",
+          "  systemd-networkd.service              loaded active running Network Management",
+          "  systemd-resolved.service              loaded active running Network Name Resolution",
+          "  user@1000.service                     loaded active running User Manager for UID 1000"
+        ]
+      }
+    },
+    "lxc:410": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      24s Mon 2026-10-26 08:50:30 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 09:00:03 CET      28s Mon 2026-10-26 08:59:03 CET      31s ago comfyui-idle-stop.timer      comfyui-idle-stop.service",
+          "Mon 2026-10-26 13:28:41 CET 4h 29min Mon 2026-10-26 06:53:30 CET  2h 6min ago motd-news.timer              motd-news.service",
+          "Mon 2026-10-26 17:36:55 CET       8h Sun 2026-10-25 20:44:30 CET      12h ago apt-daily.timer              apt-daily.service",
+          "Mon 2026-10-26 21:35:21 CET      12h Sun 2026-10-25 21:35:21 CET      11h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:09 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:09 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:03 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:46:23 CET      15h Mon 2026-10-26 00:40:24 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 04:24:35 CET      19h Mon 2026-10-26 04:29:30 CET 4h 30min ago man-db.timer                 man-db.service",
+          "Tue 2026-10-27 06:00:15 CET      21h Mon 2026-10-26 06:17:05 CET 2h 42min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Sun 2026-11-01 03:10:18 CET   5 days Sun 2026-10-25 03:10:06 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           65536        3021       61612          26         927       62514\nSwap:           4096        3383         712\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          " 263916 2192936 26.8 6-17:20:23 llama-server",
+          "1295729 643956 0.4  3-17:08:40 uvicorn",
+          "2703247 528512 0.1  1-05:51:48 docling-serve",
+          "2056244 85684  0.1  2-08:21:07 python3",
+          "    515 61236  1.8  7-11:43:20 dockerd",
+          "    349 46888  1.8  7-11:43:21 containerd",
+          "     46 24700  0.0  7-11:43:21 systemd-journal",
+          "3275213 23036  0.0    06:21:08 python3",
+          "   1637 16004  0.0  7-11:43:18 beszel-agent",
+          "   1640 15892  4.4  7-11:43:18 python",
+          "1384883 13792  0.1  3-13:18:17 python",
+          "1300264 11644  0.1  3-16:57:46 python",
+          "3429735 11112 33.3       00:00 python3",
+          "2056355 10296  0.1  2-08:21:07 uvicorn",
+          "    293  8440  0.0  7-11:43:21 periphery",
+          "2056329  7856  0.0  2-08:21:07 containerd-shim"
+        ],
+        "docker": [
+          "docling-serve|514.7MiB / 8GiB|0.11%",
+          "autosubs-aligner-gpu|17.62MiB / 12GiB|0.12%",
+          "autosubs-aligner|7.402MiB / 4GiB|0.12%",
+          "wyoming-speaches|5.621MiB / 256MiB|0.00%",
+          "voicestudio|91.86MiB / 64GiB|0.15%",
+          "chatterbox-vc|7.285MiB / 12GiB|0.11%",
+          "autosubs-gpu-asr|8.684MiB / 12GiB|0.12%",
+          "speaches|629.5MiB / 12GiB|0.44%"
+        ],
+        "failed": [
+          "● comfyui.service       loaded failed failed ComfyUI Cloud9 AMD",
+          "● docling-proxy.service loaded failed failed Docling on-demand proxy",
+          "● comfyui-proxy.socket  loaded failed failed ComfyUI on-demand socket",
+          "● docling-proxy.socket  loaded failed failed Docling on-demand API socket"
+        ],
+        "active": [
+          "  beszel-agent.service          loaded active running Beszel Agent - CT410 IA-Compute",
+          "  cloud9-embedding.service      loaded active running Cloud9 Embedding Engine",
+          "  cloud9-engine-router.service  loaded active running Cloud9 Engine model router",
+          "  cloud9-wan-controller.service loaded active running Cloud9 WanGP Private Burst Controller",
+          "  console-getty.service         loaded active running Console Getty",
+          "  container-getty@1.service     loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service     loaded active running Container Getty on /dev/tty2",
+          "  containerd.service            loaded active running containerd container runtime",
+          "  cron.service                  loaded active running Regular background program processing daemon",
+          "  dbus.service                  loaded active running D-Bus System Message Bus",
+          "  docker.service                loaded active running Docker Application Container Engine",
+          "  echomimic-v3.service          loaded active running EchoMimic V3 Flash UI - Cloud9",
+          "  lemond.service                loaded active running Lemonade Server",
+          "  networkd-dispatcher.service   loaded active running Dispatcher daemon for systemd-networkd",
+          "  periphery.service             loaded active running Agent to connect with Komodo Core",
+          "  polkit.service                loaded active running Authorization Manager",
+          "  postfix.service               loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rsyslog.service               loaded active running System Logging Service",
+          "  ssh.service                   loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service      loaded active running Journal Service",
+          "  systemd-logind.service        loaded active running User Login Management",
+          "  systemd-networkd.service      loaded active running Network Management",
+          "  systemd-resolved.service      loaded active running Network Name Resolution"
+        ]
+      }
+    },
+    "lxc:500": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 21:16:15 CET       12h Sun 2026-10-25 21:16:15 CET     11h ago systemd-tmpfiles-clean.timer     systemd-tmpfiles-clean.service",
+          "Tue 2026-10-27 00:00:00 CET       15h Mon 2026-10-26 00:00:02 CET      8h ago shadow.timer                     shadow.service",
+          "Tue 2026-10-27 22:53:44 CET 1 day 13h Wed 2026-10-21 15:13:50 CEST 4 days ago archlinux-keyring-wkd-sync.timer archlinux-keyring-wkd-sync.service"
+        ],
+        "cron": {
+          "crontab": "ERR=[Errno 2] No such file or directory: 'crontab'",
+          "cron_d": "ERR=ls: cannot access '/etc/cron.d': No such file or directory\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           32768        1142       31567         204         262       31625\nSwap:              0           0           0\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "  84600 230048 0.1  2-10:17:35 plasmashell",
+          "  83978 172360 0.5  2-10:20:41 open-webui",
+          "  56417 97496  0.9  2-12:26:54 kwin_wayland",
+          "  84081 83588  0.0  2-10:20:41 open-webui",
+          "  83918 63008  0.0  2-10:20:42 open-webui",
+          "  84042 51648  0.0  2-10:20:41 open-webui",
+          "  85067 42512  0.0  2-10:13:35 sunshine",
+          "  56454 23136  0.0  2-12:26:54 Xwayland",
+          "  83988 21852  0.0  2-10:20:41 open-webui",
+          "  56419 18692  0.0  2-12:26:54 kded6",
+          "  11264 17676  0.0  9-20:56:47 dirmngr",
+          "  83577 17536  0.0  2-10:20:59 ksecretd",
+          "  86277 15156  0.0  2-09:55:48 open-webui",
+          "  84907 15000  0.0  2-10:15:09 python3",
+          "    531 14840  0.0 12-12:00:27 pipewire-pulse",
+          "  41979 14116  0.0  2-16:23:58 python3"
+        ],
+        "docker": [],
+        "failed": [],
+        "active": [
+          "  accounts-daemon.service                 loaded active running Accounts Service",
+          "  beszel-agent.service                    loaded active running Beszel Agent - CT500 Colonial One",
+          "  btrfs-assistant-harbor-progress.service loaded active running Read-only Harbor transfer progress and ETA observer",
+          "  console-getty.service                   loaded active running Console Getty",
+          "  container-getty@1.service               loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service               loaded active running Container Getty on /dev/tty2",
+          "  dbus-broker.service                     loaded active running D-Bus System Message Bus",
+          "  dirmngr@etc-pacman.d-gnupg.service      loaded active running GnuPG network certificate management daemon for /etc/pacman.d/gnupg",
+          "  polkit.service                          loaded active running Authorization Manager",
+          "  sshd.service                            loaded active running OpenSSH Daemon",
+          "  systemd-homed.service                   loaded active running Home Area Manager",
+          "  systemd-journald.service                loaded active running Journal Service",
+          "  systemd-logind.service                  loaded active running User Login Management",
+          "  systemd-networkd.service                loaded active running Network Management",
+          "  systemd-nsresourced.service             loaded active running Namespace Resource Manager",
+          "  systemd-resolved.service                loaded active running Network Name Resolution",
+          "  systemd-userdbd.service                 loaded active running User Database Manager",
+          "  udisks2.service                         loaded active running Disk Manager",
+          "  upower.service                          loaded active running Daemon for power management",
+          "  user@1000.service                       loaded active running User Manager for UID 1000"
+        ]
+      }
+    },
+    "lxc:700": {
+      "rc": 0,
+      "err": "",
+      "data": {
+        "timers": [
+          "Mon 2026-10-26 09:00:00 CET      24s Mon 2026-10-26 08:50:09 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+          "Mon 2026-10-26 13:12:55 CET 4h 13min Mon 2026-10-26 02:49:06 CET       6h ago apt-daily.timer              apt-daily.service",
+          "Mon 2026-10-26 13:28:08 CET 4h 28min Sun 2026-10-25 13:28:08 CET      19h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+          "Mon 2026-10-26 14:30:50 CET 5h 31min Mon 2026-10-26 06:30:26 CET 2h 29min ago motd-news.timer              motd-news.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:02 CET       8h ago dpkg-db-backup.timer         dpkg-db-backup.service",
+          "Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:02 CET       8h ago sysstat-rotate.timer         sysstat-rotate.service",
+          "Tue 2026-10-27 00:07:00 CET      15h Mon 2026-10-26 00:07:25 CET       8h ago sysstat-summary.timer        sysstat-summary.service",
+          "Tue 2026-10-27 00:51:01 CET      15h Mon 2026-10-26 00:37:36 CET       8h ago logrotate.timer              logrotate.service",
+          "Tue 2026-10-27 06:58:38 CET      21h Mon 2026-10-26 06:46:27 CET 2h 13min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+          "Tue 2026-10-27 11:09:23 CET 1 day 2h Mon 2026-10-26 00:33:29 CET       8h ago man-db.timer                 man-db.service",
+          "Sun 2026-11-01 03:10:02 CET   5 days Sun 2026-10-25 03:10:27 CET 1 day 5h ago e2scrub_all.timer            e2scrub_all.service",
+          "-                                  - -                                      - fstrim.timer                 fstrim.service",
+          "-                                  - -                                      - ua-timer.timer               ua-timer.service"
+        ],
+        "cron": {
+          "crontab": "ERR=no crontab for root\n",
+          "cron_d": "total 5\n-rw-r--r--+ 1 root root 187 Sep  4 11:52 e2scrub_all\n"
+        },
+        "memory": "               total        used        free      shared  buff/cache   available\nMem:           73728        1021       69853         835        3688       72706\nSwap:              0           0           0\n",
+        "top": [
+          "    PID   RSS %CPU     ELAPSED COMMAND",
+          "    497 65720  0.0  5-19:49:47 dockerd",
+          "    322 28448  0.1  5-19:49:48 containerd",
+          "     48 27148  0.0  5-19:49:48 systemd-journal",
+          "    294 17884  0.0  5-19:49:48 networkd-dispat",
+          "  49268 16404  0.0  5-15:48:43 python3",
+          "  49269 15084  0.0  5-15:48:43 python3",
+          "    351 14980  0.0  5-19:49:48 unattended-upgr",
+          "1770011 11312 42.8       00:00 python3",
+          "      1  8496  0.0  5-19:49:50 systemd",
+          "1769341  5660  0.0    01:22:31 pickup",
+          "     90  4608  0.0  5-19:49:48 systemd-resolve",
+          "    299  4440  0.0  5-19:49:48 systemd-logind",
+          "    118  3668  0.0  5-19:49:48 systemd-network",
+          "1770017  2952  0.0       00:00 ps",
+          "  18703  2656  0.0  5-17:13:22 polkitd",
+          "    309  2408  0.0  5-19:49:48 sshd"
+        ],
+        "docker": [],
+        "failed": [
+          "● run-rpc_pipefs.mount                   loaded failed failed RPC Pipe File System",
+          "● cloud9-site-preview-kechidi.service    loaded failed failed [systemd-run] /usr/bin/python3 /home/arezki/Projets/Applications/Sites-Web/Cabinets-Dentaires/scripts/preview_server.py --site kechidi-paris-20 --host 192.168.1.220 --port 18731",
+          "● cloud9-site-preview-marsollier.service loaded failed failed [systemd-run] /usr/bin/python3 /home/arezki/Projets/Applications/Sites-Web/Cabinets-Dentaires/scripts/preview_server.py --site marsollier-toulouse --host 192.168.1.220 --port 18732"
+        ],
+        "active": [
+          "  cabinet-preview-kechidi.service    loaded active running Read-only dental preview Dr Kechidi (via Pangolin SSO)",
+          "  cabinet-preview-marsollier.service loaded active running Read-only dental preview Dr Marsollier (via Pangolin SSO)",
+          "  console-getty.service              loaded active running Console Getty",
+          "  container-getty@1.service          loaded active running Container Getty on /dev/tty1",
+          "  container-getty@2.service          loaded active running Container Getty on /dev/tty2",
+          "  containerd.service                 loaded active running containerd container runtime",
+          "  cron.service                       loaded active running Regular background program processing daemon",
+          "  dbus.service                       loaded active running D-Bus System Message Bus",
+          "  docker.service                     loaded active running Docker Application Container Engine",
+          "  networkd-dispatcher.service        loaded active running Dispatcher daemon for systemd-networkd",
+          "  polkit.service                     loaded active running Authorization Manager",
+          "  postfix.service                    loaded active running Postfix Mail Transport Agent (main/default instance)",
+          "  rpcbind.service                    loaded active running RPC bind portmap service",
+          "  rsyslog.service                    loaded active running System Logging Service",
+          "  ssh.service                        loaded active running OpenBSD Secure Shell server",
+          "  systemd-journald.service           loaded active running Journal Service",
+          "  systemd-logind.service             loaded active running User Login Management",
+          "  systemd-networkd.service           loaded active running Network Management",
+          "  systemd-resolved.service           loaded active running Network Name Resolution",
+          "  unattended-upgrades.service        loaded active running Unattended Upgrades Shutdown"
+        ]
+      }
+    },
+    "lxc:9500": {
+      "rc": 255,
+      "out": "",
+      "err": "container '9500' not running!\n"
+    },
+    "lxc:9600": {
+      "rc": 255,
+      "out": "",
+      "err": "container '9600' not running!\n"
+    },
+    "vm:100": {
+      "rc": 29,
+      "out": "",
+      "err": "Wide character in die at /usr/share/perl5/PVE/RESTHandler.pm line 1131.\nAgent error: Failed to execute child process “/usr/bin/python3” (No such file or directory)\n"
+    },
+    "vm:900": {
+      "rc": 0,
+      "out": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"{\\\"timers\\\": [\\\"Mon 2026-10-26 09:17:20 CET    17min Sun 2026-10-25 01:54:11 CEST 1 day 8h ago man-db.timer                      man-db.service\\\", \\\"Mon 2026-10-26 13:32:15 CET 4h 32min Sun 2026-10-25 13:32:15 CET       19h ago systemd-tmpfiles-clean.timer      systemd-tmpfiles-clean.service\\\", \\\"Mon 2026-10-26 20:43:14 CET      11h Mon 2026-10-26 06:16:07 CET  2h 43min ago apt-daily.timer                   apt-daily.service\\\", \\\"Tue 2026-10-27 00:00:00 CET      15h Mon 2026-10-26 00:00:07 CET        8h ago dpkg-db-backup.timer              dpkg-db-backup.service\\\", \\\"Tue 2026-10-27 00:12:37 CET      15h Mon 2026-10-26 00:10:07 CET        8h ago logrotate.timer                   logrotate.service\\\", \\\"Tue 2026-10-27 02:56:33 CET      17h Mon 2026-10-26 04:37:33 CET  4h 22min ago proxmox-backup-daily-update.timer proxmox-backup-daily-update.service\\\", \\\"Tue 2026-10-27 06:19:57 CET      21h Mon 2026-10-26 06:40:16 CET  2h 19min ago apt-daily-upgrade.timer           apt-daily-upgrade.service\\\", \\\"Sun 2026-11-01 03:10:01 CET   5 days Sun 2026-10-25 03:10:01 CET  1 day 5h ago xfs_scrub_all.timer               xfs_scrub_all.service\\\", \\\"Sun 2026-11-01 03:10:39 CET   5 days Sun 2026-10-25 03:11:07 CET  1 day 5h ago e2scrub_all.timer                 e2scrub_all.service\\\", \\\"Mon 2026-11-02 00:02:55 CET   6 days Mon 2026-10-26 01:16:11 CET        7h ago fstrim.timer                      fstrim.service\\\"], \\\"cron\\\": {\\\"crontab\\\": \\\"ERR=no crontab for root\\\\n\\\", \\\"cron_d\\\": \\\"total 8\\\\n-rw-r--r-- 1 root root 188 Mar  9  2026 e2scrub_all\\\\n-rw-r--r-- 1 root root 377 May 20  2023 zfsutils-linux\\\\n\\\"}, \\\"memory\\\": \\\"               total        used        free      shared  buff/cache   available\\\\nMem:            7872         779        2461           5        4938        7092\\\\nSwap:           8191           0        8191\\\\n\\\", \\\"top\\\": [\\\"    PID   RSS %CPU     ELAPSED COMMAND\\\", \\\"    287 153732 0.0  5-19:45:28 systemd-journal\\\", \\\"    638 116440 12.7 5-19:45:25 proxmox-backup-\\\", \\\"    494 28244  0.1  5-19:45:27 qemu-ga\\\", \\\"    598 20764  0.0  5-19:45:25 proxmox-backup-\\\", \\\"      1 13840  0.0  5-19:45:32 systemd\\\", \\\" 173427 12620 20.0       00:00 python3\\\", \\\"    596 11856  0.0  5-19:45:25 beszel-agent\\\", \\\"    314  9632  0.0  5-19:45:28 systemd-udevd\\\", \\\"    496  8316  0.0  5-19:45:27 systemd-logind\\\", \\\" 167452  7512  0.0    01:22:56 pickup\\\", \\\"    773  7044  0.0  5-19:45:25 qmgr\\\", \\\"    608  6988  0.0  5-19:45:25 sshd\\\", \\\"    499  5416  0.0  5-19:45:27 zed\\\", \\\"    491  4952  0.0  5-19:45:27 dbus-daemon\\\", \\\"    771  4336  0.0  5-19:45:25 master\\\", \\\" 173433  4104  0.0       00:00 ps\\\"], \\\"docker\\\": [], \\\"failed\\\": [], \\\"active\\\": [\\\"  beszel-agent.service         loaded active running Beszel Agent - VM900 PBS\\\", \\\"  chrony.service               loaded active running chrony, an NTP client/server\\\", \\\"  cron.service                 loaded active running Regular background program processing daemon\\\", \\\"  dbus.service                 loaded active running D-Bus System Message Bus\\\", \\\"  getty@tty1.service           loaded active running Getty on tty1\\\", \\\"  nfs-blkmap.service           loaded active running pNFS block layout mapping daemon\\\", \\\"  postfix.service              loaded active running Postfix Mail Transport Agent (main/default instance)\\\", \\\"  proxmox-backup-proxy.service loaded active running Proxmox Backup API Proxy Server\\\", \\\"  proxmox-backup.service       loaded active running Proxmox Backup API Server\\\", \\\"  qemu-guest-agent.service     loaded active running QEMU Guest Agent\\\", \\\"  rpcbind.service              loaded active running RPC bind portmap service\\\", \\\"  ssh.service                  loaded active running OpenBSD Secure Shell server\\\", \\\"  systemd-journald.service     loaded active running Journal Service\\\", \\\"  systemd-logind.service       loaded active running User Login Management\\\", \\\"  systemd-udevd.service        loaded active running Rule-based Manager for Device Events and Files\\\", \\\"  zfs-zed.service              loaded active running ZFS Event Daemon (zed)\\\"]}\\n\",\n   \"out-truncated\" : 0\n}\n",
+      "err": ""
+    }
+  },
+  "summary": {
+    "host:cloud9": {
+      "rc": 0,
+      "error": null,
+      "out": "{\"timers\": [\"Mon 2026-10-26 08:59:32 CET       4s Mon 2026-10-26 08:59:27 CET    842ms ago davinci-gpu-arbiter.timer                    davinci-gpu-arbiter.service\", \"Mon 2026-10-26 08:59:34 CET       6s Mon 2026-10-26 07:59:34 CET    59min ago aooscope-host-storage.timer                  aooscope-h"
+    },
+    "lxc:110": {
+      "timers": 13,
+      "docker": 12,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "3660467 772220 0.3  3-06:58:23 dotnet",
+        "1045490 378268 0.7  2-21:42:39 MainThread",
+        "3404036 319992 0.0  4-08:43:13 python",
+        "3404034 291544 0.0  4-08:43:13 python"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:32 CET     8min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 14:22:26 CET 5h 22min Mon 2026-10-26 04:30:32 CET 4h 28min ago motd-news.timer              motd-news.service",
+        "Mon 2026-10-26 21:48:52 CET      12h Mon 2026-10-26 07:26:48 CET 1h 32min ago apt-daily.timer              apt-daily.service",
+        "Tue 2026-10-27 05:45:06 CET      20h Mon 2026-10-26 05:43:21 CET 3h 16min ago man-db.timer                 man-db.service",
+        "Tue 2026-10-27 06:16:46 CET      21h Mon 2026-10-26 06:33:30 CET 2h 25min ago apt-daily-upgrade.timer      apt-daily-upgrade.service"
+      ],
+      "failed": []
+    },
+    "lxc:120": {
+      "timers": 13,
+      "docker": 4,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "1004683 277168 0.4    03:14:38 gunicorn: worke",
+        "3876679 276464 0.2  2-21:53:29 python",
+        "1012576 276336 0.2    02:50:59 gunicorn: worke",
+        "3876690 271912 0.0  2-21:53:29 gunicorn: maste"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:16 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 18:09:11 CET       9h Mon 2026-10-26 06:52:20 CET  2h 7min ago apt-daily.timer              apt-daily.service",
+        "Mon 2026-10-26 20:54:33 CET      11h Mon 2026-10-26 08:17:02 CET    42min ago motd-news.timer              motd-news.service",
+        "Tue 2026-10-27 06:55:13 CET      21h Mon 2026-10-26 06:42:44 CET 2h 16min ago apt-daily-upgrade.timer      apt-daily-upgrade.service"
+      ],
+      "failed": []
+    },
+    "lxc:130": {
+      "timers": 13,
+      "docker": 6,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "3865704 207664 0.9  3-06:56:31 mongod",
+        " 769273 188088 1.2  1-05:53:49 uptime-kuma",
+        " 653753 141956 0.2  1-10:57:21 next-server (v",
+        "3630121 52480  2.0  3-17:16:29 dockerd"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:16 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 18:33:47 CET       9h Mon 2026-10-26 06:14:02 CET 2h 45min ago apt-daily.timer              apt-daily.service",
+        "Mon 2026-10-26 22:27:41 CET      13h Mon 2026-10-26 07:00:08 CET 1h 59min ago motd-news.timer              motd-news.service",
+        "Tue 2026-10-27 06:53:50 CET      21h Mon 2026-10-26 06:32:16 CET 2h 27min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+        "Tue 2026-10-27 10:06:45 CET 1 day 1h Mon 2026-10-26 04:32:16 CET 4h 27min ago man-db.timer                 man-db.service"
+      ],
+      "failed": []
+    },
+    "lxc:200": {
+      "timers": 13,
+      "docker": 5,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "   1308 287492 2.7  5-19:45:37 syncthing",
+        " 756107 177336 2.1  3-16:51:36 filebrowser",
+        "    478 47972  0.9  5-19:45:38 dockerd",
+        "    345 36744  0.9  5-19:45:39 containerd"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      30s Mon 2026-10-26 08:50:00 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 13:30:00 CET 4h 30min Sun 2026-10-25 13:30:00 CET      19h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+        "Tue 2026-10-27 00:19:50 CET      15h Mon 2026-10-26 03:05:09 CET 5h 54min ago man-db.timer                 man-db.service",
+        "Tue 2026-10-27 02:10:53 CET      17h Mon 2026-10-26 07:58:35 CET  1h 0min ago apt-daily.timer              apt-daily.service",
+        "Tue 2026-10-27 06:28:19 CET      21h Mon 2026-10-26 06:50:55 CET  2h 8min ago apt-daily-upgrade.timer      apt-daily-upgrade.service"
+      ],
+      "failed": []
+    },
+    "lxc:210": {
+      "timers": 15,
+      "docker": 28,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "   1375 1519212 0.7 12-12:01:44 betterbird-bin",
+        "2725860 459464 0.4  3-13:56:51 MainThread",
+        "    587 368764 0.2 12-12:01:46 betterbird-bin",
+        "2914376 365288 1.0  3-11:30:02 openbb-mcp"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      27s Mon 2026-10-26 08:50:17 CET     9min ago sysstat-collect.timer           sysstat-collect.service",
+        "Mon 2026-10-26 09:09:26 CET     9min Sun 2026-10-25 14:36:44 CET      18h ago motd-news.timer                 motd-news.service",
+        "Mon 2026-10-26 09:14:15 CET    14min Mon 2026-10-26 03:16:37 CET 5h 42min ago moneymatter-crypto-sync.timer   moneymatter-crypto-sync.service",
+        "Mon 2026-10-26 12:46:19 CET 3h 46min Sun 2026-10-25 19:20:50 CET      13h ago apt-daily.timer                 apt-daily.service",
+        "Tue 2026-10-27 06:40:01 CET      21h Mon 2026-10-26 06:14:15 CET 2h 45min ago apt-daily-upgrade.timer         apt-daily-upgrade.service"
+      ],
+      "failed": []
+    },
+    "lxc:220": {
+      "timers": 13,
+      "docker": 13,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        " 127709 932608 3.1  3-16:32:23 jellyfin",
+        "2647792 412148 0.1  1-05:57:08 python",
+        " 128019 400276 0.9  3-16:32:21 Readarr",
+        "2650152 125820 0.7  1-05:56:16 silo"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      27s Mon 2026-10-26 08:50:21 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 23:12:28 CET      14h Mon 2026-10-26 07:10:21 CET 1h 49min ago motd-news.timer              motd-news.service",
+        "Tue 2026-10-27 00:23:21 CET      15h Mon 2026-10-26 06:32:21 CET 2h 27min ago apt-daily.timer              apt-daily.service",
+        "Tue 2026-10-27 06:57:27 CET      21h Mon 2026-10-26 06:06:32 CET 2h 52min ago apt-daily-upgrade.timer      apt-daily-upgrade.service"
+      ],
+      "failed": []
+    },
+    "lxc:230": {
+      "timers": 13,
+      "docker": 15,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "1798002 238672 0.3  1-05:54:47 Radarr",
+        "1797895 218452 0.4  1-05:54:48 Prowlarr",
+        "1797955 200584 0.3  1-05:54:48 node",
+        "1797412 183220 0.1  1-05:54:49 Whisparr"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      27s Mon 2026-10-26 08:50:20 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 12:49:33 CET 3h 50min Sun 2026-10-25 20:43:20 CET      12h ago apt-daily.timer              apt-daily.service",
+        "Mon 2026-10-26 22:22:37 CET      13h Mon 2026-10-26 06:08:20 CET 2h 51min ago motd-news.timer              motd-news.service",
+        "Tue 2026-10-27 06:52:26 CET      21h Mon 2026-10-26 06:25:19 CET 2h 34min ago apt-daily-upgrade.timer      apt-daily-upgrade.service",
+        "Tue 2026-10-27 08:01:51 CET      23h Mon 2026-10-26 03:11:20 CET 5h 48min ago man-db.timer                 man-db.service"
+      ],
+      "failed": []
+    },
+    "lxc:300": {
+      "timers": 16,
+      "docker": 14,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "2955552 454304 0.0  3-13:56:03 node",
+        "3694749 187012 3.1  2-21:50:33 temporal-server",
+        "2955550 100952 0.0  3-13:56:03 next-server (v1",
+        "    429 91264  0.2 12-12:01:37 python"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET    27s Mon 2026-10-26 08:50:42 CET     8min ago sysstat-collect.timer           sysstat-collect.service",
+        "Mon 2026-10-26 09:09:33 CET  10min Mon 2026-10-26 08:39:33 CET    19min ago mediamtx-upnp.timer             mediamtx-upnp.service",
+        "Mon 2026-10-26 17:10:43 CET     8h Mon 2026-10-26 05:29:32 CET 3h 29min ago motd-news.timer                 motd-news.service",
+        "Tue 2026-10-27 06:04:15 CET    21h Mon 2026-10-26 06:20:11 CET 2h 39min ago apt-daily-upgrade.timer         apt-daily-upgrade.service"
+      ],
+      "failed": [
+        "● davinci-fonts-refresh.path     loaded failed failed Refresh DaVinci font cache when shared font directory changes",
+        "● davinci-assets-refresh.service loaded failed failed Refresh DaVinci Resolve shared fonts and LUT metadata"
+      ]
+    },
+    "lxc:400": {
+      "timers": 16,
+      "docker": 61,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        " 114451 1596252 3.1 2-07:46:32 hindsight-api",
+        "4068118 790628 0.2  2-08:45:41 chrome",
+        "1255931 768232 1.4  1-10:50:39 omniroute (v16.",
+        "1553257 715576 3.7  1-09:45:16 MainThread"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      24s Mon 2026-10-26 08:50:15 CET      9min ago sysstat-collect.timer          sysstat-collect.service",
+        "Mon 2026-10-26 09:00:43 CET  1min 8s Mon 2026-10-26 08:50:22 CET      9min ago hindsight-guides-sync.timer    hindsight-guides-sync.service",
+        "Mon 2026-10-26 13:30:17 CET 4h 30min Mon 2026-10-26 02:58:22 CET        6h ago apt-daily.timer                apt-daily.service",
+        "Mon 2026-10-26 19:49:24 CET      10h Mon 2026-10-26 05:58:22 CET   3h 1min ago motd-news.timer                motd-news.service",
+        "Tue 2026-10-27 00:52:57 CET      15h Mon 2026-10-26 08:48:22 CET     11min ago man-db.timer                   man-db.service",
+        "Tue 2026-10-27 06:52:05 CET      21h Mon 2026-10-26 06:33:26 CET  2h 26min ago apt-daily-upgrade.timer        apt-daily-upgrade.service"
+      ],
+      "failed": []
+    },
+    "lxc:410": {
+      "timers": 14,
+      "docker": 8,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        " 263916 2192936 26.8 6-17:20:23 llama-server",
+        "1295729 643956 0.4  3-17:08:40 uvicorn",
+        "2703247 528512 0.1  1-05:51:48 docling-serve",
+        "2056244 85684  0.1  2-08:21:07 python3"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      24s Mon 2026-10-26 08:50:30 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 13:28:41 CET 4h 29min Mon 2026-10-26 06:53:30 CET  2h 6min ago motd-news.timer              motd-news.service",
+        "Tue 2026-10-27 04:24:35 CET      19h Mon 2026-10-26 04:29:30 CET 4h 30min ago man-db.timer                 man-db.service",
+        "Tue 2026-10-27 06:00:15 CET      21h Mon 2026-10-26 06:17:05 CET 2h 42min ago apt-daily-upgrade.timer      apt-daily-upgrade.service"
+      ],
+      "failed": [
+        "● comfyui.service       loaded failed failed ComfyUI Cloud9 AMD",
+        "● docling-proxy.service loaded failed failed Docling on-demand proxy",
+        "● comfyui-proxy.socket  loaded failed failed ComfyUI on-demand socket",
+        "● docling-proxy.socket  loaded failed failed Docling on-demand API socket"
+      ]
+    },
+    "lxc:500": {
+      "timers": 3,
+      "docker": 0,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "  84600 230048 0.1  2-10:17:35 plasmashell",
+        "  83978 172360 0.5  2-10:20:41 open-webui",
+        "  56417 97496  0.9  2-12:26:54 kwin_wayland",
+        "  84081 83588  0.0  2-10:20:41 open-webui"
+      ],
+      "timers_frequent": [],
+      "failed": []
+    },
+    "lxc:700": {
+      "timers": 13,
+      "docker": 0,
+      "top": [
+        "    PID   RSS %CPU     ELAPSED COMMAND",
+        "    497 65720  0.0  5-19:49:47 dockerd",
+        "    322 28448  0.1  5-19:49:48 containerd",
+        "     48 27148  0.0  5-19:49:48 systemd-journal",
+        "    294 17884  0.0  5-19:49:48 networkd-dispat"
+      ],
+      "timers_frequent": [
+        "Mon 2026-10-26 09:00:00 CET      24s Mon 2026-10-26 08:50:09 CET     9min ago sysstat-collect.timer        sysstat-collect.service",
+        "Mon 2026-10-26 13:12:55 CET 4h 13min Mon 2026-10-26 02:49:06 CET       6h ago apt-daily.timer              apt-daily.service",
+        "Mon 2026-10-26 13:28:08 CET 4h 28min Sun 2026-10-25 13:28:08 CET      19h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service",
+        "Mon 2026-10-26 14:30:50 CET 5h 31min Mon 2026-10-26 06:30:26 CET 2h 29min ago motd-news.timer              motd-news.service",
+        "Tue 2026-10-27 06:58:38 CET      21h Mon 2026-10-26 06:46:27 CET 2h 13min ago apt-daily-upgrade.timer      apt-daily-upgrade.service"
+      ],
+      "failed": [
+        "● run-rpc_pipefs.mount                   loaded failed failed RPC Pipe File System",
+        "● cloud9-site-preview-kechidi.service    loaded failed failed [systemd-run] /usr/bin/python3 /home/arezki/Projets/Applications/Sites-Web/Cabinets-Dentaires/scripts/preview_server.py --site kechidi-paris-20 --host 192.168.1.220 --port 18731",
+        "● cloud9-site-preview-marsollier.service loaded failed failed [systemd-run] /usr/bin/python3 /home/arezki/Projets/Applications/Sites-Web/Cabinets-Dentaires/scripts/preview_server.py --site marsollier-toulouse --host 192.168.1.220 --port 18732"
+      ]
+    },
+    "lxc:9500": {
+      "rc": 255,
+      "error": null,
+      "out": ""
+    },
+    "lxc:9600": {
+      "rc": 255,
+      "error": null,
+      "out": ""
+    },
+    "vm:100": {
+      "rc": 29,
+      "error": null,
+      "out": ""
+    },
+    "vm:900": {
+      "rc": 0,
+      "error": null,
+      "out": "{\n   \"exitcode\" : 0,\n   \"exited\" : 1,\n   \"out-data\" : \"{\\\"timers\\\": [\\\"Mon 2026-10-26 09:17:20 CET    17min Sun 2026-10-25 01:54:11 CEST 1 day 8h ago man-db.timer                      man-db.service\\\", \\\"Mon 2026-10-26 13:32:15 CET 4h 32min Sun 2026-10-25 13:32:15 CET       19h ago systemd-tmpfiles-"
+    }
+  }
+}

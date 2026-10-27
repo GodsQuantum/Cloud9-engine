@@ -1,0 +1,12 @@
+0.00.058.697 I srv    load_model: loading model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf'
+0.02.788.473 I common_speculative_init_result: loading draft model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.14.598.587 I srv  llama_server: model loaded
+0.35.592.847 I slot print_timing: id  0 | task 0 | prompt eval time =   14238.46 ms /    18 tokens (  791.03 ms per token,     1.26 tokens per second)
+0.35.592.853 I slot print_timing: id  0 | task 0 |        eval time =    6134.10 ms /     9 tokens (  681.57 ms per token,     1.47 tokens per second)
+0.35.592.866 I slot print_timing: id  0 | task 0 | draft acceptance = 0.55556 (    5 accepted /     9 generated), mean len =  2.67
+1.01.719.936 I slot print_timing: id  0 | task 6 | prompt eval time =    6556.17 ms /    14 tokens (  468.30 ms per token,     2.14 tokens per second)
+1.01.719.947 I slot print_timing: id  0 | task 6 |        eval time =   19418.74 ms /    32 tokens (  606.84 ms per token,     1.65 tokens per second)
+1.01.719.959 I slot print_timing: id  0 | task 6 | draft acceptance = 0.72414 (   21 accepted /    29 generated), mean len =  3.10
+1.30.846.705 I slot print_timing: id  0 | task 19 | prompt eval time =    7196.81 ms /    16 tokens (  449.80 ms per token,     2.22 tokens per second)
+1.30.846.713 I slot print_timing: id  0 | task 19 |        eval time =   21692.17 ms /    32 tokens (  677.88 ms per token,     1.48 tokens per second)
+1.30.846.719 I slot print_timing: id  0 | task 19 | draft acceptance = 0.75000 (   21 accepted /    28 generated), mean len =  3.10

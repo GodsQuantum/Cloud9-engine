@@ -1,0 +1,42 @@
+{
+  "hardware": "Cloud9 Ryzen7 8845HS / 96 GiB / Radeon 780M gfx1103 12 CUs, Proxmox Linux",
+  "source_lineage": "Actual local GPU validations only; benchmarks across different protocols are NOT directly comparable",
+  "winner_speed_and_verified_16K_recall": "Atomic TurboQuant 2.0.0 Vulkan, Qwen3.5 4B MTP Q4_K_M",
+  "atomic2": {
+    "historical_16K_exact_retrieval": "3/3 five markers, 16330 actual input tokens",
+    "historical_16K_median_decode_tps": 30.6577,
+    "historical_16K_median_prefill_tps": 298.2544,
+    "historical_quality_36_categories": {
+      "json_strict": "3/9",
+      "tool": "6/9",
+      "code": "0/9",
+      "french": "7/9"
+    },
+    "production_quality_approved": false,
+    "staged_inactive": true,
+    "new_live_C09": {
+      "status": "paused_resource_pressure",
+      "scored_cases": 2,
+      "safe_correct_cases": 2,
+      "unsafe_cases": 0,
+      "same_fixtures_as_chimera_c09": true,
+      "production_pass": false
+    }
+  },
+  "chimera": {
+    "simulated_diagnostic_tools": "36/36 correct, 0 unsafe",
+    "current_8K": "3/3 full-prompt exact recall (last seed 8.48t/s)",
+    "current_16K": "failed watchdog during 6400-token prefill",
+    "production_agentic_general_approved": false
+  },
+  "gates": {
+    "full_32K_64K_128K_real_GPU": "not validated",
+    "agentic_JSON_code_real_quality": "unqualified",
+    "live_Dify_n8n_Paperclip": "unqualified",
+    "rollback_24h_canary": "not executed",
+    "native_2_4_GPU_slots": "not proven"
+  },
+  "recommendation": "Do not promote either engine or edit stable OmniRoute combo until identical native C09+JSON/code, long-context and live-agent quality gates pass",
+  "all_purpose_production_certified": false,
+  "production_modified": false
+}

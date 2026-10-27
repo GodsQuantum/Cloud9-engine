@@ -1,0 +1,37 @@
+{
+  "time": "2026-10-26T03:34:05.692196+00:00",
+  "before_evidence": "2026-10-26_PBS_NATIVE_POLICY_BEFORE_EDIT.json",
+  "after": {
+    "prune": {
+      "id": "default-cloud9-9e5b896e-2238-4e5",
+      "keep-daily": 14,
+      "keep-last": 3,
+      "keep-monthly": 12,
+      "keep-weekly": 8,
+      "keep-yearly": 3,
+      "schedule": "20:30",
+      "store": "cloud9"
+    },
+    "verify": {
+      "comment": "Weekly Cloud9 datastore verification",
+      "id": "cloud9-weekly",
+      "ignore-verified": true,
+      "outdated-after": 30,
+      "read-threads": 1,
+      "schedule": "Sat 12:00",
+      "store": "cloud9",
+      "verify-threads": 1
+    },
+    "datastore": {
+      "gc-schedule": "Sun 04:00",
+      "name": "cloud9",
+      "path": "/mnt/cloud9-pbs/datastore",
+      "verify-new": false
+    }
+  },
+  "prune_dry_run": "filesystem directory count estimate 277 snapshots total, proposed 46 pruned if all present and unprotected. SIMULATION ONLY; PBS native prune later may differ",
+  "prune_executed_now": false,
+  "rationale": "Native PBS verification kept weekly+outdated30, but no duplicate immediate verify-new; low 1/1 threads instead of 2/4; bounded 3+14+8+12+3 retention and daily20:30 job; no deletion now",
+  "backup_schedule_00_30_preserved": true,
+  "gc_schedule_preserved": true
+}

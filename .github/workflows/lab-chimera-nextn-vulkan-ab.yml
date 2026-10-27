@@ -1,0 +1,63 @@
+name: LAB Cloud9 NextN Scheduler Reserve A-B Candidate (Vulkan)
+on:
+  push:
+    branches:
+      - lab/20261022-one-engine-qualification
+    paths:
+      - .github/workflows/lab-chimera-nextn-vulkan-ab.yml
+      - tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch
+      - tests/chimera_nextn_revert_lab_test.py
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-vulkan-nextn-revert:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 95
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Verify unmodified baseline and tiny isolated LAB patch
+        run: |
+          set -euo pipefail
+          python3 tools/chimera/verify_native_turbo_backend_guard.py
+          python3 -m unittest discover -s tests -p chimera_nextn_revert_lab_test.py -v
+          echo "84120fcb675e0b274147b16a5296ab5b266b76e29ae246cea21e54729337e5ee  tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch" | sha256sum --check
+      - name: Reconstruct exact source and apply experimental LAB-only revert
+        run: |
+          set -euo pipefail
+          git clone -q --filter=blob:none --no-checkout https://github.com/ggml-org/llama.cpp.git "$RUNNER_TEMP/native"
+          git -C "$RUNNER_TEMP/native" fetch -q --depth 1 origin 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          git -C "$RUNNER_TEMP/native" checkout -q --detach 9ae73e68f5a78933c0d988bbd17bf4647ad6a0b2
+          python3 tools/chimera/verify_native_turbo_backend_guard.py --source "$RUNNER_TEMP/native" --apply
+          git -C "$RUNNER_TEMP/native" apply --index "$GITHUB_WORKSPACE/tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch"
+          git -C "$RUNNER_TEMP/native" diff --cached --check
+          test "$(git -C "$RUNNER_TEMP/native" write-tree)" = "d122b09e38c4e5397601c1ade0c3c6cc3aea39cc"
+          echo "EXACT_NATIVE_CHIMERA_NEXTN_LAB_TREE d122b09e38c4e5397601c1ade0c3c6cc3aea39cc"
+      - name: Compile experimental Vulkan binary without Cloud9 hardware
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ninja-build cmake libvulkan-dev glslc glslang-tools spirv-headers
+          cmake -S "$RUNNER_TEMP/native" -B "$RUNNER_TEMP/build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DGGML_CUDA=OFF -DGGML_HIP=OFF -DGGML_NATIVE=OFF -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF
+          cmake --build "$RUNNER_TEMP/build" --parallel 2 --target llama-server test-speculative-adaptive test-cloud9-turbo-backend-policy test-quantize-fns
+          "$RUNNER_TEMP/build/bin/llama-server" --version
+          ctest --test-dir "$RUNNER_TEMP/build" -R '^(test-speculative-adaptive|test-cloud9-turbo-backend-policy)$' --output-on-failure
+          "$RUNNER_TEMP/build/bin/test-cloud9-turbo-backend-policy" | grep 'TURBO_GPU_BACKEND_FAIL_CLOSED 20/20 PASS'
+          "$RUNNER_TEMP/build/bin/test-quantize-fns"
+      - name: Package checksummed opt-in binary (never promote automatically)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/native-nextn-revert-vulkan-lab"
+          cp -a "$RUNNER_TEMP/build/bin" "$RUNNER_TEMP/native-nextn-revert-vulkan-lab/bin"
+          cp "$RUNNER_TEMP/native/LICENSE" "$RUNNER_TEMP/native-nextn-revert-vulkan-lab/LICENSE"
+          cp tools/chimera/patches/20261025-master9ae-nextn-rereserve-revert-LAB.patch "$RUNNER_TEMP/native-nextn-revert-vulkan-lab/EXPERIMENTAL_REVERT.patch"
+          echo "EXPERIMENTAL LAB ONLY; reverts upstream scheduler reserve change 1a3011cc0. May reintroduce scheduler graph allocation hazards. NOT PRODUCTION. GPU inference and stability NOT CERTIFIED." > "$RUNNER_TEMP/native-nextn-revert-vulkan-lab/NOT-PRODUCTION.txt"
+          (cd "$RUNNER_TEMP/native-nextn-revert-vulkan-lab"; find bin -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+          tar -czf cloud9-native-nextn-revert-vulkan-lab.tar.gz -C "$RUNNER_TEMP" native-nextn-revert-vulkan-lab
+          sha256sum cloud9-native-nextn-revert-vulkan-lab.tar.gz
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cloud9-native-nextn-revert-vulkan-lab
+          path: cloud9-native-nextn-revert-vulkan-lab.tar.gz
+          retention-days: 7
+          if-no-files-found: error

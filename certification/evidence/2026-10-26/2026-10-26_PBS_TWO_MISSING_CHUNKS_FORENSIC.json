@@ -1,0 +1,75 @@
+{
+  "utc": "2026-10-26T03:58:57.096787+00:00",
+  "source_task": "PBS garbage collection 2026-10-25; UPID:pbs:0000027E:000002AE:000000B1:6ADD70B0:garbage_collection:cloud9:root@pam:",
+  "gc_warnings": 2,
+  "issue": "PBS GC WARNINGS specifically two referenced chunk digests missing from host/cloud-arezki 2026-10-22 payload index",
+  "missing_chunks": [
+    "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a",
+    "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9"
+  ],
+  "affected_references": [
+    {
+      "snapshot": "2026-10-21T17:57:38Z",
+      "index": "cloud-arezki.ppxar.didx",
+      "index_bytes": 5309456,
+      "missing_chunk_references": {
+        "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": true,
+        "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": true
+      }
+    },
+    {
+      "snapshot": "2026-10-22T08:49:12Z",
+      "index": "cloud-arezki.ppxar.didx",
+      "index_bytes": 5316016,
+      "missing_chunk_references": {
+        "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": true,
+        "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": true
+      }
+    },
+    {
+      "snapshot": "2026-10-23T08:44:41Z",
+      "index": "cloud-arezki.ppxar.didx",
+      "index_bytes": 5355216,
+      "missing_chunk_references": {
+        "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": false,
+        "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": false
+      }
+    },
+    {
+      "snapshot": "2026-10-24T00:06:57Z",
+      "index": "cloud-arezki.ppxar.didx",
+      "index_bytes": 5767176,
+      "missing_chunk_references": {
+        "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": false,
+        "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": false
+      }
+    },
+    {
+      "snapshot": "2026-10-24T08:53:59Z",
+      "index": "cloud-arezki.ppxar.didx",
+      "index_bytes": 5767256,
+      "missing_chunk_references": {
+        "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": false,
+        "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": false
+      }
+    },
+    {
+      "snapshot": "2026-10-25T09:57:32Z",
+      "index": "cloud-arezki.ppxar.didx",
+      "index_bytes": 5796656,
+      "missing_chunk_references": {
+        "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": false,
+        "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": false
+      }
+    }
+  ],
+  "chunk_present": {
+    "fbf6ebcbbd2d9452f1d6501979bbd020fb0ea4c30e058099d4e6daac8acfca9a": false,
+    "5c29d849cd64550bf815768c3e12c5018ac6d45766ce7cf6c6b04760690dcbc9": false
+  },
+  "confidence": "Binary bytes-for-digest presence in native unencrypted .ppxar.didx index (source ground truth); older snapshots Oct21 and Oct22 refer, 4 later snapshots Oct23-Oct25 do not refer to these 2",
+  "not_proven": "Recent backups have not been fully integrity-verified/restored. Absence of these two hashes from later indices does not prove no other corruption.",
+  "action": "No snapshot deletion, no remapping of chunks, no forced full verify on heavily loaded SMR datastore",
+  "urgent_next_step": "Native PBS targeted verification or sample restoration of latest Oct25 cloud-arezki snapshot in safe disk window; preserve Oct21/22 for investigation; monitor weekly verify Sat12 and PBS prune20:30 retention, warn on any new missing chunk",
+  "data_integrity_status": "OLD_SNAPSHOTS_HAVE_MISSING_CHUNKS; LATEST_SNAPSHOTS_REQUIRE_VERIFICATION"
+}

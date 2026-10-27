@@ -1,0 +1,51 @@
+{
+  "verified": true,
+  "type": "READ_ONLY_OFFLINE_MULTI_POSITION_FIXTURE_TEST",
+  "context_goal_tokens": 131072,
+  "generator": "/srv/storage/nvme/DEV/Projets/HomeLab/Moteurs IA/Sources/Scratch/cloud9-engine-qualification-20261022-host/tools/benchmarks/atomic_turboquant_context_20261022.py",
+  "samples": [
+    {
+      "repeats": 50,
+      "characters": 118648,
+      "bytes_utf8": 124682,
+      "five_marker_fractional_positions": {
+        "alpha": 0.1,
+        "beta": 0.3001,
+        "gamma": 0.4985,
+        "delta": 0.6979,
+        "omega": 0.8973
+      },
+      "sha256": "434f633cda9466333576dd421b0a5867dc9c0147e3cac10134ee05f88d59ab10",
+      "exact_tokenizer_length_verified": false
+    },
+    {
+      "repeats": 150,
+      "characters": 354158,
+      "bytes_utf8": 372161,
+      "five_marker_fractional_positions": {
+        "alpha": 0.1001,
+        "beta": 0.2997,
+        "gamma": 0.4996,
+        "delta": 0.6991,
+        "omega": 0.899
+      },
+      "sha256": "11b8593787a2858b7d7c86c5616d512737885b7261775f65fed714be150c1a3e",
+      "exact_tokenizer_length_verified": false
+    },
+    {
+      "repeats": 300,
+      "characters": 707747,
+      "bytes_utf8": 743671,
+      "five_marker_fractional_positions": {
+        "alpha": 0.1,
+        "beta": 0.2998,
+        "gamma": 0.4998,
+        "delta": 0.6994,
+        "omega": 0.8998
+      },
+      "sha256": "f7d3d6a9673c64e50b4a40276d9b57f9fbc6a130c84c16af87944fa8bd2d2cd8",
+      "exact_tokenizer_length_verified": false
+    }
+  ],
+  "explanation": "Position fractions measured in text characters, NOT model-token offsets or actual GPU 128K retrieval"
+}

@@ -1,0 +1,220 @@
+{
+  "recorded_utc": "2026-10-26T09:13:13.644716+00:00",
+  "raw_audit_kept_host_only": "2026-10-26_CLOUD9_ALL_GUESTS_SERVICE_TIMER_AUDIT.json may include process arguments; do not sync raw file to Git",
+  "guest_service_inventory": {
+    "host:cloud9": {
+      "inspected": false,
+      "note": "stopped or QGA unavailable"
+    },
+    "lxc:110": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:120": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:130": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:200": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:210": {
+      "inspected": true,
+      "custom_timer_names": [
+        "moneymatter-crypto-sync.timer",
+        "moneymatter-swisslife-nav.timer"
+      ],
+      "failed_unit_names": []
+    },
+    "lxc:220": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:230": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:300": {
+      "inspected": true,
+      "custom_timer_names": [
+        "davinci-render-autosleep.timer",
+        "davinci-render-supervisor.timer"
+      ],
+      "failed_unit_names": [
+        "davinci-fonts-refresh.path",
+        "davinci-assets-refresh.service"
+      ]
+    },
+    "lxc:400": {
+      "inspected": true,
+      "custom_timer_names": [
+        "hindsight-guides-sync.timer"
+      ],
+      "failed_unit_names": []
+    },
+    "lxc:410": {
+      "inspected": true,
+      "custom_timer_names": [
+        "comfyui-idle-stop.timer"
+      ],
+      "failed_unit_names": [
+        "comfyui.service",
+        "docling-proxy.service",
+        "comfyui-proxy.socket",
+        "docling-proxy.socket"
+      ]
+    },
+    "lxc:500": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": []
+    },
+    "lxc:700": {
+      "inspected": true,
+      "custom_timer_names": [],
+      "failed_unit_names": [
+        "run-rpc_pipefs.mount",
+        "cloud9-site-preview-kechidi.service",
+        "cloud9-site-preview-marsollier.service"
+      ]
+    },
+    "lxc:9500": {
+      "inspected": false,
+      "note": "stopped or QGA unavailable"
+    },
+    "lxc:9600": {
+      "inspected": false,
+      "note": "stopped or QGA unavailable"
+    },
+    "vm:100": {
+      "inspected": false,
+      "note": "stopped or QGA unavailable"
+    },
+    "vm:900": {
+      "inspected": false,
+      "note": "stopped or QGA unavailable"
+    }
+  },
+  "docker_healthcheck_counts_by_ctid": {
+    "110": {
+      "active_containers": 12,
+      "<=15s": 5
+    },
+    "120": {
+      "active_containers": 4,
+      "<=15s": 0
+    },
+    "130": {
+      "active_containers": 6,
+      "<=15s": 0
+    },
+    "200": {
+      "active_containers": 5,
+      "<=15s": 0
+    },
+    "210": {
+      "active_containers": 28,
+      "<=15s": 0
+    },
+    "220": {
+      "active_containers": 13,
+      "<=15s": 2
+    },
+    "230": {
+      "active_containers": 15,
+      "<=15s": 0
+    },
+    "300": {
+      "active_containers": 14,
+      "<=15s": 1
+    },
+    "400": {
+      "active_containers": 60,
+      "<=15s": 3
+    },
+    "410": {
+      "active_containers": 8,
+      "<=15s": 0
+    },
+    "500": {
+      "active_containers": 0,
+      "<=15s": 0
+    },
+    "700": {
+      "active_containers": 0,
+      "<=15s": 0
+    }
+  },
+  "applied_live": [
+    "CT300 DaVinci broken font directory path watcher disabled and native30m service timer active",
+    "completed ZFS rehab collector disabled without removing script (720 probes/day eliminated)",
+    "host GPU arbiter native timer5s to10s (8640 activations/day eliminated)"
+  ],
+  "staged_compose_source_but_not_live_healthchecks": [
+    "CT110 Redis and Redis-cache health1s->15s",
+    "CT400 Dify Postgres1s->15s",
+    "CT300 DaVinci Postgres5s->15s"
+  ],
+  "LXC_or_Docker_DB_services_stopped_by_current_fixes": false,
+  "incident_prior": "CT400 unrequested stop on Oct26 earlier; restarted, all essential app health verified; never stop any LXC to bench again",
+  "Pym_Atomic2_partial_min_real": {
+    "status": "complete",
+    "tasks": {
+      "math": {
+        "tps": 8.974154365317304,
+        "visible": true,
+        "math_ok": true
+      },
+      "code": {
+        "tps": 6.956165928722831,
+        "visible": true,
+        "math_ok": null
+      },
+      "fr": {
+        "tps": 8.597563148345678,
+        "visible": true,
+        "math_ok": null
+      }
+    },
+    "no_mtp": true,
+    "gpu_layers": 4,
+    "full_gpu_hof_protocol_same": false
+  },
+  "Pym_cross_engine_trials": [
+    {
+      "engine": "upstream_b11844",
+      "mode": "mtp2",
+      "status": "failed_watchdog",
+      "watchdog": true
+    },
+    {
+      "engine": "upstream_b11844",
+      "mode": null,
+      "status": "failed_watchdog",
+      "watchdog": true
+    },
+    {
+      "engine": "atomic2_zen4_lto",
+      "mode": null,
+      "status": "paused_runtime_pressure",
+      "watchdog": false
+    },
+    {
+      "engine": "atomic2",
+      "mode": null,
+      "status": "blocked_preflight",
+      "watchdog": false
+    }
+  ],
+  "production_promotion": false
+}

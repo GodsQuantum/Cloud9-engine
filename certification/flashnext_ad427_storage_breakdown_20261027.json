@@ -1,0 +1,34 @@
+{
+  "status": "GGUF_METADATA_INSPECTED_ONLY_NOT_MODEL_BENCHMARK",
+  "source_files": 33,
+  "source_bytes": 94525394976,
+  "total_tensors": 1224,
+  "classes": {
+    "other_weights": {
+      "bytes": 5467962880,
+      "tensors": 1079,
+      "GiB": 5.092
+    },
+    "ngram_table": {
+      "bytes": 38400184320,
+      "tensors": 1,
+      "GiB": 35.763
+    },
+    "MoE_expert_weights": {
+      "bytes": 50646220800,
+      "tensors": 144,
+      "GiB": 47.168
+    }
+  },
+  "n_gram_tensor": {
+    "name": "per_layer_token_embd.weight",
+    "bytes": 38400184320,
+    "shape": [
+      160,
+      320001536
+    ],
+    "type": 7
+  },
+  "exact_quantization_preserved": true,
+  "GPU_execution_performed": false
+}
