@@ -1,0 +1,68 @@
+0.00.239.478 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.240.586 I srv          init: The UI is disabled
+0.00.240.647 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.240.997 W srv  llama_server: -----------------
+0.00.240.999 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.240.999 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.240.999 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.241.000 W srv  llama_server: -----------------
+0.00.242.725 I srv    load_model: loading model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64/Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64-00001-of-00033.gguf'
+0.00.242.945 I cmn  common_init_: MoE cache: mode=off
+0.00.746.214 W FRSPEC-LAB: entering model tensor declarations
+0.00.747.398 W llama_model_loader: tensor overrides to CPU are used with mmap enabled - consider using --no-mmap for better performance
+0.00.747.409 W FRSPEC-LAB: PLE tensor declaration completed
+0.00.747.485 W FRSPEC-LAB: tensor declaration reached layer 0
+0.00.784.564 W FRSPEC-LAB: tensor declaration reached layer 12
+0.00.832.482 W FRSPEC-LAB: tensor declaration reached layer 24
+0.00.872.963 W FRSPEC-LAB: tensor declaration reached layer 36
+0.00.911.946 W FRSPEC-LAB: completed model tensor declarations
+0.00.913.777 W FRSPEC-LAB: before mmap init, lazy=1
+0.00.914.460 W FRSPEC-LAB: mmap initialized
+0.06.759.701 I common_speculative_init_result: loading draft model '/srv/storage/nvme/shared/ai-models/llm/gguf/FlashNext-AD427/MTP/mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf'
+0.07.211.390 W FRSPEC-LAB: entering model tensor declarations
+0.07.211.438 W FRSPEC-LAB: PLE tensor declaration completed
+0.07.211.453 W FRSPEC-LAB: tensor declaration reached layer 0
+0.07.211.836 W FRSPEC-LAB: tensor declaration reached layer 12
+0.07.212.212 W FRSPEC-LAB: tensor declaration reached layer 24
+0.07.212.579 W FRSPEC-LAB: tensor declaration reached layer 36
+0.07.212.925 W FRSPEC-LAB: tensor declaration reached layer 48
+0.07.213.019 W FRSPEC-LAB: completed model tensor declarations
+0.07.213.051 W FRSPEC-LAB: before mmap init, lazy=1
+0.07.213.092 W FRSPEC-LAB: mmap initialized
+0.15.862.557 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 1024, kv_unified = 'false'
+0.15.917.236 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.15.926.477 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+0.15.926.554 I srv  llama_server: model loaded
+0.15.926.561 I srv  llama_server: listening on http://127.0.0.1:18148
+0.16.039.746 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.16.039.828 I srv        update: prompt cache: 0 prompts, 0.0 MiB (limit 8192.0 MiB, 1024 tokens)
+0.16.039.909 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.22.856.832 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =     14, progress = 0.78, t =   6.82 s / 2.05 tokens per second
+0.29.453.051 I slot print_timing: id  0 | task 0 | prompt eval time =    8780.19 ms /    18 tokens (  487.79 ms per token,     2.05 tokens per second)
+0.29.453.058 I slot print_timing: id  0 | task 0 |        eval time =    4632.77 ms /     9 tokens (  514.75 ms per token,     1.94 tokens per second)
+0.29.453.198 I slot print_timing: id  0 | task 0 |       total time =   13412.97 ms /    27 tokens
+0.29.453.208 I slot print_timing: id  0 | task 0 |    graphs reused =          0
+0.29.453.214 I slot print_timing: id  0 | task 0 | draft acceptance = 0.55556 (    5 accepted /     9 generated), mean len =  2.67
+0.29.453.807 I slot      release: id  0 | task 0 | stop processing: n_tokens = 26, truncated = 0
+0.29.457.369 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 1139776585742
+0.29.592.019 I srv        update: prompt cache: 1 prompts, 225.9 MiB (limit 8192.0 MiB, 1024 tokens)
+0.29.592.091 I slot launch_slot_: id  0 | task 6 | processing task, is_child = 0
+0.34.664.235 I slot print_timing: id  0 | task 6 | prompt processing, n_tokens =     10, progress = 0.71, t =   5.07 s / 1.97 tokens per second
+0.52.763.126 I slot print_timing: id  0 | task 6 | prompt eval time =    6542.55 ms /    14 tokens (  467.32 ms per token,     2.14 tokens per second)
+0.52.763.137 I slot print_timing: id  0 | task 6 |        eval time =   16628.39 ms /    32 tokens (  519.64 ms per token,     1.92 tokens per second)
+0.52.763.138 I slot print_timing: id  0 | task 6 |       total time =   23170.94 ms /    46 tokens
+0.52.763.141 I slot print_timing: id  0 | task 6 |    graphs reused =          0
+0.52.763.150 I slot print_timing: id  0 | task 6 | draft acceptance = 0.72414 (   21 accepted /    29 generated), mean len =  3.10
+0.52.763.227 I slot      release: id  0 | task 6 | stop processing: n_tokens = 45, truncated = 0
+0.52.765.757 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 1139799895161
+0.52.914.908 I srv        update: prompt cache: 2 prompts, 452.3 MiB (limit 8192.0 MiB, 1024 tokens)
+0.52.914.952 I slot launch_slot_: id  0 | task 19 | processing task, is_child = 0
+0.58.275.938 I slot print_timing: id  0 | task 19 | prompt processing, n_tokens =     12, progress = 0.75, t =   5.36 s / 2.24 tokens per second
+1.17.075.391 I slot print_timing: id  0 | task 19 | prompt eval time =    7060.48 ms /    16 tokens (  441.28 ms per token,     2.27 tokens per second)
+1.17.075.397 I slot print_timing: id  0 | task 19 |        eval time =   17099.91 ms /    32 tokens (  534.37 ms per token,     1.87 tokens per second)
+1.17.075.398 I slot print_timing: id  0 | task 19 |       total time =   24160.40 ms /    48 tokens
+1.17.075.399 I slot print_timing: id  0 | task 19 |    graphs reused =          0
+1.17.075.405 I slot print_timing: id  0 | task 19 | draft acceptance = 0.75000 (   21 accepted /    28 generated), mean len =  3.10
+1.17.075.442 I slot      release: id  0 | task 19 | stop processing: n_tokens = 47, truncated = 0
+1.17.077.372 I srv    operator(): operator(): cleaning up before exit...
+1.17.189.830 W ~llama_context: Vulkan_Host compute buffer size of   2.8867 MiB, does not match expectation of   2.0274 MiB

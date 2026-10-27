@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-27",
+  "title": "Cloud9 Qwen3.8 FlashNext AD4.27 exact 33-shard + FR-Spec guarded native inference attempts",
+  "exact_target_gib": 88.03363421559334,
+  "model": "Qwen3.8-Flash-Next-AD-4.27bpw-Q4_K_M-M64",
+  "target_shards": 33,
+  "draft": "mtp-Qwen3.8-Flash-Next-Q8_0-frspec-65k.gguf",
+  "gguf_metadata_breakdown": "certification/flashnext_ad427_storage_breakdown_20261027.json",
+  "native_base_commit": "3df182b0",
+  "native_latest_commit": "0780e182",
+  "lab_native_features": [
+    "Qwen4Exp PLE per_layer_token_embd.weight native TENSOR_READ_LAZY",
+    "Qwen4Exp routed expert weights 47GiB native TENSOR_READ_LAZY when explicit --tensor-read-lazy on",
+    "Qwen4Exp explicit read-lazy mmap suppress eager tensor prefetch",
+    "native CPU buffer override for PLE and native CPU MoE48, 99 GPU layers for other weights",
+    "native 65K FRSpec d2t logit scatter and split projection support"
+  ],
+  "patch": "certification/patches/atomic2-flashnext-lazy-ple-moe-and-prefetch-20261027.patch",
+  "patch_sha256": "af2a65046ff2d90a5d550e375d20b5c35594ba828b4f7d19dc53bf414789d01d",
+  "smoke_runner": "tools/qualification/flashnext_ad427_native_smoke.py",
+  "upstream_production_modified": false,
+  "native_rebuild_CT700_pass": true,
+  "synthetic_qwen4exp_vulkan_test_pass": true,
+  "latest_synthetic_gpu_nmse": 8.51e-08,
+  "verified_trials": 12,
+  "attempts": [
+    {
+      "run_id": "oct27_flash_ad427_frspec_real_1",
+      "status": "failed_load_or_safety",
+      "load_s": 27.037,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "max_psi_memory_full_avg10_during_abort": 0.54,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_ad427_frspec_real_1.json"
+    },
+    {
+      "run_id": "oct27_flash_lazy_ple_gpu_run1",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "preflight_reasons": [
+        "EMBEDDINGS_ACTIVE_OR_UNKNOWN"
+      ],
+      "rows": 0,
+      "guard_event_reasons": [],
+      "max_psi_memory_full_avg10_during_abort": 0,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_lazy_ple_gpu_run1.json"
+    },
+    {
+      "run_id": "oct27_flash_lazy_ple_gpu_run2",
+      "status": "failed_load_or_safety",
+      "load_s": 70.103,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "max_psi_memory_full_avg10_during_abort": 25.55,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_lazy_ple_gpu_run2.json"
+    },
+    {
+      "run_id": "oct27_flash_lazy_ple_moe_gpu_run1",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "preflight_reasons": [
+        "HOST_IO_PSI"
+      ],
+      "rows": 0,
+      "guard_event_reasons": [],
+      "max_psi_memory_full_avg10_during_abort": 0,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_lazy_ple_moe_gpu_run1.json"
+    },
+    {
+      "run_id": "oct27_flash_lazy_ple_moe_gpu_run2",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "preflight_reasons": [
+        "HOST_IO_PSI"
+      ],
+      "rows": 0,
+      "guard_event_reasons": [],
+      "max_psi_memory_full_avg10_during_abort": 0,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_lazy_ple_moe_gpu_run2.json"
+    },
+    {
+      "run_id": "oct27_flash_lazy_ple_moe_gpu_run3",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "preflight_reasons": [
+        "HOST_IO_PSI"
+      ],
+      "rows": 0,
+      "guard_event_reasons": [],
+      "max_psi_memory_full_avg10_during_abort": 0,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_lazy_ple_moe_gpu_run3.json"
+    },
+    {
+      "run_id": "oct27_flash_lazy_ple_moe_gpu_run4",
+      "status": "failed_load_or_safety",
+      "load_s": 38.285,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "max_psi_memory_full_avg10_during_abort": 14.62,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_lazy_ple_moe_gpu_run4.json"
+    },
+    {
+      "run_id": "oct27_flash_no_pref_run1",
+      "status": "failed_load_or_safety",
+      "load_s": 61.15,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "max_psi_memory_full_avg10_during_abort": 18.23,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flash_no_pref_run1.json"
+    },
+    {
+      "run_id": "oct27_flashnext_ad427_guard_probe_01",
+      "status": "admitted_not_executed",
+      "load_s": null,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [],
+      "max_psi_memory_full_avg10_during_abort": 0,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_flashnext_ad427_guard_probe_01.json"
+    },
+    {
+      "run_id": "oct27_frspec_owner_fullgpu_03",
+      "status": "blocked_preflight",
+      "load_s": null,
+      "preflight_reasons": [
+        "HOST_IO_PSI"
+      ],
+      "rows": 0,
+      "guard_event_reasons": [],
+      "max_psi_memory_full_avg10_during_abort": 0,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_frspec_owner_fullgpu_03.json"
+    },
+    {
+      "run_id": "oct27_frspec_owner_fullgpu_04",
+      "status": "failed_load_or_safety",
+      "load_s": 26.259,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "max_psi_memory_full_avg10_during_abort": 13.17,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_frspec_owner_fullgpu_04.json"
+    },
+    {
+      "run_id": "oct27_frspec_second_gpu_smoke",
+      "status": "failed_load_or_safety",
+      "load_s": 12.861,
+      "preflight_reasons": [],
+      "rows": 0,
+      "guard_event_reasons": [
+        "RUNTIME_SAFETY_STOP"
+      ],
+      "max_psi_memory_full_avg10_during_abort": 2.28,
+      "source_ct410": "/srv/lxc/ia-compute/data/cloud9-engine-runtime/lab-releases/local-agent-readiness-20261024/flashnext_ad427_oct27_frspec_second_gpu_smoke.json"
+    }
+  ],
+  "true_output_tps": null,
+  "true_full_dual_model_response_confirmed": false,
+  "historical_17_878_tps_reproduced": false,
+  "no_oom_kills_ct410": true,
+  "no_user_intervention_required_for_qa": true,
+  "remaining": "Actual dual-model GPU inference under guardian admission, math/code/FR quality, sustained t/s, historical compare. Do not claim complete until actual output.",
+  "production_promoted": false
+}
