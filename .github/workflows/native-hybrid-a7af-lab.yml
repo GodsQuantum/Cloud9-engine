@@ -1,0 +1,47 @@
+name: Cloud9 native hybrid — current a7af CPU port QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - lab/20261028-a7af-native-mtp-mmid-hybrid
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-hybrid-source-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check source freshness — fail closed
+        run: |
+          set -euo pipefail
+          pin=a7af149a2a7768d4b1f6f02c6ce26a17fba11376
+          live="$(git ls-remote https://github.com/ggml-org/llama.cpp.git refs/heads/master | cut -f1)"
+          test "$live" = "$pin" || { echo "::error::Upstream advanced from $pin to $live; rebase latest first"; exit 1; }
+      - name: Apply two native source changes
+        run: |
+          set -euo pipefail
+          git clone -q --depth 1 https://github.com/ggml-org/llama.cpp.git llama
+          test "$(git -C llama rev-parse HEAD)" = a7af149a2a7768d4b1f6f02c6ce26a17fba11376
+          git -C llama -c user.name='Cloud9 CI' -c user.email='cloud9-ci@users.noreply.github.com' am \
+            "$GITHUB_WORKSPACE"/patches/lab-hybrid-a7af/*.patch
+          git -C llama diff HEAD~2 HEAD --check
+          python3 llama/cloud9/tests/test-phoenix-mmid-tile.py
+      - name: Build current source with CPU-only backend
+        run: |
+          set -euo pipefail
+          cmake -S llama -B llama/build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DGGML_VULKAN=OFF -DGGML_CUDA=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF \
+            -DLLAMA_BUILD_TOOLS=ON -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=OFF \
+            -DLLAMA_BUILD_APP=OFF
+          cmake --build llama/build --parallel 2 --target test-speculative-adaptive llama-cli
+      - name: Test controller and acceptance profiles
+        run: |
+          set -euo pipefail
+          ctest --test-dir llama/build -R '^test-speculative-adaptive$' --output-on-failure
+          g++ -std=c++17 -Wall -Wextra -Werror -O2 -I llama/common \
+            tests/cloud9-mtp-acceptance-profiles.cpp -o /tmp/cloud9-hybrid-profile
+          /tmp/cloud9-hybrid-profile
