@@ -1,0 +1,54 @@
+name: Cloud9 native hybrid — pinned ff0d CPU port QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - lab/20261028-ff0d-native-mtp-mmid
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-hybrid-source-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Fetch immutable latest-verified upstream revision
+        run: |
+          set -euo pipefail
+          pin=ff0d396e3dda0f33e7ce5ad4267fce4f7690cfb1
+          git init -q llama
+          git -C llama remote add origin https://github.com/ggml-org/llama.cpp.git
+          git -C llama fetch -q --depth 1 origin "$pin"
+          git -C llama checkout -q --detach FETCH_HEAD
+          test "$(git -C llama rev-parse HEAD)" = "$pin"
+          live="$(git ls-remote https://github.com/ggml-org/llama.cpp.git refs/heads/master | cut -f1)"
+          if [ "$live" != "$pin" ]; then
+            echo "::notice::Upstream advanced to $live; this CI tests immutable latest-verified $pin, not a production promotion"
+          fi
+      - name: Apply three native source changes
+        run: |
+          set -euo pipefail
+          git -C llama -c user.name='Cloud9 CI' -c user.email='cloud9-ci@users.noreply.github.com' am \
+            "$GITHUB_WORKSPACE"/patches/lab-hybrid-ff0d/*.patch
+          git -C llama diff HEAD~3 HEAD --check
+          (cd llama && python3 cloud9/tests/test-phoenix-mmid-tile.py)
+          grep -Fq 'cloud9_requested && n_seq == 1' llama/common/speculative.cpp
+          grep -Fq 'effective_depth(dp.n_max)' llama/common/speculative.cpp
+      - name: Build current source with CPU-only backend
+        run: |
+          set -euo pipefail
+          cmake -S llama -B llama/build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DGGML_VULKAN=OFF -DGGML_CUDA=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF \
+            -DLLAMA_BUILD_TOOLS=ON -DLLAMA_BUILD_SERVER=ON -DLLAMA_BUILD_EXAMPLES=OFF \
+            -DLLAMA_BUILD_APP=OFF
+          cmake --build llama/build --parallel 2 --target test-speculative-adaptive llama-cli
+      - name: Test controller and acceptance profiles
+        run: |
+          set -euo pipefail
+          ctest --test-dir llama/build -R '^test-speculative-adaptive$' --output-on-failure
+          g++ -std=c++17 -Wall -Wextra -Werror -O2 -I llama/common \
+            tests/cloud9-mtp-acceptance-profiles.cpp -o /tmp/cloud9-hybrid-profile
+          /tmp/cloud9-hybrid-profile
