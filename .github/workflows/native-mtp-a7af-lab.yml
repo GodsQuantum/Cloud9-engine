@@ -35,7 +35,7 @@ jobs:
           set -euo pipefail
           cmake -S llama -B llama/build -G Ninja -DCMAKE_BUILD_TYPE=Release \
             -DGGML_VULKAN=OFF -DGGML_CUDA=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF \
-            -DLLAMA_BUILD_SERVER=OFF -DLLAMA_BUILD_EXAMPLES=OFF
+            -DLLAMA_BUILD_SERVER=OFF -DLLAMA_BUILD_EXAMPLES=ON
           cmake --build llama/build --parallel 2 --target test-speculative-adaptive llama-cli
       - name: Run original donor CTest and Cloud9 profile
         run: |
