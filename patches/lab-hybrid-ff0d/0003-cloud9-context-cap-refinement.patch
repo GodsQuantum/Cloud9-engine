@@ -1,0 +1,73 @@
+From 0094e8c0789e9129affe2ea000857eeb452733e4 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine LAB <cloud9lab@users.noreply.github.com>
+Date: Wed, 28 Oct 2026 16:45:37 +0100
+Subject: [PATCH] fix(lab): cap adaptive MTP drafts at caller remaining context
+ budget
+
+---
+ common/speculative-adaptive.h       |  7 +++++++
+ common/speculative.cpp              |  2 +-
+ tests/test-speculative-adaptive.cpp | 15 +++++++++++++++
+ 3 files changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/common/speculative-adaptive.h b/common/speculative-adaptive.h
+index 1f8e8a6..07216c8 100644
+--- a/common/speculative-adaptive.h
++++ b/common/speculative-adaptive.h
+@@ -79,6 +79,13 @@ struct common_speculative_adaptive {
+         return drop_pressure() + climb_budget();
+     }
+ 
++    // A near-full KV context can lower the caller's actual verification cap.
++    // Respect it *before* running an expensive MTP draft, rather than generating
++    // rows the verifier immediately discards. Nonpositive means no caller cap.
++    int effective_depth(int caller_cap) const {
++        return caller_cap > 0 ? std::min(n_cur, caller_cap) : n_cur;
++    }
++
+     // cold start; the default is three steps below the ceiling, bounded by the
+     // floor, and n_start > 0 overrides it (--spec-draft-n-start, clamped to
+     // [floor, cap]); the drift then settles the depth in whichever direction the
+diff --git a/common/speculative.cpp b/common/speculative.cpp
+index 4d9439f..3312b5e 100644
+--- a/common/speculative.cpp
++++ b/common/speculative.cpp
+@@ -1902,7 +1902,7 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+                 }
+ 
+                 const int32_t n_cap = cloud9_adaptive_enabled
+-                    ? cloud9_depth[seq_id].n_cur : params.n_max;
++                    ? cloud9_depth[seq_id].effective_depth(dp.n_max) : params.n_max;
+                 if (n_cap <= (int) result.size()) {
+                     drafting[seq_id] = false;
+                     n_drafting--;
+diff --git a/tests/test-speculative-adaptive.cpp b/tests/test-speculative-adaptive.cpp
+index a5ae0bc..f402047 100644
+--- a/tests/test-speculative-adaptive.cpp
++++ b/tests/test-speculative-adaptive.cpp
+@@ -223,7 +223,22 @@ static void test_mixed_workload_settles(void) {
+     assert(ctrl.n_cur == 12);
+ }
+ 
++static void test_effective_depth_caller_bound(void) {
++    common_speculative_adaptive ctrl;
++    ctrl.reset(8, 1, 8);
++    assert(ctrl.effective_depth(0) == 8); // unset caller limit
++    assert(ctrl.effective_depth(-1) == 8);
++    assert(ctrl.effective_depth(3) == 3); // near-full KV, do not waste 5 drafts
++    assert(ctrl.effective_depth(8) == 8);
++    assert(ctrl.effective_depth(20) == 8);
++    // A lower adaptive depth still dominates a larger caller cap.
++    for (int i = 0; i < 600; ++i) ctrl.update(0, 8, 1);
++    assert(ctrl.n_cur == 1);
++    assert(ctrl.effective_depth(3) == 1);
++}
++
+ int main(void) {
++    test_effective_depth_caller_bound();
+     test_reset();
+     test_reset_start();
+     test_climb();
+-- 
+2.53.0
+
