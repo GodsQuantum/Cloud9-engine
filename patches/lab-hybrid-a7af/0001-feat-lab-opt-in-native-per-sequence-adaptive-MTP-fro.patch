@@ -1,0 +1,551 @@
+From 3eec78dacd11cbf71dd46673e75752e138ee70c2 Mon Sep 17 00:00:00 2001
+From: Cloud9 Engine LAB <cloud9lab@users.noreply.github.com>
+Date: Wed, 28 Oct 2026 10:00:57 +0100
+Subject: [PATCH 1/2] feat(lab): opt-in native per-sequence adaptive MTP from
+ current RDNA r158
+
+(cherry picked from commit c33f400880a13fdd414e83bccbd61815813a20a5)
+---
+ common/speculative-adaptive.h       | 142 +++++++++++++++++
+ common/speculative.cpp              |  60 ++++++-
+ tests/CMakeLists.txt                |   2 +
+ tests/test-speculative-adaptive.cpp | 237 ++++++++++++++++++++++++++++
+ 4 files changed, 439 insertions(+), 2 deletions(-)
+ create mode 100644 common/speculative-adaptive.h
+ create mode 100644 tests/test-speculative-adaptive.cpp
+
+diff --git a/common/speculative-adaptive.h b/common/speculative-adaptive.h
+new file mode 100644
+index 0000000..1f8e8a6
+--- /dev/null
++++ b/common/speculative-adaptive.h
+@@ -0,0 +1,142 @@
++#pragma once
++
++#include <algorithm>
++
++// Adaptive draft depth controller for MTP speculative decoding (draft-mtp-adaptive).
++//
++// Single credit-bucket state machine. Every verification result moves a bucket B
++// by (n_accepted - depth), except that a full accept (n_accepted >= depth) is
++// flipped to add max(1, n_accepted - 1) instead: a deeper or longer accept is
++// worth more, so climbing accelerates with depth.  Feeding another speculator's
++// rounds (ngram-mod) into this bucket was measured and is deliberately NOT done
++// (see common_speculative_impl_draft_mtp::accept): with this controller's
++// cap - 3 cold start the feed is a no-op, and a weak ngram win on novel content
++// is not evidence about the MTP content.  Any shortfall drains
++// depth - n_accepted, i.e. a miss of k tokens subtracts k. There is no special
++// case for truncated drafts: a p_min-truncated draft is just a miss of the
++// tokens it came up short, which keeps the controller honest about the depth
++// it actually holds.
++//
++// B starts at the drop pressure D = max(60, 10*depth) on every depth change.
++// When B reaches the cap T = D + climb_budget() the depth climbs one step; when
++// B falls to 0 the depth drops one step. The surplus above the cap (bounded at
++// the depth, so at most one step per update) carries into the new depth's
++// bucket, and a deficit below zero carries down the same way, instead of being
++// discarded.
++//
++// The bucket's drift (its expected change per verification round) is what
++// locates the right depth, and its zero-crossing lands on the throughput
++// optimum of every workload measured: code ~9, reasoning/prose/phase-switching
++// at the floor, verbatim recall at the ceiling. That is the property the credit
++// function above buys, and it needs no tuning. The constants do, because the
++// delivery's acceptance is higher than mainline's and therefore raises the
++// drift at every depth, which turns a careful upstream compromise into a
++// trigger-happy one at the top of the range:
++//
++//   * climb_budget grows with depth, 20 + 6*(depth - 1). A flat 20 is small
++//     enough that a lucky streak of full accepts fills the bucket, and because
++//     the credit grows with depth the next few accepts cascade the depth up
++//     several steps (measured: 9 -> 10 -> 11 -> 12 in 16 rounds after six
++//     consecutive full accepts at depth 8, then a slow drain back down). A
++//     depth-scaled budget makes the top of the range resist a streak the way
++//     the floor already does.
++//
++//   * drop_pressure is steeper, max(60, 10*depth) rather than max(20, 4*depth),
++//     which damps the slow 6 <-> 12 limit cycle the flat budget produced
++//     (measured 40 depth changes in 477 verification rounds, and each change
++//     costs a rollback and a re-draft).
++//
++//   * the cold start is cap - 3 rather than the floor. The expensive direction
++//     is the climb: off the floor a step costs ~20 net full accepts, and the
++//     controller burned a third of a 3000-token run reaching the plateau --
++//     which is the entire advantage of a higher ceiling. Settling *down* is
++//     cheap even for a workload whose equilibrium is the floor, because its
++//     drift is strongly negative up there, so starting near the plateau costs a
++//     reasoning or mixed workload almost nothing while a code workload starts
++//     on its optimum.  The start is only the entry point of the drift, so it
++//     can be overridden per context with --spec-draft-n-start (clamped to
++//     [floor, cap]) -- a workload generated at a deep context pays more for a
++//     wide verify batch than one generated shallow, and there the lower start
++//     wins.
++struct common_speculative_adaptive {
++    int n_cur    = 0; // current adaptive draft depth N
++    int n_bucket = 0; // accumulated bucket: net accepted surplus over the depth
++
++    // accumulated (n_cur - n_accepted) needed to drop one step from depth N
++    int drop_pressure(void) const {
++        return std::max(60, n_cur * 10);
++    }
++
++    // net full-accept-equivalents needed to climb one step from depth N; grows
++    // with depth so one lucky streak cannot cascade the depth upward
++    int climb_budget(void) const {
++        return 20 + 6 * (n_cur - 1);
++    }
++
++    // bucket cap: drop pressure plus the climb budget, so climbing from the
++    // reset point costs climb_budget() net full-accept-equivalents
++    int bucket_cap(void) const {
++        return drop_pressure() + climb_budget();
++    }
++
++    // cold start; the default is three steps below the ceiling, bounded by the
++    // floor, and n_start > 0 overrides it (--spec-draft-n-start, clamped to
++    // [floor, cap]); the drift then settles the depth in whichever direction the
++    // workload calls for
++    void reset(int n_max, int n_min_adaptive, int n_start = 0) {
++        const int cap   = std::max(1, n_max);
++        const int floor = std::max(1, n_min_adaptive);
++
++        n_cur    = n_start > 0 ? std::min(cap, std::max(floor, n_start))
++                               : std::min(cap, std::max(floor, cap - 3));
++        n_bucket = drop_pressure();
++    }
++
++    // feed one verification result from this implementation's own draft:
++    // n_accepted is the number of tokens the target accepted this round.  A
++    // round whose accepted draft came from another speculator (ngram-mod) is
++    // NOT fed -- see common_speculative_impl_draft_mtp::accept() and the note
++    // at the top of this file
++    void update(int n_accepted, int n_max, int n_min_adaptive) {
++        const int cap   = std::max(1, n_max);
++        const int floor = std::max(1, n_min_adaptive);
++
++        int delta;
++
++        if (n_accepted >= n_cur) {
++            delta = std::max(1, n_accepted - 1);
++        } else {
++            delta = n_accepted - n_cur;
++        }
++
++        n_bucket += delta;
++
++        // At the bucket boundaries adjust the current depth if possible. Otherwise
++        // both n_cur and n_bucket always get clamped to their minimum/maximum values.
++        // The surplus above the cap (clamped at the depth, so at most one climb per
++        // update) carries into the new depth's bucket, and a deficit below zero
++        // carries down the same way, instead of being discarded
++        if (n_bucket >= bucket_cap()) {
++            // At or above the high water mark
++            if (n_cur < cap) {
++                n_bucket = std::min(n_bucket, bucket_cap() + n_cur);
++                n_bucket -= bucket_cap();
++                n_cur++;
++                n_bucket += drop_pressure();
++            } else {
++                n_cur = cap;
++                n_bucket = bucket_cap();
++            }
++        } else if (n_bucket <= 0) {
++            // At or below low water mark
++            if (n_cur > floor) {
++                n_bucket -= drop_pressure();
++                n_cur--;
++                n_bucket += bucket_cap();
++            } else {
++                n_cur = floor;
++                n_bucket = 0;
++            }
++        }
++    }
++};
+diff --git a/common/speculative.cpp b/common/speculative.cpp
+index 4305ac6..4d9439f 100644
+--- a/common/speculative.cpp
++++ b/common/speculative.cpp
+@@ -1,4 +1,5 @@
+ #include "speculative.h"
++#include "speculative-adaptive.h"
+ 
+ #include "common.h"
+ #include "ggml.h"
+@@ -16,6 +17,7 @@
+ #include <cassert>
+ #include <cmath>
+ #include <cstring>
++#include <cstdlib>
+ #include <fstream>
+ #include <iomanip>
+ #include <map>
+@@ -1524,6 +1526,12 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+     std::vector<int>                i_last;
+     std::vector<std::vector<float>> chain_h;
+ 
++    // Native opt-in: adjusts draft depth using only the target acceptance of
++    // this MTP implementation. Disabled by default for zero legacy change.
++    bool cloud9_adaptive_enabled = false;
++    std::vector<common_speculative_adaptive> cloud9_depth;
++    std::vector<int32_t> cloud9_last_attempted;
++
+     common_speculative_impl_draft_mtp(const common_params_speculative & params, uint32_t n_seq)
+         : common_speculative_impl(COMMON_SPECULATIVE_TYPE_DRAFT_MTP, n_seq, params.draft.n_max)
+         , params(params.draft)
+@@ -1590,6 +1598,28 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+         }
+         this->n_max = this->params.n_max;
+ 
++        // Initial cap matches fixed-depth MTP2/MTP3, instead of speculating
++        // less at startup. The controller is per sequence; opt-in only.
++        const char * cloud9_opt_in = std::getenv("CLOUD9_MTP_ADAPTIVE");
++        const bool cloud9_requested = cloud9_opt_in && std::strcmp(cloud9_opt_in, "1") == 0;
++        // Parallel sequences can diverge in draft width and trigger extra
++        // verifier ubatches. Fail closed until an aligned-batch A/B qualifies.
++        cloud9_adaptive_enabled = cloud9_requested && n_seq == 1 && this->params.n_max > 0;
++        if (cloud9_requested && !cloud9_adaptive_enabled) {
++            SPC_WRN("Cloud9 adaptive MTP disabled: parallel sequences=%u or n_max=%d invalid\n",
++                    n_seq, this->params.n_max);
++        }
++        if (cloud9_adaptive_enabled) {
++            cloud9_depth.resize(n_seq);
++            cloud9_last_attempted.assign(n_seq, 0);
++            const int floor = std::min(this->params.n_max, std::max(1, this->params.n_min));
++            for (uint32_t s = 0; s < n_seq; ++s) {
++                cloud9_depth[s].reset(this->params.n_max, floor, this->params.n_max);
++            }
++            SPC_INF("Cloud9 native adaptive MTP enabled (per-seq, initial depth %d, floor %d)\n",
++                    this->params.n_max, floor);
++        }
++
+         pending_h.assign(n_seq, std::vector<float>(n_embd, 0.0f));
+ 
+         i_last.assign(n_seq, -1);
+@@ -1615,6 +1645,12 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+     }
+ 
+     void begin(llama_seq_id seq_id, const llama_tokens & prompt) override {
++
++        if (cloud9_adaptive_enabled) {
++            const int floor = std::min(params.n_max, std::max(1, params.n_min));
++            cloud9_depth[seq_id].reset(params.n_max, floor, params.n_max);
++            cloud9_last_attempted[seq_id] = 0;
++        }
+         // reset here rather than per round, or two identical requests differ
+         common_sampler_reset(smpls[seq_id].get());
+ 
+@@ -1764,6 +1800,10 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+                 continue;
+             }
+ 
++            if (cloud9_adaptive_enabled) {
++                cloud9_last_attempted[seq_id] = 0;
++            }
++
+             n_drafting++;
+             drafting[seq_id] = true;
+             // greedy drafting leaves no candidates behind, so the verifier falls back to sample-and-match
+@@ -1861,7 +1901,9 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+                     dp.result_q->emplace_back(cur_p->data, cur_p->data + cur_p->size);
+                 }
+ 
+-                if (params.n_max <= (int) result.size()) {
++                const int32_t n_cap = cloud9_adaptive_enabled
++                    ? cloud9_depth[seq_id].n_cur : params.n_max;
++                if (n_cap <= (int) result.size()) {
+                     drafting[seq_id] = false;
+                     n_drafting--;
+                     continue;
+@@ -1911,10 +1953,13 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+             if (dp.result->size() < (size_t) params.n_min) {
+                 dp.result->clear();
+             }
++            if (cloud9_adaptive_enabled) {
++                cloud9_last_attempted[seq_id] = (int32_t) dp.result->size();
++            }
+         }
+     }
+ 
+-    void accept(llama_seq_id seq_id, uint16_t n_accepted, bool /*is_other*/) override {
++    void accept(llama_seq_id seq_id, uint16_t n_accepted, bool is_other) override {
+         if (seq_id < 0 || seq_id >= (llama_seq_id) n_seq) {
+             return;
+         }
+@@ -1924,6 +1969,17 @@ struct common_speculative_impl_draft_mtp : public common_speculative_impl {
+             return;
+         }
+ 
++        // Never adapt from an ngram/different speculator's acceptance.
++        // Record feedback once, and cap the credit at tokens we drafted.
++        if (cloud9_adaptive_enabled) {
++            const int32_t attempted = cloud9_last_attempted[seq_id];
++            cloud9_last_attempted[seq_id] = 0;
++            if (!is_other && attempted > 0) {
++                const int floor = std::min(params.n_max, std::max(1, params.n_min));
++                cloud9_depth[seq_id].update(std::min<int>(n_accepted, attempted), params.n_max, floor);
++            }
++        }
++
+         const int32_t i_h = std::min<int32_t>(n_accepted, n_rows - 1);
+         const size_t row_bytes = (size_t) n_embd * sizeof(float);
+         std::memcpy(pending_h[seq_id].data(), verify_h[seq_id].data() + (size_t) i_h * n_embd, row_bytes);
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 2e768cb..588f8d1 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -183,6 +183,8 @@ if (NOT WIN32 OR NOT BUILD_SHARED_LIBS)
+     # these tests are disabled on Windows because they use internal functions not exported with LLAMA_API (when building with shared libraries)
+     llama_build_and_test(test-unicode.cpp  LABEL behavior  LINK llama)
+     llama_build_and_test(test-sampling.cpp  LABEL behavior  LINK llama)
++    # CPU-only upstream RDNA adaptive MTP controller correctness; no GPU or model required.
++    llama_build_and_test(test-speculative-adaptive.cpp LABEL behavior)
+     llama_build_and_test(test-reasoning-budget.cpp  LABEL behavior)
+     llama_build_and_test(test-grammar-parser.cpp  LABEL behavior  LINK llama)
+     llama_build_and_test(test-grammar-integration.cpp  LABEL behavior)
+diff --git a/tests/test-speculative-adaptive.cpp b/tests/test-speculative-adaptive.cpp
+new file mode 100644
+index 0000000..a5ae0bc
+--- /dev/null
++++ b/tests/test-speculative-adaptive.cpp
+@@ -0,0 +1,237 @@
++#include "speculative-adaptive.h"
++
++#undef NDEBUG
++
++#include <cassert>
++#include <cstdio>
++
++// The controller's constants (see speculative-adaptive.h):
++//   drop_pressure(d)  = max(60, 10*d)      -> the reset point of the bucket
++//   climb_budget(d)   = 20 + 6*(d - 1)     -> the distance from there to the cap
++//   full accept       = max(1, n_accepted - 1)
++//   miss              = n_accepted - d
++//   cold start        = min(cap, max(floor, cap - 3))
++// Every case below is written against those numbers so a retune has to update
++// this file deliberately rather than silently.
++
++static void test_reset(void) {
++    common_speculative_adaptive ctrl;
++
++    // the cold start sits three steps below the ceiling, with the bucket at the
++    // drop pressure of that depth
++    ctrl.reset(12, 3);
++    assert(ctrl.n_cur == 9);
++    assert(ctrl.n_bucket == 90);
++
++    ctrl.reset(8, 1);
++    assert(ctrl.n_cur == 5);
++    assert(ctrl.n_bucket == 60);
++
++    // the floor bounds the cold start from below
++    ctrl.reset(4, 3);
++    assert(ctrl.n_cur == 3);
++    assert(ctrl.n_bucket == 60);
++
++    ctrl.reset(3, 3);
++    assert(ctrl.n_cur == 3);
++    assert(ctrl.n_bucket == 60);
++
++    // ... and the ceiling from above (a cap below the floor wins)
++    ctrl.reset(1, 3);
++    assert(ctrl.n_cur == 1);
++    assert(ctrl.n_bucket == 60);
++}
++
++static void test_reset_start(void) {
++    common_speculative_adaptive ctrl;
++
++    // --spec-draft-n-start overrides the default cold start; the chosen depth is
++    // clamped to [floor, cap] and the bucket is that depth's drop pressure
++    ctrl.reset(12, 3, 7);
++    assert(ctrl.n_cur == 7);
++    assert(ctrl.n_bucket == 70);
++
++    ctrl.reset(12, 3, 3);
++    assert(ctrl.n_cur == 3);
++    assert(ctrl.n_bucket == 60);
++
++    // below the floor clamps up ...
++    ctrl.reset(12, 3, 1);
++    assert(ctrl.n_cur == 3);
++    assert(ctrl.n_bucket == 60);
++
++    // ... and above the cap clamps down
++    ctrl.reset(12, 4, 15);
++    assert(ctrl.n_cur == 12);
++    assert(ctrl.n_bucket == 120);
++
++    // n_start == 0 (unset) keeps the default cold start (cap - 3)
++    ctrl.reset(12, 3, 0);
++    assert(ctrl.n_cur == 9);
++    assert(ctrl.n_bucket == 90);
++}
++
++static void test_climb(void) {
++    common_speculative_adaptive ctrl;
++
++    // from the cold start at 9 a step needs climb_budget(9) = 68, and a full
++    // accept is worth n_accepted - 1 = 8, so nine of them
++    ctrl.reset(12, 3);
++    for (int i = 0; i < 8; ++i) {
++        ctrl.update(9, 12, 3);
++        assert(ctrl.n_cur == 9);
++    }
++    assert(ctrl.n_bucket == 154);
++    ctrl.update(9, 12, 3);
++    assert(ctrl.n_cur == 10);
++    // the 4-token surplus over the cap carries, and the new depth adds its own
++    // drop pressure: 0 + 4 carry + drop_pressure(10)
++    assert(ctrl.n_bucket == 104);
++
++    // depth 10: budget 74, a full accept worth 9
++    for (int i = 0; i < 7; ++i) {
++        ctrl.update(10, 12, 3);
++        assert(ctrl.n_cur == 10);
++    }
++    assert(ctrl.n_bucket == 167);
++    ctrl.update(10, 12, 3);
++    assert(ctrl.n_cur == 11);
++    assert(ctrl.n_bucket == 112);
++
++    // off the floor: at depth 3 the budget is 32 and a full accept is worth 2
++    ctrl.reset(4, 3);
++    assert(ctrl.n_cur == 3);
++    assert(ctrl.n_bucket == 60);
++    for (int i = 0; i < 15; ++i) {
++        ctrl.update(3, 4, 3);
++        assert(ctrl.n_cur == 3);
++    }
++    assert(ctrl.n_bucket == 90);
++    ctrl.update(3, 4, 3);
++    assert(ctrl.n_cur == 4);
++    assert(ctrl.n_bucket == 60);
++
++    // the ceiling blocks further climbs and the bucket parks at the cap
++    for (int i = 0; i < 100; ++i) {
++        ctrl.update(4, 4, 3);
++    }
++    assert(ctrl.n_cur == 4);
++    assert(ctrl.n_bucket == 98);  // drop_pressure(4) + climb_budget(4)
++
++    // depth 1: a full accept is worth max(1, 1 - 1) = 1 and the budget is 20
++    ctrl.reset(8, 1);
++    ctrl.n_cur = 1;
++    ctrl.n_bucket = 60;
++    for (int i = 0; i < 19; ++i) {
++        ctrl.update(1, 8, 1);
++        assert(ctrl.n_cur == 1);
++    }
++    assert(ctrl.n_bucket == 79);
++    ctrl.update(1, 8, 1);
++    assert(ctrl.n_cur == 2);
++    assert(ctrl.n_bucket == 60);
++}
++
++static void test_drop(void) {
++    common_speculative_adaptive ctrl;
++
++    // from 9, drop_pressure(9) = 90 and a total miss drains 9, so ten of them
++    ctrl.reset(12, 3);
++    for (int i = 0; i < 9; ++i) {
++        ctrl.update(0, 12, 3);
++        assert(ctrl.n_cur == 9);
++    }
++    assert(ctrl.n_bucket == 9);
++    ctrl.update(0, 12, 3);
++    assert(ctrl.n_cur == 8);
++    // 0 - drop_pressure(9) + bucket_cap(8)
++    assert(ctrl.n_bucket == 52);
++
++    // the floor clamps: no drop below it, and the bucket parks at 0
++    ctrl.reset(8, 2);
++    ctrl.n_cur = 2;
++    ctrl.n_bucket = 60;
++    for (int i = 0; i < 29; ++i) {
++        ctrl.update(0, 8, 2);
++        assert(ctrl.n_cur == 2);
++    }
++    assert(ctrl.n_bucket == 2);
++    ctrl.update(0, 8, 2);
++    assert(ctrl.n_cur == 2);
++    assert(ctrl.n_bucket == 0);
++
++    // no matter how bad it gets, the depth never leaves the floor
++    for (int i = 0; i < 1000; ++i) {
++        ctrl.update(0, 8, 2);
++    }
++    assert(ctrl.n_cur == 2);
++    assert(ctrl.n_bucket == 0);
++}
++
++static void test_delta(void) {
++    common_speculative_adaptive ctrl;
++    ctrl.reset(8, 3);
++    ctrl.n_cur = 3;
++    ctrl.n_bucket = 60;
++
++    // a full accept is worth n_accepted - 1
++    ctrl.update(3, 8, 3);
++    assert(ctrl.n_bucket == 62);
++
++    // an accept from another speculator can exceed the depth: still max(1, n - 1)
++    ctrl.update(6, 8, 3);
++    assert(ctrl.n_bucket == 67);
++
++    // a draft that came up one token short is a real miss, not neutral
++    ctrl.update(2, 8, 3);
++    assert(ctrl.n_bucket == 66);
++
++    // ... and a total miss drains the whole depth
++    ctrl.update(0, 8, 3);
++    assert(ctrl.n_bucket == 63);
++}
++
++static void test_mixed_workload_settles(void) {
++    common_speculative_adaptive ctrl;
++
++    // A workload whose acceptance is good enough to hold a high depth must not
++    // be walked up to the ceiling by the surplus carry: after the cold start the
++    // controller may climb while the acceptance is there, but once the full
++    // accepts stop it has to give the depth back. Alternating a full accept with
++    // a half miss at depth 9 (drift 8 and -4.5, so positive) climbs; alternating
++    // it with a total miss (drift 8 and -9, negative) drains and drops.
++    ctrl.reset(12, 3);
++    for (int i = 0; i < 400; ++i) {
++        ctrl.update(i % 2 ? 0 : 9, 12, 3);
++    }
++    assert(ctrl.n_cur < 12);
++
++    // a workload that never accepts anything must end at the floor with an
++    // empty bucket, whatever depth it started from
++    ctrl.reset(12, 3);
++    for (int i = 0; i < 400; ++i) {
++        ctrl.update(0, 12, 3);
++    }
++    assert(ctrl.n_cur == 3);
++    assert(ctrl.n_bucket == 0);
++
++    // and one that always accepts must end at the ceiling
++    ctrl.reset(12, 3);
++    for (int i = 0; i < 400; ++i) {
++        ctrl.update(ctrl.n_cur + 1, 12, 3);
++    }
++    assert(ctrl.n_cur == 12);
++}
++
++int main(void) {
++    test_reset();
++    test_reset_start();
++    test_climb();
++    test_drop();
++    test_delta();
++    test_mixed_workload_settles();
++
++    printf("test-speculative-adaptive: all tests OK\n\n");
++
++    return 0;
++}
+-- 
+2.53.0
+
