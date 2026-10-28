@@ -1,0 +1,46 @@
+name: Cloud9 native MTP source port — a7af lab
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - lab/20261028-native-adaptive-mtp-a7af
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-port-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Fail closed if upstream moved
+        env:
+          BASE: a7af149a2a7768d4b1f6f02c6ce26a17fba11376
+        run: |
+          set -euo pipefail
+          live="$(git ls-remote https://github.com/ggml-org/llama.cpp.git refs/heads/master | cut -f1)"
+          test "$live" = "$BASE" || { echo "::error::Source baseline STALE; pin=$BASE live=$live; rebase required"; exit 1; }
+      - name: Checkout exactly pinned upstream and apply native patch
+        run: |
+          set -euo pipefail
+          git clone --quiet --depth 1 https://github.com/ggml-org/llama.cpp.git llama
+          test "$(git -C llama rev-parse HEAD)" = a7af149a2a7768d4b1f6f02c6ce26a17fba11376
+          git -C llama -c user.name='Cloud9 CI' -c user.email='cloud9-ci@users.noreply.github.com' am \
+            "$GITHUB_WORKSPACE/patches/lab-a7af/0001-cloud9-native-adaptive-MTP-r158-a7af.patch"
+          git -C llama diff HEAD^ HEAD --check
+      - name: CPU-only config and build
+        run: |
+          set -euo pipefail
+          cmake -S llama -B llama/build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DGGML_VULKAN=OFF -DGGML_CUDA=OFF -DLLAMA_BUILD_TESTS=ON -DLLAMA_CURL=OFF \
+            -DLLAMA_BUILD_SERVER=OFF -DLLAMA_BUILD_EXAMPLES=OFF
+          cmake --build llama/build --parallel 2 --target test-speculative-adaptive llama-cli
+      - name: Run original donor CTest and Cloud9 profile
+        run: |
+          set -euo pipefail
+          ctest --test-dir llama/build -R '^test-speculative-adaptive$' --output-on-failure
+          g++ -std=c++17 -Wall -Wextra -Werror -O2 -I llama/common \
+            tests/cloud9-mtp-acceptance-profiles.cpp -o /tmp/cloud9-mtp-profile
+          /tmp/cloud9-mtp-profile
