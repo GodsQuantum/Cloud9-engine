@@ -29,7 +29,7 @@ jobs:
           git -C llama -c user.name='Cloud9 CI' -c user.email='cloud9-ci@users.noreply.github.com' am \
             "$GITHUB_WORKSPACE"/patches/lab-hybrid-a7af/*.patch
           git -C llama diff HEAD~2 HEAD --check
-          python3 llama/cloud9/tests/test-phoenix-mmid-tile.py
+          (cd llama && python3 cloud9/tests/test-phoenix-mmid-tile.py)
       - name: Build current source with CPU-only backend
         run: |
           set -euo pipefail
