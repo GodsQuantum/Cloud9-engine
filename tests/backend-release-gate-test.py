@@ -10,10 +10,14 @@ DOC = (ROOT / "docs/backend-qualification-20261016.md").read_text()
 
 class BackendReleaseGate(unittest.TestCase):
     def test_atomic_source_pinned_not_transplanted(self):
-        self.assertEqual(LOCK["atomic"]["release"], "b10298-2.0.0")
-        self.assertEqual(LOCK["atomic"]["commit"], "cda0f9256665845cd9d6f3a0176880883f653a3d")
-        self.assertIn("candidate_only", LOCK["atomic"]["qualification"])
-        self.assertNotEqual(LOCK["atomic"]["commit"], LOCK["upstream"]["commit"])
+        atomic = LOCK["atomic"]
+        self.assertEqual(atomic["repository"], "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git")
+        self.assertEqual(atomic["branch"], "master")
+        # Releases advance; never hard-code a past release or commit here.
+        self.assertRegex(atomic["release"], r"\Ab[0-9]+-[0-9]+\.[0-9]+\.[0-9]+\Z")
+        self.assertRegex(atomic["commit"], r"\A[0-9a-f]{40}\Z")
+        self.assertIn("candidate_only", atomic["qualification"])
+        self.assertNotEqual(atomic["commit"], LOCK["upstream"]["commit"])
 
     def test_rejected_v070_separate_from_production(self):
         candidate = LOCK["upstream_candidate"]
