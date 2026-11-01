@@ -45,7 +45,7 @@ class RoleContract(unittest.TestCase):
                 self.assertEqual(m["backend"],row["engine_runtime"])
                 self.assertEqual(m["context"],row["context"])
                 self.assertEqual(m["gpu_mode"],row["gpu_mode"])
-                self.assertTrue(m["model"].startswith("/srv/lxc/ia-compute/data/models/"))
+                self.assertTrue(m["model"].startswith("/srv/storage/nvme/shared/ai-models/"))
     def test_all_exclusive_large_remain_exclusive(self):
         for row in self.roles["selection"]:
             m=self.lookup[row["model_id"]]
