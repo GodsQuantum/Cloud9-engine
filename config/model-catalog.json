@@ -17,10 +17,10 @@
       "uncensored": true,
       "backend": "upstream-next",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2B-heretic-Q6_K.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/MiniCPM5-2B-heretic-Q6_K.gguf",
       "extra_args": [
         "--model-draft",
-        "/srv/lxc/ia-compute/data/models/bakeoff-20260928/minicpm5-2b-heretic/MiniCPM5-2.6B-DSpark.gguf",
+        "/srv/storage/nvme/shared/ai-models/llm/gguf/MiniCPM5-2.6B-DSpark.gguf",
         "--spec-type",
         "draft-dspark",
         "--spec-draft-n-max",
@@ -49,7 +49,7 @@
       "uncensored": true,
       "backend": "upstream-next",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20260928/ling3-tiny-uncensored/Ling-3.0-tiny-abliterated-APEX-I-Balanced.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/Ling-3.0-tiny-abliterated-APEX-I-Balanced.gguf",
       "extra_args": [],
       "benchmark": {
         "decode_tps": 44.41,
@@ -70,7 +70,7 @@
       "uncensored": true,
       "backend": "upstream-latest",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/lfm25-26b-uncensored/LFM2.5-2.6B-Uncensored-Q4_K_M.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/LFM2.5-2.6B-Uncensored-Q4_K_M.gguf",
       "extra_args": [],
       "benchmark": {
         "decode_tps": 34.98,
@@ -96,7 +96,7 @@
       "uncensored": true,
       "backend": "upstream-latest",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/bakeoff-20261002/qwen38distill-qwen35-4b-mtp/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/Qwen3.5-4B-Qwen3.8-Distill-Heretic-MTP-Q4_K_M.gguf",
       "extra_args": [
         "--spec-type",
         "draft-mtp",
@@ -125,7 +125,7 @@
       "uncensored": false,
       "backend": "upstream-pym",
       "context": 8192,
-      "model": "/srv/lxc/ia-compute/data/models/qwen36-pym-q2-mtp/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/Qwen3.6-35B-A3B-Pym-Q2-MTP.gguf",
       "extra_args": [
         "--spec-type",
         "draft-mtp",
@@ -153,7 +153,7 @@
       "uncensored": true,
       "backend": "upstream-fast",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/variants-20260914/heretic-mtp-icompact/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-APEX-I-Compact.gguf",
       "extra_args": [
         "--spec-type",
         "draft-mtp",
@@ -182,10 +182,10 @@
       "uncensored": false,
       "backend": "upstream-fast",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
       "extra_args": [
         "--model-draft",
-        "/srv/lxc/ia-compute/data/models/gemma4-26b-a4b/MTP/mtp-gemma-4-26B-A4B-it-Q8_0.gguf",
+        "/srv/storage/nvme/shared/ai-models/llm/gguf/mtp-gemma-4-26B-A4B-it-Q8_0.gguf",
         "--spec-type",
         "draft-mtp",
         "--spec-draft-n-max",
@@ -213,7 +213,7 @@
       "uncensored": true,
       "backend": "prism",
       "context": 16384,
-      "model": "/srv/lxc/ia-compute/data/models/bonsai2/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0.gguf",
+      "model": "/srv/storage/nvme/shared/ai-models/llm/gguf/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0.gguf",
       "extra_args": [],
       "benchmark": {
         "decode_tps": 8.59,
