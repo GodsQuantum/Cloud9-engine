@@ -3,7 +3,7 @@
   "upstream": {
     "repository": "https://github.com/ggml-org/llama.cpp.git",
     "branch": "master",
-    "commit": "a91eab67d8389d979d29fdf6633b2edd0718eb4b"
+    "commit": "dde879bc4f954b809892fd0d660515f42536394a"
   },
   "atomic": {
     "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
