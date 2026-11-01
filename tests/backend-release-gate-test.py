@@ -16,6 +16,8 @@ class BackendReleaseGate(unittest.TestCase):
         # Releases advance; never hard-code a past release or commit here.
         self.assertRegex(atomic["release"], r"\Ab[0-9]+-[0-9]+\.[0-9]+\.[0-9]+\Z")
         self.assertRegex(atomic["commit"], r"\A[0-9a-f]{40}\Z")
+        if "release_commit" in atomic:
+            self.assertEqual(atomic["release_commit"], atomic["commit"])
         self.assertIn("candidate_only", atomic["qualification"])
         self.assertNotEqual(atomic["commit"], LOCK["upstream"]["commit"])
 
