@@ -3,7 +3,7 @@
   "upstream": {
     "repository": "https://github.com/ggml-org/llama.cpp.git",
     "branch": "master",
-    "commit": "a91eab67d8389d979d29fdf6633b2edd0718eb4b"
+    "commit": "aac6da8012efd5c0fd211c907c4e870ba075b211"
   },
   "atomic": {
     "repository": "https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git",
@@ -27,5 +27,5 @@
   "patchset": "patches/upstream-latest",
   "policy": "upstream production; Prism ternary lab/runtime; Atomic compatibility lab; hardware + performance gate before promotion",
   "legacy_patchset": "patches/upstream",
-  "observed_on": "2026-11-01"
+  "observed_on": "2026-11-02"
 }
