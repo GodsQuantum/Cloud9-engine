@@ -6,7 +6,10 @@ Requires=docker.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/cloud9-model-router --host 192.0.2.42 --port 8090 --worker-host 127.0.0.1 --worker-port 18091 --catalog /srv/lxc/ia-compute/data/cloud9-engine-runtime/model-catalog.json --engine-home /srv/lxc/ia-compute/data/cloud9-engine-runtime --idle-seconds 30
+# Default to loopback; LAN bind address belongs in private operator configuration.
+Environment=CLOUD9_ENGINE_BIND_HOST=127.0.0.1
+EnvironmentFile=-/etc/cloud9-engine/router.env
+ExecStart=/usr/local/bin/cloud9-model-router --host ${CLOUD9_ENGINE_BIND_HOST} --port 8090 --worker-host 127.0.0.1 --worker-port 18091 --catalog /srv/lxc/ia-compute/data/cloud9-engine-runtime/model-catalog.json --engine-home /srv/lxc/ia-compute/data/cloud9-engine-runtime --idle-seconds 30
 Restart=on-failure
 RestartSec=2s
 TimeoutStopSec=60s

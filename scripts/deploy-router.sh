@@ -5,7 +5,7 @@ ENGINE_HOME=${CLOUD9_ENGINE_HOME:-/srv/lxc/ia-compute/data/cloud9-engine-runtime
 ROUTER_BINDIR=${CLOUD9_ENGINE_ROUTER_BINDIR:-/usr/local/bin}
 CATALOG_SRC=${CLOUD9_ENGINE_CATALOG_SOURCE:-$ROOT/config/model-catalog.json}
 CATALOG_DST=${CLOUD9_ENGINE_CATALOG_DEST:-$ENGINE_HOME/model-catalog.json}
-CATALOG_USER=${CLOUD9_ENGINE_CATALOG_USER:-developer}
+CATALOG_USER=${CLOUD9_ENGINE_CATALOG_USER:-${SUDO_USER:-$(id -un)}}
 
 python3 -m json.tool "$CATALOG_SRC" >/dev/null
 install -m 0755 "$ROOT/bin/cloud9-model-router.py" "$ROUTER_BINDIR/cloud9-model-router"

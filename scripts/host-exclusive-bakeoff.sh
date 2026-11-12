@@ -78,7 +78,10 @@ set -e
 echo "bakeoff_rc=$rc watchdog=${trip:-none} max_tctl=$max_temp peak_gtt=$peak_gtt"
 
 # The inner arbiter owns restoration. Verify the important public services after it exits.
-for url in http://192.0.2.42:8091/health http://192.0.2.42:8005/health; do
+# Discover the active LXC endpoint without publishing private LAN addresses.
+HEALTH_HOST=${CLOUD9_BENCH_HEALTH_HOST:-$(pct exec "$CTID" -- hostname -I | awk '{print $1}')}
+[[ -n "$HEALTH_HOST" ]] || { echo "Cannot discover CT health host" >&2; exit 4; }
+for url in "http://${HEALTH_HOST}:8091/health" "http://${HEALTH_HOST}:8005/health"; do
   for _ in $(seq 1 30); do
     curl -fsS --max-time 2 "$url" >/dev/null && { echo "health OK $url"; break; }
     sleep 1
