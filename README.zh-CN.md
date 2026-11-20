@@ -9,7 +9,7 @@ Cloud9 Engine 面向 AMD RDNA + Vulkan 本地推理。它同时跟踪 **llama.cp
 - **真正的 RDNA Vulkan 优化**：针对 Phoenix/Hawk Point RDNA3 UMA 的 128×32 `MUL_MAT_ID` tile 加速稀疏 MoE prompt processing。
 - **硬件自动调优**：根据实测调整 batch/ubatch、polling、FlashAttention 与内存策略，同时尊重用户显式传入的参数。
 - **已验证优先，TurboQuant 逐项评估**：只有通过 Vulkan 正确性、性能和内存门禁的 KV 缓存方案才能进入生产；不得将实验性 TurboQuant 功能当作已全面支持。
-- **多后端，一个稳定入口**：根据模型选择已验证的 upstream+Cloud9、Prism 或固定版本的 Atomic 1.6。Atomic 1.7+ 为实验候选，并非自动 fallback。
+- **多后端，一个稳定入口**：根据模型选择已验证的 upstream+Cloud9、Prism 或当前链接的 Atomic 2.1（尚无同条件 GPU 晋级证明）。其他版本不得未经验证自动晋级。
 - **安全更新**：更新先作为 candidate，通过本机 gate 后才 promotion。
 
 ## ⚡ 快速开始
@@ -24,7 +24,7 @@ cloud9-llama-server -m /path/to/model.gguf -ngl 99 -c 32768
 ```
 
 ## 🧠 路由与 RDNA profile
-`auto` 模式使用本机 hardware gate 选出的后端。在参考 Radeon 780M 上，截至 **2026-11-20**，实际生产目录将 **Qwen3.6-35B-A3B Pym Q2 + MTP2** 置于经过验证的 **Atomic 1.6**，上下文 8K；其他模型仍按各自的测试结果选用 upstream+Cloud9 或 Prism。直接使用 `CLOUD9_ENGINE_BACKEND=atomic` 属于手动实验覆盖，不等同于生产晋级。
+`auto` 模式使用本机 hardware gate 选出的后端。在参考 Radeon 780M 上，截至 **2026-11-20**，实际生产目录将 **Qwen3.6-35B-A3B Pym Q2 + MTP2** 实际链接到 **Atomic 2.1（`0fe16d12`，尚未经同条件性能验证）**，上下文 8K；其他模型仍按各自的测试结果选用 upstream+Cloud9 或 Prism。直接使用 `CLOUD9_ENGINE_BACKEND=atomic` 属于手动实验覆盖，不等同于生产晋级。
 
 默认 `balanced` profile 只在 AMD/RADV 上生效，并且不会覆盖用户已经指定的 llama-server 参数。大规模 prompt ingestion 可使用 `CLOUD9_ENGINE_RDNA_PROFILE=prefill`；完全关闭自动调优则设 `CLOUD9_ENGINE_RDNA_TUNING=off`。
 
@@ -38,7 +38,7 @@ cloud9-llama-server -m /path/to/model.gguf -ngl 99 -c 32768
 | MoE pp2048，反向顺序 5-run A/B | 378.8 → **391.6 t/s** | **+3.4%** |
 | MoE pp512，生产 chat profile | 337.1 → **397.5 t/s** | **+17.9%** |
 
-上述 2026 年 9 月数据并非当前生产 8K 条件下的同一组测试。2026-10-28 的匹配 GPU A/B（Pym Q2/MTP2、8K、512 输出 tokens）记录了 **Atomic 1.6 25.02 t/s** 与 **Atomic 2.1 21.62 t/s**。
+上述 2026 年 9 月数据并非当前生产 8K 条件下的同一组测试。2026-10-28 的匹配 GPU A/B（Pym Q2/MTP2、8K、512 输出 tokens）记录了 **Atomic 1.6 25.02 t/s** 与 **Atomic 2.1 21.62 t/s**。2026-11-20 生产软链接实际指向 Atomic 2.1，不能将旧版速度视为当前实测。
 
 该 kernel 通过 **921/921 个 Vulkan `MUL_MAT_ID` 正确性测试**；纯 decode 没有可测回退（22.50 → 22.63 t/s）。详情见 [benchmarks](docs/benchmarks.md)。
 
