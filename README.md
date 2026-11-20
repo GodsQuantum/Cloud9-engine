@@ -10,14 +10,14 @@
   <a href="README.md">English</a> · <a href="README.fr.md">Français</a> · <a href="README.zh-CN.md">简体中文</a>
 </p>
 
-Cloud9 Engine is a control layer for local LLMs on AMD RDNA GPUs. **Production is model-specific**, not tied to one fork: validated upstream llama.cpp + Cloud9 RDNA patches serve several model families; the live Radeon 780M catalog on **2026-11-20** routes **Qwen3.6-35B-A3B Pym Q2 + MTP2 to pinned Atomic 1.6** at 8K context. Prism is specialized for ternary/PTQ models. Atomic 1.7+ and unqualified TurboQuant variants remain laboratory candidates after observed Vulkan allocation/device-loss failures. A newer release must pass a matched on-device test before replacing a known-good runtime.
+Cloud9 Engine is a control layer for local LLMs on AMD RDNA GPUs. **Production is model-specific**, not tied to one fork: validated upstream llama.cpp + Cloud9 RDNA patches serve several model families; the live Radeon 780M catalog on **2026-11-20** routes **Qwen3.6-35B-A3B Pym Q2 + MTP2 to the currently linked Atomic 2.1 build (`0fe16d12`)** at 8K context (not qualified by a matching current GPU benchmark). Prism is specialized for ternary/PTQ models. Atomic 1.7+ and unqualified TurboQuant variants remain laboratory candidates after observed Vulkan allocation/device-loss failures. A newer release must pass a matched on-device test before replacing a known-good runtime.
 
 ## ☁️ Why Cloud9 Engine?
 
 - **RDNA-tuned Vulkan, not just another wrapper** — a Phoenix/Hawk Point high-aspect `MUL_MAT_ID` kernel accelerates sparse MoE prompt processing on validated RDNA3 UMA hardware.
 - **Hardware autotuning** — Cloud9 selects measured RADV batch/ubatch, polling, FlashAttention and memory-placement defaults while preserving any flags you explicitly pass.
 - **Feature union, not fork lock-in** — current llama.cpp features stay available on the latest compatibility runtime while proven faster upstream revisions can remain selected for specific model families.
-- **One stable API, model-specific runtimes** — the model router can select `upstream-pym`, `upstream-fast`, `upstream-next`, `upstream-latest` or Prism per model while exposing one OpenAI-compatible endpoint. Only the pinned Atomic 1.6 Pym profile is a validated production exception on the reference 780M; newer Atomic builds are lab-only.
+- **One stable API, model-specific runtimes** — the model router can select `upstream-pym`, `upstream-fast`, `upstream-next`, `upstream-latest` or Prism per model while exposing one OpenAI-compatible endpoint. On 2026-11-20 the active Pym route resolves to Atomic 2.1; an earlier equivalent GPU test favored Atomic 1.6. Requalification is required.
 - **RDNA-first validation** — the reference machine is Radeon 780M / RADV (`gfx1103` class hardware), not CUDA.
 - **Hardware-gated promotion** — updates are candidates until they load a real model and survive an on-device benchmark.
 - **Oversize-model fuse** — ordinary model files above 40 GiB are refused by default on the reference 780M after a Flash-Next lab load exhausted GTT. A separate typed `ngram-on-disk` policy may be used only for validated formats whose resident estimate is <=30 GiB and whose runtime explicitly receives `--ngram-on-disk`; the generic laboratory override remains explicit.
@@ -49,11 +49,11 @@ Normal production traffic goes through `cloud9-model-router`. Its versioned cata
 CLOUD9_ENGINE_BACKEND=upstream-fast   cloud9-llama-server ...
 CLOUD9_ENGINE_BACKEND=upstream-latest cloud9-llama-server ...
 CLOUD9_ENGINE_BACKEND=prism           cloud9-llama-server ...
-# The direct Atomic override is laboratory-only; the live Pym catalog explicitly pins Atomic 1.6:
+# Direct Atomic overrides are laboratory-only; the live Pym catalog uses the atomic alias, currently resolving to Atomic 2.1:
 CLOUD9_ENGINE_BACKEND=atomic          cloud9-llama-server ...
 ```
 
-On the reference 780M, the router keeps several validated upstream+Cloud9 revisions for other model families, a pinned Atomic 1.6 production profile for Pym 35B Q2/MTP2, and Prism for ternary Bonsai/PTQ models. Direct overrides must not bypass the model-specific production gate.
+On the reference 780M, the router keeps several validated upstream+Cloud9 revisions for other model families, an Atomic 2.1 linked (not yet matched-requalified) profile for Pym 35B Q2/MTP2, and Prism for ternary Bonsai/PTQ models. Direct overrides must not bypass the model-specific production gate.
 
 The default `balanced` RDNA profile is only injected on AMD/RADV and only for options you did not already specify. Set `CLOUD9_ENGINE_RDNA_TUNING=off` to pass through untouched llama-server defaults. The wrapper never downloads a model and never uploads prompts or model data.
 
@@ -69,7 +69,7 @@ Reference platform: Ryzen 7 8845HS / Radeon 780M (RADV), Qwen3.6-35B-A3B Pym Q2 
 | MoE pp512, production chat profile | same upstream build, kernel off → on | **337.1 → 397.5 t/s (+17.9%)** |
 | Decode-only 7-run reverse A/B | kernel off → on | **22.50 → 22.63 t/s (no regression)** |
 
-The September 2026 table above uses different prompts and tuning profiles from the current production 8K benchmark; do not compare their raw t/s as identical workloads. A matched 512-output-token GPU A/B on **2026-10-28**, same Pym Q2/MTP2 and 8K profile, measured **Atomic 1.6 at 25.02 t/s** versus **Atomic 2.1 at 21.62 t/s**. The live catalog still selects Atomic 1.6 for this model as of 2026-11-20.
+The September 2026 table above uses different prompts and tuning profiles from the current production 8K benchmark; do not compare their raw t/s as identical workloads. A matched 512-output-token GPU A/B on **2026-10-28**, same Pym Q2/MTP2 and 8K profile, measured **Atomic 1.6 at 25.02 t/s** versus **Atomic 2.1 at 21.62 t/s**. The live Pym catalog instead resolves to Atomic 2.1 (`0fe16d12`) as of 2026-11-20. The link is verified, but matching GPU promotion evidence is absent; the historical Atomic 1.6 measurement is not the live speed.
 
 The Vulkan `MUL_MAT_ID` gate also passes **921/921** backend correctness cases on the reference 780M. See [Benchmarks](docs/benchmarks.md) for protocol, variance and limitations.
 
