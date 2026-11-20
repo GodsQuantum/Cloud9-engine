@@ -14,14 +14,15 @@ Prism ternary/PTQ ────────────────────�
                                       │
                          one OpenAI-compatible endpoint
 
-Atomic TurboQuant ── lab/donor only; never an automatic Radeon 780M route
+Atomic 1.6 pinned ────────────────> validated Pym Q2/MTP2 8K production route
+Atomic 1.7+ / TurboQuant ──────────> lab/donor candidates only
 ```
 
 ## Production upstream profiles
 
 The runtime may keep several **validated upstream+Cloud9 releases** at once. This is deliberate: on the reference Radeon 780M, different model families benchmark best on different llama.cpp revisions. A newer commit is not promoted globally merely because it is newer.
 
-- **upstream-pym**: retained specifically for the fastest validated Pym/MTP path.
+- **upstream-pym**: retained as a measured alternate / rollback for the Pym/MTP family; the live Pym production entry currently selects pinned Atomic 1.6.
 - **upstream-fast**: stable optimized path for mature Qwen3.6/Gemma4 workloads.
 - **upstream-next**: intermediate validated revision currently winning on MiniCPM5+DSpark, Ling-3 and some small-model families.
 - **upstream-latest**: compatibility path for newer architectures such as Qwen3.8-derived models and Spark-X2.5. Flash-Next remains research-only on the reference gfx1103/780M after an oversized local smoke test exhausted GTT and required a power-cycle.
@@ -53,7 +54,7 @@ ComfyUI and AutoPublisher image services use `coexist-light`; reproducible bench
 
 ## Atomic policy
 
-Atomic remains tracked because it can contribute useful ideas and may improve on other hardware or future releases. It is **not** an automatic fallback on the reference Radeon 780M. Atomic 1.7 reproduced Vulkan allocation/device-loss failures during the 2026-10-02 gate, so it requires an explicit laboratory override.
+The live CT410 catalog checked on **2026-11-20** selects **pinned Atomic 1.6** for `Cloud9-Pym-35B-A3B-MTP`, context 8192, MTP2. Matched 8K/512-token tests on 2026-10-28 measured 25.02 t/s (Atomic 1.6) versus 21.62 t/s (Atomic 2.1). Newer Atomic builds are **not** generic fallbacks; Atomic 1.7 caused Vulkan allocation/device-loss errors and newer candidates require explicit isolated gates. For other model families, retain validated upstream+Cloud9 backends or Prism where specified by the catalog.
 
 ## Hardware gates
 
